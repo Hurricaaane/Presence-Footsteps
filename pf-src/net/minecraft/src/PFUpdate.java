@@ -35,17 +35,17 @@ import eu.ha3.util.property.simple.ConfigProperty;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class CCBUpdate extends Thread
+public class PFUpdate extends Thread
 {
-	private CCBHaddon mod;
+	private PFHaddon mod;
 	
-	private int lastFound = CCBHaddon.VERSION;
+	private int lastFound = PFHaddon.VERSION;
 	
 	private int displayCount = 3;
 	private int displayRemaining = 0;
 	private boolean enabled = true;
 	
-	public CCBUpdate(CCBHaddon mod)
+	public PFUpdate(PFHaddon mod)
 	{
 		this.mod = mod;
 	}
@@ -64,7 +64,7 @@ public class CCBUpdate extends Thread
 	{
 		try
 		{
-			URL url = new URL("http://q.mc.ha3.eu/query/ccb-main-version.xml");
+			URL url = new URL("http://q.mc.ha3.eu/query/pf-main-version.xml");
 			
 			InputStream contents = url.openStream();
 			
@@ -93,7 +93,7 @@ public class CCBUpdate extends Thread
 				}
 				
 			}
-			CCBHaddon.log("Update version found: " + maxvn);
+			PFHaddon.log("Update version found: " + maxvn);
 			
 			try
 			{
@@ -106,7 +106,7 @@ public class CCBUpdate extends Thread
 				
 			}
 			
-			if (maxvn > CCBHaddon.VERSION)
+			if (maxvn > PFHaddon.VERSION)
 			{
 				boolean needsSave = false;
 				if (maxvn != this.lastFound)
@@ -125,7 +125,7 @@ public class CCBUpdate extends Thread
 					this.displayRemaining = this.displayRemaining - 1;
 					this.mod.getConfig().setProperty("update_found.display.remaining.value", this.displayRemaining);
 					
-					int vc = maxvn - CCBHaddon.VERSION;
+					int vc = maxvn - PFHaddon.VERSION;
 					this.mod.printChat(
 						Ha3Utility.COLOR_GOLD, "A ", Ha3Utility.COLOR_WHITE, "r" + maxvn, Ha3Utility.COLOR_GOLD,
 						" update is available (You're ", Ha3Utility.COLOR_WHITE, vc, Ha3Utility.COLOR_GOLD, " version"

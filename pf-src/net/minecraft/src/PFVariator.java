@@ -21,7 +21,7 @@ import eu.ha3.util.property.simple.ConfigProperty;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class CCBVariator
+public class PFVariator
 {
 	public boolean FORCE_HUMANOID = false;
 	public float HUMAN_DISTANCE = 0.80f;
@@ -88,7 +88,7 @@ public class CCBVariator
 		Set<String> keys = config.getAllProperties().keySet();
 		
 		// I am feeling SUPER LAZY today
-		Field[] fields = CCBVariator.class.getDeclaredFields();
+		Field[] fields = PFVariator.class.getDeclaredFields();
 		for (Field field : fields)
 		{
 			try
@@ -112,7 +112,7 @@ public class CCBVariator
 			}
 			catch (Throwable e)
 			{
-				CCBHaddon.log(e.getClass().getName() + ": " + field.getName());
+				PFHaddon.log(e.getClass().getName() + ": " + field.getName());
 			}
 		}
 	}

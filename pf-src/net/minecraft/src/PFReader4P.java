@@ -16,7 +16,7 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class CCBReader4P extends CCBReaderH
+public class PFReader4P extends PFReaderH
 {
 	protected boolean isPegasus;
 	
@@ -27,13 +27,13 @@ public class CCBReader4P extends CCBReaderH
 	protected long airborneTime;
 	protected long immobileTime;
 	
-	public CCBReader4P(CCBHaddon mod)
+	public PFReader4P(PFHaddon mod)
 	{
 		super(mod);
 	}
 	
 	@Override
-	public void setVariator(CCBVariator variator)
+	public void setVariator(PFVariator variator)
 	{
 		this.VAR = variator;
 	}
@@ -93,13 +93,13 @@ public class CCBReader4P extends CCBReaderH
 				if (!this.isFlying)
 				{
 					this.mod.manager().getMinecraft().theWorld.playSound(
-						ply.posX, ply.posY, ply.posZ, "ccb_sounds.land", volume,
+						ply.posX, ply.posY, ply.posZ, "pf_sounds.land", volume,
 						randomPitch(1f, this.VAR.LANDING_PITCH_RADIUS), false);
 				}
 				else
 				{
 					this.mod.manager().getMinecraft().theWorld.playSound(
-						ply.posX, ply.posY, ply.posZ, "ccb_sounds.dash", volume,
+						ply.posX, ply.posY, ply.posZ, "pf_sounds.dash", volume,
 						randomPitch(1f, this.VAR.DASHING_PITCH_RADIUS), false);
 				}
 				
@@ -145,7 +145,7 @@ public class CCBReader4P extends CCBReaderH
 			{
 				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
 				this.mod.manager().getMinecraft().theWorld.playSound(
-					ply.posX, ply.posY, ply.posZ, "ccb_sounds.wing", volume,
+					ply.posX, ply.posY, ply.posZ, "pf_sounds.wing", volume,
 					randomPitch(1f, this.VAR.WING_PITCH_RADIUS), false);
 			}
 			
@@ -234,7 +234,7 @@ public class CCBReader4P extends CCBReaderH
 			if (dwm > distance)
 			{
 				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
-				makeSoundForPlayerBlock(ply, volume, 0d, CCBEventType.STEP);
+				makeSoundForPlayerBlock(ply, volume, 0d, PFEventType.STEP);
 				
 				this.dmwBase = distanceReference;
 				

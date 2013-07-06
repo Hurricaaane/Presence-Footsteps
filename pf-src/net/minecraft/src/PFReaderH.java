@@ -18,11 +18,11 @@ import java.util.Random;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class CCBReaderH implements CCBReader
+public class PFReaderH implements PFReader
 {
 	// Construct
-	final protected CCBHaddon mod;
-	protected CCBVariator VAR;
+	final protected PFHaddon mod;
+	protected PFVariator VAR;
 	protected Random rand;
 	
 	// Footsteps
@@ -34,15 +34,15 @@ public class CCBReaderH implements CCBReader
 	protected boolean isFlying;
 	protected float fallDistance;
 	
-	public CCBReaderH(CCBHaddon mod)
+	public PFReaderH(PFHaddon mod)
 	{
 		this.mod = mod;
-		this.VAR = new CCBVariator();
+		this.VAR = new PFVariator();
 		this.rand = new Random();
 	}
 	
 	@Override
-	public void setVariator(CCBVariator variator)
+	public void setVariator(PFVariator variator)
 	{
 		this.VAR = variator;
 	}
@@ -97,7 +97,7 @@ public class CCBReaderH implements CCBReader
 			if (dwm > distance)
 			{
 				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
-				makeSoundForPlayerBlock(ply, volume, 0d, CCBEventType.STEP);
+				makeSoundForPlayerBlock(ply, volume, 0d, PFEventType.STEP);
 				
 				this.dmwBase = distanceReference;
 			}
@@ -130,7 +130,7 @@ public class CCBReaderH implements CCBReader
 			if (this.VAR.PLAY_STEP_ON_JUMP)
 			{
 				makeSoundForPlayerBlock(
-					ply, this.VAR.JUMP_VOLUME * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR, 0.5d, CCBEventType.JUMP);
+					ply, this.VAR.JUMP_VOLUME * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR, 0.5d, PFEventType.JUMP);
 			}
 			
 			if (this.VAR.PLAY_SPECIAL_ON_JUMP)
@@ -144,7 +144,7 @@ public class CCBReaderH implements CCBReader
 			if (this.VAR.PLAY_STEP_ON_LAND_HARD)
 			{
 				makeSoundForPlayerBlock(
-					ply, this.VAR.LAND_HARD_VOLUME * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR, 0d, CCBEventType.LAND);
+					ply, this.VAR.LAND_HARD_VOLUME * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR, 0d, PFEventType.LAND);
 			}
 			
 			if (this.VAR.PLAY_SPECIAL_ON_LAND_HARD)
@@ -155,7 +155,7 @@ public class CCBReaderH implements CCBReader
 		}
 	}
 	
-	protected void makeSoundForPlayerBlock(EntityPlayer ply, float volume, double minus, CCBEventType event)
+	protected void makeSoundForPlayerBlock(EntityPlayer ply, float volume, double minus, PFEventType event)
 	{
 		int xx = MathHelper.floor_double(ply.posX);
 		int yy = MathHelper.floor_double(ply.posY - 0.1d - ply.yOffset - minus); // Support for trapdoors
@@ -256,7 +256,7 @@ public class CCBReaderH implements CCBReader
 		}
 	}
 	
-	protected boolean makeSoundForBlock(EntityPlayer ply, float volume, int xx, int yy, int zz, CCBEventType event)
+	protected boolean makeSoundForBlock(EntityPlayer ply, float volume, int xx, int yy, int zz, PFEventType event)
 	{
 		World world = this.mod.manager().getMinecraft().theWorld;
 		
@@ -305,7 +305,7 @@ public class CCBReaderH implements CCBReader
 						if (flak != null)
 						{
 							sound = flak;
-							CCBHaddon.debug("Flak enabled");
+							PFHaddon.debug("Flak enabled");
 						}
 						
 						if (sound != null)
@@ -313,7 +313,7 @@ public class CCBReaderH implements CCBReader
 							// Player has stepped on a non-emitter block by blockmap choice
 							if (sound.equals("NOT_EMITTER"))
 							{
-								CCBHaddon.debug("Not emitter for " + block + ":" + metadata);
+								PFHaddon.debug("Not emitter for " + block + ":" + metadata);
 								
 								return false;
 							}
@@ -326,12 +326,12 @@ public class CCBReaderH implements CCBReader
 								//	randomPitch(1f, this.VAR.MATSTEP_PITCH_RADIUS), false);
 								ply.playSound(sound, volume, randomPitch(1f, this.VAR.MATSTEP_PITCH_RADIUS));
 								
-								CCBHaddon.debug("Playing sound " + sound + " for " + block + ":" + metadata);
+								PFHaddon.debug("Playing sound " + sound + " for " + block + ":" + metadata);
 								
 							}
 							else
 							{
-								CCBHaddon.debug("Blank sound for " + block + ":" + metadata);
+								PFHaddon.debug("Blank sound for " + block + ":" + metadata);
 							}
 						}
 						
@@ -342,7 +342,7 @@ public class CCBReaderH implements CCBReader
 						}
 						else
 						{
-							CCBHaddon.debug("Fallback to default for " + block + ":" + metadata);
+							PFHaddon.debug("Fallback to default for " + block + ":" + metadata);
 						}
 					}
 					
@@ -350,7 +350,7 @@ public class CCBReaderH implements CCBReader
 					if (this.VAR.PLAY_BLOCKSTEPS && (!this.VAR.PLAY_OVERRIDES || !overrode))
 					{
 						ply.playStepSound(xx, yy, zz, block);
-						CCBHaddon.debug("Playing base Minecaft step for " + block);
+						PFHaddon.debug("Playing base Minecaft step for " + block);
 					}
 				}
 			}

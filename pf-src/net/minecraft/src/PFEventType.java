@@ -16,7 +16,7 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public enum CCBEventType
+public enum PFEventType
 {
 	STEP, JUMP, LAND
 }

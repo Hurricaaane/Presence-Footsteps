@@ -19,23 +19,23 @@ import eu.ha3.mc.convenience.Ha3StaticUtilities;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class mod_CCB extends HaddonBridgeModLoader
+public class mod_PF extends HaddonBridgeModLoader
 {
 	private static boolean DEV_MODE_USE_MODLOADER_COUNTERPART = true;
 	
-	public mod_CCB()
+	public mod_PF()
 	{
-		super(!isInstalledInDouble() ? new CCBHaddon() : new HaddonEmpty());
+		super(!isInstalledInDouble() ? new PFHaddon() : new HaddonEmpty());
 		
 		if (DEV_MODE_USE_MODLOADER_COUNTERPART)
 		{
-			System.out.println("ATTENTION! Dev mode is on for CCB!!!");
+			System.out.println("ATTENTION! Dev mode is on for PF!!!");
 			
 		}
 		
 		if (isInstalledInDouble())
 		{
-			System.out.println("Detected CCB was installed in double. Not starting ModLoader version");
+			System.out.println("Detected PF was installed in double. Not starting ModLoader version");
 		}
 	}
 	
@@ -47,8 +47,8 @@ public class mod_CCB extends HaddonBridgeModLoader
 	
 	private static boolean isPresentLiteModCounterpart(Minecraft mc)
 	{
-		return Ha3StaticUtilities.classExists("LiteMod_CCB", mc)
-			|| Ha3StaticUtilities.classExists("net.minecraft.src.LiteMod_CCB", mc);
+		return Ha3StaticUtilities.classExists("LiteMod_PF", mc)
+			|| Ha3StaticUtilities.classExists("net.minecraft.src.LiteMod_PF", mc);
 	}
 	
 	private static boolean isInstalledLiteLoader(Minecraft mc)

@@ -31,12 +31,12 @@ import eu.ha3.util.property.simple.ConfigProperty;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
+public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 {
 	public static final int VERSION = 0;
 	
-	private CCBReader system;
-	private CCBUpdate update;
+	private PFReader system;
+	private PFUpdate update;
 	
 	private ConfigProperty blockSound;
 	private Map<String, String> blockMap;
@@ -66,14 +66,14 @@ public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 		if (isInstalledMLP())
 		{
-			this.system = new CCBReaderMLP(this);
+			this.system = new PFReaderMLP(this);
 		}
 		else
 		{
-			this.system = new CCBReader4P(this);
+			this.system = new PFReader4P(this);
 		}
 		
-		File configFile = new File(util().getMinecraftDir(), "ccb.cfg");
+		File configFile = new File(util().getMinecraftDir(), "pf.cfg");
 		if (configFile.exists())
 		{
 			log("Config file found. Loading...");
@@ -83,7 +83,7 @@ public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
 				config.setSource(configFile.getCanonicalPath());
 				config.load();
 				
-				CCBVariator var = new CCBVariator();
+				PFVariator var = new PFVariator();
 				var.loadConfig(config);
 				
 				this.system.setVariator(var);
@@ -100,7 +100,7 @@ public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 		manager().hookFrameEvents(true);
 		
-		this.update = new CCBUpdate(this);
+		this.update = new PFUpdate(this);
 		this.update.attempt();
 	}
 	
@@ -116,14 +116,14 @@ public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
 		{
 			this.blockSound.setProperty(Integer.toString(block), "soft");
 		}
-		this.blockSound.setProperty("default_material.step", "ccb_sounds.hoofstep");
-		this.blockSound.setProperty("soft.step", "ccb_sounds.softstep");
+		this.blockSound.setProperty("default_material.step", "pf_sounds.hoofstep");
+		this.blockSound.setProperty("soft.step", "pf_sounds.softstep");
 		this.blockSound.commit();
 		
 		// Load configuration from source
 		try
 		{
-			this.blockSound.setSource(new File(util().getMinecraftDir(), "ccb_blockmap.cfg").getCanonicalPath());
+			this.blockSound.setSource(new File(util().getMinecraftDir(), "pf_blockmap.cfg").getCanonicalPath());
 			this.blockSound.load();
 		}
 		catch (IOException e)
@@ -156,10 +156,10 @@ public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	private void fixInstallation()
 	{
-		File folder = new File(util().getMinecraftDir(), "resources/sound3/ccb_sounds");
+		File folder = new File(util().getMinecraftDir(), "resources/sound3/pf_sounds");
 		if (!folder.exists())
 		{
-			log("Did not find folder resources/sound3/ccb_sounds/. Attempting first installation");
+			log("Did not find folder resources/sound3/pf_sounds/. Attempting first installation");
 			folder.mkdirs();
 		}
 		
@@ -175,7 +175,7 @@ public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
 				if (!file.exists())
 				{
 					URL toInstall =
-						net.minecraft.src.Minecraft.class.getResource("/resources/sound/ccb_sounds/" + name);
+						net.minecraft.src.Minecraft.class.getResource("/resources/sound/pf_sounds/" + name);
 					stream = toInstall.openStream();
 					if (stream != null)
 					{
@@ -194,7 +194,7 @@ public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
 			}
 			catch (Exception e)
 			{
-				CCBHaddon.log("Could not fix " + name + ": " + e.getMessage());
+				PFHaddon.log("Could not fix " + name + ": " + e.getMessage());
 			}
 			finally
 			{
@@ -256,10 +256,10 @@ public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	private void loadSounds()
 	{
-		File dir = new File(util().getMinecraftDir(), "resources/sound3/ccb_sounds/");
+		File dir = new File(util().getMinecraftDir(), "resources/sound3/pf_sounds/");
 		if (dir.exists())
 		{
-			loadResource(dir, "sound3/ccb_sounds/");
+			loadResource(dir, "sound3/pf_sounds/");
 		}
 	}
 	
@@ -338,7 +338,7 @@ public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	public static void log(String contents)
 	{
-		System.out.println("(CCB) " + contents);
+		System.out.println("(PF) " + contents);
 	}
 	
 	public static void setDebugEnabled(boolean enable)
@@ -351,14 +351,14 @@ public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
 		if (!isDebugEnabled)
 			return;
 		
-		System.out.println("(CCB) " + contents);
+		System.out.println("(PF) " + contents);
 	}
 	
 	public void saveConfig()
 	{
 	}
 	
-	public String getSoundForBlock(int block, int meta, CCBEventType event)
+	public String getSoundForBlock(int block, int meta, PFEventType event)
 	{
 		String material = null;
 		
@@ -378,7 +378,7 @@ public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
 		return getSoundForMaterial(material, event);
 	}
 	
-	public String getFlakForBlock(int block, int meta, CCBEventType event)
+	public String getFlakForBlock(int block, int meta, PFEventType event)
 	{
 		String material = null;
 		
@@ -396,7 +396,7 @@ public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
 		return getSoundForMaterial(material, event);
 	}
 	
-	public String getSoundForMaterial(String material, CCBEventType event)
+	public String getSoundForMaterial(String material, PFEventType event)
 	{
 		if (material == null || material.equals("FALLBACK"))
 			return null;
@@ -404,15 +404,15 @@ public class CCBHaddon extends HaddonImpl implements SupportsFrameEvents
 		if (material.equals("BLANK") || material.equals("NOT_EMITTER"))
 			return material;
 		
-		if (event == CCBEventType.STEP)
+		if (event == PFEventType.STEP)
 			return this.blockMap.get(material + ".step");
-		else if (event == CCBEventType.JUMP)
+		else if (event == PFEventType.JUMP)
 			return this.blockMap.containsKey(material + ".jump")
-				? this.blockMap.get(material + ".jump") : getSoundForMaterial(material, CCBEventType.STEP);
+				? this.blockMap.get(material + ".jump") : getSoundForMaterial(material, PFEventType.STEP);
 		else
-			//if (event == CCBEventType.LAND)
+			//if (event == PFEventType.LAND)
 			return this.blockMap.containsKey(material + ".land")
-				? this.blockMap.get(material + ".land") : getSoundForMaterial(material, CCBEventType.STEP);
+				? this.blockMap.get(material + ".land") : getSoundForMaterial(material, PFEventType.STEP);
 		
 	}
 	

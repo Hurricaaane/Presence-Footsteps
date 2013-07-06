@@ -16,23 +16,10 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class CCBReaderMLP extends CCBReader4P
+public interface PFReader
 {
-	public CCBReaderMLP(CCBHaddon mod)
-	{
-		super(mod);
-	}
+	public void frame(EntityPlayer ply);
 	
-	@Override
-	public void frame(EntityPlayer ply)
-	{
-		if (true)
-			throw new Minecraft161NotYetFixedRuntimeException();
-		
-		// recomment on fix
-		//Pony pony = Pony.getPonyFromRegistry(ply, this.mod.manager().getMinecraft().renderEngine);
-		//this.isPegasus = pony != null ? pony.isPegasus() : false;
-		
-		super.frame(ply);
-	}
+	public void setVariator(PFVariator var);
+	
 }
