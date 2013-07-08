@@ -53,6 +53,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			{
 				setDebugEnabled(true);
 				reloadBlockMapFromFile();
+				PFHaddon.this.blockSound.load();
 			}
 			
 			@Override
@@ -61,7 +62,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			}
 		});
 		
-		fixInstallation();
+		//fixInstallation();
 		loadSounds();
 		
 		if (isInstalledMLP())
@@ -174,8 +175,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 				
 				if (!file.exists())
 				{
-					URL toInstall =
-						net.minecraft.src.Minecraft.class.getResource("/resources/sound/pf_sounds/" + name);
+					URL toInstall = net.minecraft.src.Minecraft.class.getResource("/resources/sound/pf_sounds/" + name);
 					stream = toInstall.openStream();
 					if (stream != null)
 					{
@@ -256,10 +256,10 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	private void loadSounds()
 	{
-		File dir = new File(util().getMinecraftDir(), "resources/sound3/pf_sounds/");
+		File dir = new File(util().getMinecraftDir(), "assets/minecraft/sound/pf_library/");
 		if (dir.exists())
 		{
-			loadResource(dir, "sound3/pf_sounds/");
+			loadResource(dir, "pf_library/");
 		}
 	}
 	
@@ -308,16 +308,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			{
 				try
 				{
-					String fileRep = par2Str + file.getName();
-					fileRep = fileRep.substring(fileRep.indexOf("/") + 1);
-					fileRep = fileRep.substring(0, fileRep.indexOf("."));
-					while (Character.isDigit(fileRep.charAt(fileRep.length() - 1)))
-					{
-						fileRep = fileRep.substring(0, fileRep.length() - 1);
-					}
-					fileRep = fileRep.replaceAll("/", ".");
-					
-					getManager().getMinecraft().installResource(par2Str + file.getName(), file);
+					getManager().getMinecraft().sndManager.addSound(par2Str + file.getName());
 				}
 				catch (Exception var9)
 				{
