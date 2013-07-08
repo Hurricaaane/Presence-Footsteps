@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.Set;
 
 import eu.ha3.util.property.simple.ConfigProperty;
@@ -24,7 +25,7 @@ import eu.ha3.util.property.simple.ConfigProperty;
 public class PFVariator
 {
 	public boolean FORCE_HUMANOID = false;
-	public float HUMAN_DISTANCE = 0.80f;
+	public float HUMAN_DISTANCE = 0.95f;
 	
 	public int WING_JUMPING_REST_TIME = 700;
 	public int WING_SLOW = 550;
@@ -49,10 +50,11 @@ public class PFVariator
 	public float WALK_DISTANCE = 0.65f;
 	public float WALK_CHASING_FACTOR = 1f / 7f;
 	public float SLOW_DISTANCE = 0.75f;
-	public float GALLOP_DISTANCE_1 = 0.25f;
+	public float GALLOP_DISTANCE_1 = 0.80f;
 	public float GALLOP_DISTANCE_2 = 0.25f;
-	public float GALLOP_DISTANCE_3 = 0.05f;
-	public float GALLOP_DISTANCE_4 = 0.7f;
+	public float GALLOP_DISTANCE_3 = 0.25f;
+	public float GALLOP_DISTANCE_4 = 0.05f;
+	public boolean GALLOP_3STEP = true;
 	public float LADDER_DISTANCE = 0.4f;
 	public float STAIRCASE_DISTANCE = 0.01f;
 	public float STAIRCASE_ANTICHASE_DIFFERENCE = 1f;
@@ -86,7 +88,12 @@ public class PFVariator
 	
 	public void loadConfig(ConfigProperty config)
 	{
-		Set<String> keys = config.getAllProperties().keySet();
+		Set<String> keysFromConfig = config.getAllProperties().keySet();
+		Set<String> keys = new HashSet<String>();
+		for (String key : keysFromConfig)
+		{
+			keys.add(key.toUpperCase());
+		}
 		
 		// I am feeling SUPER LAZY today
 		Field[] fields = PFVariator.class.getDeclaredFields();
@@ -94,26 +101,27 @@ public class PFVariator
 		{
 			try
 			{
-				String fieldName = field.getName().toLowerCase();
+				String fieldName = field.getName();
 				if (keys.contains(fieldName))
 				{
+					String lowercaseField = fieldName.toLowerCase();
 					if (field.getType() == Float.TYPE)
 					{
-						field.setFloat(this, config.getFloat(fieldName));
+						field.setFloat(this, config.getFloat(lowercaseField));
 					}
 					else if (field.getType() == Integer.TYPE)
 					{
-						field.setInt(this, config.getInteger(fieldName));
+						field.setInt(this, config.getInteger(lowercaseField));
 					}
 					else if (field.getType() == Boolean.TYPE)
 					{
-						field.setBoolean(this, config.getBoolean(fieldName));
+						field.setBoolean(this, config.getBoolean(lowercaseField));
 					}
 				}
 			}
 			catch (Throwable e)
 			{
-				PFHaddon.log(e.getClass().getName() + ": " + field.getName());
+				PFHaddon.log("Incompatible type: " + e.getClass().getName() + ": " + field.getName());
 			}
 		}
 	}

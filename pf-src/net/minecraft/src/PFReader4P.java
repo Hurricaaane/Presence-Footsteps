@@ -33,12 +33,6 @@ public class PFReader4P extends PFReaderH
 	}
 	
 	@Override
-	public void setVariator(PFVariator variator)
-	{
-		this.VAR = variator;
-	}
-	
-	@Override
 	public void frame(EntityPlayer ply)
 	{
 		if (this.VAR.FORCE_HUMANOID)
@@ -169,8 +163,10 @@ public class PFReader4P extends PFReaderH
 			float dwm = distanceReference - this.dmwBase;
 			
 			float speed = (float) Math.sqrt(ply.motionX * ply.motionX + ply.motionZ * ply.motionZ);
-			float distance = this.VAR.WALK_DISTANCE;
+			float distance = 0f;
 			float volume = this.VAR.WALK_VOLUME;
+			
+			boolean isGallop = false;
 			
 			if (ply.isOnLadder())
 			{
@@ -191,6 +187,7 @@ public class PFReader4P extends PFReaderH
 			}
 			else if (speed > this.VAR.SPEED_TO_GALLOP)
 			{
+				isGallop = true;
 				volume = this.VAR.GALLOP_VOLUME;
 				// Gallop stance (1-1-2--)
 				if (this.hoof == 3)
@@ -212,6 +209,8 @@ public class PFReader4P extends PFReaderH
 			}
 			else if (speed > this.VAR.SPEED_TO_WALK)
 			{
+				distance = this.VAR.WALK_DISTANCE;
+				
 				// Walking stance (2-2-)
 				// Prevent the 2-2 steps from happening on staircases
 				if (distanceReference - this.dwmYChange > this.VAR.STAIRCASE_ANTICHASE_DIFFERENCE)
@@ -236,9 +235,18 @@ public class PFReader4P extends PFReaderH
 				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
 				makeSoundForPlayerBlock(ply, volume, 0d, PFEventType.STEP);
 				
+				if (isGallop && this.VAR.GALLOP_3STEP && this.hoof >= 2)
+				{
+					makeSoundForPlayerBlock(ply, volume, 0d, PFEventType.STEP);
+					this.hoof = 0;
+				}
+				else
+				{
+					this.hoof = (this.hoof + 1) % 4;
+				}
+				
 				this.dmwBase = distanceReference;
 				
-				this.hoof = (this.hoof + 1) % 4;
 			}
 		}
 		

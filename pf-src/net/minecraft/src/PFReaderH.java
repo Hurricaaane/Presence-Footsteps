@@ -96,7 +96,7 @@ public class PFReaderH implements PFReader
 			boolean immobile = stoppedImmobile(distanceReference);
 			
 			//float speed = (float) Math.sqrt(ply.motionX * ply.motionX + ply.motionZ * ply.motionZ);
-			float distance = this.VAR.WALK_DISTANCE;
+			float distance = 0f;
 			float volume = this.VAR.WALK_VOLUME;
 			
 			if (ply.isOnLadder())
