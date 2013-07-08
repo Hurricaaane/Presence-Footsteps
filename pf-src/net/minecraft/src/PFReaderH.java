@@ -34,6 +34,10 @@ public class PFReaderH implements PFReader
 	protected boolean isFlying;
 	protected float fallDistance;
 	
+	protected float lastReference;
+	protected boolean isImmobile;
+	protected long timeImmobile;
+	
 	public PFReaderH(PFHaddon mod)
 	{
 		this.mod = mod;
@@ -54,6 +58,27 @@ public class PFReaderH implements PFReader
 		simulateAirborne(ply);
 	}
 	
+	protected boolean stoppedImmobile(float reference)
+	{
+		float diff = this.lastReference - reference;
+		this.lastReference = reference;
+		if (!this.isImmobile && diff == 0f)
+		{
+			this.timeImmobile = System.currentTimeMillis();
+			this.isImmobile = true;
+		}
+		else if (this.isImmobile && diff != 0f)
+		{
+			this.isImmobile = false;
+			long delay = System.currentTimeMillis() - this.timeImmobile;
+			
+			if (delay > this.VAR.IMMOBILE_DURATION)
+				return true;
+		}
+		
+		return false;
+	}
+	
 	protected void simulateFootsteps(EntityPlayer ply)
 	{
 		// final float distanceReference = ply.field_82151_R;
@@ -68,6 +93,7 @@ public class PFReaderH implements PFReader
 		if (ply.onGround || ply.isInWater() || ply.isOnLadder())
 		{
 			float dwm = distanceReference - this.dmwBase;
+			boolean immobile = stoppedImmobile(distanceReference);
 			
 			//float speed = (float) Math.sqrt(ply.motionX * ply.motionX + ply.motionZ * ply.motionZ);
 			float distance = this.VAR.WALK_DISTANCE;
@@ -94,7 +120,7 @@ public class PFReaderH implements PFReader
 				distance = this.VAR.HUMAN_DISTANCE;
 			}
 			
-			if (dwm > distance)
+			if (immobile || dwm > distance)
 			{
 				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
 				makeSoundForPlayerBlock(ply, volume, 0d, PFEventType.STEP);

@@ -82,6 +82,7 @@ public class PFVariator
 	public boolean PLAY_SPECIAL_ON_JUMP = false;
 	public boolean PLAY_SPECIAL_ON_LAND = false; // TODO UNUSED
 	public boolean PLAY_SPECIAL_ON_LAND_HARD = false;
+	public int IMMOBILE_DURATION = 700;
 	
 	public void loadConfig(ConfigProperty config)
 	{
