@@ -26,8 +26,8 @@ public class PFReaderMLP extends PFReader4P
 	@Override
 	public void frame(EntityPlayer ply)
 	{
-		if (true)
-			throw new Minecraft161NotYetFixedRuntimeException();
+		//if (true)
+		//	throw new Minecraft161NotYetFixedRuntimeException();
 		
 		// recomment on fix
 		//Pony pony = Pony.getPonyFromRegistry(ply, this.mod.manager().getMinecraft().renderEngine);
