@@ -52,8 +52,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			public void onTrueEdge()
 			{
 				setDebugEnabled(true);
+				reloadVariatorFromFile();
 				reloadBlockMapFromFile();
-				PFHaddon.this.blockSound.load();
 			}
 			
 			@Override
@@ -74,6 +74,17 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			this.system = new PFReader4P(this);
 		}
 		
+		reloadVariatorFromFile();
+		reloadBlockMapFromFile();
+		
+		manager().hookFrameEvents(true);
+		
+		this.update = new PFUpdate(this);
+		this.update.attempt();
+	}
+	
+	private void reloadVariatorFromFile()
+	{
 		File configFile = new File(util().getMinecraftDir(), "pf.cfg");
 		if (configFile.exists())
 		{
@@ -96,13 +107,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			log("Loaded.");
 			
 		}
-		
-		reloadBlockMapFromFile();
-		
-		manager().hookFrameEvents(true);
-		
-		this.update = new PFUpdate(this);
-		this.update.attempt();
 	}
 	
 	private void reloadBlockMapFromFile()
