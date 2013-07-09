@@ -1,4 +1,6 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
+
+import eu.ha3.mc.presencefootsteps.engine.interfaces.Generator;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,17 +18,6 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface PFDefaultStepPlayer
+public interface VariableGenerator extends Generator, VariatorSettable
 {
-	/**
-	 * Play a step sound from a block.
-	 * 
-	 * @param entity
-	 *            TODO
-	 * @param xx
-	 * @param yy
-	 * @param zz
-	 * @param block
-	 */
-	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, int blockID);
 }

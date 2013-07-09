@@ -1,4 +1,4 @@
-package eu.ha3.mc.presencefootsteps.interfaces;
+package eu.ha3.mc.presencefootsteps.engine.interfaces;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,17 +16,9 @@ package eu.ha3.mc.presencefootsteps.interfaces;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface Acoustic
+public interface Options
 {
-	/**
-	 * Plays a sound.
-	 * 
-	 * @param player
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param event
-	 */
-	public void playSound(SoundPlayer player, Object location, EventType event);
+	public boolean hasOption(String option);
 	
+	public Object getOption(String option);
 }

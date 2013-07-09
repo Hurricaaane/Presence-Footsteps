@@ -2,8 +2,9 @@ package net.minecraft.src;
 
 import java.util.Random;
 
-import eu.ha3.mc.presencefootsteps.interfaces.EventType;
-import eu.ha3.mc.presencefootsteps.mcpackage.VariableGenerator;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.VariableGenerator;
+import eu.ha3.mc.presencefootsteps.mod.Variator;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -25,7 +26,7 @@ public class PFReaderH implements VariableGenerator
 {
 	// Construct
 	final protected PFHaddon mod;
-	protected PFVariator VAR;
+	protected Variator VAR;
 	protected Random rand;
 	
 	// Footsteps
@@ -44,12 +45,12 @@ public class PFReaderH implements VariableGenerator
 	public PFReaderH(PFHaddon mod)
 	{
 		this.mod = mod;
-		this.VAR = new PFVariator();
+		this.VAR = new Variator();
 		this.rand = new Random();
 	}
 	
 	@Override
-	public void setVariator(PFVariator variator)
+	public void setVariator(Variator variator)
 	{
 		this.VAR = variator;
 	}

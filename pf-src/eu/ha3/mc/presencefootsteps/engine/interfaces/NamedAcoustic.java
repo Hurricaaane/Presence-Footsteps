@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.engine.interfaces;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,7 +16,12 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface PFVariatorSettable
+public interface NamedAcoustic extends Acoustic
 {
-	public void setVariator(PFVariator var);
+	/**
+	 * Gets the name of this Acoustic.
+	 * 
+	 * @return
+	 */
+	public String getName();
 }

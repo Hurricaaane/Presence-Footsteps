@@ -10,8 +10,10 @@ import eu.ha3.easy.EdgeModel;
 import eu.ha3.easy.EdgeTrigger;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
-import eu.ha3.mc.presencefootsteps.interfaces.EventType;
-import eu.ha3.mc.presencefootsteps.mcpackage.VariableGenerator;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.VariableGenerator;
+import eu.ha3.mc.presencefootsteps.mod.UpdateNotifier;
+import eu.ha3.mc.presencefootsteps.mod.Variator;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /*
@@ -35,7 +37,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	public static final int VERSION = 0;
 	
 	private VariableGenerator system;
-	private PFUpdate update;
+	private UpdateNotifier update;
 	
 	private ConfigProperty blockSound;
 	private Map<String, String> blockMap;
@@ -78,7 +80,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 		manager().hookFrameEvents(true);
 		
-		this.update = new PFUpdate(this);
+		this.update = new UpdateNotifier(this);
 		this.update.attempt();
 	}
 	
@@ -94,7 +96,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 				config.setSource(configFile.getCanonicalPath());
 				config.load();
 				
-				PFVariator var = new PFVariator();
+				Variator var = new Variator();
 				var.loadConfig(config);
 				
 				this.system.setVariator(var);

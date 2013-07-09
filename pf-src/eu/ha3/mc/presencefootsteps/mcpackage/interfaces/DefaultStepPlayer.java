@@ -1,4 +1,6 @@
-package eu.ha3.mc.presencefootsteps.interfaces;
+package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
+
+import net.minecraft.src.EntityLivingBase;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,12 +18,17 @@ package eu.ha3.mc.presencefootsteps.interfaces;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface NamedAcoustic extends Acoustic
+public interface DefaultStepPlayer
 {
 	/**
-	 * Gets the name of this Acoustic.
+	 * Play a step sound from a block.
 	 * 
-	 * @return
+	 * @param entity
+	 *            TODO
+	 * @param xx
+	 * @param yy
+	 * @param zz
+	 * @param block
 	 */
-	public String getName();
+	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, int blockID);
 }

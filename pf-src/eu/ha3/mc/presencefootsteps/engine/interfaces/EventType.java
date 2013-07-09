@@ -1,6 +1,4 @@
-package eu.ha3.mc.presencefootsteps.interfaces;
-
-import net.minecraft.src.EntityPlayer;
+package eu.ha3.mc.presencefootsteps.engine.interfaces;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -18,12 +16,7 @@ import net.minecraft.src.EntityPlayer;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface Generator
+public enum EventType
 {
-	/**
-	 * Generate footsteps sounds of the player.
-	 * 
-	 * @param ply
-	 */
-	public void generateFootsteps(EntityPlayer ply);
+	WALK, RUN, JUMP, LAND, WANDER
 }

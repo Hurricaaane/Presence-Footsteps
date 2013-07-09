@@ -1,11 +1,11 @@
-package eu.ha3.mc.presencefootsteps.implem;
+package eu.ha3.mc.presencefootsteps.engine.implem;
 
 import java.util.Random;
 
-import eu.ha3.mc.presencefootsteps.interfaces.Acoustic;
-import eu.ha3.mc.presencefootsteps.interfaces.EventType;
-import eu.ha3.mc.presencefootsteps.interfaces.Options;
-import eu.ha3.mc.presencefootsteps.interfaces.SoundPlayer;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.Acoustic;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 

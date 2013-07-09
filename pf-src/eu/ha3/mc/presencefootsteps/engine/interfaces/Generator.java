@@ -1,6 +1,6 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.engine.interfaces;
 
-import eu.ha3.mc.presencefootsteps.interfaces.Library;
+import net.minecraft.src.EntityPlayer;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -18,10 +18,12 @@ import eu.ha3.mc.presencefootsteps.interfaces.Library;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class PFJasonAcoustics
+public interface Generator
 {
-	public void parseJSON(String jason, Library materials)
-	{
-		
-	}
+	/**
+	 * Generate footsteps sounds of the player.
+	 * 
+	 * @param ply
+	 */
+	public void generateFootsteps(EntityPlayer ply);
 }

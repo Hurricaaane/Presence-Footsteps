@@ -1,4 +1,6 @@
-package eu.ha3.mc.presencefootsteps.interfaces;
+package eu.ha3.mc.presencefootsteps.engine.interfaces;
+
+import java.util.Random;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,7 +18,20 @@ package eu.ha3.mc.presencefootsteps.interfaces;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public enum EventType
+public interface SoundPlayer
 {
-	WALK, RUN, JUMP, LAND, WANDER
+	/**
+	 * Plays a sound.
+	 * @param volume
+	 * @param pitch
+	 * @param name
+	 */
+	public void playSound(Object location, String soundName, float volume, float pitch, Options options);
+	
+	/**
+	 * Returns a random number generator.
+	 * 
+	 * @return
+	 */
+	public Random getRNG();
 }

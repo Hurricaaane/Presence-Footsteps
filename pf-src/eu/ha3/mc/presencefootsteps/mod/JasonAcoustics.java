@@ -1,4 +1,6 @@
-package eu.ha3.mc.presencefootsteps.interfaces;
+package eu.ha3.mc.presencefootsteps.mod;
+
+import eu.ha3.mc.presencefootsteps.engine.interfaces.Library;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,9 +18,10 @@ package eu.ha3.mc.presencefootsteps.interfaces;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface Options
+public class JasonAcoustics
 {
-	public boolean hasOption(String option);
-	
-	public Object getOption(String option);
+	public void parseJSON(String jason, Library materials)
+	{
+		
+	}
 }

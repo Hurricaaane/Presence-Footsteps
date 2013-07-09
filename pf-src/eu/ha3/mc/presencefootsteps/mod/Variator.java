@@ -1,9 +1,10 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.mod;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.minecraft.src.PFHaddon;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /*
@@ -22,7 +23,7 @@ import eu.ha3.util.property.simple.ConfigProperty;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class PFVariator
+public class Variator
 {
 	public boolean FORCE_HUMANOID = false;
 	public float HUMAN_DISTANCE = 0.95f;
@@ -96,7 +97,7 @@ public class PFVariator
 		}
 		
 		// I am feeling SUPER LAZY today
-		Field[] fields = PFVariator.class.getDeclaredFields();
+		Field[] fields = Variator.class.getDeclaredFields();
 		for (Field field : fields)
 		{
 			try

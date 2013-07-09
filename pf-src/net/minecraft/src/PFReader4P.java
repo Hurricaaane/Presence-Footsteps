@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import eu.ha3.mc.presencefootsteps.interfaces.EventType;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 

@@ -1,9 +1,6 @@
-package eu.ha3.mc.presencefootsteps.implem;
+package eu.ha3.mc.presencefootsteps.engine.implem;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import eu.ha3.mc.presencefootsteps.interfaces.Options;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -21,29 +18,33 @@ import eu.ha3.mc.presencefootsteps.interfaces.Options;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class ConfigOptions implements Options
+public class DelayedAcoustic extends BasicAcoustic implements Options
 {
-	private Map<String, Object> map;
+	protected float delay;
 	
-	public ConfigOptions()
+	public DelayedAcoustic()
 	{
-		this.map = new HashMap<String, Object>();
-	}
-	
-	public Map<String, Object> getMap()
-	{
-		return this.map;
+		super();
+		
+		this.options = this;
 	}
 	
 	@Override
 	public boolean hasOption(String option)
 	{
-		return this.map.containsKey(option);
+		return option.equals("delay");
 	}
 	
 	@Override
 	public Object getOption(String option)
 	{
-		return this.map.get(option);
+		return option.equals("delay") ? this.delay : null;
+	}
+	
+	//
+	
+	public void setDelay(float delay)
+	{
+		this.delay = delay;
 	}
 }

@@ -1,10 +1,14 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.mcpackage.implem;
 
 import java.util.Random;
 
-import eu.ha3.mc.presencefootsteps.implem.AcousticsLibrary;
-import eu.ha3.mc.presencefootsteps.interfaces.Options;
-import eu.ha3.mc.presencefootsteps.interfaces.SoundPlayer;
+import net.minecraft.src.Entity;
+import net.minecraft.src.EntityLivingBase;
+import net.minecraft.src.PFAccessors;
+import eu.ha3.mc.presencefootsteps.engine.implem.AcousticsLibrary;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -22,11 +26,11 @@ import eu.ha3.mc.presencefootsteps.interfaces.SoundPlayer;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class PFAcousticsManager extends AcousticsLibrary implements SoundPlayer, PFDefaultStepPlayer
+public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, DefaultStepPlayer
 {
 	private final Random random;
 	
-	public PFAcousticsManager()
+	public AcousticsManager()
 	{
 		this.random = new Random();
 	}
@@ -34,7 +38,7 @@ public class PFAcousticsManager extends AcousticsLibrary implements SoundPlayer,
 	@Override
 	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, int blockID)
 	{
-		entity.playStepSound(xx, yy, zz, blockID);
+		PFAccessors.getInstance().playStep(entity, xx, yy, zz, blockID);
 	}
 	
 	@Override

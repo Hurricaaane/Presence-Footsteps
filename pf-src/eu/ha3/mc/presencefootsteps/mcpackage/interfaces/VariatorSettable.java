@@ -1,6 +1,6 @@
-package eu.ha3.mc.presencefootsteps.interfaces;
+package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
 
-import java.util.Random;
+import eu.ha3.mc.presencefootsteps.mod.Variator;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -18,20 +18,7 @@ import java.util.Random;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface SoundPlayer
+public interface VariatorSettable
 {
-	/**
-	 * Plays a sound.
-	 * @param volume
-	 * @param pitch
-	 * @param name
-	 */
-	public void playSound(Object location, String soundName, float volume, float pitch, Options options);
-	
-	/**
-	 * Returns a random number generator.
-	 * 
-	 * @return
-	 */
-	public Random getRNG();
+	public void setVariator(Variator var);
 }

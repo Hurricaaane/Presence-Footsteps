@@ -1,7 +1,6 @@
-package eu.ha3.mc.presencefootsteps.mcpackage;
+package net.minecraft.src;
 
-import net.minecraft.src.PFVariatorSettable;
-import eu.ha3.mc.presencefootsteps.interfaces.Generator;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -19,6 +18,22 @@ import eu.ha3.mc.presencefootsteps.interfaces.Generator;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface VariableGenerator extends Generator, PFVariatorSettable
+public class PFAccessors implements DefaultStepPlayer
 {
+	private static final PFAccessors instance = new PFAccessors();
+	
+	private PFAccessors()
+	{
+	}
+	
+	public static PFAccessors getInstance()
+	{
+		return instance;
+	}
+	
+	@Override
+	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, int blockID)
+	{
+		entity.playStepSound(xx, yy, zz, blockID);
+	}
 }

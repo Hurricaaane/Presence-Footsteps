@@ -1,4 +1,4 @@
-package eu.ha3.mc.presencefootsteps.interfaces;
+package eu.ha3.mc.presencefootsteps.engine.interfaces;
 
 import java.util.Set;
 

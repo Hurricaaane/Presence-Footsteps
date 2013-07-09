@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.mod;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +11,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
+import net.minecraft.src.Ha3Utility;
+import net.minecraft.src.PFHaddon;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -35,7 +38,7 @@ import eu.ha3.util.property.simple.ConfigProperty;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class PFUpdate extends Thread
+public class UpdateNotifier extends Thread
 {
 	private PFHaddon mod;
 	
@@ -45,7 +48,7 @@ public class PFUpdate extends Thread
 	private int displayRemaining = 0;
 	private boolean enabled = true;
 	
-	public PFUpdate(PFHaddon mod)
+	public UpdateNotifier(PFHaddon mod)
 	{
 		this.mod = mod;
 	}
