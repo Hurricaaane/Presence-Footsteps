@@ -34,10 +34,10 @@ public class BasicAcoustic implements Acoustic
 	protected Options options;
 	
 	@Override
-	public void playSound(SoundPlayer player, double x, double y, double z, EventType event)
+	public void playSound(SoundPlayer player, Object location, EventType event)
 	{
 		player.playSound(
-			x, y, z, this.soundName, generateVolume(player.getRNG()), generatePitch(player.getRNG()), this.options);
+			location, this.soundName, generateVolume(player.getRNG()), generatePitch(player.getRNG()), this.options);
 	}
 	
 	private float generateVolume(Random rng)

@@ -3,6 +3,7 @@ package net.minecraft.src;
 import java.util.Random;
 
 import eu.ha3.mc.presencefootsteps.interfaces.EventType;
+import eu.ha3.mc.presencefootsteps.mcpackage.VariableGenerator;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -20,7 +21,7 @@ import eu.ha3.mc.presencefootsteps.interfaces.EventType;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class PFReaderH implements PFGenerator
+public class PFReaderH implements VariableGenerator
 {
 	// Construct
 	final protected PFHaddon mod;

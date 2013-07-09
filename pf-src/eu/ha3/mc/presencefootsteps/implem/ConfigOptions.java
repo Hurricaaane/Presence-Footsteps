@@ -1,5 +1,8 @@
 package eu.ha3.mc.presencefootsteps.implem;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import eu.ha3.mc.presencefootsteps.interfaces.Options;
 
 /*
@@ -18,33 +21,29 @@ import eu.ha3.mc.presencefootsteps.interfaces.Options;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class DelayedAcoustic extends BasicAcoustic implements Options
+public class ConfigOptions implements Options
 {
-	protected float delay;
+	private Map<String, Object> map;
 	
-	public DelayedAcoustic()
+	public ConfigOptions()
 	{
-		super();
-		
-		this.options = this;
+		this.map = new HashMap<String, Object>();
+	}
+	
+	public Map<String, Object> getMap()
+	{
+		return this.map;
 	}
 	
 	@Override
 	public boolean hasOption(String option)
 	{
-		return option.equals("delay");
+		return this.map.containsKey(option);
 	}
 	
 	@Override
 	public Object getOption(String option)
 	{
-		return option.equals("delay") ? this.delay : null;
-	}
-	
-	//
-	
-	public void setDelay(float delay)
-	{
-		this.delay = delay;
+		return this.map.get(option);
 	}
 }

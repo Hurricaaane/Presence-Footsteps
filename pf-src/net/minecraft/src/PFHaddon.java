@@ -11,6 +11,7 @@ import eu.ha3.easy.EdgeTrigger;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.presencefootsteps.interfaces.EventType;
+import eu.ha3.mc.presencefootsteps.mcpackage.VariableGenerator;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /*
@@ -33,7 +34,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 {
 	public static final int VERSION = 0;
 	
-	private PFGenerator system;
+	private VariableGenerator system;
 	private PFUpdate update;
 	
 	private ConfigProperty blockSound;

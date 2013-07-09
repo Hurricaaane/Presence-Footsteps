@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import eu.ha3.mc.presencefootsteps.interfaces.Generator;
+import eu.ha3.mc.presencefootsteps.interfaces.Library;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -18,6 +18,10 @@ import eu.ha3.mc.presencefootsteps.interfaces.Generator;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface PFGenerator extends Generator, PFVariatorSettable
+public class PFJasonAcoustics
 {
+	public void parseJSON(String jason, Library materials)
+	{
+		
+	}
 }

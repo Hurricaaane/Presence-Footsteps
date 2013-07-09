@@ -27,6 +27,6 @@ public interface Acoustic
 	 * @param z
 	 * @param event
 	 */
-	public void playSound(SoundPlayer player, double x, double y, double z, EventType event);
+	public void playSound(SoundPlayer player, Object location, EventType event);
 	
 }

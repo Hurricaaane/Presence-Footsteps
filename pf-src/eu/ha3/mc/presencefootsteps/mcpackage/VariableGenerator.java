@@ -1,6 +1,7 @@
-package eu.ha3.mc.presencefootsteps.interfaces;
+package eu.ha3.mc.presencefootsteps.mcpackage;
 
-import java.util.Random;
+import net.minecraft.src.PFVariatorSettable;
+import eu.ha3.mc.presencefootsteps.interfaces.Generator;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -18,20 +19,6 @@ import java.util.Random;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface SoundPlayer
+public interface VariableGenerator extends Generator, PFVariatorSettable
 {
-	/**
-	 * Plays a sound.
-	 * @param volume
-	 * @param pitch
-	 * @param name
-	 */
-	public void playSound(Object location, String soundName, float volume, float pitch, Options options);
-	
-	/**
-	 * Returns a random number generator.
-	 * 
-	 * @return
-	 */
-	public Random getRNG();
 }

@@ -43,11 +43,11 @@ public class EventSelectorAcoustics implements NamedAcoustic
 	}
 	
 	@Override
-	public void playSound(SoundPlayer player, double x, double y, double z, EventType event)
+	public void playSound(SoundPlayer player, Object location, EventType event)
 	{
 		if (this.pairs.containsKey(event))
 		{
-			this.pairs.get(event).playSound(player, x, y, z, event);
+			this.pairs.get(event).playSound(player, location, event);
 		}
 	}
 	

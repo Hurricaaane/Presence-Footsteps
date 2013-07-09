@@ -52,22 +52,28 @@ public abstract class AcousticsLibrary implements Library
 	@Override
 	public Acoustic getAcoustic(String acoustic)
 	{
-		if (this.acoustics.containsKey(acoustic))
+		if (!this.acoustics.containsKey(acoustic))
 			return null;
 		
 		return this.acoustics.get(acoustic);
 	}
 	
 	@Override
-	public void playAcoustic(double x, double y, double z, EventType event, String acousticName)
+	public void playAcoustic(Object location, String acousticName, EventType event)
 	{
-		if (this.acoustics.containsKey(acousticName))
+		if (!this.acoustics.containsKey(acousticName))
 		{
 			onMaterialNotFound();
 			return;
 		}
 		
-		this.acoustics.get(acousticName).playSound(this.myPlayer, x, y, z, event);
+		this.acoustics.get(acousticName).playSound(this.myPlayer, location, event);
+	}
+	
+	@Override
+	public boolean hasAcoustic(String acousticName)
+	{
+		return this.acoustics.containsKey(acousticName);
 	}
 	
 	protected abstract void onMaterialNotFound();

@@ -29,14 +29,13 @@ public interface Library
 	
 	/**
 	 * Plays a acoustic.
-	 * 
+	 * @param acousticName
+	 * @param event
 	 * @param x
 	 * @param y
 	 * @param z
-	 * @param event
-	 * @param acousticName
 	 */
-	public void playAcoustic(double x, double y, double z, EventType event, String acousticName);
+	public void playAcoustic(Object location, String acousticName, EventType event);
 	
 	/**
 	 * Gets a key set of the acoustic.
@@ -53,4 +52,11 @@ public interface Library
 	 */
 	public Acoustic getAcoustic(String acoustic);
 	
+	/**
+	 * Tells if such acoustic exist.
+	 * 
+	 * @param acoustic
+	 * @return
+	 */
+	public boolean hasAcoustic(String acoustic);
 }

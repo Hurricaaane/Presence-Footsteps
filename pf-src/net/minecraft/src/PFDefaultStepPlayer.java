@@ -1,8 +1,5 @@
 package net.minecraft.src;
 
-import eu.ha3.mc.presencefootsteps.interfaces.Library;
-import eu.ha3.mc.presencefootsteps.interfaces.EventType;
-
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
@@ -19,16 +16,17 @@ import eu.ha3.mc.presencefootsteps.interfaces.EventType;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class PFJasonMaterials
+public interface PFDefaultStepPlayer
 {
-	public void parseJSON(String jason, Library materials)
-	{
-		
-	}
-	
-	public void playSound(EventType event, double x, double y, double z, float volumeMod)
-	{
-		if (volumeMod <= 0f)
-			return;
-	}
+	/**
+	 * Play a step sound from a block.
+	 * 
+	 * @param entity
+	 *            TODO
+	 * @param xx
+	 * @param yy
+	 * @param zz
+	 * @param block
+	 */
+	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, int blockID);
 }

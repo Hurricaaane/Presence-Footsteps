@@ -34,11 +34,11 @@ public class SimultaneousAcoustic implements Acoustic
 	}
 	
 	@Override
-	public void playSound(SoundPlayer player, double x, double y, double z, EventType event)
+	public void playSound(SoundPlayer player, Object location, EventType event)
 	{
 		for (Acoustic acoustic : this.acoustics)
 		{
-			acoustic.playSound(player, x, y, z, event);
+			acoustic.playSound(player, location, event);
 		}
 	}
 	
