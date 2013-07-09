@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import eu.ha3.mc.presencefootsteps.interfaces.EventType;
+
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
@@ -33,7 +35,7 @@ public class PFReader4P extends PFReaderH
 	}
 	
 	@Override
-	public void frame(EntityPlayer ply)
+	public void generateFootsteps(EntityPlayer ply)
 	{
 		if (this.VAR.FORCE_HUMANOID)
 		{
@@ -233,11 +235,11 @@ public class PFReader4P extends PFReaderH
 			if (dwm > distance)
 			{
 				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
-				makeSoundForPlayerBlock(ply, volume, 0d, PFEventType.STEP);
+				makeSoundForPlayerBlock(ply, volume, 0d, EventType.WALK);
 				
 				if (isGallop && this.VAR.GALLOP_3STEP && this.hoof >= 2)
 				{
-					makeSoundForPlayerBlock(ply, volume, 0d, PFEventType.STEP);
+					makeSoundForPlayerBlock(ply, volume, 0d, EventType.WALK);
 					this.hoof = 0;
 				}
 				else

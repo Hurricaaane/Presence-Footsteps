@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.interfaces;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,7 +16,7 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public enum PFEventType
+public enum EventType
 {
-	STEP, JUMP, LAND
+	WALK, RUN, JUMP, LAND, WANDER
 }

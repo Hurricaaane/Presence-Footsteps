@@ -2,6 +2,8 @@ package net.minecraft.src;
 
 import java.util.Random;
 
+import eu.ha3.mc.presencefootsteps.interfaces.EventType;
+
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
@@ -18,7 +20,7 @@ import java.util.Random;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class PFReaderH implements PFReader
+public class PFReaderH implements PFGenerator
 {
 	// Construct
 	final protected PFHaddon mod;
@@ -52,7 +54,7 @@ public class PFReaderH implements PFReader
 	}
 	
 	@Override
-	public void frame(EntityPlayer ply)
+	public void generateFootsteps(EntityPlayer ply)
 	{
 		simulateFootsteps(ply);
 		simulateAirborne(ply);
@@ -123,7 +125,7 @@ public class PFReaderH implements PFReader
 			if (immobile || dwm > distance)
 			{
 				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
-				makeSoundForPlayerBlock(ply, volume, 0d, PFEventType.STEP);
+				makeSoundForPlayerBlock(ply, volume, 0d, EventType.WALK);
 				
 				this.dmwBase = distanceReference;
 			}
@@ -156,7 +158,7 @@ public class PFReaderH implements PFReader
 			if (this.VAR.PLAY_STEP_ON_JUMP)
 			{
 				makeSoundForPlayerBlock(
-					ply, this.VAR.JUMP_VOLUME * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR, 0.5d, PFEventType.JUMP);
+					ply, this.VAR.JUMP_VOLUME * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR, 0.5d, EventType.JUMP);
 			}
 			
 			if (this.VAR.PLAY_SPECIAL_ON_JUMP)
@@ -170,7 +172,7 @@ public class PFReaderH implements PFReader
 			if (this.VAR.PLAY_STEP_ON_LAND_HARD)
 			{
 				makeSoundForPlayerBlock(
-					ply, this.VAR.LAND_HARD_VOLUME * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR, 0d, PFEventType.LAND);
+					ply, this.VAR.LAND_HARD_VOLUME * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR, 0d, EventType.LAND);
 			}
 			
 			if (this.VAR.PLAY_SPECIAL_ON_LAND_HARD)
@@ -181,7 +183,7 @@ public class PFReaderH implements PFReader
 		}
 	}
 	
-	protected void makeSoundForPlayerBlock(EntityPlayer ply, float volume, double minus, PFEventType event)
+	protected void makeSoundForPlayerBlock(EntityPlayer ply, float volume, double minus, EventType event)
 	{
 		int xx = MathHelper.floor_double(ply.posX);
 		int yy = MathHelper.floor_double(ply.posY - 0.1d - ply.yOffset - minus); // Support for trapdoors
@@ -282,7 +284,7 @@ public class PFReaderH implements PFReader
 		}
 	}
 	
-	protected boolean makeSoundForBlock(EntityPlayer ply, float volume, int xx, int yy, int zz, PFEventType event)
+	protected boolean makeSoundForBlock(EntityPlayer ply, float volume, int xx, int yy, int zz, EventType event)
 	{
 		World world = this.mod.manager().getMinecraft().theWorld;
 		

@@ -1,4 +1,6 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.implem;
+
+import eu.ha3.mc.presencefootsteps.interfaces.Options;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,23 +18,33 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class PFReaderMLP extends PFReader4P
+public class DelayedAcoustic extends BasicAcoustic implements Options
 {
-	public PFReaderMLP(PFHaddon mod)
+	protected float delay;
+	
+	public DelayedAcoustic()
 	{
-		super(mod);
+		super();
+		
+		this.options = this;
 	}
 	
 	@Override
-	public void generateFootsteps(EntityPlayer ply)
+	public boolean hasOption(String option)
 	{
-		//if (true)
-		//	throw new Minecraft161NotYetFixedRuntimeException();
-		
-		// recomment on fix
-		//Pony pony = Pony.getPonyFromRegistry(ply, this.mod.manager().getMinecraft().renderEngine);
-		//this.isPegasus = pony != null ? pony.isPegasus() : false;
-		
-		super.generateFootsteps(ply);
+		return option.equals("delay");
+	}
+	
+	@Override
+	public Object getOption(String option)
+	{
+		return this.delay;
+	}
+	
+	//
+	
+	public void setDelay(float delay)
+	{
+		this.delay = delay;
 	}
 }

@@ -1,10 +1,7 @@
 package net.minecraft.src;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,6 +10,7 @@ import eu.ha3.easy.EdgeModel;
 import eu.ha3.easy.EdgeTrigger;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
+import eu.ha3.mc.presencefootsteps.interfaces.EventType;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /*
@@ -35,7 +33,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 {
 	public static final int VERSION = 0;
 	
-	private PFReader system;
+	private PFGenerator system;
 	private PFUpdate update;
 	
 	private ConfigProperty blockSound;
@@ -159,99 +157,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 	}
 	
-	private void fixInstallation()
-	{
-		File folder = new File(util().getMinecraftDir(), "resources/sound3/pf_sounds");
-		if (!folder.exists())
-		{
-			log("Did not find folder resources/sound3/pf_sounds/. Attempting first installation");
-			folder.mkdirs();
-		}
-		
-		String[] names = { "dash1.wav", "hoofstep1.wav", "softstep1.wav", "land1.wav", "wing1.wav" };
-		
-		for (String name : names)
-		{
-			InputStream stream = null;
-			try
-			{
-				File file = new File(folder, name);
-				
-				if (!file.exists())
-				{
-					URL toInstall = net.minecraft.src.Minecraft.class.getResource("/resources/sound/pf_sounds/" + name);
-					stream = toInstall.openStream();
-					if (stream != null)
-					{
-						isToFile(stream, file);
-					}
-					
-					/*File inJarFile = new File(toInstall.getFile());
-					
-					if (inJarFile.exists())
-					{
-						log("Did not find file " + name + ". Installing...");
-						copyFile(new File(toInstall.getFile()), file);
-					}*/
-					
-				}
-			}
-			catch (Exception e)
-			{
-				PFHaddon.log("Could not fix " + name + ": " + e.getMessage());
-			}
-			finally
-			{
-				try
-				{
-					if (stream != null)
-					{
-						stream.close();
-					}
-				}
-				catch (Exception e)
-				{
-				}
-			}
-			
-		}
-	}
-	
-	// from
-	// http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
-	private static void isToFile(InputStream sourceStream, File destFile) throws IOException
-	{
-		if (!destFile.exists())
-		{
-			destFile.createNewFile();
-		}
-		
-		FileOutputStream fos = null;
-		
-		try
-		{
-			fos = new FileOutputStream(destFile);
-			
-			byte buffer[] = new byte[1024];
-			int length;
-			while ((length = sourceStream.read(buffer)) > 0)
-			{
-				fos.write(buffer, 0, length);
-			}
-		}
-		finally
-		{
-			if (sourceStream != null)
-			{
-				sourceStream.close();
-			}
-			if (fos != null)
-			{
-				fos.close();
-			}
-		}
-	}
-	
 	private boolean isInstalledMLP()
 	{
 		return Ha3StaticUtilities.classExists("Pony", this)
@@ -275,7 +180,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		if (ply == null)
 			return;
 		
-		this.system.frame(ply);
+		this.system.generateFootsteps(ply);
 		this.debugButton.signalState(util().areKeysDown(29, 42, 33)); // CTRL SHIFT F
 		
 		try
@@ -353,7 +258,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	{
 	}
 	
-	public String getSoundForBlock(int block, int meta, PFEventType event)
+	public String getSoundForBlock(int block, int meta, EventType event)
 	{
 		String material = null;
 		
@@ -373,7 +278,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		return getSoundForMaterial(material, event);
 	}
 	
-	public String getFlakForBlock(int block, int meta, PFEventType event)
+	public String getFlakForBlock(int block, int meta, EventType event)
 	{
 		String material = null;
 		
@@ -391,7 +296,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		return getSoundForMaterial(material, event);
 	}
 	
-	public String getSoundForMaterial(String material, PFEventType event)
+	public String getSoundForMaterial(String material, EventType event)
 	{
 		if (material == null || material.equals("FALLBACK"))
 			return null;
@@ -399,15 +304,15 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		if (material.equals("BLANK") || material.equals("NOT_EMITTER"))
 			return material;
 		
-		if (event == PFEventType.STEP)
+		if (event == EventType.WALK)
 			return this.blockMap.get(material + ".step");
-		else if (event == PFEventType.JUMP)
+		else if (event == EventType.JUMP)
 			return this.blockMap.containsKey(material + ".jump")
-				? this.blockMap.get(material + ".jump") : getSoundForMaterial(material, PFEventType.STEP);
+				? this.blockMap.get(material + ".jump") : getSoundForMaterial(material, EventType.WALK);
 		else
 			//if (event == PFEventType.LAND)
 			return this.blockMap.containsKey(material + ".land")
-				? this.blockMap.get(material + ".land") : getSoundForMaterial(material, PFEventType.STEP);
+				? this.blockMap.get(material + ".land") : getSoundForMaterial(material, EventType.WALK);
 		
 	}
 	

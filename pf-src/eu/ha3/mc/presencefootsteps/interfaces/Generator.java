@@ -1,4 +1,6 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.interfaces;
+
+import net.minecraft.src.EntityPlayer;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,10 +18,12 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface PFReader
+public interface Generator
 {
-	public void frame(EntityPlayer ply);
-	
-	public void setVariator(PFVariator var);
-	
+	/**
+	 * Generate footsteps sounds of the player.
+	 * 
+	 * @param ply
+	 */
+	public void generateFootsteps(EntityPlayer ply);
 }

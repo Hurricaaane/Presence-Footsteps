@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.interfaces;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,23 +16,12 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class PFReaderMLP extends PFReader4P
+public interface NamedAcoustic extends Acoustic
 {
-	public PFReaderMLP(PFHaddon mod)
-	{
-		super(mod);
-	}
-	
-	@Override
-	public void generateFootsteps(EntityPlayer ply)
-	{
-		//if (true)
-		//	throw new Minecraft161NotYetFixedRuntimeException();
-		
-		// recomment on fix
-		//Pony pony = Pony.getPonyFromRegistry(ply, this.mod.manager().getMinecraft().renderEngine);
-		//this.isPegasus = pony != null ? pony.isPegasus() : false;
-		
-		super.generateFootsteps(ply);
-	}
+	/**
+	 * Gets the name of this Acoustic.
+	 * 
+	 * @return
+	 */
+	public String getName();
 }

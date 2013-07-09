@@ -1,5 +1,8 @@
 package net.minecraft.src;
 
+import eu.ha3.mc.presencefootsteps.interfaces.Library;
+import eu.ha3.mc.presencefootsteps.interfaces.EventType;
+
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
@@ -16,23 +19,16 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class PFReaderMLP extends PFReader4P
+public class PFJasonMaterials
 {
-	public PFReaderMLP(PFHaddon mod)
+	public void parseJSON(String jason, Library materials)
 	{
-		super(mod);
+		
 	}
 	
-	@Override
-	public void generateFootsteps(EntityPlayer ply)
+	public void playSound(EventType event, double x, double y, double z, float volumeMod)
 	{
-		//if (true)
-		//	throw new Minecraft161NotYetFixedRuntimeException();
-		
-		// recomment on fix
-		//Pony pony = Pony.getPonyFromRegistry(ply, this.mod.manager().getMinecraft().renderEngine);
-		//this.isPegasus = pony != null ? pony.isPegasus() : false;
-		
-		super.generateFootsteps(ply);
+		if (volumeMod <= 0f)
+			return;
 	}
 }

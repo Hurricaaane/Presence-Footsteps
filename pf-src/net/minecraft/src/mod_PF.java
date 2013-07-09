@@ -1,6 +1,5 @@
 package net.minecraft.src;
 
-import net.minecraft.src.Minecraft;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
 
 /*
@@ -25,7 +24,7 @@ public class mod_PF extends HaddonBridgeModLoader
 	
 	public mod_PF()
 	{
-		super(!isInstalledInDouble() ? new PFHaddon() : new HaddonEmpty());
+		super(!isInstalledInDouble() /*&& false */? new PFHaddon() : new HaddonEmpty());
 		
 		if (DEV_MODE_USE_MODLOADER_COUNTERPART)
 		{
