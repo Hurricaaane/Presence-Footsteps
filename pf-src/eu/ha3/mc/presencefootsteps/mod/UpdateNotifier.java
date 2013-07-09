@@ -38,6 +38,12 @@ import eu.ha3.util.property.simple.ConfigProperty;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
+/**
+ * The Update Notifier for Presence Footsteps.
+ * 
+ * @author Hurry
+ * 
+ */
 public class UpdateNotifier extends Thread
 {
 	private PFHaddon mod;

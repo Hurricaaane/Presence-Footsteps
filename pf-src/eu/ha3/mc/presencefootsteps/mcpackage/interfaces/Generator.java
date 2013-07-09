@@ -1,4 +1,4 @@
-package eu.ha3.mc.presencefootsteps.engine.interfaces;
+package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
 
 import net.minecraft.src.EntityPlayer;
 
@@ -18,10 +18,16 @@ import net.minecraft.src.EntityPlayer;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
+/**
+ * Has the ability to generate footsteps based on a Player.
+ * 
+ * @author Hurry
+ * 
+ */
 public interface Generator
 {
 	/**
-	 * Generate footsteps sounds of the player.
+	 * Generate footsteps sounds of the Entity.
 	 * 
 	 * @param ply
 	 */

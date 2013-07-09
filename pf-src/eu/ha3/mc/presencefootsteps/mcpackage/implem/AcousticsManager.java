@@ -26,6 +26,12 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
+/**
+ * A Library that can also play sounds and default footsteps.
+ * 
+ * @author Hurry
+ * 
+ */
 public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, DefaultStepPlayer
 {
 	private final Random random;

@@ -18,6 +18,12 @@ import net.minecraft.src.EntityLivingBase;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
+/**
+ * Can generate footsteps using the default Minecraft function.
+ * 
+ * @author Hurry
+ * 
+ */
 public interface DefaultStepPlayer
 {
 	/**

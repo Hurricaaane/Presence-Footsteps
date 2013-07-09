@@ -16,6 +16,12 @@ package eu.ha3.mc.presencefootsteps.engine.interfaces;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
+/**
+ * Something that has the ability to play sounds.
+ * 
+ * @author Hurry
+ * 
+ */
 public interface Acoustic
 {
 	/**

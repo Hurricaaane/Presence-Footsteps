@@ -18,6 +18,12 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
+/**
+ * An accessor to non-visible methods from this package.
+ * 
+ * @author Hurry
+ * 
+ */
 public class PFAccessors implements DefaultStepPlayer
 {
 	private static final PFAccessors instance = new PFAccessors();

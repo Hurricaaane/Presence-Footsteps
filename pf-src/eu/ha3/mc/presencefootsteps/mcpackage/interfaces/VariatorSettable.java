@@ -18,6 +18,12 @@ import eu.ha3.mc.presencefootsteps.mod.Variator;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
+/**
+ * Can have a Variator.
+ * 
+ * @author Hurry
+ * 
+ */
 public interface VariatorSettable
 {
 	public void setVariator(Variator var);
