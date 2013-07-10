@@ -42,12 +42,12 @@ public class BasicAcoustic implements Acoustic
 	
 	private float generateVolume(Random rng)
 	{
-		return randAB(rng, this.pitchMin, this.pitchMax);
+		return randAB(rng, this.volMin, this.volMax);
 	}
 	
 	private float generatePitch(Random rng)
 	{
-		return randAB(rng, this.volMin, this.volMax);
+		return randAB(rng, this.pitchMin, this.pitchMax);
 	}
 	
 	private float randAB(Random rng, float a, float b)
