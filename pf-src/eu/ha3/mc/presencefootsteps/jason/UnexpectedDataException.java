@@ -1,5 +1,4 @@
-package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
-
+package eu.ha3.mc.presencefootsteps.jason;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -17,13 +16,8 @@ package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-/**
- * Can have a Variator.
- * 
- * @author Hurry
- * 
- */
-public interface VariatorSettable
+public class UnexpectedDataException extends Exception
 {
-	public void setVariator(Variator var);
+	private static final long serialVersionUID = 4586255498544473275L;
+	
 }

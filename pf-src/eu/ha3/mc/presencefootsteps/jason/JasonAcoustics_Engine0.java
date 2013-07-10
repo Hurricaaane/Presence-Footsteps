@@ -19,7 +19,6 @@ import eu.ha3.mc.presencefootsteps.engine.implem.SimultaneousAcoustic;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Acoustic;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Library;
-import eu.ha3.mc.presencefootsteps.mod.UnexpectedDataException;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 

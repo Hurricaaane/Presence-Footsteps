@@ -15,9 +15,10 @@ import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.jason.JasonAcoustics_Engine0;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
+import eu.ha3.mc.presencefootsteps.mcpackage.implem.NormalVariator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.VariableGenerator;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.mc.presencefootsteps.mod.UpdateNotifier;
-import eu.ha3.mc.presencefootsteps.mod.Variator;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /*
@@ -107,7 +108,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 				config.setSource(configFile.getCanonicalPath());
 				config.load();
 				
-				Variator var = new Variator();
+				Variator var = new NormalVariator();
 				var.loadConfig(config);
 				
 				this.system.setVariator(var);

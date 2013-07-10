@@ -1,4 +1,6 @@
-package eu.ha3.mc.presencefootsteps.mod;
+package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
+
+import eu.ha3.util.property.simple.ConfigProperty;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,8 +18,7 @@ package eu.ha3.mc.presencefootsteps.mod;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class UnexpectedDataException extends Exception
+public interface Variator
 {
-	private static final long serialVersionUID = 4586255498544473275L;
-	
+	public void loadConfig(ConfigProperty config);
 }
