@@ -131,7 +131,10 @@ public class PFReaderH implements VariableGenerator
 			if (immobile || dwm > distance)
 			{
 				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
-				makeSoundForPlayerBlock(ply, volume, 0d, EventType.WALK);
+				
+				double speed = ply.motionX * ply.motionX + ply.motionY * ply.motionY;
+				System.out.println(speed);
+				makeSoundForPlayerBlock(ply, volume, 0d, speed > 0.025f ? EventType.RUN : EventType.WALK);
 				
 				this.dmwBase = distanceReference;
 			}
@@ -331,21 +334,25 @@ public class PFReaderH implements VariableGenerator
 				{
 					if (this.VAR.PLAY_MATSTEPS)
 					{
-						String sound = this.mod.getSoundForBlock(block, metadata, event);
-						String flak =
-							this.mod.getFlakForBlock(
-								world.getBlockId(xx, yy + 1, zz), world.getBlockMetadata(xx, yy + 1, zz), event);
+						// Try to see if the block above is a carpet...
+						String association =
+							this.mod.getAssociationForCarpet(
+								world.getBlockId(xx, yy + 1, zz), world.getBlockMetadata(xx, yy + 1, zz));
 						
-						if (flak != null)
+						if (association == null)
 						{
-							sound = flak;
-							PFHaddon.debug("Flak enabled");
+							// Not a carpet
+							association = this.mod.getAssociationForBlock(block, metadata);
+						}
+						else
+						{
+							PFHaddon.debug("Carpet detected");
 						}
 						
-						if (sound != null)
+						if (association != null)
 						{
 							// Player has stepped on a non-emitter block by blockmap choice
-							if (sound.equals("NOT_EMITTER"))
+							if (association.equals("NOT_EMITTER"))
 							{
 								PFHaddon.debug("Not emitter for " + block + ":" + metadata);
 								
@@ -353,14 +360,19 @@ public class PFReaderH implements VariableGenerator
 							}
 							
 							// Player has stepped on a non-blank sound
-							if (!sound.equals("BLANK"))
+							if (!association.equals("BLANK"))
 							{
-								//this.mod.manager().getMinecraft().theWorld.playSound(
-								//	ply.posX, ply.posY, ply.posZ, sound, volume,
-								//	randomPitch(1f, this.VAR.MATSTEP_PITCH_RADIUS), false);
-								ply.playSound(sound, volume, randomPitch(1f, this.VAR.MATSTEP_PITCH_RADIUS));
+								//ply.playSound(association, volume, randomPitch(1f, this.VAR.MATSTEP_PITCH_RADIUS));
+								if (this.mod.getAcoustics().hasAcoustic(association))
+								{
+									this.mod.getAcoustics().playAcoustic(ply, association, event);
+								}
+								else
+								{
+									PFHaddon.debug("Acoustic " + association + " is missing!");
+								}
 								
-								PFHaddon.debug("Playing sound " + sound + " for " + block + ":" + metadata);
+								PFHaddon.debug("Playing sound " + association + " for " + block + ":" + metadata);
 								
 							}
 							else
@@ -370,7 +382,7 @@ public class PFReaderH implements VariableGenerator
 						}
 						
 						// Sound isn't null
-						if (sound != null /* && !sound.equals("DEFAULT")*/)
+						if (association != null /* && !sound.equals("DEFAULT")*/)
 						{
 							overrode = true;
 						}

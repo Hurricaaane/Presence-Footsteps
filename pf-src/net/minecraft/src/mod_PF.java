@@ -24,7 +24,7 @@ public class mod_PF extends HaddonBridgeModLoader
 	
 	public mod_PF()
 	{
-		super(!isInstalledInDouble() /*&& false */? new PFHaddon() : new HaddonEmpty());
+		super(!isInstalledInDouble() ? new PFHaddon() : new HaddonEmpty());
 		
 		if (DEV_MODE_USE_MODLOADER_COUNTERPART)
 		{

@@ -128,8 +128,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 		this.blockMap = new LinkedHashMap<String, String>();
 		this.blockSound = new ConfigProperty();
-		this.blockSound.setProperty("0", "default_material");
-		this.blockSound.setProperty("0.flak", "NO_FLAK");
 		for (int block : softBlocks)
 		{
 			this.blockSound.setProperty(Integer.toString(block), "soft");
@@ -213,6 +211,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			return;
 		
 		this.system.generateFootsteps(ply);
+		this.acoustics.generateFootsteps(null);
 		this.debugButton.signalState(util().areKeysDown(29, 42, 33)); // CTRL SHIFT F
 		
 		try
@@ -290,6 +289,62 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	{
 	}
 	
+	/**
+	 * This will return null if the block is not defined, and NOT_EMITTER if the
+	 * block is a non-emitting block, meaning block resolution must continue on
+	 * its neighbors.
+	 * 
+	 * @param block
+	 * @param meta
+	 * @return
+	 */
+	public String getAssociationForBlock(int block, int meta)
+	{
+		String material = null;
+		
+		if (this.blockMap.containsKey(block + "_" + meta))
+		{
+			material = this.blockMap.get(block + "_" + meta);
+		}
+		else if (this.blockMap.containsKey(Integer.toString(block)))
+		{
+			material = this.blockMap.get(Integer.toString(block));
+		}
+		else
+		{
+			material = null;
+		}
+		
+		return material;
+	}
+	
+	/**
+	 * This will return null if the block is not a carpet.
+	 * 
+	 * @param carpet
+	 * @param meta
+	 * @param event
+	 * @return
+	 */
+	public String getAssociationForCarpet(int carpet, int meta)
+	{
+		String material = null;
+		
+		if (this.blockMap.containsKey(carpet + "_" + meta + ".flak"))
+		{
+			material = this.blockMap.get(carpet + "_" + meta + ".flak");
+		}
+		else if (this.blockMap.containsKey(Integer.toString(carpet) + ".flak"))
+		{
+			material = this.blockMap.get(Integer.toString(carpet) + ".flak");
+		}
+		else
+			return null;
+		
+		return material;
+	}
+	
+	@Deprecated
 	public String getSoundForBlock(int block, int meta, EventType event)
 	{
 		String material = null;
@@ -304,12 +359,13 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		}
 		else
 		{
-			material = this.blockMap.get("0");
+			material = null;
 		}
 		
 		return getSoundForMaterial(material, event);
 	}
 	
+	@Deprecated
 	public String getFlakForBlock(int block, int meta, EventType event)
 	{
 		String material = null;
@@ -328,6 +384,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		return getSoundForMaterial(material, event);
 	}
 	
+	@Deprecated
 	public String getSoundForMaterial(String material, EventType event)
 	{
 		if (material == null || material.equals("FALLBACK"))
@@ -346,6 +403,11 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			return this.blockMap.containsKey(material + ".land")
 				? this.blockMap.get(material + ".land") : getSoundForMaterial(material, EventType.WALK);
 		
+	}
+	
+	public AcousticsManager getAcoustics()
+	{
+		return this.acoustics;
 	}
 	
 }
