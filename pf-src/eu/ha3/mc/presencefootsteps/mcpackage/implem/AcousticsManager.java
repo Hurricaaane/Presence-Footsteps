@@ -44,6 +44,8 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	private List<PendingSound> pending;
 	private long minimum;
 	
+	private final float LATENESS_THRESHOLD_DIVIDER = 5;
+	
 	public AcousticsManager()
 	{
 		this.random = new Random();
@@ -77,7 +79,7 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 				}
 				
 				this.pending.add(new PendingSound(location, soundName, volume, pitch, null, System.currentTimeMillis()
-					+ delay));
+					+ delay, options.hasOption("skippable") ? -1 : (Long) options.getOption("delay_max")));
 			}
 			else
 			{
@@ -127,9 +129,19 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 		for (Iterator<PendingSound> iter = this.pending.iterator(); iter.hasNext();)
 		{
 			PendingSound sound = iter.next();
-			if (time > sound.getTimeToPlay())
+			if (time >= sound.getTimeToPlay())
 			{
-				sound.playSound(this);
+				long lateness = time - sound.getTimeToPlay();
+				if (sound.getMaximumBase() < 0 || lateness <= sound.getMaximumBase() / this.LATENESS_THRESHOLD_DIVIDER)
+				{
+					sound.playSound(this);
+				}
+				else
+				{
+					PFHaddon.debug("Skipped late sound (late by "
+						+ lateness + "ms, tolerence is " + sound.getMaximumBase() / this.LATENESS_THRESHOLD_DIVIDER
+						+ "ms)");
+				}
 				iter.remove();
 			}
 			else

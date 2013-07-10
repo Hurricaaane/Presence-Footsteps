@@ -27,8 +27,10 @@ public class PendingSound
 	private float pitch;
 	private Options options;
 	private long timeToPlay;
+	private long maximum;
 	
-	public PendingSound(Object location, String soundName, float volume, float pitch, Options options, long timeToPlay)
+	public PendingSound(
+		Object location, String soundName, float volume, float pitch, Options options, long timeToPlay, long maximum)
 	{
 		this.location = location;
 		this.soundName = soundName;
@@ -37,6 +39,7 @@ public class PendingSound
 		this.options = options;
 		
 		this.timeToPlay = timeToPlay;
+		this.maximum = maximum;
 	}
 	
 	/**
@@ -57,5 +60,16 @@ public class PendingSound
 	public long getTimeToPlay()
 	{
 		return this.timeToPlay;
+	}
+	
+	/**
+	 * Get the maximum delay of this sound, for threshold purposes. If the value
+	 * is negative, the sound will not be skippable.
+	 * 
+	 * @return
+	 */
+	public long getMaximumBase()
+	{
+		return this.maximum;
 	}
 }
