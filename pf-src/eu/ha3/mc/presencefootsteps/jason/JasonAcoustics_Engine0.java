@@ -147,7 +147,12 @@ public class JasonAcoustics_Engine0
 	private Acoustic solveAcoustic(JsonElement unsolved) throws UnexpectedDataException
 	{
 		Acoustic ret = null;
-		if (unsolved.isJsonPrimitive() && unsolved.getAsJsonPrimitive().isString())
+		
+		if (unsolved.isJsonObject())
+		{
+			ret = solveAcousticsCompound(unsolved.getAsJsonObject());
+		}
+		else if (unsolved.isJsonPrimitive() && unsolved.getAsJsonPrimitive().isString())
 		{
 			// Is a sound name
 			BasicAcoustic a = new BasicAcoustic();
@@ -156,10 +161,6 @@ public class JasonAcoustics_Engine0
 			a.setSoundName(this.soundRoot + unsolved.getAsString());
 			
 			ret = a;
-		}
-		else
-		{
-			ret = solveAcousticsCompound(unsolved.getAsJsonObject());
 		}
 		
 		if (ret == null)

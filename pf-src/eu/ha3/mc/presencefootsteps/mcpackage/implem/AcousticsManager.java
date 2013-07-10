@@ -9,6 +9,7 @@ import net.minecraft.src.Entity;
 import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.PFAccessors;
+import net.minecraft.src.PFHaddon;
 import eu.ha3.mc.presencefootsteps.engine.implem.AcousticsLibrary;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
@@ -100,7 +101,7 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	@Override
 	protected void onMaterialNotFound()
 	{
-		throw new RuntimeException("Tried to play a missing acoustics. Check if the material exists before playing it.");
+		PFHaddon.log("Tried to play a missing acoustic.");
 	}
 	
 	@Override
