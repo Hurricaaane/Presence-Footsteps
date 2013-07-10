@@ -1,7 +1,5 @@
 package eu.ha3.mc.presencefootsteps.mod;
 
-import eu.ha3.mc.presencefootsteps.engine.interfaces.Library;
-
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 
@@ -18,10 +16,8 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.Library;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class JasonAcoustics
+public class UnexpectedDataException extends Exception
 {
-	public void parseJSON(String jason, Library materials)
-	{
-		
-	}
+	private static final long serialVersionUID = 4586255498544473275L;
+	
 }
