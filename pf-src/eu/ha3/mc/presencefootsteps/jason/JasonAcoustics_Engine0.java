@@ -206,7 +206,16 @@ public class JasonAcoustics_Engine0
 				prepareDefaults(a);
 				setupClassics(a, unsolved);
 				
-				a.setDelay(unsolved.get("delay").getAsInt());
+				if (unsolved.has("delay"))
+				{
+					a.setDelayMin(unsolved.get("delay").getAsInt());
+					a.setDelayMax(unsolved.get("delay").getAsInt());
+				}
+				else
+				{
+					a.setDelayMin(unsolved.get("delay_min").getAsInt());
+					a.setDelayMax(unsolved.get("delay_max").getAsInt());
+				}
 				
 				ret = a;
 			}

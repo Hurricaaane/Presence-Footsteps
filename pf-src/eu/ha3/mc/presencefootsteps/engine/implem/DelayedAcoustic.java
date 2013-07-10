@@ -20,7 +20,8 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 
 public class DelayedAcoustic extends BasicAcoustic implements Options
 {
-	protected long delay;
+	protected long delayMin = 0;
+	protected long delayMax = 0;
 	
 	public DelayedAcoustic()
 	{
@@ -32,19 +33,24 @@ public class DelayedAcoustic extends BasicAcoustic implements Options
 	@Override
 	public boolean hasOption(String option)
 	{
-		return option.equals("delay");
+		return option.equals("delaymin") || option.equals("delaymax");
 	}
 	
 	@Override
 	public Object getOption(String option)
 	{
-		return option.equals("delay") ? this.delay : null;
+		return option.equals("delaymin") ? this.delayMin : option.equals("delaymax") ? this.delayMax : null;
 	}
 	
 	//
 	
-	public void setDelay(long delay)
+	public void setDelayMin(long delay)
 	{
-		this.delay = delay;
+		this.delayMin = delay;
+	}
+	
+	public void setDelayMax(long delay)
+	{
+		this.delayMax = delay;
 	}
 }

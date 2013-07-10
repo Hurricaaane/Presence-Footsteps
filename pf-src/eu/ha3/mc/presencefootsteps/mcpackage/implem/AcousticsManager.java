@@ -64,15 +64,13 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 		if (!(location instanceof Entity))
 			return;
 		
-		if (options == null || !options.hasOption("delay"))
-		{
-			((Entity) location).playSound(soundName, volume, pitch);
-		}
 		if (options != null)
 		{
-			if (options.hasOption("delay") && (Long) options.getOption("delay") > 0)
+			if (options.hasOption("delay_min") && options.hasOption("delay_max"))
 			{
-				long delay = (Long) options.getOption("delay");
+				long delay =
+					randAB(this.random, (Long) options.getOption("delay_min"), (Long) options.getOption("delay_max"));
+				
 				if (delay < this.minimum)
 				{
 					this.minimum = delay;
@@ -91,6 +89,16 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 			((Entity) location).playSound(soundName, volume, pitch);
 		}
 	}
+	
+	private long randAB(Random rng, long a, long b)
+	{
+		if (a >= b)
+			return a;
+		
+		return a + rng.nextInt((int) b + 1);
+	}
+	
+	//
 	
 	@Override
 	public Random getRNG()
