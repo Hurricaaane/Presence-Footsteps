@@ -44,7 +44,10 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	private List<PendingSound> pending;
 	private long minimum;
 	
-	private final float LATENESS_THRESHOLD_DIVIDER = 5;
+	private boolean USING_LATENESS = true;
+	private boolean USING_EARLYNESS = false;
+	private float LATENESS_THRESHOLD_DIVIDER = 5;
+	private double EARLYNESS_THRESHOLD_POW = 0.5d;
 	
 	public AcousticsManager()
 	{
@@ -129,10 +132,22 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 		for (Iterator<PendingSound> iter = this.pending.iterator(); iter.hasNext();)
 		{
 			PendingSound sound = iter.next();
-			if (time >= sound.getTimeToPlay())
+			
+			if (time >= sound.getTimeToPlay()
+				|| this.USING_EARLYNESS
+				&& time >= sound.getTimeToPlay() - Math.pow(sound.getMaximumBase(), this.EARLYNESS_THRESHOLD_POW))
 			{
+				if (this.USING_EARLYNESS && time < sound.getTimeToPlay())
+				{
+					PFHaddon.debug("Playing early sound (early by "
+						+ (sound.getTimeToPlay() - time) + "ms, tolerence is "
+						+ Math.pow(sound.getMaximumBase(), this.EARLYNESS_THRESHOLD_POW));
+				}
+				
 				long lateness = time - sound.getTimeToPlay();
-				if (sound.getMaximumBase() < 0 || lateness <= sound.getMaximumBase() / this.LATENESS_THRESHOLD_DIVIDER)
+				if (!this.USING_LATENESS
+					|| sound.getMaximumBase() < 0
+					|| lateness <= sound.getMaximumBase() / this.LATENESS_THRESHOLD_DIVIDER)
 				{
 					sound.playSound(this);
 				}
