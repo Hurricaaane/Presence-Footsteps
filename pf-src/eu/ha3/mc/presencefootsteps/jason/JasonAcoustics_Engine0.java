@@ -65,11 +65,11 @@ public class JasonAcoustics_Engine0
 		this.soundRoot = soundRoot;
 		
 		this.equivalents = new HashMap<String, EventType>();
+		this.equivalents.put("wander", EventType.WANDER);
 		this.equivalents.put("walk", EventType.WALK);
 		this.equivalents.put("run", EventType.RUN);
-		this.equivalents.put("wander", EventType.WANDER);
-		this.equivalents.put("run", EventType.RUN);
 		this.equivalents.put("jump", EventType.JUMP);
+		this.equivalents.put("land", EventType.LAND);
 	}
 	
 	public void parseJSON(String jasonString, Library lib)
@@ -192,7 +192,7 @@ public class JasonAcoustics_Engine0
 				JsonArray sim = unsolved.getAsJsonArray("array");
 				for (Iterator<JsonElement> iter = sim.iterator(); iter.hasNext();)
 				{
-					JsonObject subElement = iter.next().getAsJsonObject();
+					JsonElement subElement = iter.next();
 					acoustics.add(solveAcoustic(subElement));
 				}
 				
