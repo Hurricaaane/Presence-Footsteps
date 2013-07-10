@@ -116,10 +116,14 @@ public class PFReaderH implements VariableGenerator
 			{
 				volume = 0;
 			}*/
-			else if (Math.abs(this.yPosition - ply.posY) > 0.4d)
+			else if (Math.abs(this.yPosition - ply.posY) > 0.4d && Math.abs(this.yPosition - ply.posY) < 0.7d)
 			{
+				// This ensures this does not get recorded as landing, but as a step
+				
 				volume = this.VAR.STAIRCASE_VOLUME;
-				distance = this.VAR.STAIRCASE_DISTANCE;
+				// Going upstairs --- Going downstairs
+				distance = this.yPosition < ply.posY ? this.VAR.HUMAN_DISTANCE * 0.65f : -1f;
+				
 				this.dwmYChange = distanceReference;
 				
 			}
@@ -132,15 +136,21 @@ public class PFReaderH implements VariableGenerator
 			{
 				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
 				
-				double speed = ply.motionX * ply.motionX + ply.motionY * ply.motionY;
+				double speed = ply.motionX * ply.motionX + ply.motionZ * ply.motionZ;
 				System.out.println(speed);
-				makeSoundForPlayerBlock(ply, volume, 0d, speed > 0.025f ? EventType.RUN : EventType.WALK);
+				makeSoundForPlayerBlock(ply, volume, 0d, speed > 0.022f ? EventType.RUN : EventType.WALK);
 				
 				this.dmwBase = distanceReference;
 			}
 		}
 		
-		this.yPosition = ply.posY;
+		if (ply.onGround)
+		{
+			// This fixes an issue where the value is evaluated
+			// while the player is between two steps in the air
+			// while descending stairs
+			this.yPosition = ply.posY;
+		}
 		
 	}
 	
