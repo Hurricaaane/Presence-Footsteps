@@ -1,14 +1,19 @@
 package eu.ha3.mc.presencefootsteps.mcpackage.implem;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityLivingBase;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.PFAccessors;
 import eu.ha3.mc.presencefootsteps.engine.implem.AcousticsLibrary;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Generator;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -32,13 +37,17 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
  * @author Hurry
  * 
  */
-public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, DefaultStepPlayer
+public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, DefaultStepPlayer, Generator
 {
 	private final Random random;
+	private List<PendingSound> pending;
+	private long minimum;
 	
 	public AcousticsManager()
 	{
 		this.random = new Random();
+		this.pending = new ArrayList<PendingSound>();
+		
 		this.myPlayer = this;
 	}
 	
@@ -54,7 +63,32 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 		if (!(location instanceof Entity))
 			return;
 		
-		((Entity) location).playSound(soundName, volume, pitch);
+		if (options == null || !options.hasOption("delay"))
+		{
+			((Entity) location).playSound(soundName, volume, pitch);
+		}
+		if (options != null)
+		{
+			if (options.hasOption("delay") && (Long) options.getOption("delay") > 0)
+			{
+				long delay = (Long) options.getOption("delay");
+				if (delay < this.minimum)
+				{
+					this.minimum = delay;
+				}
+				
+				this.pending.add(new PendingSound(location, soundName, volume, pitch, null, System.currentTimeMillis()
+					+ delay));
+			}
+			else
+			{
+				((Entity) location).playSound(soundName, volume, pitch);
+			}
+		}
+		else
+		{
+			((Entity) location).playSound(soundName, volume, pitch);
+		}
 	}
 	
 	@Override
@@ -69,4 +103,32 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 		throw new RuntimeException("Tried to play a missing acoustics. Check if the material exists before playing it.");
 	}
 	
+	@Override
+	public void generateFootsteps(EntityPlayer ply)
+	{
+		if (this.pending.isEmpty())
+			return;
+		
+		if (System.currentTimeMillis() < this.minimum)
+			return;
+		
+		long newMinimum = Long.MAX_VALUE;
+		long time = System.currentTimeMillis();
+		
+		for (Iterator<PendingSound> iter = this.pending.iterator(); iter.hasNext();)
+		{
+			PendingSound sound = iter.next();
+			if (time > sound.getTimeToPlay())
+			{
+				sound.playSound(this);
+				iter.remove();
+			}
+			else
+			{
+				newMinimum = sound.getTimeToPlay();
+			}
+		}
+		
+		this.minimum = newMinimum;
+	}
 }

@@ -20,7 +20,7 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 
 public class DelayedAcoustic extends BasicAcoustic implements Options
 {
-	protected float delay;
+	protected long delay;
 	
 	public DelayedAcoustic()
 	{
@@ -43,7 +43,7 @@ public class DelayedAcoustic extends BasicAcoustic implements Options
 	
 	//
 	
-	public void setDelay(float delay)
+	public void setDelay(long delay)
 	{
 		this.delay = delay;
 	}
