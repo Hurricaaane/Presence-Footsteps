@@ -1,16 +1,20 @@
 package net.minecraft.src;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Scanner;
 
 import eu.ha3.easy.EdgeModel;
 import eu.ha3.easy.EdgeTrigger;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
+import eu.ha3.mc.presencefootsteps.jason.JasonAcoustics_Engine0;
+import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.VariableGenerator;
 import eu.ha3.mc.presencefootsteps.mod.UpdateNotifier;
 import eu.ha3.mc.presencefootsteps.mod.Variator;
@@ -45,6 +49,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	private EdgeTrigger debugButton;
 	private static boolean isDebugEnabled;
 	
+	private AcousticsManager acoustics;
+	
 	@Override
 	public void onLoad()
 	{
@@ -55,6 +61,9 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 				setDebugEnabled(true);
 				reloadVariatorFromFile();
 				reloadBlockMapFromFile();
+				reloadAcousticsFromFile();
+				
+				PFHaddon.this.acoustics.playAcoustic(Minecraft.getMinecraft().thePlayer, "snow", EventType.WALK);
 			}
 			
 			@Override
@@ -77,11 +86,13 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 		reloadVariatorFromFile();
 		reloadBlockMapFromFile();
+		reloadAcousticsFromFile();
 		
 		manager().hookFrameEvents(true);
 		
 		this.update = new UpdateNotifier(this);
 		this.update.attempt();
+		
 	}
 	
 	private void reloadVariatorFromFile()
@@ -138,6 +149,23 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			throw new RuntimeException("Error caused config not to work: " + e.getMessage());
 		}
 		createBlockMap();
+	}
+	
+	private void reloadAcousticsFromFile()
+	{
+		this.acoustics = new AcousticsManager();
+		String jasonString;
+		try
+		{
+			jasonString =
+				new Scanner(new File(util().getMinecraftDir(), "presencefootsteps/presence_acoustics.json"))
+					.useDelimiter("\\Z").next();
+			new JasonAcoustics_Engine0("pf_library.presence.").parseJSON(jasonString, this.acoustics);
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	private void createBlockMap()
