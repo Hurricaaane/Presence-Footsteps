@@ -39,6 +39,7 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	public AcousticsManager()
 	{
 		this.random = new Random();
+		this.myPlayer = this;
 	}
 	
 	@Override

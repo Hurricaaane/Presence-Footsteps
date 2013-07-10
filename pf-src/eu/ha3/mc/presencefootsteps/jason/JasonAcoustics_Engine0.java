@@ -89,10 +89,10 @@ public class JasonAcoustics_Engine0
 	{
 		JsonObject jason = new JsonParser().parse(jasonString).getAsJsonObject();
 		
-		if (jason.getAsJsonObject("type").getAsString().equals("library"))
+		if (!jason.get("type").getAsString().equals("library"))
 			throw new UnexpectedDataException();
 		
-		if (jason.getAsJsonObject("engineversion").getAsInt() != this.ENGINEVERSION)
+		if (jason.get("engineversion").getAsInt() != this.ENGINEVERSION)
 			throw new UnexpectedDataException();
 		
 		if (!jason.has("contents"))
@@ -119,7 +119,7 @@ public class JasonAcoustics_Engine0
 		JsonObject contents = jason.getAsJsonObject("contents");
 		for (Entry<String, JsonElement> preAcoustics : contents.entrySet())
 		{
-			String acousticsName = preAcoustics.getValue().getAsString();
+			String acousticsName = preAcoustics.getKey();
 			JsonObject acousticsDefinition = preAcoustics.getValue().getAsJsonObject();
 			
 			EventSelectorAcoustics selector = new EventSelectorAcoustics(acousticsName);
@@ -136,7 +136,7 @@ public class JasonAcoustics_Engine0
 		{
 			if (acousticsDefinition.has(eventName))
 			{
-				JsonObject unsolved = acousticsDefinition.getAsJsonObject(eventName);
+				JsonElement unsolved = acousticsDefinition.get(eventName);
 				
 				Acoustic acoustic = solveAcoustic(unsolved);
 				
@@ -145,7 +145,7 @@ public class JasonAcoustics_Engine0
 		}
 	}
 	
-	private Acoustic solveAcoustic(JsonObject unsolved) throws UnexpectedDataException
+	private Acoustic solveAcoustic(JsonElement unsolved) throws UnexpectedDataException
 	{
 		Acoustic ret = null;
 		if (unsolved.isJsonPrimitive() && unsolved.getAsJsonPrimitive().isString())
@@ -154,54 +154,63 @@ public class JasonAcoustics_Engine0
 			BasicAcoustic a = new BasicAcoustic();
 			prepareDefaults(a);
 			
-			a.setSoundName(this.soundRoot + unsolved.toString());
+			a.setSoundName(this.soundRoot + unsolved.getAsString());
 			
 			ret = a;
 		}
 		else
 		{
-			if (!unsolved.has("type") || unsolved.get("type").getAsString().equals("basic"))
-			{
-				BasicAcoustic a = new BasicAcoustic();
-				prepareDefaults(a);
-				setupClassics(a, unsolved);
-				
-				ret = a;
-			}
-			else
-			{
-				String type = unsolved.get("type").getAsString();
-				
-				if (type.equals("simultaneous"))
-				{
-					List<Acoustic> acoustics = new ArrayList<Acoustic>();
-					
-					JsonArray sim = unsolved.getAsJsonArray("array");
-					for (Iterator<JsonElement> iter = sim.iterator(); iter.hasNext();)
-					{
-						JsonObject subElement = iter.next().getAsJsonObject();
-						acoustics.add(solveAcoustic(subElement));
-					}
-					
-					SimultaneousAcoustic a = new SimultaneousAcoustic(acoustics);
-					
-					ret = a;
-				}
-				else if (type.equals("delayed"))
-				{
-					DelayedAcoustic a = new DelayedAcoustic();
-					prepareDefaults(a);
-					setupClassics(a, unsolved);
-					
-					a.setDelay(unsolved.get("delay").getAsInt());
-					
-					ret = a;
-				}
-			}
+			ret = solveAcousticsCompound(unsolved.getAsJsonObject());
 		}
 		
 		if (ret == null)
 			throw new UnexpectedDataException();
+		
+		return ret;
+	}
+	
+	private Acoustic solveAcousticsCompound(JsonObject unsolved) throws UnexpectedDataException
+	{
+		Acoustic ret = null;
+		
+		if (!unsolved.has("type") || unsolved.get("type").getAsString().equals("basic"))
+		{
+			BasicAcoustic a = new BasicAcoustic();
+			prepareDefaults(a);
+			setupClassics(a, unsolved);
+			
+			ret = a;
+		}
+		else
+		{
+			String type = unsolved.get("type").getAsString();
+			
+			if (type.equals("simultaneous"))
+			{
+				List<Acoustic> acoustics = new ArrayList<Acoustic>();
+				
+				JsonArray sim = unsolved.getAsJsonArray("array");
+				for (Iterator<JsonElement> iter = sim.iterator(); iter.hasNext();)
+				{
+					JsonObject subElement = iter.next().getAsJsonObject();
+					acoustics.add(solveAcoustic(subElement));
+				}
+				
+				SimultaneousAcoustic a = new SimultaneousAcoustic(acoustics);
+				
+				ret = a;
+			}
+			else if (type.equals("delayed"))
+			{
+				DelayedAcoustic a = new DelayedAcoustic();
+				prepareDefaults(a);
+				setupClassics(a, unsolved);
+				
+				a.setDelay(unsolved.get("delay").getAsInt());
+				
+				ret = a;
+			}
+		}
 		
 		return ret;
 	}
