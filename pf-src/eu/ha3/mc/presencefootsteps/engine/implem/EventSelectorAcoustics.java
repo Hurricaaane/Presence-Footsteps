@@ -30,6 +30,14 @@ public class EventSelectorAcoustics implements NamedAcoustic
 	
 	private Map<EventType, Acoustic> pairs;
 	
+	private static Map<EventType, EventType> fallback;
+	static
+	{
+		fallback = new HashMap<EventType, EventType>();
+		fallback.put(EventType.RUN, EventType.WALK);
+		fallback.put(EventType.LAND, EventType.RUN);
+	}
+	
 	public EventSelectorAcoustics(String name)
 	{
 		this.name = name;
@@ -48,6 +56,13 @@ public class EventSelectorAcoustics implements NamedAcoustic
 		if (this.pairs.containsKey(event))
 		{
 			this.pairs.get(event).playSound(player, location, event);
+		}
+		else if (fallback.containsKey(event))
+		{
+			EventType substituteEvent = fallback.get(event);
+			
+			// the possibility of a resonance cascade scenario is extremely unlikely
+			playSound(player, location, substituteEvent);
 		}
 	}
 	

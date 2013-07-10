@@ -36,6 +36,10 @@ public class BasicAcoustic implements Acoustic
 	@Override
 	public void playSound(SoundPlayer player, Object location, EventType event)
 	{
+		// Special case for intentionnaly empty sounds (as opposed to fallback sounds)
+		if (this.soundName.equals(""))
+			return;
+		
 		player.playSound(
 			location, this.soundName, generateVolume(player.getRNG()), generatePitch(player.getRNG()), this.options);
 	}
