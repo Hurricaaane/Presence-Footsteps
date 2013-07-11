@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
-import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.NormalVariator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Generator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
@@ -107,21 +106,21 @@ public class PFReaderH implements Generator, VariatorSettable
 			
 			if (ply.isOnLadder())
 			{
-				distance = this.VAR.LADDER_DISTANCE;
+				distance = this.VAR.MODERN_DISTANCE_LADDER;
 			}
 			else if (Math.abs(this.yPosition - ply.posY) > 0.4d && Math.abs(this.yPosition - ply.posY) < 0.7d)
 			{
 				// This ensures this does not get recorded as landing, but as a step
 				
 				// Going upstairs --- Going downstairs
-				distance = this.yPosition < ply.posY ? this.VAR.HUMAN_DISTANCE * 0.65f : -1f;
+				distance = this.yPosition < ply.posY ? this.VAR.MODERN_DISTANCE_STAIR : -1f;
 				
 				this.dwmYChange = distanceReference;
 				
 			}
 			else
 			{
-				distance = this.VAR.HUMAN_DISTANCE;
+				distance = this.VAR.MODERN_DISTANCE_HUMAN;
 			}
 			
 			if (immobile || dwm > distance)
@@ -148,12 +147,6 @@ public class PFReaderH implements Generator, VariatorSettable
 			// while descending stairs
 			this.yPosition = ply.posY;
 		}
-	}
-	
-	protected void playAssociation(String association, EntityPlayer player, EventType event, Options options)
-	{
-		if (association == null)
-			return;
 	}
 	
 	protected void simulateAirborne(EntityPlayer ply)

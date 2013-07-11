@@ -58,7 +58,7 @@ public class mod_PF extends HaddonBridgeModLoader
 	@Override
 	public String getVersion()
 	{
-		return "r0";
+		return "r" + PFHaddon.VERSION + " for " + PFHaddon.FOR;
 	}
 	
 }

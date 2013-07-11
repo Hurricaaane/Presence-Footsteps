@@ -159,14 +159,14 @@ public class PFReader4P extends PFReaderH
 			
 			if (ply.isOnLadder())
 			{
-				distance = this.VAR.LADDER_DISTANCE;
+				distance = this.VAR.MODERN_DISTANCE_LADDER;
 			}
 			else if (Math.abs(this.yPosition - ply.posY) > 0.4d && Math.abs(this.yPosition - ply.posY) < 0.7d)
 			{
 				// This ensures this does not get recorded as landing, but as a step
 				
 				// Going upstairs --- Going downstairs
-				distance = this.yPosition < ply.posY ? this.VAR.HUMAN_DISTANCE * 0.65f : -1f;
+				distance = this.yPosition < ply.posY ? this.VAR.MODERN_DISTANCE_STAIR : -1f;
 				
 				// Regular stance on staircases (1-1-1-1-)
 				

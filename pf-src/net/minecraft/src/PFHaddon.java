@@ -38,6 +38,7 @@ import eu.ha3.util.property.simple.ConfigProperty;
 public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 {
 	public static final int VERSION = 0;
+	public static final String FOR = "1.6.1";
 	
 	private UpdateNotifier update;
 	
