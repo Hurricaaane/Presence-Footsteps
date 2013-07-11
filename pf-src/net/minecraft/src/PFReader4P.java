@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import eu.ha3.mc.presencefootsteps.engine.implem.ConfigOptions;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 
@@ -69,35 +70,21 @@ public class PFReader4P extends PFReaderH
 			
 			if (hugeLanding || speedingJumpStateChange)
 			{
-				float volume = this.VAR.GROUND_AIR_STATE_CHANGE_VOLUME;
-				
-				// If the pegasus has landed 
-				if (hugeLanding)
-				{
-					volume =
-						this.VAR.HUGEFALL_LANDING_VOLUME_MIN
-							+ (this.VAR.HUGEFALL_LANDING_VOLUME_MAX - this.VAR.HUGEFALL_LANDING_VOLUME_MIN)
-							* scalex(
-								this.fallDistance, this.VAR.HUGEFALL_LANDING_DISTANCE_MIN,
-								this.VAR.HUGEFALL_LANDING_DISTANCE_MAX - this.VAR.HUGEFALL_LANDING_DISTANCE_MIN);
-					if (speedingJumpStateChange && volume < this.VAR.GROUND_AIR_STATE_CHANGE_VOLUME)
-					{
-						volume = this.VAR.GROUND_AIR_STATE_CHANGE_VOLUME;
-					}
-				}
-				
-				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
 				if (!this.isFlying)
 				{
-					this.mod.manager().getMinecraft().theWorld.playSound(
-						ply.posX, ply.posY, ply.posZ, "pf_sounds.land", volume,
-						randomPitch(1f, this.VAR.LANDING_PITCH_RADIUS), false);
+					float volume =
+						speedingJumpStateChange ? 1f : scalex(
+							this.fallDistance, this.VAR.HUGEFALL_LANDING_DISTANCE_MIN,
+							this.VAR.HUGEFALL_LANDING_DISTANCE_MAX);
+					
+					ConfigOptions options = new ConfigOptions();
+					options.getMap().put("gliding_volume", volume);
+					
+					this.mod.getAcoustics().playAcoustic(ply, "_SWIFT", EventType.LAND, options);
 				}
 				else
 				{
-					this.mod.manager().getMinecraft().theWorld.playSound(
-						ply.posX, ply.posY, ply.posZ, "pf_sounds.dash", volume,
-						randomPitch(1f, this.VAR.DASHING_PITCH_RADIUS), false);
+					this.mod.getAcoustics().playAcoustic(ply, "_SWIFT", EventType.JUMP);
 				}
 				
 			}
@@ -128,23 +115,19 @@ public class PFReader4P extends PFReaderH
 			
 			this.airborneTime = System.currentTimeMillis() + period;
 			
-			float volume = this.VAR.WING_VOLUME;
+			float volume = 1f;
 			long diffImmobile = System.currentTimeMillis() - this.immobileTime;
 			if (System.currentTimeMillis() - this.immobileTime > this.VAR.WING_IMMOBILE_FADE_START)
 			{
 				volume =
-					volume
-						* (1f - scalex(
-							diffImmobile, this.VAR.WING_IMMOBILE_FADE_START, this.VAR.WING_IMMOBILE_FADE_DURATION));
+					1f - scalex(diffImmobile, this.VAR.WING_IMMOBILE_FADE_START, this.VAR.WING_IMMOBILE_FADE_START
+						+ this.VAR.WING_IMMOBILE_FADE_DURATION);
 			}
 			
-			if (volume > 0f)
-			{
-				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
-				this.mod.manager().getMinecraft().theWorld.playSound(
-					ply.posX, ply.posY, ply.posZ, "pf_sounds.wing", volume,
-					randomPitch(1f, this.VAR.WING_PITCH_RADIUS), false);
-			}
+			ConfigOptions options = new ConfigOptions();
+			options.getMap().put("gliding_volume", volume);
+			
+			this.mod.getAcoustics().playAcoustic(ply, "_WING", EventType.WALK, options);
 			
 		}
 		
@@ -164,34 +147,35 @@ public class PFReader4P extends PFReaderH
 		if (ply.onGround || ply.isInWater() || ply.isOnLadder())
 		{
 			float dwm = distanceReference - this.dmwBase;
+			boolean immobile = stoppedImmobile(distanceReference);
 			
 			float speed = (float) Math.sqrt(ply.motionX * ply.motionX + ply.motionZ * ply.motionZ);
 			float distance = 0f;
-			float volume = this.VAR.WALK_VOLUME;
 			
 			boolean isGallop = false;
+			float specialVolume = -1f;
+			
+			EventType event = EventType.WALK;
 			
 			if (ply.isOnLadder())
 			{
-				volume = this.VAR.LADDER_VOLUME;
 				distance = this.VAR.LADDER_DISTANCE;
 			}
-			/*else if (!ply.onGround && !ply.isInWater())
+			else if (Math.abs(this.yPosition - ply.posY) > 0.4d && Math.abs(this.yPosition - ply.posY) < 0.7d)
 			{
-				volume = 0;
-			}*/
-			else if (Math.abs(this.yPosition - ply.posY) > 0.4d)
-			{
+				// This ensures this does not get recorded as landing, but as a step
+				
+				// Going upstairs --- Going downstairs
+				distance = this.yPosition < ply.posY ? this.VAR.HUMAN_DISTANCE * 0.65f : -1f;
+				
 				// Regular stance on staircases (1-1-1-1-)
-				volume = this.VAR.STAIRCASE_VOLUME;
-				distance = this.VAR.STAIRCASE_DISTANCE;
+				
 				this.dwmYChange = distanceReference;
 				
 			}
 			else if (speed > this.VAR.SPEED_TO_GALLOP)
 			{
 				isGallop = true;
-				volume = this.VAR.GALLOP_VOLUME;
 				// Gallop stance (1-1-2--)
 				if (this.hoof == 3)
 				{
@@ -209,6 +193,8 @@ public class PFReader4P extends PFReaderH
 				{
 					distance = this.VAR.GALLOP_DISTANCE_1;
 				}
+				
+				event = EventType.RUN;
 			}
 			else if (speed > this.VAR.SPEED_TO_WALK)
 			{
@@ -230,22 +216,29 @@ public class PFReader4P extends PFReaderH
 			{
 				// Slow stance (1--1--1--1--)
 				distance = this.VAR.SLOW_DISTANCE;
-				volume = this.VAR.SLOW_VOLUME * speed / this.VAR.SPEED_TO_WALK;
+				specialVolume = this.VAR.SLOW_VOLUME * speed / this.VAR.SPEED_TO_WALK;
 			}
 			
-			if (dwm > distance)
+			if (immobile || dwm > distance)
 			{
-				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
-				makeSoundForPlayerBlock(ply, 0d, EventType.WALK);
-				
-				if (isGallop && this.VAR.GALLOP_3STEP && this.hoof >= 2)
+				if (!this.mod.getSolver().playSpecialStoppingConditions(ply))
 				{
-					makeSoundForPlayerBlock(ply, 0d, EventType.WALK);
-					this.hoof = 0;
-				}
-				else
-				{
-					this.hoof = (this.hoof + 1) % 4;
+					String assos = this.mod.getSolver().findAssociationForPlayer(ply, 0d, this.hoof % 2 == 0);
+					this.mod.getSolver().playAssociation(ply, assos, event);
+					
+					if (isGallop && this.VAR.GALLOP_3STEP && this.hoof >= 2)
+					{
+						assos = this.mod.getSolver().findAssociationForPlayer(ply, 0d, true);
+						this.mod.getSolver().playAssociation(ply, assos, event);
+						assos = this.mod.getSolver().findAssociationForPlayer(ply, 0d, false);
+						this.mod.getSolver().playAssociation(ply, assos, event);
+						
+						this.hoof = 0;
+					}
+					else
+					{
+						this.hoof = (this.hoof + 1) % 4;
+					}
 				}
 				
 				this.dmwBase = distanceReference;
@@ -253,7 +246,13 @@ public class PFReader4P extends PFReaderH
 			}
 		}
 		
-		this.yPosition = ply.posY;
+		if (ply.onGround)
+		{
+			// This fixes an issue where the value is evaluated
+			// while the player is between two steps in the air
+			// while descending stairs
+			this.yPosition = ply.posY;
+		}
 		
 	}
 }

@@ -1,7 +1,5 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.NormalVariator;
@@ -31,7 +29,6 @@ public class PFReaderH implements Generator, VariatorSettable
 	// Construct
 	final protected Isolator mod;
 	protected NormalVariator VAR;
-	protected Random rand;
 	
 	// Footsteps
 	protected float dmwBase;
@@ -52,7 +49,6 @@ public class PFReaderH implements Generator, VariatorSettable
 	{
 		this.mod = isolator;
 		this.VAR = new NormalVariator();
-		this.rand = new Random();
 	}
 	
 	@Override
@@ -215,6 +211,8 @@ public class PFReaderH implements Generator, VariatorSettable
 		}
 	}
 	
+	//
+	
 	protected void playSinglefoot(EntityPlayer ply, double verticalOffsetAsMinus, EventType eventType, boolean foot)
 	{
 		String assos = this.mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus, this.isRightFoot);
@@ -238,9 +236,9 @@ public class PFReaderH implements Generator, VariatorSettable
 		this.mod.getSolver().playAssociation(ply, rightFoot, eventType);
 	}
 	
-	protected float scalex(float number, float min, float range)
+	protected float scalex(float number, float min, float max)
 	{
-		float m = (number - min) / range;
+		float m = (number - min) / (max - min);
 		if (m < 0f)
 			return 0f;
 		if (m > 1f)
@@ -248,10 +246,5 @@ public class PFReaderH implements Generator, VariatorSettable
 		
 		return m;
 		
-	}
-	
-	protected float randomPitch(float base, float radius)
-	{
-		return base + this.rand.nextFloat() * radius * 2 - radius;
 	}
 }

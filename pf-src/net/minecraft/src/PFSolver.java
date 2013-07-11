@@ -288,7 +288,7 @@ public class PFSolver implements Solver
 			ConfigOptions options = new ConfigOptions();
 			options.getMap().put("gliding_volume", volume);
 			
-			this.isolator.getAcoustics().playAcoustic(ply, "_SWIM", EventType.SWIM, options);
+			this.isolator.getAcoustics().playAcoustic(ply, "_SWIM", EventType.SPECIAL, options);
 			
 			return true;
 		}

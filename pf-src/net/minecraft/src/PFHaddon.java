@@ -83,7 +83,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		this.isolator.setSolver(new PFSolver(this.isolator));
 		reloadVariatorFromFile();
 		
-		this.isolator.setGenerator(new PFReaderH(this.isolator));
+		this.isolator.setGenerator(new PFReader4P(this.isolator));
 		
 		manager().hookFrameEvents(true);
 		
