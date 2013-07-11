@@ -26,8 +26,9 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
  * <br>
  * The association null is derived from blockmap "NOT_EMITTER" and means the
  * block is NOT MEANT to emit sounds (not equal to "no sound").<br>
- * The association "_NO_ASSOCIATION" is derived from AN ABSENCE of an entry in
- * the blockmap (after solving missing metadata and carpets).<br>
+ * The association "_NO_ASSOCIATION:xx:yy:zz" is derived from AN ABSENCE of an
+ * entry in the blockmap (after solving missing metadata and carpets). xx,yy,zz
+ * is the location of the incriminated block.<br>
  * Any other association string returned by the findAssociation* methods
  * correspond to an Acoustic name.
  * 
@@ -38,10 +39,32 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 public class PFSolver
 {
 	private final PFHaddon mod;
+	public static String NO_ASSOCIATION = "_NO_ASSOCIATION";
 	
 	public PFSolver(PFHaddon mod)
 	{
 		this.mod = mod;
+	}
+	
+	public void playAssociation(EntityPlayer ply, String assos, EventType eventType)
+	{
+		if (assos == null)
+			return;
+		
+		if (assos.startsWith(PFSolver.NO_ASSOCIATION))
+		{
+			String[] noAssos = assos.split(":");
+			this.mod.getAcoustics().playStep(ply, i(noAssos[1]), i(noAssos[2]), i(noAssos[3]), i(noAssos[4]));
+		}
+		else
+		{
+			this.mod.getAcoustics().playAcoustic(ply, assos, eventType);
+		}
+	}
+	
+	private int i(String s)
+	{
+		return Integer.parseInt(s);
 	}
 	
 	/**
@@ -52,8 +75,8 @@ public class PFSolver
 	 * air or water).<br>
 	 * <br>
 	 * Returns null if no blocks are valid emitting blocks.<br>
-	 * Returns "_NO_ASSOCIATION" if a matching block was found, but has no
-	 * association in the blockmap.
+	 * Returns a string that begins with "_NO_ASSOCIATION" if a matching block
+	 * was found, but has no association in the blockmap.
 	 * 
 	 * @param ply
 	 * @param verticalOffsetAsMinus
@@ -73,7 +96,7 @@ public class PFSolver
 		int xx = MathHelper.floor_double(ply.posX + xn * feetDistanceToCenter);
 		int zz = MathHelper.floor_double(ply.posZ + zn * feetDistanceToCenter);
 		
-		return findAssociationFromLocation(ply, xx, yy, zz);
+		return findAssociationForLocation(ply, xx, yy, zz);
 	}
 	
 	/**
@@ -83,8 +106,8 @@ public class PFSolver
 	 * non-emitting blocks like air or water).<br>
 	 * <br>
 	 * Returns null if no blocks are valid emitting blocks.<br>
-	 * Returns "_NO_ASSOCIATION" if a matching block was found, but has no
-	 * association in the blockmap.
+	 * Returns a string that begins with "_NO_ASSOCIATION" if a matching block
+	 * was found, but has no association in the blockmap.
 	 * 
 	 * @param ply
 	 * @param verticalOffsetAsMinus
@@ -97,7 +120,7 @@ public class PFSolver
 		
 		int xx = MathHelper.floor_double(ply.posX);
 		int zz = MathHelper.floor_double(ply.posZ);
-		return findAssociationFromLocation(ply, xx, yy, zz);
+		return findAssociationForLocation(ply, xx, yy, zz);
 	}
 	
 	/**
@@ -107,8 +130,8 @@ public class PFSolver
 	 * over non-emitting blocks like air or water)<br>
 	 * <br>
 	 * Returns null if no blocks are valid emitting blocks.<br>
-	 * Returns "_NO_ASSOCIATION" if a matching block was found, but has no
-	 * association in the blockmap.
+	 * Returns a string that begins with "_NO_ASSOCIATION" if a matching block
+	 * was found, but has no association in the blockmap.
 	 * 
 	 * @param ply
 	 * @param xx
@@ -116,7 +139,7 @@ public class PFSolver
 	 * @param zz
 	 * @return
 	 */
-	public String findAssociationFromLocation(EntityPlayer ply, int xx, int yy, int zz)
+	public String findAssociationForLocation(EntityPlayer ply, int xx, int yy, int zz)
 	{
 		if (ply.isInWater())
 		{
@@ -225,9 +248,11 @@ public class PFSolver
 	 * is actually not emitting, such as lilypads on water.<br>
 	 * <br>
 	 * Returns null if the block is not a valid emitting block (this causes the
-	 * engine to continue looking for valid blocks).<br>
-	 * Returns "_NO_ASSOCIATION" if the block is valid, but has no association
-	 * in the blockmap.
+	 * engine to continue looking for valid blocks). This also happens if the
+	 * carpet is non-emitting.<br>
+	 * Returns a string that begins with "_NO_ASSOCIATION" if the block is
+	 * valid, but has no association in the blockmap. If the carpet was
+	 * selected, this solves to the carpet.
 	 * 
 	 * @param ply
 	 * @param xx
@@ -252,13 +277,16 @@ public class PFSolver
 			}
 		}
 		
+		// REMOVED: This blocks carpet detection over air
 		// If the block is air, it is not an emitter
-		if (block == 0)
-			return null;
+		//if (block == 0)
+		//	return null;
+		
+		int xblock = world.getBlockId(xx, yy + 1, zz);
+		int xmetadata = world.getBlockMetadata(xx, yy + 1, zz);
 		
 		// Try to see if the block above is a carpet...
-		String association =
-			this.mod.getAssociationForCarpet(world.getBlockId(xx, yy + 1, zz), world.getBlockMetadata(xx, yy + 1, zz));
+		String association = this.mod.getAssociationForCarpet(xblock, xmetadata);
 		
 		if (association == null)
 		{
@@ -267,6 +295,9 @@ public class PFSolver
 		}
 		else
 		{
+			yy = yy + 1;
+			block = xblock;
+			metadata = xmetadata;
 			PFHaddon.debug("Carpet detected");
 		}
 		
@@ -289,7 +320,7 @@ public class PFSolver
 		else
 		{
 			PFHaddon.debug("No association for " + block + ":" + metadata);
-			return "_NO_ASSOCIATION";
+			return NO_ASSOCIATION + ":" + xx + ":" + yy + ":" + zz + ":" + block;
 		}
 	}
 	

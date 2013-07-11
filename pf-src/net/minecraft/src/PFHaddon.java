@@ -41,7 +41,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 {
 	public static final int VERSION = 0;
 	
-	private VariableGenerator system;
+	private VariableGenerator generator;
 	private UpdateNotifier update;
 	
 	private ConfigProperty blockSound;
@@ -51,6 +51,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	private static boolean isDebugEnabled;
 	
 	private AcousticsManager acoustics;
+	
+	private PFSolver solver;
 	
 	@Override
 	public void onLoad()
@@ -78,12 +80,14 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 		if (isInstalledMLP())
 		{
-			this.system = new PFReaderMLP(this);
+			this.generator = new PFReaderMLP(this);
 		}
 		else
 		{
-			this.system = new PFReader4P(this);
+			this.generator = new PFReader4P(this);
 		}
+		
+		this.solver = new PFSolver(this);
 		
 		reloadVariatorFromFile();
 		reloadBlockMapFromFile();
@@ -111,7 +115,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 				Variator var = new NormalVariator();
 				var.loadConfig(config);
 				
-				this.system.setVariator(var);
+				this.generator.setVariator(var);
 			}
 			catch (Exception e)
 			{
@@ -210,7 +214,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		if (ply == null)
 			return;
 		
-		this.system.generateFootsteps(ply);
+		this.generator.generateFootsteps(ply);
 		this.acoustics.generateFootsteps(null);
 		this.debugButton.signalState(util().areKeysDown(29, 42, 33)); // CTRL SHIFT F
 		
@@ -347,6 +351,11 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	public AcousticsManager getAcoustics()
 	{
 		return this.acoustics;
+	}
+	
+	public PFSolver getSolver()
+	{
+		return this.solver;
 	}
 	
 }

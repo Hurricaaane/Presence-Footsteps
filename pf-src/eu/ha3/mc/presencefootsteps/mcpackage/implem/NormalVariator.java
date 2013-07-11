@@ -78,7 +78,6 @@ public class NormalVariator implements Variator
 	public boolean PLAY_BLOCKSTEPS = true;
 	
 	public float JUMP_VOLUME = 1f;
-	public boolean PLAY_STEP_ON_JUMP = true;
 	public float LAND_HARD_VOLUME = 1f;
 	public float LAND_HARD_DISTANCE_MIN = 0.9f; //2f
 	public boolean PLAY_STEP_ON_LAND_HARD = true;
@@ -86,6 +85,10 @@ public class NormalVariator implements Variator
 	public int IMMOBILE_DURATION = 700;
 	
 	public boolean USE_TWO_FEET_DETECTION = true;
+	
+	public float MODERN_SPEED_TO_RUN = 0.022f;
+	public float MODERN_SPEED_TO_JUMP_AS_MULTIFOOT = 0.005f;
+	public boolean MODERN_EVENT_ON_JUMP = true;
 	
 	@Override
 	public void loadConfig(ConfigProperty config)
