@@ -3,8 +3,8 @@ package eu.ha3.mc.presencefootsteps.parsers;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.minecraft.src.PFBlockMap;
 import net.minecraft.src.PFHaddon;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.BlockMap;
 import eu.ha3.util.property.contract.PropertyHolder;
 
 /*
@@ -25,7 +25,7 @@ import eu.ha3.util.property.contract.PropertyHolder;
 
 public class PropertyBlockMap_Engine0
 {
-	public void setup(PropertyHolder blockSound, PFBlockMap blockMap)
+	public void setup(PropertyHolder blockSound, BlockMap blockMap)
 	{
 		Map<String, String> properties = blockSound.getAllProperties();
 		for (Entry<String, String> entry : properties.entrySet())

@@ -1,8 +1,11 @@
 package net.minecraft.src;
 
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.BlockMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Generator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.GeneratorSettable;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Solver;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.VariatorSettable;
 
@@ -28,8 +31,8 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	private PFHaddon mod; // Unused?
 	
 	private AcousticsManager acoustics;
-	private PFSolver solver;
-	private PFBlockMap blockMap;
+	private Solver solver;
+	private BlockMap blockMap;
 	
 	private Variator VAR;
 	
@@ -63,13 +66,13 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	}
 	
 	@Override
-	public PFSolver getSolver()
+	public Solver getSolver()
 	{
 		return this.solver;
 	}
 	
 	@Override
-	public PFBlockMap getBlockMap()
+	public BlockMap getBlockMap()
 	{
 		return this.blockMap;
 	}
@@ -83,13 +86,13 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	}
 	
 	@Override
-	public void setSolver(PFSolver solver)
+	public void setSolver(Solver solver)
 	{
 		this.solver = solver;
 	}
 	
 	@Override
-	public void setBlockMap(PFBlockMap blockMap)
+	public void setBlockMap(BlockMap blockMap)
 	{
 		this.blockMap = blockMap;
 	}

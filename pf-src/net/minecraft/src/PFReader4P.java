@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 

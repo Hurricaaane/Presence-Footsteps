@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
+
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 

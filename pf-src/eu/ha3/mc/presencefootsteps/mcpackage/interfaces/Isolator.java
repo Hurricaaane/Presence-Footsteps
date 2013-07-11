@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
 
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
 
@@ -25,14 +25,14 @@ public interface Isolator
 	
 	public abstract AcousticsManager getAcoustics();
 	
-	public abstract PFSolver getSolver();
+	public abstract Solver getSolver();
 	
-	public abstract PFBlockMap getBlockMap();
+	public abstract BlockMap getBlockMap();
 	
 	public abstract void setAcoustics(AcousticsManager acoustics);
 	
-	public abstract void setSolver(PFSolver solver);
+	public abstract void setSolver(Solver solver);
 	
-	public abstract void setBlockMap(PFBlockMap blockMap);
+	public abstract void setBlockMap(BlockMap blockMap);
 	
 }

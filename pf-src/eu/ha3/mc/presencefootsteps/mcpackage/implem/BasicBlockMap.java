@@ -1,7 +1,9 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.mcpackage.implem;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.BlockMap;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -19,24 +21,16 @@ import java.util.Map;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class PFBlockMap
+public class BasicBlockMap implements BlockMap
 {
 	private Map<String, String> blockMap;
 	
-	public PFBlockMap()
+	public BasicBlockMap()
 	{
 		this.blockMap = new LinkedHashMap<String, String>();
 	}
 	
-	/**
-	 * This will return null if the block is not defined, and NOT_EMITTER if the
-	 * block is a non-emitting block, meaning block resolution must continue on
-	 * its neighbors.
-	 * 
-	 * @param block
-	 * @param meta
-	 * @return
-	 */
+	@Override
 	public String getBlockMap(int block, int meta)
 	{
 		String material = null;
@@ -57,14 +51,7 @@ public class PFBlockMap
 		return material;
 	}
 	
-	/**
-	 * This will return null if the block is not a carpet.
-	 * 
-	 * @param carpet
-	 * @param meta
-	 * @param event
-	 * @return
-	 */
+	@Override
 	public String getBlockMapForCarpet(int carpet, int meta)
 	{
 		String material = null;
@@ -83,12 +70,7 @@ public class PFBlockMap
 		return material;
 	}
 	
-	/**
-	 * Register an blockmap entry.
-	 * 
-	 * @param key
-	 * @param value
-	 */
+	@Override
 	public void register(String key, String value)
 	{
 		this.blockMap.put(key, value);
