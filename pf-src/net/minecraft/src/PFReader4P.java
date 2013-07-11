@@ -228,8 +228,6 @@ public class PFReader4P extends PFReaderH
 					
 					if (isGallop && this.VAR.GALLOP_3STEP && this.hoof >= 2)
 					{
-						assos = this.mod.getSolver().findAssociationForPlayer(ply, 0d, true);
-						this.mod.getSolver().playAssociation(ply, assos, event);
 						assos = this.mod.getSolver().findAssociationForPlayer(ply, 0d, false);
 						this.mod.getSolver().playAssociation(ply, assos, event);
 						
