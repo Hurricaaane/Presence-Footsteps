@@ -8,6 +8,7 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.Acoustic;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Library;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.NamedAcoustic;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 
 /*
@@ -61,13 +62,19 @@ public abstract class AcousticsLibrary implements Library
 	@Override
 	public void playAcoustic(Object location, String acousticName, EventType event)
 	{
+		this.playAcoustic(location, acousticName, event, null);
+	}
+	
+	@Override
+	public void playAcoustic(Object location, String acousticName, EventType event, Options inputOptions)
+	{
 		if (!this.acoustics.containsKey(acousticName))
 		{
 			onMaterialNotFound();
 			return;
 		}
 		
-		this.acoustics.get(acousticName).playSound(this.myPlayer, location, event);
+		this.acoustics.get(acousticName).playSound(this.myPlayer, location, event, inputOptions);
 	}
 	
 	@Override

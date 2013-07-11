@@ -6,6 +6,7 @@ import java.util.List;
 
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Acoustic;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 
 /*
@@ -34,12 +35,13 @@ public class SimultaneousAcoustic implements Acoustic
 	}
 	
 	@Override
-	public void playSound(SoundPlayer player, Object location, EventType event)
+	public void playSound(SoundPlayer player, Object location, EventType event, Options inputOptions)
 	{
 		for (Acoustic acoustic : this.acoustics)
 		{
-			acoustic.playSound(player, location, event);
+			acoustic.playSound(player, location, event, inputOptions);
 		}
+		
 	}
 	
 }

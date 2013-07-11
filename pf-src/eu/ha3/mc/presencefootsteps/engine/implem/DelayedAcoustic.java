@@ -27,7 +27,7 @@ public class DelayedAcoustic extends BasicAcoustic implements Options
 	{
 		super();
 		
-		this.options = this;
+		this.outputOptions = this;
 	}
 	
 	@Override

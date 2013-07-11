@@ -31,17 +31,30 @@ public class BasicAcoustic implements Acoustic
 	protected float pitchMin = 1f;
 	protected float pitchMax = 1f;
 	
-	protected Options options;
+	protected Options outputOptions;
 	
 	@Override
-	public void playSound(SoundPlayer player, Object location, EventType event)
+	public void playSound(SoundPlayer player, Object location, EventType event, Options inputOptions)
 	{
 		// Special case for intentionnaly empty sounds (as opposed to fallback sounds)
 		if (this.soundName.equals(""))
 			return;
 		
-		player.playSound(
-			location, this.soundName, generateVolume(player.getRNG()), generatePitch(player.getRNG()), this.options);
+		float volume = generateVolume(player.getRNG());
+		float pitch = generatePitch(player.getRNG());
+		if (inputOptions != null)
+		{
+			if (inputOptions.hasOption("gliding_volume"))
+			{
+				volume = this.volMin + (this.volMax - this.volMin) * (Float) inputOptions.getOption("gliding_volume");
+			}
+			if (inputOptions.hasOption("gliding_pitch"))
+			{
+				pitch =
+					this.pitchMin + (this.pitchMax - this.pitchMin) * (Float) inputOptions.getOption("gliding_pitch");
+			}
+		}
+		player.playSound(location, this.soundName, volume, pitch, this.outputOptions);
 	}
 	
 	private float generateVolume(Random rng)

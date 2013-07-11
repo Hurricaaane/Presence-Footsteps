@@ -6,6 +6,7 @@ import java.util.Map;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Acoustic;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.NamedAcoustic;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 
 /*
@@ -51,18 +52,18 @@ public class EventSelectorAcoustics implements NamedAcoustic
 	}
 	
 	@Override
-	public void playSound(SoundPlayer player, Object location, EventType event)
+	public void playSound(SoundPlayer player, Object location, EventType event, Options inputOptions)
 	{
 		if (this.pairs.containsKey(event))
 		{
-			this.pairs.get(event).playSound(player, location, event);
+			this.pairs.get(event).playSound(player, location, event, inputOptions);
 		}
 		else if (fallback.containsKey(event))
 		{
 			EventType substituteEvent = fallback.get(event);
 			
 			// the possibility of a resonance cascade scenario is extremely unlikely
-			playSound(player, location, substituteEvent);
+			playSound(player, location, substituteEvent, inputOptions);
 		}
 	}
 	

@@ -29,6 +29,7 @@ public interface Library
 	
 	/**
 	 * Plays a acoustic.
+	 * 
 	 * @param acousticName
 	 * @param event
 	 * @param x
@@ -36,6 +37,17 @@ public interface Library
 	 * @param z
 	 */
 	public void playAcoustic(Object location, String acousticName, EventType event);
+	
+	/**
+	 * Plays a acoustic with additional options.
+	 * 
+	 * @param acousticName
+	 * @param event
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public void playAcoustic(Object location, String acousticName, EventType event, Options options);
 	
 	/**
 	 * Gets a key set of the acoustic.
