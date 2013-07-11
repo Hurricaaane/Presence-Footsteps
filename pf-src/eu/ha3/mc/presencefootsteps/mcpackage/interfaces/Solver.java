@@ -111,4 +111,11 @@ public interface Solver
 	 */
 	public abstract boolean playSpecialStoppingConditions(EntityPlayer ply);
 	
+	/**
+	 * Tells if footsteps can be played.
+	 * 
+	 * @param ply
+	 */
+	public abstract boolean hasSpecialStoppingConditions(EntityPlayer ply);
+	
 }

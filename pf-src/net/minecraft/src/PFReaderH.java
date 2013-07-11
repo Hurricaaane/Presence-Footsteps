@@ -178,6 +178,9 @@ public class PFReaderH implements Generator, VariatorSettable
 	
 	protected void simulateJumpingLanding(EntityPlayer ply)
 	{
+		if (this.mod.getSolver().hasSpecialStoppingConditions(ply))
+			return;
+		
 		if (this.isFlying && ply.isJumping)
 		{
 			if (this.VAR.MODERN_EVENT_ON_JUMP)

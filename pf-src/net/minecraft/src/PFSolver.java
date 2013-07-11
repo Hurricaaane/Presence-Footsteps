@@ -286,9 +286,18 @@ public class PFSolver implements Solver
 			options.getMap().put("gliding_volume", volume);
 			
 			this.isolator.getAcoustics().playAcoustic(ply, "_SWIM", EventType.SWIM, options);
-			
+			System.out.println("tees");
 			return true;
 		}
+		
+		return false;
+	}
+	
+	@Override
+	public boolean hasSpecialStoppingConditions(EntityPlayer ply)
+	{
+		if (ply.isInWater())
+			return true;
 		
 		return false;
 	}
