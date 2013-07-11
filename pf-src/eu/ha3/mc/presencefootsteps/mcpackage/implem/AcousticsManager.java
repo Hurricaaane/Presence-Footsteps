@@ -11,6 +11,7 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.PFAccessors;
 import net.minecraft.src.PFHaddon;
 import eu.ha3.mc.presencefootsteps.engine.implem.AcousticsLibrary;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
@@ -112,9 +113,9 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	}
 	
 	@Override
-	protected void onMaterialNotFound()
+	protected void onAcousticNotFound(Object location, String acousticName, EventType event, Options inputOptions)
 	{
-		PFHaddon.log("Tried to play a missing acoustic.");
+		PFHaddon.log("Tried to play a missing acoustic: " + acousticName);
 	}
 	
 	@Override

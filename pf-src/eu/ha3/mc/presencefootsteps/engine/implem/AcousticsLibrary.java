@@ -70,7 +70,7 @@ public abstract class AcousticsLibrary implements Library
 	{
 		if (!this.acoustics.containsKey(acousticName))
 		{
-			onMaterialNotFound();
+			onAcousticNotFound(location, acousticName, event, inputOptions);
 			return;
 		}
 		
@@ -83,5 +83,6 @@ public abstract class AcousticsLibrary implements Library
 		return this.acoustics.containsKey(acousticName);
 	}
 	
-	protected abstract void onMaterialNotFound();
+	protected abstract void onAcousticNotFound(
+		Object location, String acousticName, EventType event, Options inputOptions);
 }
