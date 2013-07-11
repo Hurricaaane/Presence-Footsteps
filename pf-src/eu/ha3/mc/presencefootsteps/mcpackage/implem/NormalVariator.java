@@ -88,6 +88,9 @@ public class NormalVariator implements Variator
 	public boolean PLAY_SPECIAL_ON_LAND_HARD = false;
 	public int IMMOBILE_DURATION = 700;
 	
+	public boolean USE_TWO_FEET_DETECTION = true;
+	
+	@Override
 	public void loadConfig(ConfigProperty config)
 	{
 		Set<String> keysFromConfig = config.getAllProperties().keySet();

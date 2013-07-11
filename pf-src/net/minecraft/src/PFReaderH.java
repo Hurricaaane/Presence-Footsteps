@@ -43,6 +43,8 @@ public class PFReaderH implements VariableGenerator
 	protected boolean isImmobile;
 	protected long timeImmobile;
 	
+	protected boolean isRightFoot;
+	
 	public PFReaderH(PFHaddon mod)
 	{
 		this.mod = mod;
@@ -137,9 +139,10 @@ public class PFReaderH implements VariableGenerator
 				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
 				
 				double speed = ply.motionX * ply.motionX + ply.motionZ * ply.motionZ;
-				System.out.println(speed);
+				
 				makeSoundForPlayerBlock(ply, volume, 0d, speed > 0.022f ? EventType.RUN : EventType.WALK);
 				
+				this.isRightFoot = !this.isRightFoot;
 				this.dmwBase = distanceReference;
 			}
 		}
@@ -204,10 +207,27 @@ public class PFReaderH implements VariableGenerator
 	
 	protected void makeSoundForPlayerBlock(EntityPlayer ply, float volume, double minus, EventType event)
 	{
-		int xx = MathHelper.floor_double(ply.posX);
 		int yy = MathHelper.floor_double(ply.posY - 0.1d - ply.yOffset - minus); // Support for trapdoors
 		//int yy = MathHelper.floor_double(ply.posY - 0.2d - ply.yOffset - minus);
-		int zz = MathHelper.floor_double(ply.posZ);
+		
+		int xx;
+		int zz;
+		if (this.VAR.USE_TWO_FEET_DETECTION)
+		{
+			double rot = Math.toRadians(-MathHelper.wrapAngleTo180_float(ply.rotationYaw));
+			double xn = Math.cos(rot);
+			double zn = -Math.sin(rot);
+			
+			float feetDistanceToCenter = 0.2f * (this.isRightFoot ? -1 : 1);
+			
+			xx = MathHelper.floor_double(ply.posX + xn * feetDistanceToCenter);
+			zz = MathHelper.floor_double(ply.posZ + zn * feetDistanceToCenter);
+		}
+		else
+		{
+			xx = MathHelper.floor_double(ply.posX);
+			zz = MathHelper.floor_double(ply.posZ);
+		}
 		
 		boolean worked = makeSoundForBlock(ply, volume, xx, yy, zz, event);
 		
