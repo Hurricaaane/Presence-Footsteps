@@ -18,5 +18,5 @@ package eu.ha3.mc.presencefootsteps.engine.interfaces;
 
 public enum EventType
 {
-	WALK, RUN, JUMP, LAND, WANDER
+	WALK, RUN, JUMP, LAND, WANDER, SWIM
 }
