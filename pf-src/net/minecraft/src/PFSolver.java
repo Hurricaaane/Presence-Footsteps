@@ -251,7 +251,10 @@ public class PFSolver implements Solver
 			{
 				// Player has stepped on a non-emitter block
 				// as defined in the blockmap
-				PFHaddon.debug("Not emitter for " + block + ":" + metadata);
+				if (block != 0)
+				{
+					PFHaddon.debug("Not emitter for " + block + ":" + metadata);
+				}
 				
 				return null;
 			}
@@ -286,7 +289,7 @@ public class PFSolver implements Solver
 			options.getMap().put("gliding_volume", volume);
 			
 			this.isolator.getAcoustics().playAcoustic(ply, "_SWIM", EventType.SWIM, options);
-			System.out.println("tees");
+			
 			return true;
 		}
 		
