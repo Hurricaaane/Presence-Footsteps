@@ -376,7 +376,7 @@ public class PFReaderH implements VariableGenerator
 			else
 			{
 				PFHaddon.debug("Playing base Minecaft step for " + block + ":" + metadata);
-				PFHaddon.debug("Playing base Minecaft step for " + block);
+				this.mod.getAcoustics().playStep(ply, xx, yy, zz, block);
 			}
 			
 		}
