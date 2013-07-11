@@ -92,35 +92,33 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	private void reloadVariatorFromFile()
 	{
+		Variator var = new NormalVariator();
+		
 		File configFile = new File(util().getMinecraftDir(), "pf.cfg");
 		if (configFile.exists())
 		{
-			log("Config file found. Loading...");
 			try
 			{
 				ConfigProperty config = new ConfigProperty();
 				config.setSource(configFile.getCanonicalPath());
 				config.load();
 				
-				Variator var = new NormalVariator();
 				var.loadConfig(config);
-				
-				this.isolator.setVariator(var);
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
+				PFHaddon.log("Loading default configuration failed: " + e.getMessage());
 			}
-			log("Loaded.");
-			
 		}
+		
+		this.isolator.setVariator(var);
 	}
 	
 	private void reloadBlockMapFromFile()
 	{
 		PFBlockMap blockMap = new PFBlockMap();
 		
-		// Load configuration from source
 		try
 		{
 			ConfigProperty blockSound = new ConfigProperty();
@@ -132,7 +130,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		catch (IOException e)
 		{
 			e.printStackTrace();
-			throw new RuntimeException("Error caused config not to work: " + e.getMessage());
+			PFHaddon.log("Loading default blockmap failed: " + e.getMessage());
 		}
 		
 		this.isolator.setBlockMap(blockMap);
@@ -141,10 +139,10 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	private void reloadAcousticsFromFile()
 	{
 		AcousticsManager acoustics = new AcousticsManager();
-		String jasonString;
+		
 		try
 		{
-			jasonString =
+			String jasonString =
 				new Scanner(new File(util().getMinecraftDir(), "presencefootsteps/presence_acoustics.json"))
 					.useDelimiter("\\Z").next();
 			
@@ -153,6 +151,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
+			PFHaddon.log("Loading default acoustics failed: " + e.getMessage());
 		}
 		
 		this.isolator.setAcoustics(acoustics);
