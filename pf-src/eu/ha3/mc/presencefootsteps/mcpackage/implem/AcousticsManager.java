@@ -53,6 +53,8 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	
 	public AcousticsManager(Isolator isolator)
 	{
+		this.isolator = isolator;
+		
 		this.random = new Random();
 		this.pending = new ArrayList<PendingSound>();
 	}
