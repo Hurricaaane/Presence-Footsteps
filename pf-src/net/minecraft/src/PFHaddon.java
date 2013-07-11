@@ -140,7 +140,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	private void reloadAcousticsFromFile()
 	{
-		AcousticsManager acoustics = new AcousticsManager();
+		AcousticsManager acoustics = new AcousticsManager(this.isolator);
 		
 		try
 		{
@@ -157,6 +157,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		}
 		
 		this.isolator.setAcoustics(acoustics);
+		this.isolator.setSoundPlayer(acoustics);
+		this.isolator.setDefaultStepPlayer(acoustics);
 	}
 	
 	//

@@ -7,7 +7,6 @@ import java.util.Random;
 
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityLivingBase;
-import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.PFAccessors;
 import net.minecraft.src.PFHaddon;
 import eu.ha3.mc.presencefootsteps.engine.implem.AcousticsLibrary;
@@ -15,7 +14,7 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
-import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Generator;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -39,8 +38,10 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Generator;
  * @author Hurry
  * 
  */
-public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, DefaultStepPlayer, Generator
+public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, DefaultStepPlayer
 {
+	private Isolator isolator;
+	
 	private final Random random;
 	private List<PendingSound> pending;
 	private long minimum;
@@ -50,12 +51,10 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	private float LATENESS_THRESHOLD_DIVIDER = 5;
 	private double EARLYNESS_THRESHOLD_POW = 0.5d;
 	
-	public AcousticsManager()
+	public AcousticsManager(Isolator isolator)
 	{
 		this.random = new Random();
 		this.pending = new ArrayList<PendingSound>();
-		
-		this.myPlayer = this;
 	}
 	
 	@Override
@@ -119,7 +118,7 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	}
 	
 	@Override
-	public void generateFootsteps(EntityPlayer ply)
+	public void think()
 	{
 		if (this.pending.isEmpty())
 			return;
@@ -167,5 +166,11 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 		}
 		
 		this.minimum = newMinimum;
+	}
+	
+	@Override
+	protected SoundPlayer mySoundPlayer()
+	{
+		return this.isolator.getSoundPlayer();
 	}
 }

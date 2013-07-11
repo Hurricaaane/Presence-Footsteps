@@ -31,8 +31,6 @@ public abstract class AcousticsLibrary implements Library
 {
 	private Map<String, Acoustic> acoustics;
 	
-	protected SoundPlayer myPlayer;
-	
 	public AcousticsLibrary()
 	{
 		this.acoustics = new HashMap<String, Acoustic>();
@@ -74,7 +72,7 @@ public abstract class AcousticsLibrary implements Library
 			return;
 		}
 		
-		this.acoustics.get(acousticName).playSound(this.myPlayer, location, event, inputOptions);
+		this.acoustics.get(acousticName).playSound(mySoundPlayer(), location, event, inputOptions);
 	}
 	
 	@Override
@@ -85,4 +83,6 @@ public abstract class AcousticsLibrary implements Library
 	
 	protected abstract void onAcousticNotFound(
 		Object location, String acousticName, EventType event, Options inputOptions);
+	
+	protected abstract SoundPlayer mySoundPlayer();
 }

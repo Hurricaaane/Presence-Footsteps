@@ -1,7 +1,9 @@
 package net.minecraft.src;
 
-import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.Library;
+import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.BlockMap;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Generator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.GeneratorSettable;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
@@ -30,9 +32,11 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	@SuppressWarnings("unused")
 	private PFHaddon mod; // Unused?
 	
-	private AcousticsManager acoustics;
+	private Library acoustics;
 	private Solver solver;
 	private BlockMap blockMap;
+	private SoundPlayer soundPlayer;
+	private DefaultStepPlayer defaultStepPlayer;
 	
 	private Variator VAR;
 	
@@ -54,13 +58,13 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 		this.genetaror.generateFootsteps(ply);
 		
 		// Delayed sounds
-		this.acoustics.generateFootsteps(null);
+		this.acoustics.think();
 	}
 	
 	//
 	
 	@Override
-	public AcousticsManager getAcoustics()
+	public Library getAcoustics()
 	{
 		return this.acoustics;
 	}
@@ -77,10 +81,22 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 		return this.blockMap;
 	}
 	
+	@Override
+	public SoundPlayer getSoundPlayer()
+	{
+		return this.soundPlayer;
+	}
+	
+	@Override
+	public DefaultStepPlayer getDefaultStepPlayer()
+	{
+		return this.defaultStepPlayer;
+	}
+	
 	//
 	
 	@Override
-	public void setAcoustics(AcousticsManager acoustics)
+	public void setAcoustics(Library acoustics)
 	{
 		this.acoustics = acoustics;
 	}
@@ -95,6 +111,18 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	public void setBlockMap(BlockMap blockMap)
 	{
 		this.blockMap = blockMap;
+	}
+	
+	@Override
+	public void setSoundPlayer(SoundPlayer soundPlayer)
+	{
+		this.soundPlayer = soundPlayer;
+	}
+	
+	@Override
+	public void setDefaultStepPlayer(DefaultStepPlayer defaultStepPlayer)
+	{
+		this.defaultStepPlayer = defaultStepPlayer;
 	}
 	
 	//

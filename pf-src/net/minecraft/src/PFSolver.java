@@ -57,7 +57,8 @@ public class PFSolver implements Solver
 		if (assos.startsWith(PFSolver.NO_ASSOCIATION))
 		{
 			String[] noAssos = assos.split(":");
-			this.isolator.getAcoustics().playStep(ply, i(noAssos[1]), i(noAssos[2]), i(noAssos[3]), i(noAssos[4]));
+			this.isolator.getDefaultStepPlayer().playStep(
+				ply, i(noAssos[1]), i(noAssos[2]), i(noAssos[3]), i(noAssos[4]));
 		}
 		else
 		{

@@ -71,4 +71,9 @@ public interface Library
 	 * @return
 	 */
 	public boolean hasAcoustic(String acoustic);
+	
+	/**
+	 * Run various things, such as queued sounds.
+	 */
+	public void think();
 }
