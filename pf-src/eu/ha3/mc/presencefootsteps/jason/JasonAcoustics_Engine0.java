@@ -158,7 +158,7 @@ public class JasonAcoustics_Engine0
 			BasicAcoustic a = new BasicAcoustic();
 			prepareDefaults(a);
 			
-			a.setSoundName(this.soundRoot + unsolved.getAsString());
+			setupSoundName(a, unsolved.getAsString());
 			
 			ret = a;
 		}
@@ -232,9 +232,21 @@ public class JasonAcoustics_Engine0
 		a.setPitchMax(this.default_pitchMax);
 	}
 	
+	private void setupSoundName(BasicAcoustic a, String soundName)
+	{
+		if (!soundName.startsWith("@"))
+		{
+			a.setSoundName(this.soundRoot + soundName);
+		}
+		else
+		{
+			a.setSoundName(soundName.replace("@", ""));
+		}
+	}
+	
 	private void setupClassics(BasicAcoustic a, JsonObject solved)
 	{
-		a.setSoundName(this.soundRoot + solved.get("name").getAsString());
+		setupSoundName(a, solved.get("name").getAsString());
 		
 		if (solved.has("vol_min"))
 		{
