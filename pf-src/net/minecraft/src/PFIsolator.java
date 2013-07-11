@@ -40,7 +40,7 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	
 	private Variator VAR;
 	
-	private Generator genetaror;
+	private Generator generator;
 	
 	public PFIsolator(PFHaddon mod)
 	{
@@ -55,7 +55,7 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 		if (ply == null)
 			return;
 		
-		this.genetaror.generateFootsteps(ply);
+		this.generator.generateFootsteps(ply);
 		
 		// Delayed sounds
 		this.acoustics.think();
@@ -131,7 +131,7 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	public void setVariator(Variator var)
 	{
 		this.VAR = var;
-		fixVariator(this.genetaror);
+		fixVariator(this.generator);
 	}
 	
 	//
@@ -139,8 +139,8 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	@Override
 	public void setGenerator(Generator generator)
 	{
-		this.genetaror = generator;
-		fixVariator(this.genetaror);
+		this.generator = generator;
+		fixVariator(this.generator);
 	}
 	
 	/**
