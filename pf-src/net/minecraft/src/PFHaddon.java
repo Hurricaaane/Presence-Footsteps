@@ -3,22 +3,18 @@ package net.minecraft.src;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
 
 import eu.ha3.easy.EdgeModel;
 import eu.ha3.easy.EdgeTrigger;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
-import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
-import eu.ha3.mc.presencefootsteps.jason.JasonAcoustics_Engine0;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.NormalVariator;
-import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.VariableGenerator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.mc.presencefootsteps.mod.UpdateNotifier;
+import eu.ha3.mc.presencefootsteps.parsers.JasonAcoustics_Engine0;
+import eu.ha3.mc.presencefootsteps.parsers.PropertyBlockMap_Engine0;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /*
@@ -41,18 +37,12 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 {
 	public static final int VERSION = 0;
 	
-	private VariableGenerator generator;
 	private UpdateNotifier update;
-	
-	private ConfigProperty blockSound;
-	private Map<String, String> blockMap;
 	
 	private EdgeTrigger debugButton;
 	private static boolean isDebugEnabled;
 	
-	private AcousticsManager acoustics;
-	
-	private PFSolver solver;
+	private PFIsolator isolator;
 	
 	@Override
 	public void onLoad()
@@ -65,8 +55,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 				reloadVariatorFromFile();
 				reloadBlockMapFromFile();
 				reloadAcousticsFromFile();
-				
-				PFHaddon.this.acoustics.playAcoustic(Minecraft.getMinecraft().thePlayer, "snow", EventType.WALK);
 			}
 			
 			@Override
@@ -75,23 +63,25 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			}
 		});
 		
-		//fixInstallation();
 		loadSounds();
 		
-		if (isInstalledMLP())
+		/*if (isInstalledMLP())
 		{
-			this.generator = new PFReaderMLP(this);
+			this.generator = new PFReaderMLP(this.isolator);
 		}
 		else
 		{
-			this.generator = new PFReader4P(this);
-		}
+			this.generator = new PFReader4P(this.isolator);
+		}*/
 		
-		this.solver = new PFSolver(this);
+		this.isolator = new PFIsolator(this);
 		
-		reloadVariatorFromFile();
 		reloadBlockMapFromFile();
 		reloadAcousticsFromFile();
+		this.isolator.setSolver(new PFSolver(this.isolator));
+		reloadVariatorFromFile();
+		
+		this.isolator.setGenerator(new PFReaderH(this.isolator));
 		
 		manager().hookFrameEvents(true);
 		
@@ -115,7 +105,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 				Variator var = new NormalVariator();
 				var.loadConfig(config);
 				
-				this.generator.setVariator(var);
+				this.isolator.setVariator(var);
 			}
 			catch (Exception e)
 			{
@@ -128,68 +118,47 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	private void reloadBlockMapFromFile()
 	{
-		final int softBlocks[] = { 2, 18, 19, 35, 60, 78, 80, 81, 110, 111 };
-		
-		this.blockMap = new LinkedHashMap<String, String>();
-		this.blockSound = new ConfigProperty();
-		for (int block : softBlocks)
-		{
-			this.blockSound.setProperty(Integer.toString(block), "soft");
-		}
-		this.blockSound.setProperty("default_material.step", "pf_sounds.hoofstep");
-		this.blockSound.setProperty("soft.step", "pf_sounds.softstep");
-		this.blockSound.commit();
+		PFBlockMap blockMap = new PFBlockMap();
 		
 		// Load configuration from source
 		try
 		{
-			this.blockSound.setSource(new File(util().getMinecraftDir(), "pf_blockmap.cfg").getCanonicalPath());
-			this.blockSound.load();
+			ConfigProperty blockSound = new ConfigProperty();
+			blockSound.setSource(new File(util().getMinecraftDir(), "pf_blockmap.cfg").getCanonicalPath());
+			blockSound.load();
+			
+			new PropertyBlockMap_Engine0().setup(blockSound, blockMap);
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 			throw new RuntimeException("Error caused config not to work: " + e.getMessage());
 		}
-		createBlockMap();
+		
+		this.isolator.setBlockMap(blockMap);
 	}
 	
 	private void reloadAcousticsFromFile()
 	{
-		this.acoustics = new AcousticsManager();
+		AcousticsManager acoustics = new AcousticsManager();
 		String jasonString;
 		try
 		{
 			jasonString =
 				new Scanner(new File(util().getMinecraftDir(), "presencefootsteps/presence_acoustics.json"))
 					.useDelimiter("\\Z").next();
-			new JasonAcoustics_Engine0("pf_library.presence.").parseJSON(jasonString, this.acoustics);
+			
+			new JasonAcoustics_Engine0("pf_library.presence.").parseJSON(jasonString, acoustics);
 		}
 		catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
 		}
+		
+		this.isolator.setAcoustics(acoustics);
 	}
 	
-	private void createBlockMap()
-	{
-		Map<String, String> properties = this.blockSound.getAllProperties();
-		for (Entry<String, String> entry : properties.entrySet())
-		{
-			try
-			{
-				// blockID = Integer.parseInt(entry.getKey());
-				this.blockMap.put(entry.getKey(), entry.getValue());
-				
-			}
-			catch (Exception e)
-			{
-				log("Error when registering block " + entry.getKey() + ": " + e.getMessage());
-			}
-			
-		}
-		
-	}
+	//
 	
 	private boolean isInstalledMLP()
 	{
@@ -206,6 +175,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		}
 	}
 	
+	//
+	
 	@Override
 	public void onFrame(float semi)
 	{
@@ -214,8 +185,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		if (ply == null)
 			return;
 		
-		this.generator.generateFootsteps(ply);
-		this.acoustics.generateFootsteps(null);
+		this.isolator.onFrame();
+		
 		this.debugButton.signalState(util().areKeysDown(29, 42, 33)); // CTRL SHIFT F
 		
 		try
@@ -291,71 +262,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	public void saveConfig()
 	{
-	}
-	
-	/**
-	 * This will return null if the block is not defined, and NOT_EMITTER if the
-	 * block is a non-emitting block, meaning block resolution must continue on
-	 * its neighbors.
-	 * 
-	 * @param block
-	 * @param meta
-	 * @return
-	 */
-	public String getAssociationForBlock(int block, int meta)
-	{
-		String material = null;
-		
-		if (this.blockMap.containsKey(block + "_" + meta))
-		{
-			material = this.blockMap.get(block + "_" + meta);
-		}
-		else if (this.blockMap.containsKey(Integer.toString(block)))
-		{
-			material = this.blockMap.get(Integer.toString(block));
-		}
-		else
-		{
-			material = null;
-		}
-		
-		return material;
-	}
-	
-	/**
-	 * This will return null if the block is not a carpet.
-	 * 
-	 * @param carpet
-	 * @param meta
-	 * @param event
-	 * @return
-	 */
-	public String getAssociationForCarpet(int carpet, int meta)
-	{
-		String material = null;
-		
-		if (this.blockMap.containsKey(carpet + "_" + meta + ".carpet"))
-		{
-			material = this.blockMap.get(carpet + "_" + meta + ".carpet");
-		}
-		else if (this.blockMap.containsKey(Integer.toString(carpet) + ".carpet"))
-		{
-			material = this.blockMap.get(Integer.toString(carpet) + ".carpet");
-		}
-		else
-			return null;
-		
-		return material;
-	}
-	
-	public AcousticsManager getAcoustics()
-	{
-		return this.acoustics;
-	}
-	
-	public PFSolver getSolver()
-	{
-		return this.solver;
 	}
 	
 }

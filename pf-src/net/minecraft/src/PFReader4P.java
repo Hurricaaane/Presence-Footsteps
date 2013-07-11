@@ -29,9 +29,9 @@ public class PFReader4P extends PFReaderH
 	protected long airborneTime;
 	protected long immobileTime;
 	
-	public PFReader4P(PFHaddon mod)
+	public PFReader4P(Isolator isolator)
 	{
-		super(mod);
+		super(isolator);
 	}
 	
 	@Override

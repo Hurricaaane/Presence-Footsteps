@@ -1,4 +1,4 @@
-package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
+package eu.ha3.mc.presencefootsteps.parsers;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,6 +16,8 @@ package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public interface VariableGenerator extends Generator, VariatorSettable
+public class UnexpectedDataException extends Exception
 {
+	private static final long serialVersionUID = 4586255498544473275L;
+	
 }

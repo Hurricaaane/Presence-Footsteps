@@ -5,8 +5,9 @@ import java.util.Random;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.NormalVariator;
-import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.VariableGenerator;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Generator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.VariatorSettable;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -24,10 +25,10 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class PFReaderH implements VariableGenerator
+public class PFReaderH implements Generator, VariatorSettable
 {
 	// Construct
-	final protected PFHaddon mod;
+	final protected Isolator mod;
 	protected NormalVariator VAR;
 	protected Random rand;
 	
@@ -46,9 +47,9 @@ public class PFReaderH implements VariableGenerator
 	
 	protected boolean isRightFoot;
 	
-	public PFReaderH(PFHaddon mod)
+	public PFReaderH(Isolator isolator)
 	{
-		this.mod = mod;
+		this.mod = isolator;
 		this.VAR = new NormalVariator();
 		this.rand = new Random();
 	}

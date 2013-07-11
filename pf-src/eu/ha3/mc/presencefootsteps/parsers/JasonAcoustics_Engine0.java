@@ -1,4 +1,4 @@
-package eu.ha3.mc.presencefootsteps.jason;
+package eu.ha3.mc.presencefootsteps.parsers;
 
 import java.util.ArrayList;
 import java.util.HashMap;

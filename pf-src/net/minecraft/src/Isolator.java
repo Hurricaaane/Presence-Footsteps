@@ -1,4 +1,6 @@
-package eu.ha3.mc.presencefootsteps.jason;
+package net.minecraft.src;
+
+import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,8 +18,21 @@ package eu.ha3.mc.presencefootsteps.jason;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class UnexpectedDataException extends Exception
+public interface Isolator
 {
-	private static final long serialVersionUID = 4586255498544473275L;
+	
+	public abstract void onFrame();
+	
+	public abstract AcousticsManager getAcoustics();
+	
+	public abstract PFSolver getSolver();
+	
+	public abstract PFBlockMap getBlockMap();
+	
+	public abstract void setAcoustics(AcousticsManager acoustics);
+	
+	public abstract void setSolver(PFSolver solver);
+	
+	public abstract void setBlockMap(PFBlockMap blockMap);
 	
 }

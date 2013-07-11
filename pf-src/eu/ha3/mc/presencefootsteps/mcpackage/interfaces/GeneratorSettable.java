@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
 
 /*
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
@@ -16,23 +16,7 @@ package net.minecraft.src;
   0. You just DO WHAT THE FUCK YOU WANT TO. 
 */
 
-public class PFReaderMLP extends PFReader4P
+public interface GeneratorSettable
 {
-	public PFReaderMLP(Isolator isolator)
-	{
-		super(isolator);
-	}
-	
-	@Override
-	public void generateFootsteps(EntityPlayer ply)
-	{
-		//if (true)
-		//	throw new Minecraft161NotYetFixedRuntimeException();
-		
-		// recomment on fix
-		//Pony pony = Pony.getPonyFromRegistry(ply, this.mod.manager().getMinecraft().renderEngine);
-		//this.isPegasus = pony != null ? pony.isPegasus() : false;
-		
-		super.generateFootsteps(ply);
-	}
+	public void setGenerator(Generator generator);
 }

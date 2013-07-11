@@ -38,12 +38,12 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
  */
 public class PFSolver
 {
-	private final PFHaddon mod;
+	private final Isolator isolator;
 	public static String NO_ASSOCIATION = "_NO_ASSOCIATION";
 	
-	public PFSolver(PFHaddon mod)
+	public PFSolver(Isolator isolator)
 	{
-		this.mod = mod;
+		this.isolator = isolator;
 	}
 	
 	public void playAssociation(EntityPlayer ply, String assos, EventType eventType)
@@ -54,11 +54,11 @@ public class PFSolver
 		if (assos.startsWith(PFSolver.NO_ASSOCIATION))
 		{
 			String[] noAssos = assos.split(":");
-			this.mod.getAcoustics().playStep(ply, i(noAssos[1]), i(noAssos[2]), i(noAssos[3]), i(noAssos[4]));
+			this.isolator.getAcoustics().playStep(ply, i(noAssos[1]), i(noAssos[2]), i(noAssos[3]), i(noAssos[4]));
 		}
 		else
 		{
-			this.mod.getAcoustics().playAcoustic(ply, assos, eventType);
+			this.isolator.getAcoustics().playAcoustic(ply, assos, eventType);
 		}
 	}
 	
@@ -262,7 +262,7 @@ public class PFSolver
 	 */
 	public String findAssociationForBlock(int xx, int yy, int zz)
 	{
-		World world = this.mod.manager().getMinecraft().theWorld;
+		World world = Minecraft.getMinecraft().theWorld;
 		
 		int block = world.getBlockId(xx, yy, zz);
 		int metadata = world.getBlockMetadata(xx, yy, zz);
@@ -286,12 +286,12 @@ public class PFSolver
 		int xmetadata = world.getBlockMetadata(xx, yy + 1, zz);
 		
 		// Try to see if the block above is a carpet...
-		String association = this.mod.getAssociationForCarpet(xblock, xmetadata);
+		String association = this.isolator.getBlockMap().getBlockMapForCarpet(xblock, xmetadata);
 		
 		if (association == null)
 		{
 			// Not a carpet
-			association = this.mod.getAssociationForBlock(block, metadata);
+			association = this.isolator.getBlockMap().getBlockMap(block, metadata);
 		}
 		else
 		{
@@ -346,7 +346,7 @@ public class PFSolver
 			ConfigOptions options = new ConfigOptions();
 			options.getMap().put("gliding_volume", volume);
 			
-			this.mod.getAcoustics().playAcoustic(ply, "_SWIM", EventType.SWIM, options);
+			this.isolator.getAcoustics().playAcoustic(ply, "_SWIM", EventType.SWIM, options);
 			
 			return true;
 		}
