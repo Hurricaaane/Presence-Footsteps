@@ -235,11 +235,11 @@ public class PFReader4P extends PFReaderH
 			if (dwm > distance)
 			{
 				volume = volume * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR;
-				makeSoundForPlayerBlock(ply, volume, 0d, EventType.WALK);
+				makeSoundForPlayerBlock(ply, 0d, EventType.WALK);
 				
 				if (isGallop && this.VAR.GALLOP_3STEP && this.hoof >= 2)
 				{
-					makeSoundForPlayerBlock(ply, volume, 0d, EventType.WALK);
+					makeSoundForPlayerBlock(ply, 0d, EventType.WALK);
 					this.hoof = 0;
 				}
 				else

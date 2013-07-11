@@ -91,9 +91,8 @@ public class PFReaderH implements VariableGenerator
 	
 	protected void simulateFootsteps(EntityPlayer ply)
 	{
-		// final float distanceReference = ply.field_82151_R;
 		final float distanceReference = ply.distanceWalkedOnStepModified;
-		//System.out.println(distanceReference);
+		
 		if (this.dmwBase > distanceReference)
 		{
 			this.dmwBase = 0;
@@ -105,7 +104,6 @@ public class PFReaderH implements VariableGenerator
 			float dwm = distanceReference - this.dmwBase;
 			boolean immobile = stoppedImmobile(distanceReference);
 			
-			//float speed = (float) Math.sqrt(ply.motionX * ply.motionX + ply.motionZ * ply.motionZ);
 			float distance = 0f;
 			float volume = this.VAR.WALK_VOLUME;
 			
@@ -114,10 +112,6 @@ public class PFReaderH implements VariableGenerator
 				volume = this.VAR.LADDER_VOLUME;
 				distance = this.VAR.LADDER_DISTANCE;
 			}
-			/*else if (!ply.onGround && !ply.isInWater())
-			{
-				volume = 0;
-			}*/
 			else if (Math.abs(this.yPosition - ply.posY) > 0.4d && Math.abs(this.yPosition - ply.posY) < 0.7d)
 			{
 				// This ensures this does not get recorded as landing, but as a step
@@ -140,7 +134,7 @@ public class PFReaderH implements VariableGenerator
 				
 				double speed = ply.motionX * ply.motionX + ply.motionZ * ply.motionZ;
 				
-				makeSoundForPlayerBlock(ply, volume, 0d, speed > 0.022f ? EventType.RUN : EventType.WALK);
+				makeSoundForPlayerBlock(ply, 0d, speed > 0.022f ? EventType.RUN : EventType.WALK);
 				
 				this.isRightFoot = !this.isRightFoot;
 				this.dmwBase = distanceReference;
@@ -179,33 +173,19 @@ public class PFReaderH implements VariableGenerator
 		{
 			if (this.VAR.PLAY_STEP_ON_JUMP)
 			{
-				makeSoundForPlayerBlock(
-					ply, this.VAR.JUMP_VOLUME * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR, 0.5d, EventType.JUMP);
-			}
-			
-			if (this.VAR.PLAY_SPECIAL_ON_JUMP)
-			{
-				// MAKE VARIATOR FOR PITCH ETC.
-				//ply.playSound("UNDONE", 0, 1.0f + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4f);
+				makeSoundForPlayerBlock(ply, 0.5d, EventType.JUMP);
 			}
 		}
 		else if (!this.isFlying && this.fallDistance > this.VAR.LAND_HARD_DISTANCE_MIN)
 		{
 			if (this.VAR.PLAY_STEP_ON_LAND_HARD)
 			{
-				makeSoundForPlayerBlock(
-					ply, this.VAR.LAND_HARD_VOLUME * this.VAR.GLOBAL_VOLUME_MULTIPLICATOR, 0d, EventType.LAND);
-			}
-			
-			if (this.VAR.PLAY_SPECIAL_ON_LAND_HARD)
-			{
-				// MAKE VARIATOR FOR PITCH ETC.
-				//ply.playSound("UNDONE", 0, 1.0f + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4f);
+				makeSoundForPlayerBlock(ply, 0d, EventType.LAND);
 			}
 		}
 	}
 	
-	protected void makeSoundForPlayerBlock(EntityPlayer ply, float volume, double minus, EventType event)
+	protected void makeSoundForPlayerBlock(EntityPlayer ply, double minus, EventType event)
 	{
 		int yy = MathHelper.floor_double(ply.posY - 0.1d - ply.yOffset - minus); // Support for trapdoors
 		//int yy = MathHelper.floor_double(ply.posY - 0.2d - ply.yOffset - minus);
@@ -214,9 +194,9 @@ public class PFReaderH implements VariableGenerator
 		int zz;
 		if (this.VAR.USE_TWO_FEET_DETECTION)
 		{
-			double rot = Math.toRadians(-MathHelper.wrapAngleTo180_float(ply.rotationYaw));
+			double rot = Math.toRadians(MathHelper.wrapAngleTo180_float(ply.rotationYaw));
 			double xn = Math.cos(rot);
-			double zn = -Math.sin(rot);
+			double zn = Math.sin(rot);
 			
 			float feetDistanceToCenter = 0.2f * (this.isRightFoot ? -1 : 1);
 			
@@ -229,7 +209,7 @@ public class PFReaderH implements VariableGenerator
 			zz = MathHelper.floor_double(ply.posZ);
 		}
 		
-		boolean worked = makeSoundForBlock(ply, volume, xx, yy, zz, event);
+		boolean worked = makeSoundForBlock(ply, xx, yy, zz, event);
 		
 		// If it didn't work, the player has walked over the air on the border of a block.
 		// ------ ------  --> z
@@ -271,22 +251,22 @@ public class PFReaderH implements VariableGenerator
 					// If we are in the positive border, add 1, else subtract 1
 					if (xdang > 0)
 					{
-						worked = makeSoundForBlock(ply, volume, xx + 1, yy, zz, event);
+						worked = makeSoundForBlock(ply, xx + 1, yy, zz, event);
 					}
 					else
 					{
-						worked = makeSoundForBlock(ply, volume, xx - 1, yy, zz, event);
+						worked = makeSoundForBlock(ply, xx - 1, yy, zz, event);
 					}
 				}
 				else
 				{
 					if (zdang > 0)
 					{
-						worked = makeSoundForBlock(ply, volume, xx, yy, zz + 1, event);
+						worked = makeSoundForBlock(ply, xx, yy, zz + 1, event);
 					}
 					else
 					{
-						worked = makeSoundForBlock(ply, volume, xx, yy, zz - 1, event);
+						worked = makeSoundForBlock(ply, xx, yy, zz - 1, event);
 					}
 				}
 				
@@ -299,22 +279,22 @@ public class PFReaderH implements VariableGenerator
 					{
 						if (zdang > 0)
 						{
-							worked = makeSoundForBlock(ply, volume, xx, yy, zz + 1, event);
+							worked = makeSoundForBlock(ply, xx, yy, zz + 1, event);
 						}
 						else
 						{
-							worked = makeSoundForBlock(ply, volume, xx, yy, zz - 1, event);
+							worked = makeSoundForBlock(ply, xx, yy, zz - 1, event);
 						}
 					}
 					else
 					{
 						if (xdang > 0)
 						{
-							worked = makeSoundForBlock(ply, volume, xx + 1, yy, zz, event);
+							worked = makeSoundForBlock(ply, xx + 1, yy, zz, event);
 						}
 						else
 						{
-							worked = makeSoundForBlock(ply, volume, xx - 1, yy, zz, event);
+							worked = makeSoundForBlock(ply, xx - 1, yy, zz, event);
 						}
 					}
 				}
@@ -323,7 +303,7 @@ public class PFReaderH implements VariableGenerator
 		}
 	}
 	
-	protected boolean makeSoundForBlock(EntityPlayer ply, float volume, int xx, int yy, int zz, EventType event)
+	protected boolean makeSoundForBlock(EntityPlayer ply, int xx, int yy, int zz, EventType event)
 	{
 		World world = this.mod.manager().getMinecraft().theWorld;
 		
@@ -340,100 +320,67 @@ public class PFReaderH implements VariableGenerator
 			}
 		}
 		
-		if (block > 0)
+		if (block == 0)
+			return false;
+		
+		if (ply.isInWater())
 		{
-			boolean overrode = false;
+			float var39 =
+				MathHelper.sqrt_double(ply.motionX
+					* ply.motionX * 0.2d + ply.motionY * ply.motionY + ply.motionZ * ply.motionZ * 0.2d) * 0.35f;
 			
-			if (ply.isInWater())
+			if (var39 > 1.0F)
 			{
-				float var39 =
-					MathHelper.sqrt_double(ply.motionX
-						* ply.motionX * 0.2d + ply.motionY * ply.motionY + ply.motionZ * ply.motionZ * 0.2d) * 0.35f;
-				
-				if (var39 > 1.0F)
-				{
-					var39 = 1.0F;
-				}
-				
-				ply.playSound("liquid.swim", var39, 1.0f + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4f);
+				var39 = 1.0F;
+			}
+			
+			ply.playSound("liquid.swim", var39, 1.0f + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4f);
+		}
+		else
+		{
+			// Try to see if the block above is a carpet...
+			String association =
+				this.mod.getAssociationForCarpet(
+					world.getBlockId(xx, yy + 1, zz), world.getBlockMetadata(xx, yy + 1, zz));
+			
+			if (association == null)
+			{
+				// Not a carpet
+				association = this.mod.getAssociationForBlock(block, metadata);
 			}
 			else
 			{
-				volume = volume * this.VAR.MATSTEPS_VOLUME_MULTIPLICATOR;
-				if (volume > 0)
+				PFHaddon.debug("Carpet detected");
+			}
+			
+			if (association != null)
+			{
+				// Player has stepped on a non-emitter block by blockmap choice
+				if (association.equals("NOT_EMITTER"))
 				{
-					if (this.VAR.PLAY_MATSTEPS)
-					{
-						// Try to see if the block above is a carpet...
-						String association =
-							this.mod.getAssociationForCarpet(
-								world.getBlockId(xx, yy + 1, zz), world.getBlockMetadata(xx, yy + 1, zz));
-						
-						if (association == null)
-						{
-							// Not a carpet
-							association = this.mod.getAssociationForBlock(block, metadata);
-						}
-						else
-						{
-							PFHaddon.debug("Carpet detected");
-						}
-						
-						if (association != null)
-						{
-							// Player has stepped on a non-emitter block by blockmap choice
-							if (association.equals("NOT_EMITTER"))
-							{
-								PFHaddon.debug("Not emitter for " + block + ":" + metadata);
-								
-								return false;
-							}
-							
-							// Player has stepped on a non-blank sound
-							if (!association.equals("BLANK"))
-							{
-								//ply.playSound(association, volume, randomPitch(1f, this.VAR.MATSTEP_PITCH_RADIUS));
-								if (this.mod.getAcoustics().hasAcoustic(association))
-								{
-									this.mod.getAcoustics().playAcoustic(ply, association, event);
-								}
-								else
-								{
-									PFHaddon.debug("Acoustic " + association + " is missing!");
-								}
-								
-								PFHaddon.debug("Playing sound " + association + " for " + block + ":" + metadata);
-								
-							}
-							else
-							{
-								PFHaddon.debug("Blank sound for " + block + ":" + metadata);
-							}
-						}
-						
-						// Sound isn't null
-						if (association != null /* && !sound.equals("DEFAULT")*/)
-						{
-							overrode = true;
-						}
-						else
-						{
-							PFHaddon.debug("Fallback to default for " + block + ":" + metadata);
-						}
-					}
+					PFHaddon.debug("Not emitter for " + block + ":" + metadata);
 					
-					// Should it play blocksteps? Requires blocksteps option and (all overrides or not overridden)
-					if (this.VAR.PLAY_BLOCKSTEPS && (!this.VAR.PLAY_OVERRIDES || !overrode))
-					{
-						ply.playStepSound(xx, yy, zz, block);
-						PFHaddon.debug("Playing base Minecaft step for " + block);
-					}
+					return false;
 				}
+				
+				PFHaddon.debug("Playing acoustic " + association + " for " + block + ":" + metadata);
+				if (this.mod.getAcoustics().hasAcoustic(association))
+				{
+					this.mod.getAcoustics().playAcoustic(ply, association, event);
+				}
+				else
+				{
+					PFHaddon.debug("Acoustic " + association + " is missing!");
+				}
+			}
+			else
+			{
+				PFHaddon.debug("Playing base Minecaft step for " + block + ":" + metadata);
+				PFHaddon.debug("Playing base Minecaft step for " + block);
 			}
 			
 		}
-		else
-			return false;
+		
 		return true;
 	}
 	

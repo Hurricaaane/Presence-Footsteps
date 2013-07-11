@@ -330,79 +330,18 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	{
 		String material = null;
 		
-		if (this.blockMap.containsKey(carpet + "_" + meta + ".flak"))
+		if (this.blockMap.containsKey(carpet + "_" + meta + ".carpet"))
 		{
-			material = this.blockMap.get(carpet + "_" + meta + ".flak");
+			material = this.blockMap.get(carpet + "_" + meta + ".carpet");
 		}
-		else if (this.blockMap.containsKey(Integer.toString(carpet) + ".flak"))
+		else if (this.blockMap.containsKey(Integer.toString(carpet) + ".carpet"))
 		{
-			material = this.blockMap.get(Integer.toString(carpet) + ".flak");
+			material = this.blockMap.get(Integer.toString(carpet) + ".carpet");
 		}
 		else
 			return null;
 		
 		return material;
-	}
-	
-	@Deprecated
-	public String getSoundForBlock(int block, int meta, EventType event)
-	{
-		String material = null;
-		
-		if (this.blockMap.containsKey(block + "_" + meta))
-		{
-			material = this.blockMap.get(block + "_" + meta);
-		}
-		else if (this.blockMap.containsKey(Integer.toString(block)))
-		{
-			material = this.blockMap.get(Integer.toString(block));
-		}
-		else
-		{
-			material = null;
-		}
-		
-		return getSoundForMaterial(material, event);
-	}
-	
-	@Deprecated
-	public String getFlakForBlock(int block, int meta, EventType event)
-	{
-		String material = null;
-		
-		if (this.blockMap.containsKey(block + "_" + meta + ".flak"))
-		{
-			material = this.blockMap.get(block + "_" + meta + ".flak");
-		}
-		else if (this.blockMap.containsKey(Integer.toString(block) + ".flak"))
-		{
-			material = this.blockMap.get(Integer.toString(block) + ".flak");
-		}
-		else
-			return null;
-		
-		return getSoundForMaterial(material, event);
-	}
-	
-	@Deprecated
-	public String getSoundForMaterial(String material, EventType event)
-	{
-		if (material == null || material.equals("FALLBACK"))
-			return null;
-		
-		if (material.equals("BLANK") || material.equals("NOT_EMITTER"))
-			return material;
-		
-		if (event == EventType.WALK)
-			return this.blockMap.get(material + ".step");
-		else if (event == EventType.JUMP)
-			return this.blockMap.containsKey(material + ".jump")
-				? this.blockMap.get(material + ".jump") : getSoundForMaterial(material, EventType.WALK);
-		else
-			//if (event == PFEventType.LAND)
-			return this.blockMap.containsKey(material + ".land")
-				? this.blockMap.get(material + ".land") : getSoundForMaterial(material, EventType.WALK);
-		
 	}
 	
 	public AcousticsManager getAcoustics()
