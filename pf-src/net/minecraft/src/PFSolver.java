@@ -28,7 +28,8 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
  * block is NOT MEANT to emit sounds (not equal to "no sound").<br>
  * The association "_NO_ASSOCIATION" is derived from AN ABSENCE of an entry in
  * the blockmap (after solving missing metadata and carpets).<br>
- * Any other association string returned by the findAssociation
+ * Any other association string returned by the findAssociation* methods
+ * correspond to an Acoustic name.
  * 
  * 
  * @author Hurry
