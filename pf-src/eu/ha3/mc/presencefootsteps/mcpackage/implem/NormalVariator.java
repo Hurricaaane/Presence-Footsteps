@@ -44,7 +44,7 @@ public class NormalVariator implements Variator
 	public float HUGEFALL_LANDING_DISTANCE_MIN = 3f;
 	public float HUGEFALL_LANDING_VOLUME_MAX = 0.5f;
 	public float HUGEFALL_LANDING_VOLUME_MIN = 0.1f;
-	public int IMMOBILE_DURATION = 700;
+	public int IMMOBILE_DURATION = 200;
 	public float JUMP_VOLUME = 1f;
 	public float LADDER_VOLUME = 1f;
 	
@@ -93,6 +93,8 @@ public class NormalVariator implements Variator
 	public float WING_SPEED_MAX = 0.2f + 0.25f;
 	public float WING_SPEED_MIN = 0.2f;
 	public float WING_VOLUME = 0.5f;
+	
+	public boolean MODERN_PLAY_WANDER = true;
 	
 	@Override
 	public void loadConfig(ConfigProperty config)

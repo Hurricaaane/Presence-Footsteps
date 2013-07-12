@@ -44,6 +44,10 @@ public class PFReaderH implements Generator, VariatorSettable
 	
 	protected boolean isRightFoot;
 	
+	protected double xMovec;
+	protected double zMovec;
+	protected boolean scalStat;
+	
 	public PFReaderH(Isolator isolator)
 	{
 		this.mod = isolator;
@@ -97,10 +101,32 @@ public class PFReaderH implements Generator, VariatorSettable
 			this.dwmYChange = 0;
 		}
 		
+		double movX = ply.motionX;
+		double movZ = ply.motionZ;
+		
+		double scal = movX * this.xMovec + movZ * this.zMovec;
+		if (this.scalStat != scal < 0.001f)
+		{
+			this.scalStat = !this.scalStat;
+			
+			if (this.scalStat && this.VAR.MODERN_PLAY_WANDER && !this.mod.getSolver().hasSpecialStoppingConditions(ply))
+			{
+				String assos = this.mod.getSolver().findAssociationForPlayer(ply, 0d, this.isRightFoot);
+				this.mod.getSolver().playAssociation(ply, assos, EventType.WANDER);
+			}
+		}
+		this.xMovec = movX;
+		this.zMovec = movZ;
+		
 		if (ply.onGround || ply.isInWater() || ply.isOnLadder())
 		{
 			float dwm = distanceReference - this.dmwBase;
 			boolean immobile = stoppedImmobile(distanceReference);
+			if (immobile && !ply.isOnLadder())
+			{
+				dwm = 0;
+				this.dmwBase = distanceReference;
+			}
 			
 			float distance = 0f;
 			
@@ -123,7 +149,7 @@ public class PFReaderH implements Generator, VariatorSettable
 				distance = this.VAR.MODERN_DISTANCE_HUMAN;
 			}
 			
-			if (immobile || dwm > distance)
+			if (dwm > distance)
 			{
 				if (!this.mod.getSolver().playSpecialStoppingConditions(ply))
 				{
