@@ -66,6 +66,17 @@ public abstract class AcousticsLibrary implements Library
 	@Override
 	public void playAcoustic(Object location, String acousticName, EventType event, Options inputOptions)
 	{
+		if (acousticName.contains(","))
+		{
+			String fragments[] = acousticName.split(",");
+			for (String fragment : fragments)
+			{
+				this.playAcoustic(location, fragment, event, inputOptions);
+			}
+			
+			return;
+		}
+		
 		if (!this.acoustics.containsKey(acousticName))
 		{
 			onAcousticNotFound(location, acousticName, event, inputOptions);

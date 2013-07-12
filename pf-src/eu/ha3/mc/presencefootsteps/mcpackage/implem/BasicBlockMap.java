@@ -52,17 +52,17 @@ public class BasicBlockMap implements BlockMap
 	}
 	
 	@Override
-	public String getBlockMapForCarpet(int carpet, int meta)
+	public String getBlockMapSubstrate(int block, int meta, String substrate)
 	{
 		String material = null;
 		
-		if (this.blockMap.containsKey(carpet + "_" + meta + ".carpet"))
+		if (this.blockMap.containsKey(block + "_" + meta + "." + substrate))
 		{
-			material = this.blockMap.get(carpet + "_" + meta + ".carpet");
+			material = this.blockMap.get(block + "_" + meta + "." + substrate);
 		}
-		else if (this.blockMap.containsKey(Integer.toString(carpet) + ".carpet"))
+		else if (this.blockMap.containsKey(Integer.toString(block) + "." + substrate))
 		{
-			material = this.blockMap.get(Integer.toString(carpet) + ".carpet");
+			material = this.blockMap.get(Integer.toString(block) + "." + substrate);
 		}
 		else
 			return null;

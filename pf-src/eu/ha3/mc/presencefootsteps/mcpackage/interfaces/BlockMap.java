@@ -31,14 +31,15 @@ public interface BlockMap
 	public abstract String getBlockMap(int block, int meta);
 	
 	/**
-	 * This will return null if the block is not a carpet.
+	 * This will return null if the substrate does not resolve in the selected
+	 * carpet.
 	 * 
 	 * @param carpet
 	 * @param meta
 	 * @param event
 	 * @return
 	 */
-	public abstract String getBlockMapForCarpet(int carpet, int meta);
+	public abstract String getBlockMapSubstrate(int block, int meta, String substrate);
 	
 	/**
 	 * Register an blockmap entry.

@@ -230,19 +230,32 @@ public class PFSolver implements Solver
 		int xmetadata = world.getBlockMetadata(xx, yy + 1, zz);
 		
 		// Try to see if the block above is a carpet...
-		String association = this.isolator.getBlockMap().getBlockMapForCarpet(xblock, xmetadata);
+		String association = this.isolator.getBlockMap().getBlockMapSubstrate(xblock, xmetadata, "carpet");
 		
 		if (association == null)
 		{
 			// Not a carpet
 			association = this.isolator.getBlockMap().getBlockMap(block, metadata);
+			
+			if (association != null)
+			{
+				// This block most not be executed if the association is a carpet
+				// => this block of code is here, not outside this if else group.
+				
+				String foliage = this.isolator.getBlockMap().getBlockMapSubstrate(xblock, xmetadata, "foliage");
+				if (foliage != null)
+				{
+					association = association + "," + foliage;
+					PFHaddon.debug("Foliage detected: " + foliage);
+				}
+			}
 		}
 		else
 		{
 			yy = yy + 1;
 			block = xblock;
 			metadata = xmetadata;
-			PFHaddon.debug("Carpet detected");
+			PFHaddon.debug("Carpet detected: " + association);
 		}
 		
 		if (association != null)
@@ -288,7 +301,8 @@ public class PFSolver implements Solver
 			ConfigOptions options = new ConfigOptions();
 			options.getMap().put("gliding_volume", volume);
 			
-			this.isolator.getAcoustics().playAcoustic(ply, "_SWIM", EventType.SPECIAL, options);
+			this.isolator.getAcoustics().playAcoustic(
+				ply, "_SWIM", ply.isInsideOfMaterial(Material.water) ? EventType.SPECIAL : EventType.WALK, options);
 			
 			return true;
 		}
