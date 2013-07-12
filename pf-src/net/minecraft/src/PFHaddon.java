@@ -15,6 +15,7 @@ import eu.ha3.mc.presencefootsteps.mcpackage.implem.NormalVariator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.BlockMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.mc.presencefootsteps.mod.UpdateNotifier;
+import eu.ha3.mc.presencefootsteps.mod.UserConfigSoundPlayerWrapper;
 import eu.ha3.mc.presencefootsteps.parsers.JasonAcoustics_Engine0;
 import eu.ha3.mc.presencefootsteps.parsers.PropertyBlockMap_Engine0;
 import eu.ha3.util.property.simple.ConfigProperty;
@@ -40,24 +41,38 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	public static final int VERSION = 0;
 	public static final String FOR = "1.6.1";
 	
-	private UpdateNotifier update;
-	
+	private File presenceDir;
+	private PFCacheRegistry cache;
 	private EdgeTrigger debugButton;
 	private static boolean isDebugEnabled;
 	
+	private ConfigProperty config;
+	
+	private File currentPackFolder;
 	private PFIsolator isolator;
+	
+	private UpdateNotifier update;
+	
+	private static String DEFAULT_PACK_NAME = "pf_presence";
+	private static String DEFAULT_PACK_FOLDER_PATH = "mods/" + DEFAULT_PACK_NAME + "/";
 	
 	@Override
 	public void onLoad()
 	{
+		this.presenceDir = new File(util().getMinecraftDir(), "presence/footsteps/");
+		if (!this.presenceDir.exists())
+		{
+			this.presenceDir.mkdirs();
+		}
+		this.cache = new PFCacheRegistry();
+		
 		this.debugButton = new EdgeTrigger(new EdgeModel() {
 			@Override
 			public void onTrueEdge()
 			{
 				setDebugEnabled(true);
-				reloadVariatorFromFile();
-				reloadBlockMapFromFile();
-				reloadAcousticsFromFile();
+				
+				reloadEverything(false);
 			}
 			
 			@Override
@@ -65,8 +80,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			{
 			}
 		});
-		
-		loadSounds();
 		
 		/*if (isInstalledMLP())
 		{
@@ -77,14 +90,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			this.generator = new PFReader4P(this.isolator);
 		}*/
 		
-		this.isolator = new PFIsolator(this);
-		
-		reloadBlockMapFromFile();
-		reloadAcousticsFromFile();
-		this.isolator.setSolver(new PFSolver(this.isolator));
-		reloadVariatorFromFile();
-		
-		this.isolator.setGenerator(new PFReader4P(this.isolator));
+		reloadEverything(false);
 		
 		manager().hookFrameEvents(true);
 		
@@ -93,11 +99,66 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 	}
 	
+	private void reloadEverything(boolean nested)
+	{
+		this.isolator = new PFIsolator(this);
+		
+		// Sets up the pack
+		reloadConfig();
+		
+		if (!this.currentPackFolder.exists())
+		{
+			PFHaddon.log("The pack '" + this.currentPackFolder.getPath() + "'does not exist!");
+			if (!nested)
+			{
+				this.currentPackFolder = new File(util().getMinecraftDir(), PFHaddon.DEFAULT_PACK_FOLDER_PATH);
+				PFHaddon.log("The pack '" + this.currentPackFolder.getPath() + "'does not exist!");
+				
+				reloadEverything(true);
+			}
+			else
+				throw new RuntimeException(
+					"Presence Footsteps cannot run because the default custom pack does not exist in the "
+						+ PFHaddon.DEFAULT_PACK_FOLDER_PATH + " folder.");
+		}
+		
+		reloadBlockMapFromFile();
+		reloadAcousticsFromFile();
+		this.isolator.setSolver(new PFSolver(this.isolator));
+		reloadVariatorFromFile();
+		loadSoundsFromPack(this.currentPackFolder);
+		
+		this.isolator.setGenerator(new PFReader4P(this.isolator));
+	}
+	
+	private void reloadConfig()
+	{
+		this.config = new ConfigProperty();
+		this.config.setProperty("user.vol_mod", 1f);
+		this.config.commit();
+		
+		try
+		{
+			this.config.setSource(new File(this.presenceDir, "userconfig.cfg").getCanonicalPath());
+			this.config.load();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException("Error caused config not to work: " + e.getMessage());
+		}
+		
+		this.currentPackFolder =
+			new File(util().getMinecraftDir(), "mods/"
+				+ (this.config.getAllProperties().containsKey("user.packname.r0")
+					? this.config.getString("user.packname.r0") : PFHaddon.DEFAULT_PACK_NAME) + "/");
+	}
+	
 	private void reloadVariatorFromFile()
 	{
 		Variator var = new NormalVariator();
 		
-		File configFile = new File(util().getMinecraftDir(), "pf.cfg");
+		File configFile = new File(this.currentPackFolder, "variator.cfg");
 		if (configFile.exists())
 		{
 			try
@@ -125,7 +186,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		try
 		{
 			ConfigProperty blockSound = new ConfigProperty();
-			blockSound.setSource(new File(util().getMinecraftDir(), "pf_blockmap.cfg").getCanonicalPath());
+			blockSound.setSource(new File(this.currentPackFolder, "blockmap.cfg").getCanonicalPath());
 			blockSound.load();
 			
 			new PropertyBlockMap_Engine0().setup(blockSound, blockMap);
@@ -146,10 +207,9 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		try
 		{
 			String jasonString =
-				new Scanner(new File(util().getMinecraftDir(), "presencefootsteps/presence_acoustics.json"))
-					.useDelimiter("\\Z").next();
+				new Scanner(new File(this.currentPackFolder, "acoustics.json")).useDelimiter("\\Z").next();
 			
-			new JasonAcoustics_Engine0("pf_library.presence.").parseJSON(jasonString, acoustics);
+			new JasonAcoustics_Engine0("").parseJSON(jasonString, acoustics);
 		}
 		catch (FileNotFoundException e)
 		{
@@ -158,7 +218,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		}
 		
 		this.isolator.setAcoustics(acoustics);
-		this.isolator.setSoundPlayer(acoustics);
+		this.isolator.setSoundPlayer(new UserConfigSoundPlayerWrapper(acoustics, this.config));
 		this.isolator.setDefaultStepPlayer(acoustics);
 	}
 	
@@ -170,12 +230,29 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			|| Ha3StaticUtilities.classExists("net.minecraft.src.Pony", this);
 	}
 	
-	private void loadSounds()
+	private void loadSoundsFromPack(File pack)
 	{
-		File dir = new File(util().getMinecraftDir(), "assets/minecraft/sound/pf_library/");
+		/*File dir = new File(util().getMinecraftDir(), "mods/");
 		if (dir.exists())
 		{
-			loadResource(dir, "pf_library/");
+			for (File possiblyASubDir : dir.listFiles())
+			{
+				if (possiblyASubDir.isDirectory() && possiblyASubDir.getName().startsWith("pf_"))
+				{
+					log("Found pf_ directory " + possiblyASubDir.getName());
+					File soundFolder = new File(possiblyASubDir, "assets/minecraft/sound/");
+					if (soundFolder.exists())
+					{
+						loadResource(soundFolder, "");
+					}
+				}
+			}
+		}*/
+		
+		File soundFolder = new File(pack, "assets/minecraft/sound/");
+		if (soundFolder.exists())
+		{
+			loadResource(soundFolder, "");
 		}
 	}
 	
@@ -210,7 +287,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	/**
 	 * Loads a resource and passes it to Minecraft to install.
 	 */
-	private void loadResource(File par1File, String par2Str)
+	private void loadResource(File par1File, String root)
 	{
 		File[] filesInThisDir = par1File.listFiles();
 		int fileCount = filesInThisDir.length;
@@ -221,17 +298,17 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			
 			if (file.isDirectory())
 			{
-				loadResource(file, par2Str + file.getName() + "/");
+				loadResource(file, root + file.getName() + "/");
 			}
 			else
 			{
 				try
 				{
-					getManager().getMinecraft().sndManager.addSound(par2Str + file.getName());
+					this.cache.cacheSound(root + file.getName());
 				}
 				catch (Exception var9)
 				{
-					log("Failed to add " + par2Str + file.getName());
+					log("Failed to add " + root + file.getName());
 				}
 			}
 		}

@@ -50,7 +50,8 @@ public class JasonAcoustics_Engine0
 {
 	private final int ENGINEVERSION = 0;
 	
-	private final String soundRoot;
+	private String soundRoot;
+	
 	private final Map<String, EventType> equivalents;
 	
 	private float default_volMin;
@@ -97,6 +98,11 @@ public class JasonAcoustics_Engine0
 		
 		if (!jason.has("contents"))
 			throw new UnexpectedDataException();
+		
+		if (jason.has("soundroot"))
+		{
+			this.soundRoot = this.soundRoot + jason.get("soundroot").getAsString();
+		}
 		
 		this.default_volMin = 1f;
 		this.default_volMax = 1f;
