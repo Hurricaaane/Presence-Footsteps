@@ -47,6 +47,7 @@ public class PFReaderH implements Generator, VariatorSettable
 	protected double xMovec;
 	protected double zMovec;
 	protected boolean scalStat;
+	private boolean stepThisFrame;
 	
 	public PFReaderH(Isolator isolator)
 	{
@@ -95,6 +96,8 @@ public class PFReaderH implements Generator, VariatorSettable
 	{
 		final float distanceReference = ply.distanceWalkedOnStepModified;
 		
+		this.stepThisFrame = false;
+		
 		if (this.dmwBase > distanceReference)
 		{
 			this.dmwBase = 0;
@@ -134,7 +137,8 @@ public class PFReaderH implements Generator, VariatorSettable
 			{
 				distance = this.VAR.MODERN_DISTANCE_LADDER;
 			}
-			else if (Math.abs(this.yPosition - ply.posY) > 0.4d && Math.abs(this.yPosition - ply.posY) < 0.7d)
+			else if (Math.abs(this.yPosition - ply.posY) > 0.4d //&& Math.abs(this.yPosition - ply.posY) < 0.7d)
+			)
 			{
 				// This ensures this does not get recorded as landing, but as a step
 				
@@ -161,6 +165,8 @@ public class PFReaderH implements Generator, VariatorSettable
 					
 					this.isRightFoot = !this.isRightFoot;
 				}
+				
+				this.stepThisFrame = true;
 				
 				this.dmwBase = distanceReference;
 			}
@@ -217,9 +223,9 @@ public class PFReaderH implements Generator, VariatorSettable
 				}
 			}
 		}
-		else if (!this.isFlying && this.fallDistance > this.VAR.LAND_HARD_DISTANCE_MIN)
+		else if (!this.isFlying)
 		{
-			if (this.VAR.PLAY_STEP_ON_LAND_HARD)
+			if (this.fallDistance > this.VAR.LAND_HARD_DISTANCE_MIN)
 			{
 				// Always assume the player lands on their two feet
 				playMultifoot(ply, 0d, EventType.LAND);
@@ -227,6 +233,12 @@ public class PFReaderH implements Generator, VariatorSettable
 				// Do not toggle foot:
 				// After landing sounds, the first foot will be same as the one used to jump.
 			}
+			else if (!this.stepThisFrame)
+			{
+				playSinglefoot(ply, 0d, EventType.WANDER, this.isRightFoot);
+				this.isRightFoot = !this.isRightFoot;
+			}
+			
 		}
 	}
 	
