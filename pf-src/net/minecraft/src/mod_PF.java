@@ -20,7 +20,7 @@ import eu.ha3.mc.convenience.Ha3StaticUtilities;
 
 public class mod_PF extends HaddonBridgeModLoader
 {
-	private static boolean DEV_MODE_USE_MODLOADER_COUNTERPART = true;
+	private static boolean DEV_MODE_USE_MODLOADER_COUNTERPART = false;
 	
 	public mod_PF()
 	{
@@ -40,6 +40,9 @@ public class mod_PF extends HaddonBridgeModLoader
 	
 	private static boolean isInstalledInDouble()
 	{
+		if (true)
+			return false;
+		
 		return !DEV_MODE_USE_MODLOADER_COUNTERPART
 			&& isPresentLiteModCounterpart(Minecraft.getMinecraft()) && isInstalledLiteLoader(Minecraft.getMinecraft());
 	}
