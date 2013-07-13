@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.src.PFHaddon;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Acoustic;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Library;
@@ -83,6 +84,7 @@ public abstract class AcousticsLibrary implements Library
 			return;
 		}
 		
+		PFHaddon.debug("  Playing acoustic " + acousticName + " for event " + event.toString().toUpperCase());
 		this.acoustics.get(acousticName).playSound(mySoundPlayer(), location, event, inputOptions);
 	}
 	

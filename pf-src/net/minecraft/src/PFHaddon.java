@@ -59,7 +59,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	@Override
 	public void onLoad()
 	{
-		this.presenceDir = new File(util().getMinecraftDir(), "presence/footsteps/");
+		this.presenceDir = new File(util().getMinecraftDir(), "mods/presencefootsteps/");
 		if (!this.presenceDir.exists())
 		{
 			this.presenceDir.mkdirs();

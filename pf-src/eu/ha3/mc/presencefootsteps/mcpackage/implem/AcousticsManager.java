@@ -3,6 +3,7 @@ package eu.ha3.mc.presencefootsteps.mcpackage.implem;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import net.minecraft.src.Entity;
@@ -88,13 +89,20 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 			}
 			else
 			{
-				((Entity) location).playSound(soundName, volume, pitch);
+				actuallyPlaySound((Entity) location, soundName, volume, pitch);
 			}
 		}
 		else
 		{
-			((Entity) location).playSound(soundName, volume, pitch);
+			actuallyPlaySound((Entity) location, soundName, volume, pitch);
 		}
+	}
+	
+	protected void actuallyPlaySound(Entity location, String soundName, float volume, float pitch)
+	{
+		PFHaddon.debug("    Playing sound "
+			+ soundName + " (" + String.format(Locale.ENGLISH, "v%.2f, p%.2f", volume, pitch) + ")");
+		location.playSound(soundName, volume, pitch);
 	}
 	
 	private long randAB(Random rng, long a, long b)
@@ -141,7 +149,7 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 			{
 				if (this.USING_EARLYNESS && time < sound.getTimeToPlay())
 				{
-					PFHaddon.debug("Playing early sound (early by "
+					PFHaddon.debug("    Playing early sound (early by "
 						+ (sound.getTimeToPlay() - time) + "ms, tolerence is "
 						+ Math.pow(sound.getMaximumBase(), this.EARLYNESS_THRESHOLD_POW));
 				}
@@ -155,7 +163,7 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 				}
 				else
 				{
-					PFHaddon.debug("Skipped late sound (late by "
+					PFHaddon.debug("    Skipped late sound (late by "
 						+ lateness + "ms, tolerence is " + sound.getMaximumBase() / this.LATENESS_THRESHOLD_DIVIDER
 						+ "ms)");
 				}

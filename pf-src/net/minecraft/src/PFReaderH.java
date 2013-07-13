@@ -123,6 +123,8 @@ public class PFReaderH implements Generator, VariatorSettable
 		
 		if (ply.onGround || ply.isInWater() || ply.isOnLadder())
 		{
+			EventType event = null;
+			
 			float dwm = distanceReference - this.dmwBase;
 			boolean immobile = stoppedImmobile(distanceReference);
 			if (immobile && !ply.isOnLadder())
@@ -143,7 +145,18 @@ public class PFReaderH implements Generator, VariatorSettable
 				// This ensures this does not get recorded as landing, but as a step
 				
 				// Going upstairs --- Going downstairs
-				distance = this.yPosition < ply.posY ? this.VAR.MODERN_DISTANCE_STAIR : -1f;
+				if (this.yPosition < ply.posY)
+				{
+					// Going upstairs
+					distance = this.VAR.MODERN_DISTANCE_STAIR;
+					event = speedDisambiguator(ply, EventType.UP, EventType.UP_RUN);
+				}
+				else
+				{
+					// Going downstairs
+					distance = -1f;
+					event = speedDisambiguator(ply, EventType.DOWN, EventType.DOWN_RUN);
+				}
 				
 				this.dwmYChange = distanceReference;
 				
@@ -157,8 +170,10 @@ public class PFReaderH implements Generator, VariatorSettable
 			{
 				if (!this.mod.getSolver().playSpecialStoppingConditions(ply))
 				{
-					double speed = ply.motionX * ply.motionX + ply.motionZ * ply.motionZ;
-					EventType event = speed > this.VAR.MODERN_SPEED_TO_RUN ? EventType.RUN : EventType.WALK;
+					if (event == null)
+					{
+						event = speedDisambiguator(ply, EventType.WALK, EventType.RUN);
+					}
 					
 					String assos = this.mod.getSolver().findAssociationForPlayer(ply, 0d, this.isRightFoot);
 					this.mod.getSolver().playAssociation(ply, assos, event);
@@ -235,11 +250,17 @@ public class PFReaderH implements Generator, VariatorSettable
 			}
 			else if (!this.stepThisFrame)
 			{
-				playSinglefoot(ply, 0d, EventType.WANDER, this.isRightFoot);
+				playSinglefoot(ply, 0d, speedDisambiguator(ply, EventType.CLIMB, EventType.CLIMB_RUN), this.isRightFoot);
 				this.isRightFoot = !this.isRightFoot;
 			}
 			
 		}
+	}
+	
+	protected EventType speedDisambiguator(EntityPlayer ply, EventType walk, EventType run)
+	{
+		double speed = ply.motionX * ply.motionX + ply.motionZ * ply.motionZ;
+		return speed > this.VAR.MODERN_SPEED_TO_RUN ? run : walk;
 	}
 	
 	//

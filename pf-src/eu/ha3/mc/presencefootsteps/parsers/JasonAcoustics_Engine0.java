@@ -71,7 +71,13 @@ public class JasonAcoustics_Engine0
 		this.equivalents.put("run", EventType.RUN);
 		this.equivalents.put("jump", EventType.JUMP);
 		this.equivalents.put("land", EventType.LAND);
-		this.equivalents.put("special", EventType.SPECIAL);
+		this.equivalents.put("swim", EventType.SWIM);
+		this.equivalents.put("climb", EventType.CLIMB);
+		this.equivalents.put("up", EventType.UP);
+		this.equivalents.put("down", EventType.DOWN);
+		this.equivalents.put("climb_run", EventType.CLIMB_RUN);
+		this.equivalents.put("up_run", EventType.UP_RUN);
+		this.equivalents.put("down_run", EventType.DOWN_RUN);
 	}
 	
 	public void parseJSON(String jasonString, Library lib)

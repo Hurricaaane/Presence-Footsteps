@@ -302,7 +302,7 @@ public class PFSolver implements Solver
 			options.getMap().put("gliding_volume", volume);
 			
 			this.isolator.getAcoustics().playAcoustic(
-				ply, "_SWIM", ply.isInsideOfMaterial(Material.water) ? EventType.SPECIAL : EventType.WALK, options);
+				ply, "_SWIM", ply.isInsideOfMaterial(Material.water) ? EventType.SWIM : EventType.WALK, options);
 			
 			return true;
 		}
