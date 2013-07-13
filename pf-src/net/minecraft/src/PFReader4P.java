@@ -153,6 +153,7 @@ public class PFReader4P extends PFReaderH
 			float distance = 0f;
 			
 			boolean isGallop = false;
+			@SuppressWarnings("unused")
 			float specialVolume = -1f;
 			
 			EventType event = EventType.WALK;

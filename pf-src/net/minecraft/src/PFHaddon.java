@@ -7,7 +7,6 @@ import java.util.Scanner;
 
 import eu.ha3.easy.EdgeModel;
 import eu.ha3.easy.EdgeTrigger;
-import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.BasicBlockMap;
@@ -128,7 +127,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		reloadVariatorFromFile();
 		loadSoundsFromPack(this.currentPackFolder);
 		
-		this.isolator.setGenerator(new PFReader4P(this.isolator));
+		this.isolator.setGenerator(new PFReaderH(this.isolator));
 	}
 	
 	private void reloadConfig()
@@ -224,31 +223,14 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	//
 	
-	private boolean isInstalledMLP()
+	/*private boolean isInstalledMLP()
 	{
 		return Ha3StaticUtilities.classExists("Pony", this)
 			|| Ha3StaticUtilities.classExists("net.minecraft.src.Pony", this);
-	}
+	}*/
 	
 	private void loadSoundsFromPack(File pack)
 	{
-		/*File dir = new File(util().getMinecraftDir(), "mods/");
-		if (dir.exists())
-		{
-			for (File possiblyASubDir : dir.listFiles())
-			{
-				if (possiblyASubDir.isDirectory() && possiblyASubDir.getName().startsWith("pf_"))
-				{
-					log("Found pf_ directory " + possiblyASubDir.getName());
-					File soundFolder = new File(possiblyASubDir, "assets/minecraft/sound/");
-					if (soundFolder.exists())
-					{
-						loadResource(soundFolder, "");
-					}
-				}
-			}
-		}*/
-		
 		File soundFolder = new File(pack, "assets/minecraft/sound/");
 		if (soundFolder.exists())
 		{
