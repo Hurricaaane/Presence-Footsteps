@@ -137,7 +137,7 @@ public class PFReaderH implements Generator, VariatorSettable
 			{
 				distance = this.VAR.MODERN_DISTANCE_LADDER;
 			}
-			else if (Math.abs(this.yPosition - ply.posY) > 0.4d //&& Math.abs(this.yPosition - ply.posY) < 0.7d)
+			else if (!ply.isInWater() && Math.abs(this.yPosition - ply.posY) > 0.4d //&& Math.abs(this.yPosition - ply.posY) < 0.7d)
 			)
 			{
 				// This ensures this does not get recorded as landing, but as a step
