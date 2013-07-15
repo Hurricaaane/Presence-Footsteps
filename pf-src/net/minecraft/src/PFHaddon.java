@@ -133,8 +133,11 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	private void reloadConfig()
 	{
 		this.config = new ConfigProperty();
-		this.config.setProperty("user.vol_mod", 1f);
+		this.config.setProperty("user.volume.0-to-100", 100);
+		this.config.setProperty("user.packname.r0", PFHaddon.DEFAULT_PACK_NAME);
 		this.config.commit();
+		
+		boolean fileExisted = new File(this.presenceDir, "userconfig.cfg").exists();
 		
 		try
 		{
@@ -145,6 +148,11 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		{
 			e.printStackTrace();
 			throw new RuntimeException("Error caused config not to work: " + e.getMessage());
+		}
+		
+		if (!fileExisted)
+		{
+			this.config.save();
 		}
 		
 		this.currentPackFolder =

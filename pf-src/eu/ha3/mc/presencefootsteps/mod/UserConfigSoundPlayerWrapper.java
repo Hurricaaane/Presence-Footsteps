@@ -36,7 +36,8 @@ public class UserConfigSoundPlayerWrapper implements SoundPlayer
 	@Override
 	public void playSound(Object location, String soundName, float volume, float pitch, Options options)
 	{
-		this.wrapped.playSound(location, soundName, volume * this.userConfig.getFloat("user.vol_mod"), pitch, options);
+		this.wrapped.playSound(
+			location, soundName, volume * this.userConfig.getInteger("user.volume.0-to-100") / 100f, pitch, options);
 	}
 	
 	@Override
