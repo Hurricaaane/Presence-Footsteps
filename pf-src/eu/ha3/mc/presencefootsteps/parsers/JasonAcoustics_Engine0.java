@@ -15,6 +15,7 @@ import com.google.gson.JsonParser;
 import eu.ha3.mc.presencefootsteps.engine.implem.BasicAcoustic;
 import eu.ha3.mc.presencefootsteps.engine.implem.DelayedAcoustic;
 import eu.ha3.mc.presencefootsteps.engine.implem.EventSelectorAcoustics;
+import eu.ha3.mc.presencefootsteps.engine.implem.ProbabilityWeightsAcoustic;
 import eu.ha3.mc.presencefootsteps.engine.implem.SimultaneousAcoustic;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Acoustic;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
@@ -229,6 +230,29 @@ public class JasonAcoustics_Engine0
 					a.setDelayMin(unsolved.get("delay_min").getAsInt());
 					a.setDelayMax(unsolved.get("delay_max").getAsInt());
 				}
+				
+				ret = a;
+			}
+			else if (type.equals("probability"))
+			{
+				List<Integer> weights = new ArrayList<Integer>();
+				List<Acoustic> acoustics = new ArrayList<Acoustic>();
+				
+				JsonArray sim = unsolved.getAsJsonArray("array");
+				Iterator<JsonElement> iter = sim.iterator();
+				while (iter.hasNext())
+				{
+					JsonElement subElement = iter.next();
+					weights.add(subElement.getAsInt());
+					
+					if (!iter.hasNext())
+						throw new UnexpectedDataException();
+					
+					subElement = iter.next();
+					acoustics.add(solveAcoustic(subElement));
+				}
+				
+				ProbabilityWeightsAcoustic a = new ProbabilityWeightsAcoustic(acoustics, weights);
 				
 				ret = a;
 			}
