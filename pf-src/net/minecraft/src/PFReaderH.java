@@ -151,7 +151,7 @@ public class PFReaderH implements Generator, VariatorSettable
 					distance = this.VAR.MODERN_DISTANCE_STAIR;
 					event = speedDisambiguator(ply, EventType.UP, EventType.UP_RUN);
 				}
-				else
+				else if (!ply.isSneaking())
 				{
 					// Going downstairs
 					distance = -1f;
@@ -248,7 +248,7 @@ public class PFReaderH implements Generator, VariatorSettable
 				// Do not toggle foot:
 				// After landing sounds, the first foot will be same as the one used to jump.
 			}
-			else if (!this.stepThisFrame)
+			else if (!this.stepThisFrame && !ply.isSneaking())
 			{
 				playSinglefoot(ply, 0d, speedDisambiguator(ply, EventType.CLIMB, EventType.CLIMB_RUN), this.isRightFoot);
 				this.isRightFoot = !this.isRightFoot;
