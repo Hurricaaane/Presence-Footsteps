@@ -41,6 +41,6 @@ public class PFCacheRegistry
 		Minecraft.getMinecraft().sndManager.addSound(path);
 		this.set.add(path);
 		
-		PFHaddon.log("Cached sound " + path);
+		//PFHaddon.log("Cached sound " + path);
 	}
 }
