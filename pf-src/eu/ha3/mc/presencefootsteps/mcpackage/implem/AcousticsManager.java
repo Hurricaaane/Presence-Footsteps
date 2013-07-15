@@ -48,9 +48,9 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	private long minimum;
 	
 	private boolean USING_LATENESS = true;
-	private boolean USING_EARLYNESS = false;
-	private float LATENESS_THRESHOLD_DIVIDER = 5;
-	private double EARLYNESS_THRESHOLD_POW = 0.5d;
+	private boolean USING_EARLYNESS = true;
+	private float LATENESS_THRESHOLD_DIVIDER = 1.5f;
+	private double EARLYNESS_THRESHOLD_POW = 0.75d;
 	
 	public AcousticsManager(Isolator isolator)
 	{
