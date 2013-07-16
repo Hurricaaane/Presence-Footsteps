@@ -35,8 +35,9 @@ public class EventSelectorAcoustics implements NamedAcoustic
 	static
 	{
 		fallback = new HashMap<EventType, EventType>();
-		fallback.put(EventType.RUN, EventType.WALK);
 		fallback.put(EventType.LAND, EventType.RUN);
+		fallback.put(EventType.RUN, EventType.WALK);
+		fallback.put(EventType.JUMP, EventType.WANDER);
 		
 		fallback.put(EventType.CLIMB, EventType.WANDER);
 		fallback.put(EventType.DOWN, EventType.WALK);
