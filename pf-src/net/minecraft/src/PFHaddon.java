@@ -53,12 +53,12 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	private UpdateNotifier update;
 	
 	private static String DEFAULT_PACK_NAME = "pf_presence";
-	private static String DEFAULT_PACK_FOLDER_PATH = "mods/" + DEFAULT_PACK_NAME + "/";
+	private static String DEFAULT_PACK_FOLDER_PATH = DEFAULT_PACK_NAME + "/";
 	
 	@Override
 	public void onLoad()
 	{
-		this.presenceDir = new File(util().getMinecraftDir(), "mods/presencefootsteps/");
+		this.presenceDir = new File(util().getModsFolder(), "presencefootsteps/");
 		if (!this.presenceDir.exists())
 		{
 			this.presenceDir.mkdirs();
@@ -110,7 +110,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			PFHaddon.log("The pack '" + this.currentPackFolder.getPath() + "'does not exist!");
 			if (!nested)
 			{
-				this.currentPackFolder = new File(util().getMinecraftDir(), PFHaddon.DEFAULT_PACK_FOLDER_PATH);
+				this.currentPackFolder = new File(util().getModsFolder(), PFHaddon.DEFAULT_PACK_FOLDER_PATH);
 				PFHaddon.log("The pack '" + this.currentPackFolder.getPath() + "'does not exist!");
 				
 				reloadEverything(true);
@@ -118,7 +118,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			else
 				throw new RuntimeException(
 					"Presence Footsteps cannot run because the default custom pack does not exist in the "
-						+ PFHaddon.DEFAULT_PACK_FOLDER_PATH + " folder.");
+						+ new File(util().getModsFolder(), PFHaddon.DEFAULT_PACK_FOLDER_PATH).getAbsolutePath()
+						+ " folder.");
 		}
 		
 		reloadBlockMapFromFile();
@@ -156,9 +157,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		}
 		
 		this.currentPackFolder =
-			new File(util().getMinecraftDir(), "mods/"
-				+ (this.config.getAllProperties().containsKey("user.packname.r0")
-					? this.config.getString("user.packname.r0") : PFHaddon.DEFAULT_PACK_NAME) + "/");
+			new File(util().getModsFolder(), (this.config.getAllProperties().containsKey("user.packname.r0")
+				? this.config.getString("user.packname.r0") : PFHaddon.DEFAULT_PACK_NAME) + "/");
 	}
 	
 	private void reloadVariatorFromFile()
