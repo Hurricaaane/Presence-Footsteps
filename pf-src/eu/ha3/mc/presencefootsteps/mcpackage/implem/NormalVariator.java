@@ -35,7 +35,6 @@ public class NormalVariator implements Variator
 	public float GALLOP_DISTANCE_3 = 0.25f;
 	public float GALLOP_DISTANCE_4 = 0.05f;
 	public float GALLOP_VOLUME = 1f;
-	public float GLOBAL_VOLUME_MULTIPLICATOR = 1f;
 	public float GROUND_AIR_STATE_CHANGE_VOLUME = 0.3f;
 	
 	public float GROUND_AIR_STATE_SPEED = 0.2f;
