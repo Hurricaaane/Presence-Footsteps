@@ -135,7 +135,7 @@ public class PFReaderH implements Generator, VariatorSettable
 			
 			float distance = 0f;
 			
-			if (ply.isOnLadder())
+			if (ply.isOnLadder() && !ply.onGround)
 			{
 				distance = this.VAR.MODERN_DISTANCE_LADDER;
 			}
