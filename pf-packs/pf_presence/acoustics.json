@@ -832,6 +832,30 @@
 				]
 			}
 		},
+		"ladder_default" : {
+			"walk"  : {
+				"name"  : "@step.ladder",
+				"pitch_min" : 95,
+				"pitch_max" : 105
+			},
+			"land"  : {
+				"type"  : "simultaneous",
+				"array" : [
+					{
+						"name"  : "@step.ladder",
+						"pitch_min" : 95,
+						"pitch_max" : 105
+					},
+					{
+						"type"  : "delayed",
+						"delay" : 50,
+						"name"  : "@step.ladder",
+						"pitch_min" : 95,
+						"pitch_max" : 105
+					}
+				]
+			}
+		},
 		"snow" : {
 			"walk"  : "snow.snow_walk",
 			"run"   : "snow.snow_run",
