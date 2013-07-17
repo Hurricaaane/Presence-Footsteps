@@ -49,7 +49,7 @@ public class NormalVariator implements Variator
 	
 	public float MODERN_DISTANCE_HUMAN = 0.95f;
 	public float MODERN_DISTANCE_STAIR = 0.95f * 0.65f;
-	public float MODERN_DISTANCE_LADDER = 0.4f;
+	public float MODERN_DISTANCE_LADDER = 0.5f;
 	
 	public float SLOW_DISTANCE = 0.75f;
 	public float SLOW_VOLUME = 1f;
