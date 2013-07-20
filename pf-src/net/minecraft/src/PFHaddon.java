@@ -64,6 +64,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	private List<ResourcePack> resourcePacks;
 	private boolean firstTickPassed;
 	
+	private long pressedOptionsTime;
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onLoad()
@@ -87,8 +89,9 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			@Override
 			public void onTrueEdge()
 			{
-				setDebugEnabled(true);
+				PFHaddon.this.pressedOptionsTime = System.currentTimeMillis();
 				
+				setDebugEnabled(true);
 				reloadEverything(false);
 			}
 			
@@ -167,7 +170,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	private void reloadConfig()
 	{
 		this.config = new ConfigProperty();
-		this.config.setProperty("user.volume.0-to-100", 100);
+		this.config.setProperty("user.volume.0-to-100", 70);
 		this.config.setProperty("user.packname.r0", PFHaddon.DEFAULT_PACK_NAME);
 		this.config.setProperty("update_found.enabled", true);
 		this.config.setProperty("update_found.version", PFHaddon.VERSION);
@@ -319,7 +322,16 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 		this.isolator.onFrame();
 		
-		this.debugButton.signalState(util().areKeysDown(29, 42, 33)); // CTRL SHIFT F
+		boolean keysDown = util().areKeysDown(29, 42, 33);
+		this.debugButton.signalState(keysDown); // CTRL SHIFT F
+		if (keysDown && System.currentTimeMillis() - this.pressedOptionsTime > 1000)
+		{
+			if (util().isCurrentScreen(null))
+			{
+				Minecraft.getMinecraft().displayGuiScreen(new PFGuiMenu((GuiScreen) util().getCurrentScreen(), this));
+				setDebugEnabled(false);
+			}
+		}
 		
 		try
 		{
@@ -373,7 +385,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	public ConfigProperty getConfig()
 	{
-		return new ConfigProperty();
+		return this.config;
 	}
 	
 	public void printChat(Object... args)
