@@ -762,7 +762,24 @@
 		},
 		"metalbar" : {
 			"walk"  : "metalbar.metalbar_walk",
-			"wander": "metalbar.metalbar_wander",
+			"wander": {
+				"type"  : "simultaneous",
+				"array" : [
+					"marble.marble_wander",
+					{
+						"type"  : "probability",
+						"array" : [
+							4, {
+								"name"  : "metalbar.metalbar_wander",
+								"vol_min"  : 10,
+								"vol_max"  : 50
+							},
+							7, ""
+						]
+					}
+				]
+			},
+			"jump": "metalbar.metalbar_wander",
 			"land"  : {
 				"type"  : "simultaneous",
 				"array" : [
@@ -1107,6 +1124,42 @@
 						"name"  : "metalbar.metalbar_walk",
 						"pitch_min" : 80,
 						"pitch_min" : 85
+					}
+				]
+			}
+		},
+		
+		"metalsubparts" : {
+			"walk"  : {
+				"type" : "simultaneous",
+				"array" : [
+					{
+						"name"    : "metalbar.metalbar_walk",
+						"vol_min" : 50,
+						"vol_max" : 50
+					},
+					{
+						"name"    : "metalbox.metalbox_walk",
+						"vol_min" : 50,
+						"vol_max" : 50
+					}
+				]
+			},
+			"wander": "marble.marble_wander",
+			"land"  : {
+				"type"  : "simultaneous",
+				"array" : [
+					"metalbox.metalbox_run",
+					"metalbar.metalbar_walk",
+					{
+						"type"  : "delayed",
+						"delay" : 30,
+						"name"  : "metalbar.metalbar_walk"
+					},
+					{
+						"type"  : "delayed",
+						"delay" : 50,
+						"name"  : "metalbox.metalbox_run"
 					}
 				]
 			}
