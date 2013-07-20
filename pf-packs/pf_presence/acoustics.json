@@ -43,8 +43,8 @@
 					},
 					{
 						"name"  : "brush.brush_through",
-						"vol_min"   : 50,
-						"vol_max"   : 50
+						"vol_min"   : 30,
+						"vol_max"   : 30
 					}
 				]
 			},
@@ -58,8 +58,8 @@
 					},
 					{
 						"name"  : "brush.brush_through",
-						"vol_min"   : 50,
-						"vol_max"   : 50
+						"vol_min"   : 30,
+						"vol_max"   : 30
 					}
 				]
 			},
@@ -73,16 +73,28 @@
 					},
 					{
 						"name"  : "brush.brush_through",
-						"vol_min"   : 50,
-						"vol_max"   : 50
+						"vol_min"   : 30,
+						"vol_max"   : 30
 					}
 				]
 			}
 		},
 		"brush" : {
-			"walk"  : "brush.brush_through",
-			"jump"  : "brush.brush_through",
-			"land"  : "brush.brush_through"
+			"walk"  : {
+				"name"  : "brush.brush_through",
+				"vol_min"   : 50,
+				"vol_max"   : 50
+			},
+			"jump"  : {
+				"name"  : "brush.brush_through",
+				"vol_min"   : 50,
+				"vol_max"   : 50
+			},
+			"land"  : {
+				"name"  : "brush.brush_through",
+				"vol_min"   : 50,
+				"vol_max"   : 50
+			}
 		},
 		"fire" : {
 			"walk"  : {
@@ -229,22 +241,36 @@
 			}
 		},
 		"sand" : {
-			"walk"  : "sand.sand_walk",
-			"run"   : "sand.sand_run",
+			"walk"  : {
+				"name"  : "sand.sand_walk",
+				"vol_min"   : 60,
+				"vol_max"   : 60
+			},
+			"run"   : {
+				"name"  : "sand.sand_run",
+				"vol_min"   : 60,
+				"vol_max"   : 60
+			},
 			"wander": "dirt.dirt_wander",
 			"land"  : {
 				"type"  : "simultaneous",
 				"array" : [
-					"sand.sand_run",
+					{
+						"name"  : "sand.sand_run",
+						"vol_min"   : 60,
+						"vol_max"   : 60
+					},
 					{
 						"name"  : "sand.sand_walk",
-						"vol_min"   : 50,
-						"vol_max"   : 50
+						"vol_min"   : 60,
+						"vol_max"   : 60
 					},
 					{
 						"type"  : "delayed",
 						"delay" : 50,
-						"name"  : "sand.sand_run"
+						"name"  : "sand.sand_run",
+						"vol_min"   : 60,
+						"vol_max"   : 60
 					}
 				]
 			}
@@ -355,8 +381,8 @@
 					"wood.wood_walk",
 					{
 						"name"  : "glass.glass_hit",
-						"pitch_min"   : 90,
-						"pitch_max"   : 110
+						"pitch_min"   : 95,
+						"pitch_max"   : 105
 					}
 				]
 			},
@@ -512,7 +538,11 @@
 			}
 		},
 		"rug" : {
-			"walk"  : "rug.rug_walk",
+			"walk"  : {
+				"name"  : "rug.rug_walk",
+				"vol_min"   : 70,
+				"vol_max"   : 70
+			},
 			"wander": "grass.grass_wander",
 			"land"  : {
 				"type"  : "simultaneous",
