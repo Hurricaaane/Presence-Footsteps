@@ -232,23 +232,33 @@ public class PFSolver implements Solver
 		// Try to see if the block above is a carpet...
 		String association = this.isolator.getBlockMap().getBlockMapSubstrate(xblock, xmetadata, "carpet");
 		
-		if (association == null)
+		if (association == null || association.equals("NOT_EMITTER"))
 		{
+			// This condition implies that
+			// if the carpet is NOT_EMITTER, solving will CONTINUE with the actual
+			// block surface the player is walking on
+			// > NOT_EMITTER carpets will not cause solving to skip
+			
 			// Not a carpet
 			association = this.isolator.getBlockMap().getBlockMap(block, metadata);
 			
-			if (association != null)
+			if (association != null && !association.equals("NOT_EMITTER"))
 			{
+				// This condition implies that
+				// foliage over a NOT_EMITTER block CANNOT PLAY
+				
 				// This block most not be executed if the association is a carpet
 				// => this block of code is here, not outside this if else group.
 				
 				String foliage = this.isolator.getBlockMap().getBlockMapSubstrate(xblock, xmetadata, "foliage");
-				if (foliage != null)
+				if (foliage != null && !foliage.equals("NOT_EMITTER"))
 				{
 					association = association + "," + foliage;
+					
 					PFHaddon.debug("Foliage detected: " + foliage);
 				}
 			}
+			// else { the information is discarded anyways, the method returns null or no association }
 		}
 		else
 		{
