@@ -3,10 +3,12 @@ package net.minecraft.src;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 import eu.ha3.easy.EdgeModel;
 import eu.ha3.easy.EdgeTrigger;
+import eu.ha3.mc.haddon.PrivateAccessException;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.BasicBlockMap;
@@ -41,6 +43,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	public static final String FOR = "1.6.2";
 	
 	private File presenceDir;
+	private File packsFolder;
+	
 	private PFCacheRegistry cache;
 	private EdgeTrigger debugButton;
 	private static boolean isDebugEnabled;
@@ -53,17 +57,28 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	private UpdateNotifier update;
 	
 	private static String DEFAULT_PACK_NAME = "pf_presence";
-	private static String DEFAULT_PACK_FOLDER_PATH = DEFAULT_PACK_NAME + "/";
 	
+	private List<ResourcePack> resourcePacks;
+	private boolean firstTickPassed;
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onLoad()
 	{
 		this.presenceDir = new File(util().getModsFolder(), "presencefootsteps/");
+		this.packsFolder = new File(this.presenceDir, "packs/");
+		
 		if (!this.presenceDir.exists())
 		{
 			this.presenceDir.mkdirs();
 		}
+		if (!this.packsFolder.exists())
+		{
+			this.packsFolder.mkdirs();
+		}
 		this.cache = new PFCacheRegistry();
+		
+		this.update = new UpdateNotifier(this);
 		
 		this.debugButton = new EdgeTrigger(new EdgeModel() {
 			@Override
@@ -89,12 +104,27 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			this.generator = new PFReader4P(this.isolator);
 		}*/
 		
+		try
+		{
+			this.resourcePacks =
+				(List<ResourcePack>) util().getPrivateValueLiteral(Minecraft.class, Minecraft.getMinecraft(), "aq", 63);
+			for (File file : new File(this.presenceDir, "packs/").listFiles())
+			{
+				if (file.isDirectory())
+				{
+					PFHaddon.log("Adding resource pack at " + file.getAbsolutePath());
+					this.resourcePacks.add(new FolderResourcePack(file));
+				}
+			}
+		}
+		catch (PrivateAccessException e)
+		{
+			e.printStackTrace();
+		}
+		
 		reloadEverything(false);
 		
 		manager().hookFrameEvents(true);
-		
-		this.update = new UpdateNotifier(this);
-		this.update.attempt();
 		
 	}
 	
@@ -110,7 +140,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			PFHaddon.log("The pack '" + this.currentPackFolder.getPath() + "'does not exist!");
 			if (!nested)
 			{
-				this.currentPackFolder = new File(util().getModsFolder(), PFHaddon.DEFAULT_PACK_FOLDER_PATH);
+				this.currentPackFolder = new File(this.packsFolder, PFHaddon.DEFAULT_PACK_NAME + "/");
 				PFHaddon.log("The pack '" + this.currentPackFolder.getPath() + "'does not exist!");
 				
 				reloadEverything(true);
@@ -118,8 +148,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			else
 				throw new RuntimeException(
 					"Presence Footsteps cannot run because the default custom pack does not exist in the "
-						+ new File(util().getModsFolder(), PFHaddon.DEFAULT_PACK_FOLDER_PATH).getAbsolutePath()
-						+ " folder.");
+						+ new File(this.packsFolder, PFHaddon.DEFAULT_PACK_NAME + "/").getAbsolutePath() + " folder.");
 		}
 		
 		reloadBlockMapFromFile();
@@ -136,6 +165,10 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		this.config = new ConfigProperty();
 		this.config.setProperty("user.volume.0-to-100", 100);
 		this.config.setProperty("user.packname.r0", PFHaddon.DEFAULT_PACK_NAME);
+		this.config.setProperty("update_found.enabled", true);
+		this.config.setProperty("update_found.version", PFHaddon.VERSION);
+		this.config.setProperty("update_found.display.remaining.value", 0);
+		this.config.setProperty("update_found.display.count.value", 3);
 		this.config.commit();
 		
 		boolean fileExisted = new File(this.presenceDir, "userconfig.cfg").exists();
@@ -156,9 +189,12 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			this.config.save();
 		}
 		
+		this.update.loadConfig(this.config);
+		
 		this.currentPackFolder =
-			new File(util().getModsFolder(), (this.config.getAllProperties().containsKey("user.packname.r0")
-				? this.config.getString("user.packname.r0") : PFHaddon.DEFAULT_PACK_NAME) + "/");
+			new File(this.packsFolder, (this.config.getAllProperties().containsKey("user.packname.r0")
+				? this.config.getString("user.packname.r0") : PFHaddon.DEFAULT_PACK_NAME)
+				+ "/");
 	}
 	
 	private void reloadVariatorFromFile()
@@ -272,6 +308,12 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			e.printStackTrace();
 		}
 		
+		if (!this.firstTickPassed)
+		{
+			this.firstTickPassed = true;
+			this.update.attempt();
+			
+		}
 	}
 	
 	/**
@@ -311,6 +353,21 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	public void printChat(Object... args)
 	{
+		printChat(new Object[] { Ha3Utility.COLOR_WHITE, "Presence Footsteps: " }, args);
+	}
+	
+	public void printChatShort(Object... args)
+	{
+		printChat(new Object[] { Ha3Utility.COLOR_WHITE, "" }, args);
+	}
+	
+	protected void printChat(final Object[] in, Object... args)
+	{
+		Object[] dest = new Object[in.length + args.length];
+		System.arraycopy(in, 0, dest, 0, in.length);
+		System.arraycopy(args, 0, dest, in.length, args.length);
+		
+		util().printChat(dest);
 	}
 	
 	public static void log(String contents)
@@ -333,6 +390,14 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	public void saveConfig()
 	{
+		// If there were changes...
+		if (this.config.commit())
+		{
+			PFHaddon.log("Saving configuration...");
+			
+			// Write changes on disk.
+			this.config.save();
+		}
 	}
 	
 }

@@ -73,7 +73,7 @@ public class UpdateNotifier extends Thread
 	{
 		try
 		{
-			URL url = new URL("http://q.mc.ha3.eu/query/pf-main-version.xml");
+			URL url = new URL("http://q.mc.ha3.eu/query/pf-main-version.xml?ver=" + PFHaddon.VERSION);
 			
 			InputStream contents = url.openStream();
 			
