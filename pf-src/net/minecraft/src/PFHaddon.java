@@ -12,13 +12,16 @@ import eu.ha3.mc.haddon.PrivateAccessException;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.BasicBlockMap;
+import eu.ha3.mc.presencefootsteps.mcpackage.implem.BasicPrimitiveMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.NormalVariator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.BlockMap;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.PrimitiveMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.mc.presencefootsteps.mod.UpdateNotifier;
 import eu.ha3.mc.presencefootsteps.mod.UserConfigSoundPlayerWrapper;
 import eu.ha3.mc.presencefootsteps.parsers.JasonAcoustics_Engine0;
 import eu.ha3.mc.presencefootsteps.parsers.PropertyBlockMap_Engine0;
+import eu.ha3.mc.presencefootsteps.parsers.PropertyPrimitiveMap_Engine0;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /*
@@ -40,7 +43,7 @@ import eu.ha3.util.property.simple.ConfigProperty;
 public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 {
 	public static final int VERSION = 0;
-	public static final String FOR = "1.6.2";
+	public static final String FOR = "1.6.2 (Special build)";
 	
 	private File presenceDir;
 	private File packsFolder;
@@ -152,6 +155,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		}
 		
 		reloadBlockMapFromFile();
+		reloadPrimitiveMapFromFile();
 		reloadAcousticsFromFile();
 		this.isolator.setSolver(new PFSolver(this.isolator));
 		reloadVariatorFromFile();
@@ -241,6 +245,27 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		}
 		
 		this.isolator.setBlockMap(blockMap);
+	}
+	
+	private void reloadPrimitiveMapFromFile()
+	{
+		PrimitiveMap primitiveMap = new BasicPrimitiveMap();
+		
+		try
+		{
+			ConfigProperty primitiveSound = new ConfigProperty();
+			primitiveSound.setSource(new File(this.currentPackFolder, "primitivemap.cfg").getCanonicalPath());
+			primitiveSound.load();
+			
+			new PropertyPrimitiveMap_Engine0().setup(primitiveSound, primitiveMap);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			PFHaddon.log("Loading default primitivemap failed: " + e.getMessage());
+		}
+		
+		this.isolator.setPrimitiveMap(primitiveMap);
 	}
 	
 	private void reloadAcousticsFromFile()

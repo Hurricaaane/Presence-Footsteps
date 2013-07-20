@@ -30,6 +30,8 @@ public interface Isolator
 	
 	public abstract BlockMap getBlockMap();
 	
+	public abstract PrimitiveMap getPrimitiveMap();
+	
 	public abstract SoundPlayer getSoundPlayer();
 	
 	public abstract DefaultStepPlayer getDefaultStepPlayer();
@@ -41,6 +43,8 @@ public interface Isolator
 	public abstract void setSolver(Solver solver);
 	
 	public abstract void setBlockMap(BlockMap blockMap);
+	
+	public abstract void setPrimitiveMap(PrimitiveMap primitiveMap);
 	
 	public abstract void setSoundPlayer(SoundPlayer soundPlayer);
 	

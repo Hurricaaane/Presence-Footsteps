@@ -7,6 +7,7 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Generator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.GeneratorSettable;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
+import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.PrimitiveMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Solver;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.VariatorSettable;
@@ -35,6 +36,7 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	private Library acoustics;
 	private Solver solver;
 	private BlockMap blockMap;
+	private PrimitiveMap primitiveMap;
 	private SoundPlayer soundPlayer;
 	private DefaultStepPlayer defaultStepPlayer;
 	
@@ -82,6 +84,12 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	}
 	
 	@Override
+	public PrimitiveMap getPrimitiveMap()
+	{
+		return this.primitiveMap;
+	}
+	
+	@Override
 	public SoundPlayer getSoundPlayer()
 	{
 		return this.soundPlayer;
@@ -111,6 +119,12 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	public void setBlockMap(BlockMap blockMap)
 	{
 		this.blockMap = blockMap;
+	}
+	
+	@Override
+	public void setPrimitiveMap(PrimitiveMap primitiveMap)
+	{
+		this.primitiveMap = primitiveMap;
 	}
 	
 	@Override
