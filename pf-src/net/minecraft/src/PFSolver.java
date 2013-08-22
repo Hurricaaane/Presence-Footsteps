@@ -76,8 +76,12 @@ public class PFSolver implements Solver
 	@Override
 	public String findAssociationForPlayer(EntityPlayer ply, double verticalOffsetAsMinus, boolean isRightFoot)
 	{
-		int yy = MathHelper.floor_double(ply.posY - 0.1d - ply.yOffset - verticalOffsetAsMinus);
+		//int yy = MathHelper.floor_double(ply.posY - 0.1d - ply.yOffset - verticalOffsetAsMinus);
+		int yy = MathHelper.floor_double(ply.boundingBox.minY - 0.1d - verticalOffsetAsMinus);
 		// 0.1d: Support for trapdoors
+		
+		//System.out.println(ply.posY - ply.yOffset);
+		//System.out.println(ply.boundingBox.minY);
 		
 		double rot = Math.toRadians(MathHelper.wrapAngleTo180_float(ply.rotationYaw));
 		double xn = Math.cos(rot);
