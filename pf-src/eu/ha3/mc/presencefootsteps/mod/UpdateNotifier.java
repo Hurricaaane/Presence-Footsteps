@@ -138,7 +138,7 @@ public class UpdateNotifier extends Thread
 					this.mod.printChat(
 						Ha3Utility.COLOR_GOLD, "A ", Ha3Utility.COLOR_WHITE, "r" + maxvn, Ha3Utility.COLOR_GOLD,
 						" update is available (You're ", Ha3Utility.COLOR_WHITE, vc, Ha3Utility.COLOR_GOLD, " version"
-							+ (vc > 1 ? "s" : "") + " late).");
+							+ (vc > 1 ? "s" : "") + " late). http://presencefootsteps.ha3.eu/");
 					
 					if (this.displayRemaining > 0)
 					{
