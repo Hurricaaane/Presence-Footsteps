@@ -82,18 +82,18 @@
 		"brush" : {
 			"walk"  : {
 				"name"  : "brush.brush_through",
-				"vol_min"   : 50,
-				"vol_max"   : 50
+				"vol_min"   : 65,
+				"vol_max"   : 65
 			},
 			"jump"  : {
 				"name"  : "brush.brush_through",
-				"vol_min"   : 50,
-				"vol_max"   : 50
+				"vol_min"   : 65,
+				"vol_max"   : 65
 			},
 			"land"  : {
 				"name"  : "brush.brush_through",
-				"vol_min"   : 50,
-				"vol_max"   : 50
+				"vol_min"   : 65,
+				"vol_max"   : 65
 			}
 		},
 		"fire" : {
@@ -131,8 +131,36 @@
 			}
 		},
 		"grass" : {
-			"walk"  : "grass.grass_walk",
-			"run"  : "grass.grass_run",
+			"walk"  : {
+				"type"  : "simultaneous",
+				"array" : [
+					{
+						"name"  : "grass.grass_walk",
+						"vol_min"   : 60,
+						"vol_max"   : 60
+					},
+					{
+						"name"  : "brush.brush_through",
+						"vol_min"   : 20,
+						"vol_max"   : 20
+					}
+				]
+			},
+			"run"  : {
+				"type"  : "simultaneous",
+				"array" : [
+					{
+						"name"  : "grass.grass_run",
+						"vol_min"   : 60,
+						"vol_max"   : 60
+					},
+					{
+						"name"  : "brush.brush_through",
+						"vol_min"   : 20,
+						"vol_max"   : 20
+					}
+				]
+			},
 			"wander": "grass.grass_wander",
 			"land"  : {
 				"type"  : "simultaneous",
@@ -142,6 +170,42 @@
 						"type"  : "delayed",
 						"delay" : 50,
 						"name"  : "grass.grass_run"
+					}
+				]
+			}
+		},
+		"organic_solid" : {
+			"walk"  : {
+				"type"  : "simultaneous",
+				"array" : [
+					"grass.grass_run",
+					"mud.mud_walk"
+					]
+			},
+			"run"   : {
+				"type"  : "simultaneous",
+				"array" : [
+					"grass.grass_run",
+					"mud.mud_walk"
+					]
+			},
+			"wander": "dirt.dirt_wander",
+			"jump"  : {
+				"type"  : "simultaneous",
+				"array" : [
+					"grass.grass_run",
+					"mud.mud_wander"
+					]
+			},
+			"land"  : {
+				"type"  : "simultaneous",
+				"array" : [
+					"grass.grass_run",
+					"mud.mud_walk",
+					{
+						"type"  : "delayed",
+						"delay" : 50,
+						"name"  : "mud.mud_wander"
 					}
 				]
 			}
@@ -405,6 +469,45 @@
 						"type"  : "delayed",
 						"delay" : 30,
 						"name"  : "glass.glass_hit"
+					}
+				]
+			}
+		},
+		"glowstone" : {
+			"walk"  : {
+				"type"  : "simultaneous",
+				"array" : [
+					"concrete.concrete_walk",
+					{
+						"name"  : "weakice.weakice_walk",
+						"vol_min"   : 10,
+						"vol_max"   : 20,
+						"pitch_min" : 130,
+						"pitch_max" : 130
+					}
+				]
+			},
+			"wander": "dirt.dirt_wander",
+			"land"  : {
+				"type"  : "simultaneous",
+				"array" : [
+					"concrete.concrete_walk",
+					{
+						"type"  : "delayed",
+						"delay" : 30,
+						"name"  : "concrete.concrete_walk"
+					},
+					{
+						"type"  : "delayed",
+						"delay" : 30,
+						"name"  : "glass.glass_hit"
+					},
+					{
+						"name"  : "weakice.weakice_walk",
+						"vol_min"   : 40,
+						"vol_max"   : 60,
+						"pitch_min" : 130,
+						"pitch_max" : 130
 					}
 				]
 			}
