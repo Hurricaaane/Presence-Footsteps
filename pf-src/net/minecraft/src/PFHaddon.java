@@ -42,8 +42,8 @@ import eu.ha3.util.property.simple.ConfigProperty;
 
 public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 {
-	public static final int VERSION = 0;
-	public static final String FOR = "1.6.2 (Special build)";
+	public static final int VERSION = 1;
+	public static final String FOR = "1.6.2";
 	
 	private File presenceDir;
 	private File packsFolder;
@@ -246,6 +246,45 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			e.printStackTrace();
 			PFHaddon.log("Loading default blockmap failed: " + e.getMessage());
 		}
+		
+		/*for (File file : this.currentPackFolder.listFiles())
+		{
+			if (file.getName().startsWith("blockmap_") && file.getName().endsWith(".cfg"))
+			{
+				try
+				{
+					ConfigProperty blockSound = new ConfigProperty();
+					blockSound.setSource(file.getCanonicalPath());
+					blockSound.load();
+					
+					if (blockSound.getAllProperties().containsKey("_classname"))
+					{
+						if (eu.ha3.mc.convenience.Ha3StaticUtilities.classExists(
+							blockSound.getString("_classname"), this))
+						{
+							PFHaddon.debug("Loading mod ("
+								+ blockSound.getString("_classname") + ") blockmap: " + file.getName());
+							new PropertyBlockMap_Engine0().setup(blockSound, blockMap);
+						}
+						else
+						{
+							PFHaddon.debug("Skipping missing mod ("
+								+ blockSound.getString("_classname") + ") blockmap: " + file.getName());
+						}
+					}
+					else
+					{
+						PFHaddon.debug("Loading custom blockmap: " + file.getName());
+						new PropertyBlockMap_Engine0().setup(blockSound, blockMap);
+					}
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+					PFHaddon.log("Loading custom blockmap failed: " + e.getMessage());
+				}
+			}
+		}*/
 		
 		this.isolator.setBlockMap(blockMap);
 	}
