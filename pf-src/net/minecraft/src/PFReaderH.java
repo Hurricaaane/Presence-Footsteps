@@ -166,22 +166,17 @@ public class PFReaderH implements Generator, VariatorSettable
 				distance = this.VAR.MODERN_DISTANCE_HUMAN;
 			}
 			
+			if (event == null)
+			{
+				event = speedDisambiguator(ply, EventType.WALK, EventType.RUN);
+			}
+			distance = reevaluateDistance(event, distance);
+			
 			if (dwm > distance)
 			{
-				if (!this.mod.getSolver().playSpecialStoppingConditions(ply))
-				{
-					if (event == null)
-					{
-						event = speedDisambiguator(ply, EventType.WALK, EventType.RUN);
-					}
-					
-					String assos = this.mod.getSolver().findAssociationForPlayer(ply, 0d, this.isRightFoot);
-					this.mod.getSolver().playAssociation(ply, assos, event);
-					
-					this.isRightFoot = !this.isRightFoot;
-				}
+				produceStep(ply, event);
 				
-				this.stepThisFrame = true;
+				stepped(ply, event);
 				
 				this.dmwBase = distanceReference;
 			}
@@ -194,6 +189,33 @@ public class PFReaderH implements Generator, VariatorSettable
 			// while descending stairs
 			this.yPosition = ply.posY;
 		}
+	}
+	
+	protected void produceStep(EntityPlayer ply, EventType event)
+	{
+		if (!this.mod.getSolver().playSpecialStoppingConditions(ply))
+		{
+			if (event == null)
+			{
+				event = speedDisambiguator(ply, EventType.WALK, EventType.RUN);
+			}
+			
+			String assos = this.mod.getSolver().findAssociationForPlayer(ply, 0d, this.isRightFoot);
+			this.mod.getSolver().playAssociation(ply, assos, event);
+			
+			this.isRightFoot = !this.isRightFoot;
+		}
+		
+		this.stepThisFrame = true;
+	}
+	
+	protected void stepped(EntityPlayer ply, EventType event)
+	{
+	}
+	
+	protected float reevaluateDistance(EventType event, float distance)
+	{
+		return distance;
 	}
 	
 	protected void simulateAirborne(EntityPlayer ply)
@@ -226,12 +248,13 @@ public class PFReaderH implements Generator, VariatorSettable
 				if (speed < this.VAR.MODERN_SPEED_TO_JUMP_AS_MULTIFOOT)
 				{
 					// STILL JUMP
-					playMultifoot(ply, 0.5d, EventType.JUMP);
+					// 2 - 0.7531999805212d (magic number for vertical offset?)
+					playMultifoot(ply, 0.4d, EventType.JUMP);
 				}
 				else
 				{
 					// RUNNING JUMP
-					playSinglefoot(ply, 0.5d, EventType.JUMP, this.isRightFoot);
+					playSinglefoot(ply, 0.4d, EventType.JUMP, this.isRightFoot);
 					
 					// Do not toggle foot:
 					// After landing sounds, the first foot will be same as the one used to jump.
