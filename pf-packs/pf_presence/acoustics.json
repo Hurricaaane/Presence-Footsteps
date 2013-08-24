@@ -210,6 +210,23 @@
 				]
 			}
 		},
+		"organic_dry" : {
+			"walk"  : "grass.grass_run",
+			"run"   : "grass.grass_run",
+			"wander": "dirt.dirt_wander",
+			"jump"  : "grass.grass_run",
+			"land"  : {
+				"type"  : "simultaneous",
+				"array" : [
+					"grass.grass_run",
+					{
+						"type"  : "delayed",
+						"delay" : 50,
+						"name"  : "grass.grass_run"
+					}
+				]
+			}
+		},
 		"dirt" : {
 			"walk"  : "dirt.dirt_walk",
 			"run"   : "dirt.dirt_run",
@@ -496,11 +513,6 @@
 						"type"  : "delayed",
 						"delay" : 30,
 						"name"  : "concrete.concrete_walk"
-					},
-					{
-						"type"  : "delayed",
-						"delay" : 30,
-						"name"  : "glass.glass_hit"
 					},
 					{
 						"name"  : "weakice.weakice_walk",
