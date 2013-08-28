@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import java.util.Random;
+
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 
@@ -22,6 +24,9 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 public class PFReaderQP extends PFReaderH
 {
 	private int hoof = 0;
+	private boolean USE_ALTERNATIVE_HOOVES = true;
+	private float nextWalkDistanceMultiplier = 0.05f;
+	private final Random rand = new Random();
 	
 	public PFReaderQP(Isolator isolator)
 	{
@@ -31,6 +36,11 @@ public class PFReaderQP extends PFReaderH
 	@Override
 	protected void stepped(EntityPlayer ply, EventType event)
 	{
+		if (this.hoof == 0 || this.hoof == 2)
+		{
+			this.nextWalkDistanceMultiplier = 0.02f + this.rand.nextFloat() * 0.07f;
+		}
+		
 		if (this.hoof >= 3)
 		{
 			this.hoof = 0;
@@ -57,8 +67,13 @@ public class PFReaderQP extends PFReaderH
 	{
 		float ret = distance;
 		
-		//if (event == EventType.WALK && (this.hoof == 1 || this.hoof == 3))
-		//	return ret * 0.01f;
+		if (this.USE_ALTERNATIVE_HOOVES && event == EventType.WALK)
+		{
+			if (this.hoof == 1 || this.hoof == 3)
+				return ret * this.nextWalkDistanceMultiplier;
+			else
+				return ret * (1 - this.nextWalkDistanceMultiplier);
+		}
 		
 		if (event == EventType.RUN && this.hoof == 0)
 			return ret * 0.8f;
