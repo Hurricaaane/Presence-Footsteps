@@ -117,9 +117,11 @@ public class PFGuiMenu extends GuiScreen
 		
 		final int _SEPARATOR = 10;
 		
-		/*this.buttonList.add(new GuiButton(
-			210, _LEFT, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _AWID, _UNIT, this.mod.getConfig().getBoolean(
-				"start.enabled") ? "Start Enabled: ON" : "Start Enabled: OFF"));*/
+		if (this.mod.getConfig().getBoolean("mlp.detected") || this.mod.getConfig().getBoolean("mlp.enabled"))
+		{
+			this.buttonList.add(new GuiButton(210, _LEFT, _SEPARATOR + _MIX * 2, _WIDTH, _UNIT, this.mod
+				.getConfig().getBoolean("mlp.enabled") ? "Walk with 4 legs: ON" : "Walk with 4 legs: OFF"));
+		}
 		
 		final int _TURNOFFWIDTH = _WIDTH / 5;
 		
@@ -142,18 +144,20 @@ public class PFGuiMenu extends GuiScreen
 			// This triggers onGuiClosed
 			this.mc.displayGuiScreen(this.parentScreen);
 		}
-		/*else if (par1GuiButton.id == 210)
+		else if (par1GuiButton.id == 210)
 		{
-			boolean newEnabledState = !this.mod.getConfig().getBoolean("start.enabled");
-			this.mod.getConfig().setProperty("start.enabled", newEnabledState);
-			par1GuiButton.displayString = newEnabledState ? "Start Enabled: ON" : "Start Enabled: OFF";
+			boolean newEnabledState = !this.mod.getConfig().getBoolean("mlp.enabled");
+			this.mod.getConfig().setProperty("mlp.enabled", newEnabledState);
+			par1GuiButton.displayString = newEnabledState ? "Walk with 4 legs: ON" : "Walk with 4 legs: OFF";
 			this.mod.saveConfig();
-		}
-		else if (par1GuiButton.id == 212)
-		{
+			
+			this.mod.reloadEverything(false);
+		}/*
+			else if (par1GuiButton.id == 212)
+			{
 			this.mc.displayGuiScreen(this.parentScreen);
 			this.mod.stopRunning();
-		}*/
+			}*/
 		
 	}
 	

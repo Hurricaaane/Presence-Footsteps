@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import eu.ha3.easy.EdgeModel;
 import eu.ha3.easy.EdgeTrigger;
+import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.haddon.PrivateAccessException;
 import eu.ha3.mc.haddon.SupportsFrameEvents;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
@@ -63,6 +64,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	private List<ResourcePack> resourcePacks;
 	private boolean firstTickPassed;
+	private boolean mlpDetectedFirst;
 	
 	private long pressedOptionsTime;
 	
@@ -134,7 +136,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 	}
 	
-	private void reloadEverything(boolean nested)
+	public void reloadEverything(boolean nested)
 	{
 		this.isolator = new PFIsolator(this);
 		
@@ -157,6 +159,18 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 						+ new File(this.packsFolder, PFHaddon.DEFAULT_PACK_NAME + "/").getAbsolutePath() + " folder.");
 		}
 		
+		if (isInstalledMLP())
+		{
+			if (getConfig().getBoolean("mlp.detected") == false)
+			{
+				getConfig().setProperty("mlp.detected", true);
+				getConfig().setProperty("mlp.enabled", true);
+				saveConfig();
+				
+				this.mlpDetectedFirst = true;
+			}
+		}
+		
 		reloadBlockMapFromFile();
 		reloadPrimitiveMapFromFile();
 		reloadAcousticsFromFile();
@@ -164,7 +178,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		reloadVariatorFromFile();
 		loadSoundsFromPack(this.currentPackFolder);
 		
-		this.isolator.setGenerator(new PFReaderH(this.isolator));
+		this.isolator.setGenerator(!getConfig().getBoolean("mlp.enabled")
+			? new PFReaderH(this.isolator) : new PFReaderQP(this.isolator));
 	}
 	
 	private void reloadConfig()
@@ -176,6 +191,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		this.config.setProperty("update_found.version", PFHaddon.VERSION);
 		this.config.setProperty("update_found.display.remaining.value", 0);
 		this.config.setProperty("update_found.display.count.value", 3);
+		this.config.setProperty("mlp.detected", false);
+		this.config.setProperty("mlp.enabled", false);
 		this.config.commit();
 		
 		boolean fileExisted = new File(this.presenceDir, "userconfig.cfg").exists();
@@ -334,11 +351,10 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	//
 	
-	/*private boolean isInstalledMLP()
+	private boolean isInstalledMLP()
 	{
-		return Ha3StaticUtilities.classExists("Pony", this)
-			|| Ha3StaticUtilities.classExists("net.minecraft.src.Pony", this);
-	}*/
+		return Ha3StaticUtilities.classExists("com.minelittlepony.minelp.Pony", this);
+	}
 	
 	private void loadSoundsFromPack(File pack)
 	{
@@ -388,7 +404,17 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		{
 			this.firstTickPassed = true;
 			this.update.attempt();
-			
+			if (this.mlpDetectedFirst)
+			{
+				this
+					.printChat(
+						Ha3Utility.COLOR_TEAL,
+						"Mine Little Pony has been detected! ",
+						Ha3Utility.COLOR_WHITE,
+						"4-legged mode has been enabled, which will make running sound like galloping amongst other things. ",
+						Ha3Utility.COLOR_GRAY,
+						"You can hold down for 1 second the combination LEFT CTRL + LEFT SHIFT + F to disable it.");
+			}
 		}
 	}
 	
