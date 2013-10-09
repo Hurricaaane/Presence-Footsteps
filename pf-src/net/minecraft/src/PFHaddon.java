@@ -370,7 +370,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	@Override
 	public void onFrame(float semi)
 	{
-		EntityPlayer ply = manager().getMinecraft().thePlayer;
+		EntityPlayer ply = Minecraft.getMinecraft().thePlayer;
 		
 		if (ply == null)
 			return;
