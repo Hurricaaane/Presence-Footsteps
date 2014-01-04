@@ -1,6 +1,6 @@
 package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
 
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 
 /* x-placeholder-wtfplv2 */

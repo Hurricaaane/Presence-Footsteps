@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import net.minecraft.entity.player.EntityPlayer;
 import eu.ha3.mc.presencefootsteps.engine.implem.ConfigOptions;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;

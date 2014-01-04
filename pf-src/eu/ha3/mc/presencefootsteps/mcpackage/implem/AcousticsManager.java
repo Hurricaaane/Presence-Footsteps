@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLivingBase;
-import net.minecraft.src.PFAccessors;
+import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.PFAccessor_NetMinecraftEntity;
 import net.minecraft.src.PFHaddon;
 import eu.ha3.mc.presencefootsteps.engine.implem.AcousticsLibrary;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
@@ -47,9 +48,9 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	}
 	
 	@Override
-	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, int blockID)
+	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, Block blockID)
 	{
-		PFAccessors.getInstance().playStep(entity, xx, yy, zz, blockID);
+		PFAccessor_NetMinecraftEntity.getInstance().playStep(entity, xx, yy, zz, blockID);
 	}
 	
 	@Override

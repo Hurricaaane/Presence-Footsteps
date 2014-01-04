@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import net.minecraft.entity.PFAccessor_NetMinecraftEntity;
+import net.minecraft.entity.player.EntityPlayer;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.NormalVariator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Generator;
@@ -225,7 +227,7 @@ public class PFReaderH implements Generator, VariatorSettable
 		if (this.mod.getSolver().hasSpecialStoppingConditions(ply))
 			return;
 		
-		if (this.isFlying && ply.isJumping)
+		if (this.isFlying && PFAccessor_NetMinecraftEntity.getInstance().isJumping(ply)) //ply.isJumping)
 		{
 			if (this.VAR.MODERN_EVENT_ON_JUMP)
 			{
@@ -272,7 +274,7 @@ public class PFReaderH implements Generator, VariatorSettable
 		return speed > this.VAR.MODERN_SPEED_TO_RUN ? run : walk;
 	}
 	
-	//
+	// 
 	
 	protected void playSinglefoot(EntityPlayer ply, double verticalOffsetAsMinus, EventType eventType, boolean foot)
 	{

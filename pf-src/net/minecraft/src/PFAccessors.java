@@ -1,6 +1,5 @@
 package net.minecraft.src;
 
-import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
 
 /* x-placeholder-wtfplv2 */
 
@@ -10,7 +9,7 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
  * @author Hurry
  * 
  */
-public class PFAccessors implements DefaultStepPlayer
+public class PFAccessors
 {
 	private static final PFAccessors instance = new PFAccessors();
 	
@@ -21,11 +20,5 @@ public class PFAccessors implements DefaultStepPlayer
 	public static PFAccessors getInstance()
 	{
 		return instance;
-	}
-	
-	@Override
-	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, int blockID)
-	{
-		entity.playStepSound(xx, yy, zz, blockID);
 	}
 }

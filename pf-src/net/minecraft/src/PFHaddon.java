@@ -1,16 +1,21 @@
 package net.minecraft.src;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.IResourcePack;
+import net.minecraft.client.resources.ResourcePackRepository;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import eu.ha3.easy.EdgeModel;
 import eu.ha3.easy.EdgeTrigger;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
-import eu.ha3.mc.haddon.PrivateAccessException;
-import eu.ha3.mc.haddon.SupportsFrameEvents;
+import eu.ha3.mc.haddon.implem.HaddonImpl;
+import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.BasicBlockMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.BasicPrimitiveMap;
@@ -20,41 +25,45 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.PrimitiveMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.mc.presencefootsteps.mod.UpdateNotifier;
 import eu.ha3.mc.presencefootsteps.mod.UserConfigSoundPlayerWrapper;
+import eu.ha3.mc.presencefootsteps.modplants.ResourcePackDealer;
 import eu.ha3.mc.presencefootsteps.parsers.JasonAcoustics_Engine0;
 import eu.ha3.mc.presencefootsteps.parsers.PropertyBlockMap_Engine0;
 import eu.ha3.mc.presencefootsteps.parsers.PropertyPrimitiveMap_Engine0;
+import eu.ha3.mc.quick.ChatColorsSimple;
 import eu.ha3.util.property.simple.ConfigProperty;
+import eu.ha3.util.property.simple.InputStreamConfigProperty;
 
 /* x-placeholder-wtfplv2 */
 
 public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 {
+	public static final String NAME = "Presence Footsteps";
 	public static final int VERSION = 1;
 	public static final String FOR = "1.6.2";
+	public static final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	
 	private File presenceDir;
 	private File packsFolder;
 	
-	private PFCacheRegistry cache;
+	//private PFCacheRegistry cache;
 	private EdgeTrigger debugButton;
 	private static boolean isDebugEnabled;
 	
 	private ConfigProperty config;
 	
-	private File currentPackFolder;
 	private PFIsolator isolator;
 	
 	private UpdateNotifier update;
 	
 	private static String DEFAULT_PACK_NAME = "pf_presence";
 	
-	private List<ResourcePack> resourcePacks;
+	private ResourcePackDealer dealer;
+	private IResourcePack currentPack;
 	private boolean firstTickPassed;
 	private boolean mlpDetectedFirst;
 	
 	private long pressedOptionsTime;
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onLoad()
 	{
@@ -69,7 +78,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		{
 			this.packsFolder.mkdirs();
 		}
-		this.cache = new PFCacheRegistry();
+		//this.cache = new PFCacheRegistry();
 		
 		this.update = new UpdateNotifier(this);
 		
@@ -98,27 +107,22 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			this.generator = new PFReader4P(this.isolator);
 		}*/
 		
-		try
+		// XXX 2014-01-03 : 1.7.2 UNSURE
+		/*this.resourcePacks = Minecraft.getMinecraft().getResourcePackRepository();
+		for (File file : new File(this.presenceDir, "packs/").listFiles())
 		{
-			this.resourcePacks =
-				(List<ResourcePack>) util().getPrivateValueLiteral(Minecraft.class, Minecraft.getMinecraft(), "aq", 63);
-			for (File file : new File(this.presenceDir, "packs/").listFiles())
+			if (file.isDirectory())
 			{
-				if (file.isDirectory())
-				{
-					PFHaddon.log("Adding resource pack at " + file.getAbsolutePath());
-					this.resourcePacks.add(new FolderResourcePack(file));
-				}
+				PFHaddon.log("Adding resource pack at " + file.getAbsolutePath());
+				this.resourcePacks.getRepositoryEntries().add(new FolderResourcePack(file));
 			}
 		}
-		catch (PrivateAccessException e)
-		{
-			e.printStackTrace();
-		}
+		this.resourcePacks.updateRepositoryEntriesAll();*/
+		
+		this.dealer = new ResourcePackDealer();
 		
 		reloadEverything(false);
-		
-		manager().hookFrameEvents(true);
+		caster().setFrameEnabled(true);
 		
 	}
 	
@@ -129,6 +133,29 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		// Sets up the pack
 		reloadConfig();
 		
+		@SuppressWarnings("unchecked")
+		List<ResourcePackRepository.Entry> repo =
+			Minecraft.getMinecraft().getResourcePackRepository().getRepositoryEntries();
+		
+		ResourcePackRepository.Entry lastPackFound = null;
+		for (ResourcePackRepository.Entry pack : repo)
+		{
+			System.err.println(pack.getResourcePackName()
+				+ " is " + (this.dealer.checkoutPresencePack(pack) ? "" : "NOT ") + "a PF pack");
+			if (this.dealer.checkoutPresencePack(pack))
+			{
+				lastPackFound = pack;
+			}
+		}
+		
+		if (lastPackFound == null)
+		{
+			PFHaddon.log("Presence Footsteps didn't find any compatible resource pack.");
+			return;
+		}
+		this.currentPack = lastPackFound.getResourcePack();
+		
+		/*
 		if (!this.currentPackFolder.exists())
 		{
 			PFHaddon.log("The pack '" + this.currentPackFolder.getPath() + "'does not exist!");
@@ -144,6 +171,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 					"Presence Footsteps cannot run because the default custom pack does not exist in the "
 						+ new File(this.packsFolder, PFHaddon.DEFAULT_PACK_NAME + "/").getAbsolutePath() + " folder.");
 		}
+		*/
 		
 		if (isInstalledMLP())
 		{
@@ -162,7 +190,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		reloadAcousticsFromFile();
 		this.isolator.setSolver(new PFSolver(this.isolator));
 		reloadVariatorFromFile();
-		loadSoundsFromPack(this.currentPackFolder);
+		//loadSoundsFromPack(this.currentPackFolder);
 		
 		this.isolator.setGenerator(!getConfig().getBoolean("mlp.enabled")
 			? new PFReaderH(this.isolator) : new PFReaderQP(this.isolator));
@@ -201,32 +229,27 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 		this.update.loadConfig(this.config);
 		
-		this.currentPackFolder =
-			new File(this.packsFolder, (this.config.getAllProperties().containsKey("user.packname.r0")
-				? this.config.getString("user.packname.r0") : PFHaddon.DEFAULT_PACK_NAME)
-				+ "/");
+		//this.currentPackFolder =
+		//	new File(this.packsFolder, (this.config.getAllProperties().containsKey("user.packname.r0")
+		//		? this.config.getString("user.packname.r0") : PFHaddon.DEFAULT_PACK_NAME)
+		//		+ "/");
 	}
 	
 	private void reloadVariatorFromFile()
 	{
 		Variator var = new NormalVariator();
 		
-		File configFile = new File(this.currentPackFolder, "variator.cfg");
-		if (configFile.exists())
+		try
 		{
-			try
-			{
-				ConfigProperty config = new ConfigProperty();
-				config.setSource(configFile.getCanonicalPath());
-				config.load();
-				
-				var.loadConfig(config);
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				PFHaddon.log("Loading default configuration failed: " + e.getMessage());
-			}
+			InputStreamConfigProperty config = new InputStreamConfigProperty();
+			config.loadStream(this.dealer.openVariator(this.currentPack));
+			
+			var.loadConfig(config);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			PFHaddon.log("Loading default configuration failed: " + e.getMessage());
 		}
 		
 		this.isolator.setVariator(var);
@@ -238,9 +261,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 		try
 		{
-			ConfigProperty blockSound = new ConfigProperty();
-			blockSound.setSource(new File(this.currentPackFolder, "blockmap.cfg").getCanonicalPath());
-			blockSound.load();
+			InputStreamConfigProperty blockSound = new InputStreamConfigProperty();
+			blockSound.loadStream(this.dealer.openBlockMap(this.currentPack));
 			
 			new PropertyBlockMap_Engine0().setup(blockSound, blockMap);
 		}
@@ -298,9 +320,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 		try
 		{
-			ConfigProperty primitiveSound = new ConfigProperty();
-			primitiveSound.setSource(new File(this.currentPackFolder, "primitivemap.cfg").getCanonicalPath());
-			primitiveSound.load();
+			InputStreamConfigProperty primitiveSound = new InputStreamConfigProperty();
+			primitiveSound.loadStream(this.dealer.openPrimitiveMap(this.currentPack));
 			
 			new PropertyPrimitiveMap_Engine0().setup(primitiveSound, primitiveMap);
 		}
@@ -319,12 +340,11 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 		try
 		{
-			String jasonString =
-				new Scanner(new File(this.currentPackFolder, "acoustics.json")).useDelimiter("\\Z").next();
+			String jasonString = new Scanner(this.dealer.openAcoustics(this.currentPack)).useDelimiter("\\Z").next();
 			
 			new JasonAcoustics_Engine0("").parseJSON(jasonString, acoustics);
 		}
-		catch (FileNotFoundException e)
+		catch (IOException e)
 		{
 			e.printStackTrace();
 			PFHaddon.log("Loading default acoustics failed: " + e.getMessage());
@@ -342,6 +362,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		return Ha3StaticUtilities.classExists("com.minelittlepony.minelp.Pony", this);
 	}
 	
+	/*
 	private void loadSoundsFromPack(File pack)
 	{
 		File soundFolder = new File(pack, "assets/minecraft/sound/");
@@ -350,6 +371,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			loadResource(soundFolder, "");
 		}
 	}
+	*/
 	
 	//
 	
@@ -394,11 +416,11 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			{
 				this
 					.printChat(
-						Ha3Utility.COLOR_TEAL,
+						ChatColorsSimple.COLOR_TEAL,
 						"Mine Little Pony has been detected! ",
-						Ha3Utility.COLOR_WHITE,
+						ChatColorsSimple.COLOR_WHITE,
 						"4-legged mode has been enabled, which will make running sound like galloping amongst other things. ",
-						Ha3Utility.COLOR_GRAY,
+						ChatColorsSimple.COLOR_GRAY,
 						"You can hold down for 1 second the combination LEFT CTRL + LEFT SHIFT + F to disable it.");
 			}
 		}
@@ -407,7 +429,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	/**
 	 * Loads a resource and passes it to Minecraft to install.
 	 */
-	private void loadResource(File par1File, String root)
+	/*private void loadResource(File par1File, String root)
 	{
 		File[] filesInThisDir = par1File.listFiles();
 		int fileCount = filesInThisDir.length;
@@ -432,7 +454,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 				}
 			}
 		}
-	}
+	}*/
 	
 	public ConfigProperty getConfig()
 	{
@@ -441,12 +463,12 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	public void printChat(Object... args)
 	{
-		printChat(new Object[] { Ha3Utility.COLOR_WHITE, "Presence Footsteps: " }, args);
+		printChat(new Object[] { ChatColorsSimple.COLOR_WHITE, "Presence Footsteps: " }, args);
 	}
 	
 	public void printChatShort(Object... args)
 	{
-		printChat(new Object[] { Ha3Utility.COLOR_WHITE, "" }, args);
+		printChat(new Object[] { ChatColorsSimple.COLOR_WHITE, "" }, args);
 	}
 	
 	protected void printChat(final Object[] in, Object... args)
@@ -486,6 +508,18 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			// Write changes on disk.
 			this.config.save();
 		}
+	}
+	
+	@Override
+	public String getName()
+	{
+		return PFHaddon.NAME;
+	}
+	
+	@Override
+	public String getVersion()
+	{
+		return "r" + PFHaddon.VERSION + " for " + PFHaddon.FOR;
 	}
 	
 }

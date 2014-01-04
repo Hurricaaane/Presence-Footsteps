@@ -14,7 +14,7 @@ public interface BlockMap
 	 * @param meta
 	 * @return
 	 */
-	public abstract String getBlockMap(int block, int meta);
+	public abstract String getBlockMap(String blockName, int meta);
 	
 	/**
 	 * This will return null if the substrate does not resolve in the selected
@@ -25,7 +25,7 @@ public interface BlockMap
 	 * @param event
 	 * @return
 	 */
-	public abstract String getBlockMapSubstrate(int block, int meta, String substrate);
+	public abstract String getBlockMapSubstrate(String blockName, int meta, String substrate);
 	
 	/**
 	 * Register an blockmap entry.

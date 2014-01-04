@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 import java.util.Random;
 
+import net.minecraft.entity.player.EntityPlayer;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 

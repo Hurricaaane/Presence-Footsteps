@@ -1,11 +1,17 @@
 package net.minecraft.src;
 
-import java.util.Locale;
-
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
 import eu.ha3.mc.presencefootsteps.engine.implem.ConfigOptions;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Solver;
+import eu.ha3.mc.presencefootsteps.modplants.PF172Helper;
 
 /* x-placeholder-wtfplv2 */
 
@@ -44,9 +50,11 @@ public class PFSolver implements Solver
 		
 		if (assos.startsWith(PFSolver.NO_ASSOCIATION))
 		{
-			String[] noAssos = assos.split(":");
+			// XXX 2014-01-03 : 1.7.2 UNSURE
+			String[] noAssos = assos.split("*");
+			// Get unique name of block
 			this.isolator.getDefaultStepPlayer().playStep(
-				ply, i(noAssos[1]), i(noAssos[2]), i(noAssos[3]), i(noAssos[4]));
+				ply, i(noAssos[1]), i(noAssos[2]), i(noAssos[3]), Block.func_149684_b(noAssos[4]));
 		}
 		else
 		{
@@ -200,15 +208,19 @@ public class PFSolver implements Solver
 	{
 		World world = Minecraft.getMinecraft().theWorld;
 		
-		int block = world.getBlockId(xx, yy, zz);
+		// getBlock(x,y,z)
+		Block block = PF172Helper.getBlockAt(xx, yy, zz);
 		int metadata = world.getBlockMetadata(xx, yy, zz);
-		if (block == 0)
+		// air block
+		if (block == Blocks.field_150350_a)
 		{
-			int mm = world.blockGetRenderType(xx, yy - 1, zz);
+			//int mm = world.blockGetRenderType(xx, yy - 1, zz);
+			// see Entity, line 885
+			int mm = PF172Helper.getBlockAt(xx, yy - 1, zz).func_149645_b();
 			
 			if (mm == 11 || mm == 32 || mm == 21)
 			{
-				block = world.getBlockId(xx, yy - 1, zz);
+				block = PF172Helper.getBlockAt(xx, yy - 1, zz);
 				metadata = world.getBlockMetadata(xx, yy - 1, zz);
 			}
 		}
@@ -218,11 +230,15 @@ public class PFSolver implements Solver
 		//if (block == 0)
 		//	return null;
 		
-		int xblock = world.getBlockId(xx, yy + 1, zz);
+		Block xblock = world.func_147439_a(xx, yy + 1, zz);
 		int xmetadata = world.getBlockMetadata(xx, yy + 1, zz);
 		
 		// Try to see if the block above is a carpet...
-		String association = this.isolator.getBlockMap().getBlockMapSubstrate(xblock, xmetadata, "carpet");
+		String association =
+			this.isolator.getBlockMap().getBlockMapSubstrate(PF172Helper.nameOf(xblock), xmetadata, "carpet");
+		
+		System.out.println("kk");
+		PFHaddon.debug("Walking on block: " + PF172Helper.nameOf(block));
 		
 		if (association == null || association.equals("NOT_EMITTER"))
 		{
@@ -232,7 +248,7 @@ public class PFSolver implements Solver
 			// > NOT_EMITTER carpets will not cause solving to skip
 			
 			// Not a carpet
-			association = this.isolator.getBlockMap().getBlockMap(block, metadata);
+			association = this.isolator.getBlockMap().getBlockMap(PF172Helper.nameOf(block), metadata);
 			
 			if (association != null && !association.equals("NOT_EMITTER"))
 			{
@@ -242,7 +258,8 @@ public class PFSolver implements Solver
 				// This block most not be executed if the association is a carpet
 				// => this block of code is here, not outside this if else group.
 				
-				String foliage = this.isolator.getBlockMap().getBlockMapSubstrate(xblock, xmetadata, "foliage");
+				String foliage =
+					this.isolator.getBlockMap().getBlockMapSubstrate(PF172Helper.nameOf(xblock), xmetadata, "foliage");
 				if (foliage != null && !foliage.equals("NOT_EMITTER"))
 				{
 					association = association + "," + foliage;
@@ -266,7 +283,9 @@ public class PFSolver implements Solver
 			{
 				// Player has stepped on a non-emitter block
 				// as defined in the blockmap
-				if (block != 0)
+				
+				// air block
+				if (block != Blocks.field_150350_a)
 				{
 					PFHaddon.debug("Not emitter for " + block + ":" + metadata);
 				}
@@ -298,20 +317,23 @@ public class PFSolver implements Solver
 			else
 			{
 				PFHaddon.debug("No association for " + block + ":" + metadata);
-				return NO_ASSOCIATION + ":" + xx + ":" + yy + ":" + zz + ":" + block;
+				return NO_ASSOCIATION + "*" + xx + "*" + yy + "*" + zz + "*" + block;
 			}
 		}
 	}
 	
-	private String resolvePrimitive(int block, int metadata)
+	private String resolvePrimitive(Block block, int metadata)
 	{
-		if (block == 0)
+		// air block
+		if (block == Blocks.field_150350_a)
 			return "NOT_EMITTER";
 		
-		Block registered = Block.blocksList[block];
+		// impossible case?
+		/*Block registered = Block.blocksList[block];
 		
 		if (registered == null)
-			return null;
+			return null;*/
+		Block registered = block;
 		
 		//
 		
@@ -319,10 +341,18 @@ public class PFSolver implements Solver
 		
 		//
 		
-		if (registered.stepSound == null)
+		// stepSound <= field_149762_H
+		if (registered.field_149762_H == null)
 			return "NOT_EMITTER"; // This could return "" for empty sound, but let the engine try other things
 			
-		String soundName = registered.stepSound.stepSoundName;
+		// XXX 2014-01-04 do not bother with primitives yet
+		PFHaddon.debug("Primitives are not supported in this version");
+		if (true)
+			return "";
+		return "";
+		
+		/*
+		String soundName = registered.field_149762_H.stepSoundName;
 		if (soundName == null || soundName.equals(""))
 		{
 			soundName = "UNDEFINED";
@@ -357,7 +387,7 @@ public class PFSolver implements Solver
 		{
 			PFHaddon.debug("No primitive for " + soundName + ":" + substrate);
 			return null;
-		}
+		}*/
 	}
 	
 	@Override
@@ -377,8 +407,10 @@ public class PFSolver implements Solver
 			ConfigOptions options = new ConfigOptions();
 			options.getMap().put("gliding_volume", volume);
 			
+			// material water, see EntityLivingBase line 286
 			this.isolator.getAcoustics().playAcoustic(
-				ply, "_SWIM", ply.isInsideOfMaterial(Material.water) ? EventType.SWIM : EventType.WALK, options);
+				ply, "_SWIM", ply.isInsideOfMaterial(Material.field_151586_h) ? EventType.SWIM : EventType.WALK,
+				options);
 			
 			return true;
 		}

@@ -17,17 +17,17 @@ public class BasicBlockMap implements BlockMap
 	}
 	
 	@Override
-	public String getBlockMap(int block, int meta)
+	public String getBlockMap(String blockName, int meta)
 	{
 		String material = null;
 		
-		if (this.blockMap.containsKey(block + "_" + meta))
+		if (this.blockMap.containsKey(blockName + "_" + meta))
 		{
-			material = this.blockMap.get(block + "_" + meta);
+			material = this.blockMap.get(blockName + "_" + meta);
 		}
-		else if (this.blockMap.containsKey(Integer.toString(block)))
+		else if (this.blockMap.containsKey(blockName))
 		{
-			material = this.blockMap.get(Integer.toString(block));
+			material = this.blockMap.get(blockName);
 		}
 		else
 		{
@@ -38,17 +38,17 @@ public class BasicBlockMap implements BlockMap
 	}
 	
 	@Override
-	public String getBlockMapSubstrate(int block, int meta, String substrate)
+	public String getBlockMapSubstrate(String blockName, int meta, String substrate)
 	{
 		String material = null;
 		
-		if (this.blockMap.containsKey(block + "_" + meta + "." + substrate))
+		if (this.blockMap.containsKey(blockName + "_" + meta + "." + substrate))
 		{
-			material = this.blockMap.get(block + "_" + meta + "." + substrate);
+			material = this.blockMap.get(blockName + "_" + meta + "." + substrate);
 		}
-		else if (this.blockMap.containsKey(Integer.toString(block) + "." + substrate))
+		else if (this.blockMap.containsKey(blockName + "." + substrate))
 		{
-			material = this.blockMap.get(Integer.toString(block) + "." + substrate);
+			material = this.blockMap.get(blockName + "." + substrate);
 		}
 		else
 			return null;
@@ -59,6 +59,6 @@ public class BasicBlockMap implements BlockMap
 	@Override
 	public void register(String key, String value)
 	{
-		this.blockMap.put(key, value);
+		this.blockMap.put(key.replace('>', ':'), value);
 	}
 }

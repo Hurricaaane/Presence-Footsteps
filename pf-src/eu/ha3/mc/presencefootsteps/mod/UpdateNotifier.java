@@ -12,7 +12,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import net.minecraft.src.Ha3Utility;
 import net.minecraft.src.PFHaddon;
 
 import org.w3c.dom.Document;
@@ -20,6 +19,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import eu.ha3.mc.quick.ChatColorsSimple;
 import eu.ha3.util.property.simple.ConfigProperty;
 
 /* x-placeholder-wtfplv2 */
@@ -122,21 +122,21 @@ public class UpdateNotifier extends Thread
 					
 					int vc = maxvn - PFHaddon.VERSION;
 					this.mod.printChat(
-						Ha3Utility.COLOR_GOLD, "A ", Ha3Utility.COLOR_WHITE, "r" + maxvn, Ha3Utility.COLOR_GOLD,
-						" update is available (You're ", Ha3Utility.COLOR_WHITE, vc, Ha3Utility.COLOR_GOLD, " version"
+						ChatColorsSimple.COLOR_GOLD, "A ", ChatColorsSimple.COLOR_WHITE, "r" + maxvn, ChatColorsSimple.COLOR_GOLD,
+						" update is available (You're ", ChatColorsSimple.COLOR_WHITE, vc, ChatColorsSimple.COLOR_GOLD, " version"
 							+ (vc > 1 ? "s" : "") + " late). http://presencefootsteps.ha3.eu/");
 					
 					if (this.displayRemaining > 0)
 					{
 						this.mod.printChat(
-							Ha3Utility.COLOR_GRAY, "This message will display ", Ha3Utility.COLOR_WHITE,
-							this.displayRemaining, Ha3Utility.COLOR_GRAY, " more time"
+							ChatColorsSimple.COLOR_GRAY, "This message will display ", ChatColorsSimple.COLOR_WHITE,
+							this.displayRemaining, ChatColorsSimple.COLOR_GRAY, " more time"
 								+ (this.displayRemaining > 1 ? "s" : "") + ".");
 					}
 					else
 					{
 						this.mod.printChat(
-							Ha3Utility.COLOR_GRAY, "You won't be notified anymore until a newer version.");
+							ChatColorsSimple.COLOR_GRAY, "You won't be notified anymore until a newer version.");
 					}
 					
 					needsSave = true;

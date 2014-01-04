@@ -6,7 +6,7 @@ import java.util.Set;
 
 import net.minecraft.src.PFHaddon;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
-import eu.ha3.util.property.simple.ConfigProperty;
+import eu.ha3.util.property.contract.PropertyHolder;
 
 /* x-placeholder-wtfplv2 */
 
@@ -61,7 +61,7 @@ public class NormalVariator implements Variator
 	public boolean MODERN_PLAY_WANDER = true;
 	
 	@Override
-	public void loadConfig(ConfigProperty config)
+	public void loadConfig(PropertyHolder config)
 	{
 		Set<String> keysFromConfig = config.getAllProperties().keySet();
 		Set<String> keys = new HashSet<String>();

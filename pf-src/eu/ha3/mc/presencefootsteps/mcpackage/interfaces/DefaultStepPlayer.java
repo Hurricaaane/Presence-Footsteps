@@ -1,6 +1,7 @@
 package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
 
-import net.minecraft.src.EntityLivingBase;
+import net.minecraft.block.Block;
+import net.minecraft.entity.EntityLivingBase;
 
 /* x-placeholder-wtfplv2 */
 
@@ -22,5 +23,5 @@ public interface DefaultStepPlayer
 	 * @param zz
 	 * @param block
 	 */
-	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, int blockID);
+	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, Block blockID);
 }
