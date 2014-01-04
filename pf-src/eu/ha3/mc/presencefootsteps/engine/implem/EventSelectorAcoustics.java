@@ -25,7 +25,7 @@ public class EventSelectorAcoustics implements NamedAcoustic
 		fallback.put(EventType.RUN, EventType.WALK);
 		fallback.put(EventType.JUMP, EventType.WANDER);
 		
-		fallback.put(EventType.CLIMB, EventType.WANDER);
+		fallback.put(EventType.CLIMB, EventType.WALK);
 		fallback.put(EventType.DOWN, EventType.WALK);
 		fallback.put(EventType.UP, EventType.WALK);
 		
