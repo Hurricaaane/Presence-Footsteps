@@ -17,8 +17,8 @@ import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
-import eu.ha3.mc.presencefootsteps.mcpackage.implem.BasicBlockMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.BasicPrimitiveMap;
+import eu.ha3.mc.presencefootsteps.mcpackage.implem.LegacyCapableBlockMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.NormalVariator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.BlockMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.PrimitiveMap;
@@ -257,7 +257,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	private void reloadBlockMapFromFile()
 	{
-		BlockMap blockMap = new BasicBlockMap();
+		BlockMap blockMap = new LegacyCapableBlockMap();
 		
 		try
 		{
