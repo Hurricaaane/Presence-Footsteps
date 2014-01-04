@@ -237,8 +237,8 @@ public class PFSolver implements Solver
 		String association =
 			this.isolator.getBlockMap().getBlockMapSubstrate(PF172Helper.nameOf(xblock), xmetadata, "carpet");
 		
-		System.out.println("kk");
-		PFHaddon.debug("Walking on block: " + PF172Helper.nameOf(block));
+		PFHaddon.debug("Walking on block: "
+			+ PF172Helper.nameOf(block) + " -- Being in block: " + PF172Helper.nameOf(xblock));
 		
 		if (association == null || association.equals("NOT_EMITTER"))
 		{
