@@ -21,9 +21,9 @@ public class BasicBlockMap implements BlockMap
 	{
 		String material = null;
 		
-		if (this.blockMap.containsKey(blockName + "_" + meta))
+		if (this.blockMap.containsKey(blockName + "^" + meta))
 		{
-			material = this.blockMap.get(blockName + "_" + meta);
+			material = this.blockMap.get(blockName + "^" + meta);
 		}
 		else if (this.blockMap.containsKey(blockName))
 		{
@@ -42,9 +42,9 @@ public class BasicBlockMap implements BlockMap
 	{
 		String material = null;
 		
-		if (this.blockMap.containsKey(blockName + "_" + meta + "." + substrate))
+		if (this.blockMap.containsKey(blockName + "^" + meta + "." + substrate))
 		{
-			material = this.blockMap.get(blockName + "_" + meta + "." + substrate);
+			material = this.blockMap.get(blockName + "^" + meta + "." + substrate);
 		}
 		else if (this.blockMap.containsKey(blockName + "." + substrate))
 		{
