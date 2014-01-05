@@ -435,7 +435,7 @@ public class PFSolver implements Solver
 		
 		World world = Minecraft.getMinecraft().theWorld;
 		
-		Block block = PF172Helper.getBlockAt(xx, yy, zz);
+		/*Block block = PF172Helper.getBlockAt(xx, yy, zz);
 		int metadata = world.getBlockMetadata(xx, yy, zz);
 		// air block
 		if (block == Blocks.field_150350_a)
@@ -449,16 +449,17 @@ public class PFSolver implements Solver
 				block = PF172Helper.getBlockAt(xx, yy - 1, zz);
 				metadata = world.getBlockMetadata(xx, yy - 1, zz);
 			}
-		}
+		}*/
 		
 		Block xblock = world.func_147439_a(xx, yy + 1, zz);
 		int xmetadata = world.getBlockMetadata(xx, yy + 1, zz);
 		
+		String association = null;
+		boolean found = false;
 		// Try to see if the block above is a carpet...
-		String association =
+		/*String association =
 			this.isolator.getBlockMap().getBlockMapSubstrate(PF172Helper.nameOf(xblock), xmetadata, "carpet");
 		
-		boolean found = false;
 		if (association == null || association.equals("NOT_EMITTER"))
 		{
 			// This condition implies that
@@ -471,35 +472,34 @@ public class PFSolver implements Solver
 			
 			if (association != null && !association.equals("NOT_EMITTER"))
 			{
-				// This condition implies that
-				// foliage over a NOT_EMITTER block CANNOT PLAY
-				
-				// This block most not be executed if the association is a carpet
-				// => this block of code is here, not outside this if else group.
-				
-				String foliage =
-					this.isolator.getBlockMap().getBlockMapSubstrate(PF172Helper.nameOf(xblock), xmetadata, "foliage");
-				if (foliage != null && !foliage.equals("NOT_EMITTER"))
-				{
-					// we discard the normal block association, and mark the foliage as detected
-					//association = association + "," + foliage;
-					association = foliage;
-					
-					String isMessy =
-						this.isolator
-							.getBlockMap().getBlockMapSubstrate(PF172Helper.nameOf(xblock), xmetadata, "messy");
-					
-					if (isMessy != null && isMessy.equals("MESSY_GROUND"))
-					{
-						found = true;
-					}
-				}
+		        // This condition implies that
+		        // foliage over a NOT_EMITTER block CANNOT PLAY
+		        
+		        // This block most not be executed if the association is a carpet
+		        // => this block of code is here, not outside this if else group.*/
+		
+		String foliage =
+			this.isolator.getBlockMap().getBlockMapSubstrate(PF172Helper.nameOf(xblock), xmetadata, "foliage");
+		if (foliage != null && !foliage.equals("NOT_EMITTER"))
+		{
+			// we discard the normal block association, and mark the foliage as detected
+			//association = association + "," + foliage;
+			association = foliage;
+			
+			String isMessy =
+				this.isolator.getBlockMap().getBlockMapSubstrate(PF172Helper.nameOf(xblock), xmetadata, "messy");
+			
+			if (isMessy != null && isMessy.equals("MESSY_GROUND"))
+			{
+				found = true;
 			}
-			// else { the information is discarded anyways, the method returns null or no association }
+		}
+		/*}
+		// else { the information is discarded anyways, the method returns null or no association }
 		}
 		else
-			// Is a carpet
-			return null;
+		// Is a carpet
+		return null;*/
 		
 		if (found && association != null)
 		{

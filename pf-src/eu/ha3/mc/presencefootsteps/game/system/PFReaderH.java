@@ -292,28 +292,28 @@ public class PFReaderH implements Generator, VariatorSettable
 		if (ply.isSneaking())
 			return;
 		
-		if (ply.onGround || ply.isOnLadder())
+		//if (true || ply.onGround || ply.isOnLadder())
+		//{
+		int yy = MathHelper.floor_double(ply.posY - 0.1d - ply.yOffset - (ply.onGround ? 0d : 0.25d));
+		String assos =
+			this.mod.getSolver().findAssociationForBlock(
+				MathHelper.floor_double(ply.posX), yy, MathHelper.floor_double(ply.posZ), "find_messy_foliage");
+		if (assos != null)
 		{
-			int yy = MathHelper.floor_double(ply.posY - 0.1d - ply.yOffset);
-			String assos =
-				this.mod.getSolver().findAssociationForBlock(
-					MathHelper.floor_double(ply.posX), yy, MathHelper.floor_double(ply.posZ), "find_messy_foliage");
-			if (assos != null)
+			if (!this.isMessyFoliage)
 			{
-				if (!this.isMessyFoliage)
-				{
-					this.isMessyFoliage = true;
-					this.mod.getSolver().playAssociation(ply, assos, EventType.WALK);
-				}
-			}
-			else
-			{
-				if (this.isMessyFoliage)
-				{
-					this.isMessyFoliage = false;
-				}
+				this.isMessyFoliage = true;
+				this.mod.getSolver().playAssociation(ply, assos, EventType.WALK);
 			}
 		}
+		else
+		{
+			if (this.isMessyFoliage)
+			{
+				this.isMessyFoliage = false;
+			}
+		}
+		//}
 	}
 	
 	// 
