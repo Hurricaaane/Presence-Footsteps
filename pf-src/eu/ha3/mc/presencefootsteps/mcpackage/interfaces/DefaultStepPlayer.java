@@ -17,7 +17,6 @@ public interface DefaultStepPlayer
 	 * Play a step sound from a block.
 	 * 
 	 * @param entity
-	 *            TODO
 	 * @param xx
 	 * @param yy
 	 * @param zz

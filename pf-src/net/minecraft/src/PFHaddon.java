@@ -45,7 +45,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	private File presenceDir;
 	private File packsFolder;
 	
-	//private PFCacheRegistry cache;
 	private EdgeTrigger debugButton;
 	private static boolean isDebugEnabled;
 	
