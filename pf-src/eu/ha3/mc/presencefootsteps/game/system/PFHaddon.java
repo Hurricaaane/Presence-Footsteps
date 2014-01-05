@@ -469,13 +469,13 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	}
 	
 	@Override
-	public String getName()
+	public String getHaddonName()
 	{
 		return PFHaddon.NAME;
 	}
 	
 	@Override
-	public String getVersion()
+	public String getHaddonVersion()
 	{
 		return "r" + PFHaddon.VERSION + " for " + PFHaddon.FOR;
 	}
