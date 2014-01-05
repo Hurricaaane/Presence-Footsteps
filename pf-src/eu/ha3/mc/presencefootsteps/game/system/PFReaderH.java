@@ -2,6 +2,7 @@ package eu.ha3.mc.presencefootsteps.game.system;
 
 import net.minecraft.entity.PFAccessor_NetMinecraftEntity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.MathHelper;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.NormalVariator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Generator;
@@ -37,6 +38,9 @@ public class PFReaderH implements Generator, VariatorSettable
 	protected boolean scalStat;
 	private boolean stepThisFrame;
 	
+	private boolean isMessyFoliage;
+	private long brushesTime;
+	
 	public PFReaderH(Isolator isolator)
 	{
 		this.mod = isolator;
@@ -57,6 +61,7 @@ public class PFReaderH implements Generator, VariatorSettable
 	{
 		simulateFootsteps(ply);
 		simulateAirborne(ply);
+		simulateBrushes(ply);
 	}
 	
 	protected boolean stoppedImmobile(float reference)
@@ -272,6 +277,43 @@ public class PFReaderH implements Generator, VariatorSettable
 	{
 		double speed = ply.motionX * ply.motionX + ply.motionZ * ply.motionZ;
 		return speed > this.VAR.MODERN_SPEED_TO_RUN ? run : walk;
+	}
+	
+	private void simulateBrushes(EntityPlayer ply)
+	{
+		if (this.brushesTime > System.currentTimeMillis())
+			return;
+		
+		this.brushesTime = System.currentTimeMillis() + 100;
+		
+		if (ply.motionX == 0d && ply.motionZ == 0d)
+			return;
+		
+		if (ply.isSneaking())
+			return;
+		
+		if (ply.onGround || ply.isOnLadder())
+		{
+			int yy = MathHelper.floor_double(ply.posY - 0.1d - ply.yOffset);
+			String assos =
+				this.mod.getSolver().findAssociationForBlock(
+					MathHelper.floor_double(ply.posX), yy, MathHelper.floor_double(ply.posZ), "find_messy_foliage");
+			if (assos != null)
+			{
+				if (!this.isMessyFoliage)
+				{
+					this.isMessyFoliage = true;
+					this.mod.getSolver().playAssociation(ply, assos, EventType.WALK);
+				}
+			}
+			else
+			{
+				if (this.isMessyFoliage)
+				{
+					this.isMessyFoliage = false;
+				}
+			}
+		}
 	}
 	
 	// 

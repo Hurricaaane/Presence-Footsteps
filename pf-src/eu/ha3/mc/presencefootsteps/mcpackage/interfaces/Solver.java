@@ -90,6 +90,19 @@ public interface Solver
 	public abstract String findAssociationForBlock(int xx, int yy, int zz);
 	
 	/**
+	 * Find an association for a certain block assuming the player is standing
+	 * on it, using a custom strategy which strategies are defined by the
+	 * solver.
+	 * 
+	 * @param ply
+	 * @param xx
+	 * @param yy
+	 * @param zz
+	 * @return
+	 */
+	public abstract String findAssociationForBlock(int xx, int yy, int zz, String strategy);
+	
+	/**
 	 * Play special sounds that must stop the usual footstep figuring things out
 	 * process.
 	 * 
