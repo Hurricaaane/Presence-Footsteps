@@ -202,6 +202,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	{
 		Variator var = new NormalVariator();
 		
+		int working = 0;
 		for (ResourcePackRepository.Entry pack : repo)
 		{
 			try
@@ -210,12 +211,16 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 				config.loadStream(this.dealer.openVariator(pack.getResourcePack()));
 				
 				var.loadConfig(config);
+				working = working + 1;
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
-				PFHaddon.log("Loading default configuration failed: " + e.getMessage());
+				PFHaddon.debug("No variator found in " + pack.getResourcePackName() + ": " + e.getMessage());
 			}
+		}
+		if (working == 0)
+		{
+			PFHaddon.log("No variators found in " + repo.size() + " packs!");
 		}
 		
 		this.isolator.setVariator(var);
@@ -225,6 +230,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	{
 		BlockMap blockMap = new LegacyCapableBlockMap();
 		
+		int working = 0;
 		for (ResourcePackRepository.Entry pack : repo)
 		{
 			try
@@ -233,12 +239,16 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 				blockSound.loadStream(this.dealer.openBlockMap(pack.getResourcePack()));
 				
 				new PropertyBlockMap_Engine0().setup(blockSound, blockMap);
+				working = working + 1;
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
-				PFHaddon.log("Loading default blockmap failed: " + e.getMessage());
+				PFHaddon.debug("No blockmap found in " + pack.getResourcePackName() + ": " + e.getMessage());
 			}
+		}
+		if (working == 0)
+		{
+			PFHaddon.log("No blockmaps found in " + repo.size() + " packs!");
 		}
 		
 		this.isolator.setBlockMap(blockMap);
@@ -248,6 +258,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	{
 		PrimitiveMap primitiveMap = new BasicPrimitiveMap();
 		
+		int working = 0;
 		for (ResourcePackRepository.Entry pack : repo)
 		{
 			try
@@ -256,12 +267,16 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 				primitiveSound.loadStream(this.dealer.openPrimitiveMap(pack.getResourcePack()));
 				
 				new PropertyPrimitiveMap_Engine0().setup(primitiveSound, primitiveMap);
+				working = working + 1;
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
-				PFHaddon.log("Loading default primitivemap failed: " + e.getMessage());
+				PFHaddon.debug("No primitivemap found in " + pack.getResourcePackName() + ": " + e.getMessage());
 			}
+		}
+		if (working == 0)
+		{
+			PFHaddon.log("No blockmaps found in " + repo.size() + " packs!");
 		}
 		
 		this.isolator.setPrimitiveMap(primitiveMap);
@@ -271,6 +286,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	{
 		AcousticsManager acoustics = new AcousticsManager(this.isolator);
 		
+		int working = 0;
 		for (ResourcePackRepository.Entry pack : repo)
 		{
 			try
@@ -279,12 +295,16 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 					new Scanner(this.dealer.openAcoustics(pack.getResourcePack())).useDelimiter("\\Z").next();
 				
 				new JasonAcoustics_Engine0("").parseJSON(jasonString, acoustics);
+				working = working + 1;
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
-				PFHaddon.log("Loading default acoustics failed: " + e.getMessage());
+				PFHaddon.debug("No acoustics found in " + pack.getResourcePackName() + ": " + e.getMessage());
 			}
+		}
+		if (working == 0)
+		{
+			PFHaddon.log("No blockmaps found in " + repo.size() + " packs!");
 		}
 		
 		this.isolator.setAcoustics(acoustics);
