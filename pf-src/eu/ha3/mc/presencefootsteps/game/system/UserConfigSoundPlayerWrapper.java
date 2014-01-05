@@ -1,4 +1,4 @@
-package eu.ha3.mc.presencefootsteps.mod;
+package eu.ha3.mc.presencefootsteps.game.system;
 
 import java.util.Random;
 

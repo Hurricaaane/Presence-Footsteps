@@ -3,7 +3,7 @@ package eu.ha3.mc.presencefootsteps.parsers;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.minecraft.src.PFHaddon;
+import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.PrimitiveMap;
 import eu.ha3.util.property.contract.PropertyHolder;
 

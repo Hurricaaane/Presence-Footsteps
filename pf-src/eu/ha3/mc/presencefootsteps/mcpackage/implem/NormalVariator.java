@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.minecraft.src.PFHaddon;
+import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.util.property.contract.PropertyHolder;
 

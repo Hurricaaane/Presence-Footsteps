@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.game.system;
 
 import net.minecraft.entity.player.EntityPlayer;
 import eu.ha3.mc.presencefootsteps.engine.implem.ConfigOptions;

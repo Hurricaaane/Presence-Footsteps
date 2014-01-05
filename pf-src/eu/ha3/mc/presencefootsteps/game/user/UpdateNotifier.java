@@ -1,4 +1,4 @@
-package eu.ha3.mc.presencefootsteps.mod;
+package eu.ha3.mc.presencefootsteps.game.user;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,13 +12,12 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import net.minecraft.src.PFHaddon;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
 import eu.ha3.mc.quick.ChatColorsSimple;
 import eu.ha3.util.property.simple.ConfigProperty;
 

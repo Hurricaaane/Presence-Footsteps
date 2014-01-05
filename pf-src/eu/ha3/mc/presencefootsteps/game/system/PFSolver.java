@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.game.system;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -9,9 +9,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import eu.ha3.mc.presencefootsteps.engine.implem.ConfigOptions;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
+import eu.ha3.mc.presencefootsteps.game.PF172Helper;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Solver;
-import eu.ha3.mc.presencefootsteps.modplants.PF172Helper;
 
 /* x-placeholder-wtfplv2 */
 

@@ -1,7 +1,7 @@
-package eu.ha3.mc.presencefootsteps.modplants;
+package eu.ha3.mc.presencefootsteps.game.mod;
 
-import net.minecraft.src.PFHaddon;
 import eu.ha3.mc.litemod.LiteBase;
+import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
 
 /*
 --filenotes-placeholder

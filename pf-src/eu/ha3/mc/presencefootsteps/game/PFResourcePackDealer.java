@@ -1,8 +1,11 @@
-package eu.ha3.mc.presencefootsteps.modplants;
+package eu.ha3.mc.presencefootsteps.game;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.util.ResourceLocation;
@@ -11,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 --filenotes-placeholder
 */
 
-public class ResourcePackDealer
+public class PFResourcePackDealer
 {
 	private final ResourceLocation pf_pack = new ResourceLocation("presencefootsteps", "pf_pack.json");
 	private final ResourceLocation acoustics = new ResourceLocation("presencefootsteps", "acoustics.json");
@@ -19,9 +22,27 @@ public class ResourcePackDealer
 	private final ResourceLocation primitivemap = new ResourceLocation("presencefootsteps", "primitivemap.cfg");
 	private final ResourceLocation variator = new ResourceLocation("presencefootsteps", "variator.cfg");
 	
-	public boolean checkoutPresencePack(ResourcePackRepository.Entry pack)
+	public List<ResourcePackRepository.Entry> findResourcePacks()
 	{
-		try
+		@SuppressWarnings("unchecked")
+		List<ResourcePackRepository.Entry> repo =
+			Minecraft.getMinecraft().getResourcePackRepository().getRepositoryEntries();
+		
+		List<ResourcePackRepository.Entry> foundEntries = new ArrayList<ResourcePackRepository.Entry>();
+		
+		for (ResourcePackRepository.Entry pack : repo)
+		{
+			if (checkCompatible(pack))
+			{
+				foundEntries.add(pack);
+			}
+		}
+		return foundEntries;
+	}
+	
+	private boolean checkCompatible(ResourcePackRepository.Entry pack)
+	{
+		/*try
 		{
 			InputStream is = pack.getResourcePack().getInputStream(this.pf_pack);
 			is.close();
@@ -30,7 +51,8 @@ public class ResourcePackDealer
 		catch (IOException e)
 		{
 			return false;
-		}
+		}*/
+		return pack.getResourcePack().resourceExists(this.pf_pack);
 	}
 	
 	public InputStream openPackDescriptor(IResourcePack pack) throws IOException

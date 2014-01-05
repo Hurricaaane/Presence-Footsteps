@@ -1,10 +1,11 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.game.user;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import eu.ha3.mc.gui.HDisplayStringProvider;
 import eu.ha3.mc.gui.HGuiSliderControl;
 import eu.ha3.mc.gui.HSliderListener;
+import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
 
 /* x-placeholder-wtfplv2 */
 

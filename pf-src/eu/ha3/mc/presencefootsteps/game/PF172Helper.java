@@ -1,4 +1,4 @@
-package eu.ha3.mc.presencefootsteps.modplants;
+package eu.ha3.mc.presencefootsteps.game;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

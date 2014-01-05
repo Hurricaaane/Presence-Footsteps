@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package eu.ha3.mc.presencefootsteps.game.system;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,6 @@ import java.util.Scanner;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +15,9 @@ import eu.ha3.easy.EdgeTrigger;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
+import eu.ha3.mc.presencefootsteps.game.PFResourcePackDealer;
+import eu.ha3.mc.presencefootsteps.game.user.PFGuiMenu;
+import eu.ha3.mc.presencefootsteps.game.user.UpdateNotifier;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.BasicPrimitiveMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.LegacyCapableBlockMap;
@@ -23,9 +25,6 @@ import eu.ha3.mc.presencefootsteps.mcpackage.implem.NormalVariator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.BlockMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.PrimitiveMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
-import eu.ha3.mc.presencefootsteps.mod.UpdateNotifier;
-import eu.ha3.mc.presencefootsteps.mod.UserConfigSoundPlayerWrapper;
-import eu.ha3.mc.presencefootsteps.modplants.ResourcePackDealer;
 import eu.ha3.mc.presencefootsteps.parsers.JasonAcoustics_Engine0;
 import eu.ha3.mc.presencefootsteps.parsers.PropertyBlockMap_Engine0;
 import eu.ha3.mc.presencefootsteps.parsers.PropertyPrimitiveMap_Engine0;
@@ -56,8 +55,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	
 	private static String DEFAULT_PACK_NAME = "pf_presence";
 	
-	private ResourcePackDealer dealer;
-	private IResourcePack currentPack;
+	private PFResourcePackDealer dealer;
 	private boolean firstTickPassed;
 	private boolean mlpDetectedFirst;
 	
@@ -118,7 +116,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		}
 		this.resourcePacks.updateRepositoryEntriesAll();*/
 		
-		this.dealer = new ResourcePackDealer();
+		this.dealer = new PFResourcePackDealer();
 		
 		reloadEverything(false);
 		caster().setFrameEnabled(true);
@@ -132,45 +130,12 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		// Sets up the pack
 		reloadConfig();
 		
-		@SuppressWarnings("unchecked")
-		List<ResourcePackRepository.Entry> repo =
-			Minecraft.getMinecraft().getResourcePackRepository().getRepositoryEntries();
-		
-		ResourcePackRepository.Entry lastPackFound = null;
-		for (ResourcePackRepository.Entry pack : repo)
-		{
-			System.err.println(pack.getResourcePackName()
-				+ " is " + (this.dealer.checkoutPresencePack(pack) ? "" : "NOT ") + "a PF pack");
-			if (this.dealer.checkoutPresencePack(pack))
-			{
-				lastPackFound = pack;
-			}
-		}
-		
-		if (lastPackFound == null)
+		List<ResourcePackRepository.Entry> repo = this.dealer.findResourcePacks();
+		if (repo.size() == 0)
 		{
 			PFHaddon.log("Presence Footsteps didn't find any compatible resource pack.");
 			return;
 		}
-		this.currentPack = lastPackFound.getResourcePack();
-		
-		/*
-		if (!this.currentPackFolder.exists())
-		{
-			PFHaddon.log("The pack '" + this.currentPackFolder.getPath() + "'does not exist!");
-			if (!nested)
-			{
-				this.currentPackFolder = new File(this.packsFolder, PFHaddon.DEFAULT_PACK_NAME + "/");
-				PFHaddon.log("The pack '" + this.currentPackFolder.getPath() + "'does not exist!");
-				
-				reloadEverything(true);
-			}
-			else
-				throw new RuntimeException(
-					"Presence Footsteps cannot run because the default custom pack does not exist in the "
-						+ new File(this.packsFolder, PFHaddon.DEFAULT_PACK_NAME + "/").getAbsolutePath() + " folder.");
-		}
-		*/
 		
 		if (isInstalledMLP())
 		{
@@ -184,12 +149,11 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 			}
 		}
 		
-		reloadBlockMapFromFile();
-		reloadPrimitiveMapFromFile();
-		reloadAcousticsFromFile();
+		reloadBlockMap(repo);
+		reloadPrimitiveMap(repo);
+		reloadAcoustics(repo);
 		this.isolator.setSolver(new PFSolver(this.isolator));
-		reloadVariatorFromFile();
-		//loadSoundsFromPack(this.currentPackFolder);
+		reloadVariator(repo);
 		
 		this.isolator.setGenerator(!getConfig().getBoolean("mlp.enabled")
 			? new PFReaderH(this.isolator) : new PFReaderQP(this.isolator));
@@ -234,119 +198,93 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		//		+ "/");
 	}
 	
-	private void reloadVariatorFromFile()
+	private void reloadVariator(List<ResourcePackRepository.Entry> repo)
 	{
 		Variator var = new NormalVariator();
 		
-		try
+		for (ResourcePackRepository.Entry pack : repo)
 		{
-			InputStreamConfigProperty config = new InputStreamConfigProperty();
-			config.loadStream(this.dealer.openVariator(this.currentPack));
-			
-			var.loadConfig(config);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			PFHaddon.log("Loading default configuration failed: " + e.getMessage());
+			try
+			{
+				InputStreamConfigProperty config = new InputStreamConfigProperty();
+				config.loadStream(this.dealer.openVariator(pack.getResourcePack()));
+				
+				var.loadConfig(config);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				PFHaddon.log("Loading default configuration failed: " + e.getMessage());
+			}
 		}
 		
 		this.isolator.setVariator(var);
 	}
 	
-	private void reloadBlockMapFromFile()
+	private void reloadBlockMap(List<ResourcePackRepository.Entry> repo)
 	{
 		BlockMap blockMap = new LegacyCapableBlockMap();
 		
-		try
+		for (ResourcePackRepository.Entry pack : repo)
 		{
-			InputStreamConfigProperty blockSound = new InputStreamConfigProperty();
-			blockSound.loadStream(this.dealer.openBlockMap(this.currentPack));
-			
-			new PropertyBlockMap_Engine0().setup(blockSound, blockMap);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			PFHaddon.log("Loading default blockmap failed: " + e.getMessage());
-		}
-		
-		/*for (File file : this.currentPackFolder.listFiles())
-		{
-			if (file.getName().startsWith("blockmap_") && file.getName().endsWith(".cfg"))
+			try
 			{
-				try
-				{
-					ConfigProperty blockSound = new ConfigProperty();
-					blockSound.setSource(file.getCanonicalPath());
-					blockSound.load();
-					
-					if (blockSound.getAllProperties().containsKey("_classname"))
-					{
-						if (eu.ha3.mc.convenience.Ha3StaticUtilities.classExists(
-							blockSound.getString("_classname"), this))
-						{
-							PFHaddon.debug("Loading mod ("
-								+ blockSound.getString("_classname") + ") blockmap: " + file.getName());
-							new PropertyBlockMap_Engine0().setup(blockSound, blockMap);
-						}
-						else
-						{
-							PFHaddon.debug("Skipping missing mod ("
-								+ blockSound.getString("_classname") + ") blockmap: " + file.getName());
-						}
-					}
-					else
-					{
-						PFHaddon.debug("Loading custom blockmap: " + file.getName());
-						new PropertyBlockMap_Engine0().setup(blockSound, blockMap);
-					}
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-					PFHaddon.log("Loading custom blockmap failed: " + e.getMessage());
-				}
+				InputStreamConfigProperty blockSound = new InputStreamConfigProperty();
+				blockSound.loadStream(this.dealer.openBlockMap(pack.getResourcePack()));
+				
+				new PropertyBlockMap_Engine0().setup(blockSound, blockMap);
 			}
-		}*/
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				PFHaddon.log("Loading default blockmap failed: " + e.getMessage());
+			}
+		}
 		
 		this.isolator.setBlockMap(blockMap);
 	}
 	
-	private void reloadPrimitiveMapFromFile()
+	private void reloadPrimitiveMap(List<ResourcePackRepository.Entry> repo)
 	{
 		PrimitiveMap primitiveMap = new BasicPrimitiveMap();
 		
-		try
+		for (ResourcePackRepository.Entry pack : repo)
 		{
-			InputStreamConfigProperty primitiveSound = new InputStreamConfigProperty();
-			primitiveSound.loadStream(this.dealer.openPrimitiveMap(this.currentPack));
-			
-			new PropertyPrimitiveMap_Engine0().setup(primitiveSound, primitiveMap);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			PFHaddon.log("Loading default primitivemap failed: " + e.getMessage());
+			try
+			{
+				InputStreamConfigProperty primitiveSound = new InputStreamConfigProperty();
+				primitiveSound.loadStream(this.dealer.openPrimitiveMap(pack.getResourcePack()));
+				
+				new PropertyPrimitiveMap_Engine0().setup(primitiveSound, primitiveMap);
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				PFHaddon.log("Loading default primitivemap failed: " + e.getMessage());
+			}
 		}
 		
 		this.isolator.setPrimitiveMap(primitiveMap);
 	}
 	
-	private void reloadAcousticsFromFile()
+	private void reloadAcoustics(List<ResourcePackRepository.Entry> repo)
 	{
 		AcousticsManager acoustics = new AcousticsManager(this.isolator);
 		
-		try
+		for (ResourcePackRepository.Entry pack : repo)
 		{
-			String jasonString = new Scanner(this.dealer.openAcoustics(this.currentPack)).useDelimiter("\\Z").next();
-			
-			new JasonAcoustics_Engine0("").parseJSON(jasonString, acoustics);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			PFHaddon.log("Loading default acoustics failed: " + e.getMessage());
+			try
+			{
+				String jasonString =
+					new Scanner(this.dealer.openAcoustics(pack.getResourcePack())).useDelimiter("\\Z").next();
+				
+				new JasonAcoustics_Engine0("").parseJSON(jasonString, acoustics);
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				PFHaddon.log("Loading default acoustics failed: " + e.getMessage());
+			}
 		}
 		
 		this.isolator.setAcoustics(acoustics);
