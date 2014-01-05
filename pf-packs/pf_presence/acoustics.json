@@ -637,7 +637,7 @@
 				"type"  : "simultaneous",
 				"array" : [
 					"bluntwood.bluntwood_wander",
-					"lino.lino_wander"
+					"marble.marble_wander"
 				]
 			},
 			"land"  : {
@@ -826,7 +826,7 @@
 				"type"  : "simultaneous",
 				"array" : [
 					"dirt.dirt_wander",
-					"lino.lino_wander"
+					"marble.marble_wander"
 				]
 			},
 			"land"  : {
@@ -885,7 +885,7 @@
 				"type"  : "simultaneous",
 				"array" : [
 					"stone.stone_wander",
-					"lino.lino_wander"
+					"marble.marble_wander"
 				]
 			},
 			"land"  : {
@@ -1224,7 +1224,7 @@
 				"type"  : "simultaneous",
 				"array" : [
 					"concrete.concrete_wander",
-					"lino.lino_wander"
+					"marble.marble_wander"
 				]
 			},
 			"land"  : {
