@@ -72,6 +72,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResour
 	@Override
 	public void onLoad()
 	{
+		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "c");
+		
 		this.presenceDir = new File(util().getModsFolder(), "presencefootsteps/");
 		this.packsFolder = new File(this.presenceDir, "packs/");
 		
@@ -364,7 +366,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResour
 		try
 		{
 			//nextStepDistance
-			util().setPrivateValueLiteral(Entity.class, ply, "c", 37, Integer.MAX_VALUE);
+			util().setPrivate(ply, "Entity_nextStepDistance", Integer.MAX_VALUE);
+			//util().setPrivateValueLiteral(Entity.class, ply, "c", 37, Integer.MAX_VALUE);
 			//util().setPrivateValueLiteral(Entity.class, ply, "c", 37, 0);
 			
 		}
