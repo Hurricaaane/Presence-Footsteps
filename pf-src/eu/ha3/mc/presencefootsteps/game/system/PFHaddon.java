@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import eu.ha3.easy.EdgeModel;
 import eu.ha3.easy.EdgeTrigger;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
+import eu.ha3.mc.haddon.OperatorCaster;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.presencefootsteps.game.PFResourcePackDealer;
@@ -119,7 +120,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		this.dealer = new PFResourcePackDealer();
 		
 		reloadEverything(false);
-		caster().setFrameEnabled(true);
+		((OperatorCaster) op()).setFrameEnabled(true);
 		
 	}
 	
