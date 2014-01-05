@@ -8,6 +8,7 @@ public interface SoundPlayer
 {
 	/**
 	 * Plays a sound.
+	 * 
 	 * @param volume
 	 * @param pitch
 	 * @param name

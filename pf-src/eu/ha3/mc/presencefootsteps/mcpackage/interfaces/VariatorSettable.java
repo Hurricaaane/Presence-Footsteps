@@ -1,6 +1,5 @@
 package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
 
-
 /* x-placeholder-wtfplv2 */
 
 /**

@@ -121,8 +121,9 @@ public class UpdateNotifier extends Thread
 					
 					int vc = maxvn - PFHaddon.VERSION;
 					this.mod.printChat(
-						ChatColorsSimple.COLOR_GOLD, "A ", ChatColorsSimple.COLOR_WHITE, "r" + maxvn, ChatColorsSimple.COLOR_GOLD,
-						" update is available (You're ", ChatColorsSimple.COLOR_WHITE, vc, ChatColorsSimple.COLOR_GOLD, " version"
+						ChatColorsSimple.COLOR_GOLD, "A ", ChatColorsSimple.COLOR_WHITE, "r" + maxvn,
+						ChatColorsSimple.COLOR_GOLD, " update is available (You're ", ChatColorsSimple.COLOR_WHITE, vc,
+						ChatColorsSimple.COLOR_GOLD, " version"
 							+ (vc > 1 ? "s" : "") + " late). http://presencefootsteps.ha3.eu/");
 					
 					if (this.displayRemaining > 0)
