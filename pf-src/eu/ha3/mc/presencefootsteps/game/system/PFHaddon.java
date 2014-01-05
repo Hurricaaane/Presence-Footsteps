@@ -3,10 +3,14 @@ package eu.ha3.mc.presencefootsteps.game.system;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,7 +39,7 @@ import eu.ha3.util.property.simple.InputStreamConfigProperty;
 
 /* x-placeholder-wtfplv2 */
 
-public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
+public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResourceManagerReloadListener
 {
 	public static final String NAME = "Presence Footsteps";
 	public static final int VERSION = 1;
@@ -61,6 +65,9 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	private boolean mlpDetectedFirst;
 	
 	private long pressedOptionsTime;
+	
+	private boolean hasResourcePacks;
+	private boolean hasResourcePacks_FixMe;
 	
 	@Override
 	public void onLoad()
@@ -119,9 +126,27 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		
 		this.dealer = new PFResourcePackDealer();
 		
-		reloadEverything(false);
-		((OperatorCaster) op()).setFrameEnabled(true);
+		if (isInstalledMLP())
+		{
+			if (getConfig().getBoolean("mlp.detected") == false)
+			{
+				getConfig().setProperty("mlp.detected", true);
+				getConfig().setProperty("mlp.enabled", true);
+				saveConfig();
+				
+				this.mlpDetectedFirst = true;
+			}
+		}
 		
+		reloadEverything(false);
+		
+		IResourceManager resMan = Minecraft.getMinecraft().getResourceManager();
+		if (resMan instanceof IReloadableResourceManager)
+		{
+			((IReloadableResourceManager) resMan).registerReloadListener(this);
+		}
+		
+		((OperatorCaster) op()).setFrameEnabled(true);
 	}
 	
 	public void reloadEverything(boolean nested)
@@ -135,20 +160,13 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		if (repo.size() == 0)
 		{
 			PFHaddon.log("Presence Footsteps didn't find any compatible resource pack.");
+			this.hasResourcePacks = false;
+			
+			this.isolator.setGenerator(null);
+			
 			return;
 		}
-		
-		if (isInstalledMLP())
-		{
-			if (getConfig().getBoolean("mlp.detected") == false)
-			{
-				getConfig().setProperty("mlp.detected", true);
-				getConfig().setProperty("mlp.enabled", true);
-				saveConfig();
-				
-				this.mlpDetectedFirst = true;
-			}
-		}
+		this.hasResourcePacks = true;
 		
 		reloadBlockMap(repo);
 		reloadPrimitiveMap(repo);
@@ -320,17 +338,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 		return Ha3StaticUtilities.classExists("com.minelittlepony.minelp.Pony", this);
 	}
 	
-	/*
-	private void loadSoundsFromPack(File pack)
-	{
-		File soundFolder = new File(pack, "assets/minecraft/sound/");
-		if (soundFolder.exists())
-		{
-			loadResource(soundFolder, "");
-		}
-	}
-	*/
-	
 	//
 	
 	@Override
@@ -381,6 +388,19 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 						ChatColorsSimple.COLOR_GRAY,
 						"You can hold down for 1 second the combination LEFT CTRL + LEFT SHIFT + F to disable it.");
 			}
+			
+			if (!this.hasResourcePacks)
+			{
+				this.hasResourcePacks_FixMe = true;
+				this.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack not loaded!");
+				this.printChat(ChatColorsSimple.COLOR_WHITE, "You need to activate "
+					+ "\"Presence Footsteps Resource Pack\" in the Minecraft Options menu for it to run.");
+			}
+		}
+		if (this.hasResourcePacks_FixMe && this.hasResourcePacks)
+		{
+			this.hasResourcePacks_FixMe = false;
+			this.printChat(ChatColorsSimple.COLOR_BRIGHTGREEN, "It should work now!");
 		}
 	}
 	
@@ -471,13 +491,20 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents
 	@Override
 	public String getHaddonName()
 	{
-		return PFHaddon.NAME;
+		return PFHaddon.NAME + new Random().nextInt();
 	}
 	
 	@Override
 	public String getHaddonVersion()
 	{
 		return "r" + PFHaddon.VERSION + " for " + PFHaddon.FOR;
+	}
+	
+	@Override
+	public void onResourceManagerReload(IResourceManager var1)
+	{
+		PFHaddon.log("Resource Pack reload detected...");
+		reloadEverything(false);
 	}
 	
 }

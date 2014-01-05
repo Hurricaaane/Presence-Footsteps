@@ -40,6 +40,9 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	@Override
 	public void onFrame()
 	{
+		if (this.generator == null)
+			return;
+		
 		EntityPlayer ply = Minecraft.getMinecraft().thePlayer;
 		
 		if (ply == null)
