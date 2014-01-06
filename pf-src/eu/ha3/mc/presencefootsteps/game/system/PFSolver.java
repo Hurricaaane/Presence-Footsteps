@@ -108,7 +108,10 @@ public class PFSolver implements Solver
 				+ "This is supposed to be halted by the stopping conditions!!");
 		}
 		
+		//Minecraft.getMinecraft().theWorld.spawnParticle("note", xx + 0.5d, yy + 0.5d, zz + 0.5d, 1.0D, 0.0D, 0.0D);
+		
 		String worked = findAssociationForBlock(xx, yy, zz);
+		//System.out.println("[" + worked + " " + xx + " " + yy + " " + zz);
 		
 		// If it didn't work, the player has walked over the air on the border of a block.
 		// ------ ------  --> z
@@ -199,6 +202,7 @@ public class PFSolver implements Solver
 				}
 			}
 		}
+		//System.out.println(worked + " " + xx + " " + yy + " " + zz + "]");
 		return worked;
 	}
 	

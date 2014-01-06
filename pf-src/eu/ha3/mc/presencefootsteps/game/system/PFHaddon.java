@@ -120,18 +120,6 @@ public class PFHaddon extends HaddonImpl
 			this.generator = new PFReader4P(this.isolator);
 		}*/
 		
-		// XXX 2014-01-03 : 1.7.2 UNSURE
-		/*this.resourcePacks = Minecraft.getMinecraft().getResourcePackRepository();
-		for (File file : new File(this.presenceDir, "packs/").listFiles())
-		{
-			if (file.isDirectory())
-			{
-				PFHaddon.log("Adding resource pack at " + file.getAbsolutePath());
-				this.resourcePacks.getRepositoryEntries().add(new FolderResourcePack(file));
-			}
-		}
-		this.resourcePacks.updateRepositoryEntriesAll();*/
-		
 		this.dealer = new PFResourcePackDealer();
 		
 		if (isInstalledMLP())

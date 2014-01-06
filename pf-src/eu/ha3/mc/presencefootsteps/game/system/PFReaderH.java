@@ -127,6 +127,7 @@ public class PFReaderH implements Generator, VariatorSettable
 			}
 			
 			float distance = 0f;
+			double verticalOffsetAsMinus = 0f;
 			
 			if (ply.isOnLadder() && !ply.onGround)
 			{
@@ -148,6 +149,7 @@ public class PFReaderH implements Generator, VariatorSettable
 				{
 					// Going downstairs
 					distance = -1f;
+					verticalOffsetAsMinus = 1f;
 					event = speedDisambiguator(ply, EventType.DOWN, EventType.DOWN_RUN);
 				}
 				
@@ -167,7 +169,7 @@ public class PFReaderH implements Generator, VariatorSettable
 			
 			if (dwm > distance)
 			{
-				produceStep(ply, event);
+				produceStep(ply, event, verticalOffsetAsMinus);
 				
 				stepped(ply, event);
 				
@@ -186,6 +188,11 @@ public class PFReaderH implements Generator, VariatorSettable
 	
 	protected void produceStep(EntityPlayer ply, EventType event)
 	{
+		produceStep(ply, event, 0d);
+	}
+	
+	protected void produceStep(EntityPlayer ply, EventType event, double verticalOffsetAsMinus)
+	{
 		if (!this.mod.getSolver().playSpecialStoppingConditions(ply))
 		{
 			if (event == null)
@@ -193,7 +200,8 @@ public class PFReaderH implements Generator, VariatorSettable
 				event = speedDisambiguator(ply, EventType.WALK, EventType.RUN);
 			}
 			
-			String assos = this.mod.getSolver().findAssociationForPlayer(ply, 0d, this.isRightFoot);
+			System.out.println(ply.boundingBox.minY - 0.1d);
+			String assos = this.mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus, this.isRightFoot);
 			this.mod.getSolver().playAssociation(ply, assos, event);
 			
 			this.isRightFoot = !this.isRightFoot;
