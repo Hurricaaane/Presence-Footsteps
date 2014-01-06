@@ -9,7 +9,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import eu.ha3.mc.presencefootsteps.engine.implem.ConfigOptions;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
-import eu.ha3.mc.presencefootsteps.game.PF172Helper;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Solver;
 

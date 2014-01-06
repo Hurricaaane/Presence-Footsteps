@@ -1,7 +1,7 @@
 package eu.ha3.mc.presencefootsteps.mcpackage.implem;
 
 import net.minecraft.block.Block;
-import eu.ha3.mc.presencefootsteps.game.PF172Helper;
+import eu.ha3.mc.presencefootsteps.game.system.PF172Helper;
 import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
 
 /*

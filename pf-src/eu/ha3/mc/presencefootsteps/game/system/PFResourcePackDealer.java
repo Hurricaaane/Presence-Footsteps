@@ -1,4 +1,4 @@
-package eu.ha3.mc.presencefootsteps.game;
+package eu.ha3.mc.presencefootsteps.game.system;
 
 import java.io.IOException;
 import java.io.InputStream;

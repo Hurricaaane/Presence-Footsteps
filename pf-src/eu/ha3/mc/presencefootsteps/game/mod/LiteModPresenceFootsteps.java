@@ -7,9 +7,9 @@ import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
 --filenotes-placeholder
 */
 
-public class LiteMod_PF extends LiteBase
+public class LiteModPresenceFootsteps extends LiteBase
 {
-	public LiteMod_PF()
+	public LiteModPresenceFootsteps()
 	{
 		super(new PFHaddon());
 	}

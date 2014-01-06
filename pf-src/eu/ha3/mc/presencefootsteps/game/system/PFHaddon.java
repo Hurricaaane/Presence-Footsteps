@@ -3,7 +3,6 @@ package eu.ha3.mc.presencefootsteps.game.system;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
 import net.minecraft.client.Minecraft;
@@ -17,12 +16,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import eu.ha3.easy.EdgeModel;
 import eu.ha3.easy.EdgeTrigger;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
+import eu.ha3.mc.haddon.Identity;
 import eu.ha3.mc.haddon.OperatorCaster;
+import eu.ha3.mc.haddon.implem.HaddonIdentity;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
-import eu.ha3.mc.presencefootsteps.game.PFResourcePackDealer;
 import eu.ha3.mc.presencefootsteps.game.user.PFGuiMenu;
-import eu.ha3.mc.presencefootsteps.game.user.UpdateNotifier;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.BasicPrimitiveMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.LegacyCapableBlockMap;
@@ -33,18 +32,25 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.mc.presencefootsteps.parsers.JasonAcoustics_Engine0;
 import eu.ha3.mc.presencefootsteps.parsers.PropertyBlockMap_Engine0;
 import eu.ha3.mc.presencefootsteps.parsers.PropertyPrimitiveMap_Engine0;
-import eu.ha3.mc.quick.ChatColorsSimple;
+import eu.ha3.mc.quick.chat.ChatColorsSimple;
+import eu.ha3.mc.quick.chat.Chatter;
+import eu.ha3.mc.quick.update.NotifiableHaddon;
+import eu.ha3.mc.quick.update.UpdateNotifier;
 import eu.ha3.util.property.simple.ConfigProperty;
 import eu.ha3.util.property.simple.InputStreamConfigProperty;
 
 /* x-placeholder-wtfplv2 */
 
-public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResourceManagerReloadListener
+public class PFHaddon extends HaddonImpl
+	implements SupportsFrameEvents, IResourceManagerReloadListener, NotifiableHaddon
 {
-	public static final String NAME = "Presence Footsteps";
-	public static final int VERSION = 1;
-	public static final String FOR = "1.6.2";
-	public static final String ADDRESS = "http://presencefootsteps.ha3.eu";
+	protected final String NAME = "Presence Footsteps";
+	protected final int VERSION = 1;
+	protected final String FOR = "1.6.2";
+	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
+	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);
+	
+	private final Chatter chatter = new Chatter(this, this.NAME);
 	
 	private File presenceDir;
 	private File packsFolder;
@@ -56,7 +62,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResour
 	
 	private PFIsolator isolator;
 	
-	private UpdateNotifier update;
+	private UpdateNotifier updateNotifier;
 	
 	private static String DEFAULT_PACK_NAME = "pf_presence";
 	
@@ -72,6 +78,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResour
 	@Override
 	public void onLoad()
 	{
+		this.updateNotifier = new UpdateNotifier(this, "http://q.mc.ha3.eu/query/pf-main-version.xml?ver=%d");
+		
 		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "c");
 		
 		this.presenceDir = new File(util().getModsFolder(), "presencefootsteps/");
@@ -86,8 +94,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResour
 			this.packsFolder.mkdirs();
 		}
 		//this.cache = new PFCacheRegistry();
-		
-		this.update = new UpdateNotifier(this);
 		
 		this.debugButton = new EdgeTrigger(new EdgeModel() {
 			@Override
@@ -183,12 +189,9 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResour
 	private void reloadConfig()
 	{
 		this.config = new ConfigProperty();
+		this.updateNotifier.fillDefaults(this.config);
 		this.config.setProperty("user.volume.0-to-100", 70);
 		this.config.setProperty("user.packname.r0", PFHaddon.DEFAULT_PACK_NAME);
-		this.config.setProperty("update_found.enabled", true);
-		this.config.setProperty("update_found.version", PFHaddon.VERSION);
-		this.config.setProperty("update_found.display.remaining.value", 0);
-		this.config.setProperty("update_found.display.count.value", 3);
 		this.config.setProperty("mlp.detected", false);
 		this.config.setProperty("mlp.enabled", false);
 		this.config.commit();
@@ -211,7 +214,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResour
 			this.config.save();
 		}
 		
-		this.update.loadConfig(this.config);
+		this.updateNotifier.loadConfig(this.config);
 		
 		//this.currentPackFolder =
 		//	new File(this.packsFolder, (this.config.getAllProperties().containsKey("user.packname.r0")
@@ -379,10 +382,10 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResour
 		if (!this.firstTickPassed)
 		{
 			this.firstTickPassed = true;
-			this.update.attempt();
+			this.updateNotifier.attempt();
 			if (this.mlpDetectedFirst)
 			{
-				this
+				this.chatter
 					.printChat(
 						ChatColorsSimple.COLOR_TEAL,
 						"Mine Little Pony has been detected! ",
@@ -395,15 +398,15 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResour
 			if (!this.hasResourcePacks)
 			{
 				this.hasResourcePacks_FixMe = true;
-				this.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack not loaded!");
-				this.printChat(ChatColorsSimple.COLOR_WHITE, "You need to activate "
+				this.chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack not loaded!");
+				this.chatter.printChatShort(ChatColorsSimple.COLOR_WHITE, "You need to activate "
 					+ "\"Presence Footsteps Resource Pack\" in the Minecraft Options menu for it to run.");
 			}
 		}
 		if (this.hasResourcePacks_FixMe && this.hasResourcePacks)
 		{
 			this.hasResourcePacks_FixMe = false;
-			this.printChat(ChatColorsSimple.COLOR_BRIGHTGREEN, "It should work now!");
+			this.chatter.printChat(ChatColorsSimple.COLOR_BRIGHTGREEN, "It should work now!");
 		}
 	}
 	
@@ -437,28 +440,10 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResour
 		}
 	}*/
 	
+	@Override
 	public ConfigProperty getConfig()
 	{
 		return this.config;
-	}
-	
-	public void printChat(Object... args)
-	{
-		printChat(new Object[] { ChatColorsSimple.COLOR_WHITE, "Presence Footsteps: " }, args);
-	}
-	
-	public void printChatShort(Object... args)
-	{
-		printChat(new Object[] { ChatColorsSimple.COLOR_WHITE, "" }, args);
-	}
-	
-	protected void printChat(final Object[] in, Object... args)
-	{
-		Object[] dest = new Object[in.length + args.length];
-		System.arraycopy(in, 0, dest, 0, in.length);
-		System.arraycopy(args, 0, dest, in.length, args.length);
-		
-		util().printChat(dest);
 	}
 	
 	public static void log(String contents)
@@ -479,6 +464,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResour
 		System.out.println("(PF) " + contents);
 	}
 	
+	@Override
 	public void saveConfig()
 	{
 		// If there were changes...
@@ -492,22 +478,22 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, IResour
 	}
 	
 	@Override
-	public String getHaddonName()
-	{
-		return PFHaddon.NAME + new Random().nextInt();
-	}
-	
-	@Override
-	public String getHaddonVersion()
-	{
-		return "r" + PFHaddon.VERSION + " for " + PFHaddon.FOR;
-	}
-	
-	@Override
 	public void onResourceManagerReload(IResourceManager var1)
 	{
 		PFHaddon.log("Resource Pack reload detected...");
 		reloadEverything(false);
+	}
+	
+	@Override
+	public Chatter getChatter()
+	{
+		return this.chatter;
+	}
+	
+	@Override
+	public Identity getIdentity()
+	{
+		return this.identity;
 	}
 	
 }
