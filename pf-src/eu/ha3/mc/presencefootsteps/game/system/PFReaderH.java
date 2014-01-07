@@ -149,7 +149,7 @@ public class PFReaderH implements Generator, VariatorSettable
 				{
 					// Going downstairs
 					distance = -1f;
-					verticalOffsetAsMinus = 1f;
+					verticalOffsetAsMinus = 0f;
 					event = speedDisambiguator(ply, EventType.DOWN, EventType.DOWN_RUN);
 				}
 				
