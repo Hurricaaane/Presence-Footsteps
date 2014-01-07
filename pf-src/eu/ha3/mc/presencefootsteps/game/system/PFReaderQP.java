@@ -11,8 +11,8 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 public class PFReaderQP extends PFReaderH
 {
 	private int hoof = 0;
-	private boolean USE_ALTERNATIVE_HOOVES = false;
-	private float nextWalkDistanceMultiplier = 0.05f;
+	private boolean USE_ALTERNATIVE_HOOVES = true;
+	private float nextWalkDistanceMultiplier = 0.07f;
 	private final Random rand = new Random();
 	
 	public PFReaderQP(Isolator isolator)

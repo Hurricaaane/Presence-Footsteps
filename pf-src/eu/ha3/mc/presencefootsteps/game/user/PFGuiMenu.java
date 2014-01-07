@@ -106,11 +106,11 @@ public class PFGuiMenu extends GuiScreen
 		
 		final int _SEPARATOR = 10;
 		
-		if (this.mod.getConfig().getBoolean("mlp.detected") || this.mod.getConfig().getBoolean("mlp.enabled"))
-		{
-			this.buttonList.add(new GuiButton(210, _LEFT, _SEPARATOR + _MIX * 2, _WIDTH, _UNIT, this.mod
-				.getConfig().getBoolean("mlp.enabled") ? "Walk with 4 legs: ON" : "Walk with 4 legs: OFF"));
-		}
+		//if (this.mod.getConfig().getBoolean("mlp.detected") || this.mod.getConfig().getBoolean("mlp.enabled"))
+		//{
+		this.buttonList.add(new GuiButton(210, _LEFT, _SEPARATOR + _MIX * 2, _WIDTH, _UNIT, this.mod
+			.getConfig().getInteger("custom.stance") == 1 ? "Walking stance: 4-legged" : "Walking stance: Bipedal"));
+		//}
 		
 		final int _TURNOFFWIDTH = _WIDTH / 5;
 		
@@ -135,9 +135,9 @@ public class PFGuiMenu extends GuiScreen
 		}
 		else if (par1GuiButton.id == 210)
 		{
-			boolean newEnabledState = !this.mod.getConfig().getBoolean("mlp.enabled");
-			this.mod.getConfig().setProperty("mlp.enabled", newEnabledState);
-			par1GuiButton.displayString = newEnabledState ? "Walk with 4 legs: ON" : "Walk with 4 legs: OFF";
+			int newEnabledState = this.mod.getConfig().getInteger("custom.stance") == 1 ? 0 : 1;
+			this.mod.getConfig().setProperty("custom.stance", newEnabledState);
+			par1GuiButton.displayString = newEnabledState == 1 ? "Walking stance: 4-legged" : "Walking stance: Bipedal";
 			this.mod.saveConfig();
 			
 			this.mod.reloadEverything(false);

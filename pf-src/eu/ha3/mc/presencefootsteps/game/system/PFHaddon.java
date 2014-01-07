@@ -44,54 +44,46 @@ import eu.ha3.util.property.simple.InputStreamConfigProperty;
 public class PFHaddon extends HaddonImpl
 	implements SupportsFrameEvents, IResourceManagerReloadListener, NotifiableHaddon
 {
+	// Identity
 	protected final String NAME = "Presence Footsteps";
 	protected final int VERSION = 1;
 	protected final String FOR = "1.6.2";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);
 	
+	// NotifiableHaddon and UpdateNotifier
+	private ConfigProperty config; // Can't be final
 	private final Chatter chatter = new Chatter(this, this.NAME);
-	
-	private File presenceDir;
-	private File packsFolder;
-	
-	private EdgeTrigger debugButton;
-	private static boolean isDebugEnabled;
-	
-	private ConfigProperty config;
-	
-	private PFIsolator isolator;
-	
 	private UpdateNotifier updateNotifier;
 	
-	private static String DEFAULT_PACK_NAME = "pf_presence";
-	
-	private PFResourcePackDealer dealer;
-	private boolean firstTickPassed;
-	private boolean mlpDetectedFirst;
-	
+	// Meta
+	private File presenceDir;
+	private static boolean isDebugEnabled;
+	private EdgeTrigger debugButton;
 	private long pressedOptionsTime;
 	
+	// System
+	private PFResourcePackDealer dealer;
+	private PFIsolator isolator;
+	
+	// Use once
+	private boolean firstTickPassed;
+	private boolean mlpDetectedFirst;
 	private boolean hasResourcePacks;
 	private boolean hasResourcePacks_FixMe;
 	
 	@Override
 	public void onLoad()
 	{
-		this.updateNotifier = new UpdateNotifier(this, "http://q.mc.ha3.eu/query/pf-main-version.xml?ver=%d");
+		this.updateNotifier = new UpdateNotifier(this, "http://q.mc.ha3.eu/query/pf-main-version-vn.json?ver=%d");
 		
 		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "c");
 		
 		this.presenceDir = new File(util().getModsFolder(), "presencefootsteps/");
-		this.packsFolder = new File(this.presenceDir, "packs/");
 		
 		if (!this.presenceDir.exists())
 		{
 			this.presenceDir.mkdirs();
-		}
-		if (!this.packsFolder.exists())
-		{
-			this.packsFolder.mkdirs();
 		}
 		//this.cache = new PFCacheRegistry();
 		
@@ -122,19 +114,18 @@ public class PFHaddon extends HaddonImpl
 		
 		this.dealer = new PFResourcePackDealer();
 		
+		reloadEverything(false);
 		if (isInstalledMLP())
 		{
 			if (getConfig().getBoolean("mlp.detected") == false)
 			{
 				getConfig().setProperty("mlp.detected", true);
-				getConfig().setProperty("mlp.enabled", true);
+				getConfig().setProperty("custom.stance", 1);
 				saveConfig();
 				
 				this.mlpDetectedFirst = true;
 			}
 		}
-		
-		reloadEverything(false);
 		
 		IResourceManager resMan = Minecraft.getMinecraft().getResourceManager();
 		if (resMan instanceof IReloadableResourceManager)
@@ -170,7 +161,7 @@ public class PFHaddon extends HaddonImpl
 		this.isolator.setSolver(new PFSolver(this.isolator));
 		reloadVariator(repo);
 		
-		this.isolator.setGenerator(!getConfig().getBoolean("mlp.enabled")
+		this.isolator.setGenerator(getConfig().getInteger("custom.stance") == 0
 			? new PFReaderH(this.isolator) : new PFReaderQP(this.isolator));
 	}
 	
@@ -179,9 +170,8 @@ public class PFHaddon extends HaddonImpl
 		this.config = new ConfigProperty();
 		this.updateNotifier.fillDefaults(this.config);
 		this.config.setProperty("user.volume.0-to-100", 70);
-		this.config.setProperty("user.packname.r0", PFHaddon.DEFAULT_PACK_NAME);
 		this.config.setProperty("mlp.detected", false);
-		this.config.setProperty("mlp.enabled", false);
+		this.config.setProperty("custom.stance", 0);
 		this.config.commit();
 		
 		boolean fileExisted = new File(this.presenceDir, "userconfig.cfg").exists();

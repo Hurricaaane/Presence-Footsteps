@@ -200,7 +200,6 @@ public class PFReaderH implements Generator, VariatorSettable
 				event = speedDisambiguator(ply, EventType.WALK, EventType.RUN);
 			}
 			
-			System.out.println(ply.boundingBox.minY - 0.1d);
 			String assos = this.mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus, this.isRightFoot);
 			this.mod.getSolver().playAssociation(ply, assos, event);
 			
