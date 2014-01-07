@@ -12,7 +12,7 @@ public class PFReaderQP extends PFReaderH
 {
 	private int hoof = 0;
 	private boolean USE_ALTERNATIVE_HOOVES = true;
-	private float nextWalkDistanceMultiplier = 0.07f;
+	private float nextWalkDistanceMultiplier = 0.05f;
 	private final Random rand = new Random();
 	
 	public PFReaderQP(Isolator isolator)
@@ -56,11 +56,12 @@ public class PFReaderQP extends PFReaderH
 		
 		if (this.USE_ALTERNATIVE_HOOVES && event == EventType.WALK)
 		{
-			final float overallMultiplier = 1f;
-			final float ndm = 0.02f + this.nextWalkDistanceMultiplier * 0.07f;
+			final float overallMultiplier = 1.4f;
+			//final float ndm = 0.02f + this.nextWalkDistanceMultiplier * 0.07f;
+			final float ndm = 0.5f;
 			
 			if (this.hoof == 1 || this.hoof == 3)
-				return ret * ndm * overallMultiplier;
+				return ret * (ndm + this.rand.nextFloat() * ndm * 0.5f) * overallMultiplier;
 			else
 				return ret * (1 - ndm) * overallMultiplier;
 		}
