@@ -11,16 +11,25 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.ResourcePackRepository;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+
+import org.apache.commons.lang3.ArrayUtils;
+
 import eu.ha3.easy.EdgeModel;
 import eu.ha3.easy.EdgeTrigger;
+import eu.ha3.mc.convenience.Ha3HoldActions;
+import eu.ha3.mc.convenience.Ha3KeyHolding;
+import eu.ha3.mc.convenience.Ha3KeyManager;
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.haddon.Identity;
 import eu.ha3.mc.haddon.OperatorCaster;
 import eu.ha3.mc.haddon.implem.HaddonIdentity;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
+import eu.ha3.mc.haddon.supporting.SupportsKeyEvents;
+import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
 import eu.ha3.mc.presencefootsteps.game.user.PFGuiMenu;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.BasicPrimitiveMap;
@@ -34,6 +43,7 @@ import eu.ha3.mc.presencefootsteps.parsers.PropertyBlockMap_Engine0;
 import eu.ha3.mc.presencefootsteps.parsers.PropertyPrimitiveMap_Engine0;
 import eu.ha3.mc.quick.chat.ChatColorsSimple;
 import eu.ha3.mc.quick.chat.Chatter;
+import eu.ha3.mc.quick.keys.KeyWatcher;
 import eu.ha3.mc.quick.update.NotifiableHaddon;
 import eu.ha3.mc.quick.update.UpdateNotifier;
 import eu.ha3.util.property.simple.ConfigProperty;
@@ -42,12 +52,13 @@ import eu.ha3.util.property.simple.InputStreamConfigProperty;
 /* x-placeholder-wtfplv2 */
 
 public class PFHaddon extends HaddonImpl
-	implements SupportsFrameEvents, IResourceManagerReloadListener, NotifiableHaddon
+	implements SupportsFrameEvents, SupportsTickEvents, IResourceManagerReloadListener, NotifiableHaddon,
+	Ha3HoldActions, SupportsKeyEvents
 {
 	// Identity
 	protected final String NAME = "Presence Footsteps";
-	protected final int VERSION = 1;
-	protected final String FOR = "1.6.2";
+	protected final int VERSION = 2;
+	protected final String FOR = "1.7.2";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);
 	
@@ -66,6 +77,11 @@ public class PFHaddon extends HaddonImpl
 	private PFResourcePackDealer dealer;
 	private PFIsolator isolator;
 	
+	// Binds
+	private KeyBinding keyBindingMain;
+	private final KeyWatcher watcher = new KeyWatcher(this);
+	private final Ha3KeyManager keyManager = new Ha3KeyManager();
+	
 	// Use once
 	private boolean firstTickPassed;
 	private boolean mlpDetectedFirst;
@@ -75,7 +91,7 @@ public class PFHaddon extends HaddonImpl
 	@Override
 	public void onLoad()
 	{
-		this.updateNotifier = new UpdateNotifier(this, "http://q.mc.ha3.eu/query/pf-main-version-vn.json?ver=%d");
+		this.updateNotifier = new UpdateNotifier(this, "http://q.mc.ha3.eu/query/pf-litemod-version.json?ver=%d");
 		
 		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "c");
 		
@@ -133,6 +149,14 @@ public class PFHaddon extends HaddonImpl
 			((IReloadableResourceManager) resMan).registerReloadListener(this);
 		}
 		
+		this.keyBindingMain = new KeyBinding("Presence Footsteps", -1, "key.categories.misc");
+		Minecraft.getMinecraft().gameSettings.keyBindings =
+			ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, this.keyBindingMain);
+		
+		this.watcher.add(this.keyBindingMain);
+		this.keyManager.addKeyBinding(this.keyBindingMain, new Ha3KeyHolding(this, 7));
+		
+		((OperatorCaster) op()).setTickEnabled(true);
 		((OperatorCaster) op()).setFrameEnabled(true);
 	}
 	
@@ -337,11 +361,7 @@ public class PFHaddon extends HaddonImpl
 		this.debugButton.signalState(keysDown); // CTRL SHIFT F
 		if (keysDown && System.currentTimeMillis() - this.pressedOptionsTime > 1000)
 		{
-			if (util().isCurrentScreen(null))
-			{
-				Minecraft.getMinecraft().displayGuiScreen(new PFGuiMenu((GuiScreen) util().getCurrentScreen(), this));
-				setDebugEnabled(false);
-			}
+			displayMenu();
 		}
 		
 		try
@@ -379,12 +399,23 @@ public class PFHaddon extends HaddonImpl
 				this.chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack not loaded!");
 				this.chatter.printChatShort(ChatColorsSimple.COLOR_WHITE, "You need to activate "
 					+ "\"Presence Footsteps Resource Pack\" in the Minecraft Options menu for it to run.");
+				this.chatter.printChatShort(
+					ChatColorsSimple.COLOR_GRAY, "There is also a Presence Footsteps menu key in the Controls menu.");
 			}
 		}
 		if (this.hasResourcePacks_FixMe && this.hasResourcePacks)
 		{
 			this.hasResourcePacks_FixMe = false;
 			this.chatter.printChat(ChatColorsSimple.COLOR_BRIGHTGREEN, "It should work now!");
+		}
+	}
+	
+	private void displayMenu()
+	{
+		if (util().isCurrentScreen(null))
+		{
+			Minecraft.getMinecraft().displayGuiScreen(new PFGuiMenu((GuiScreen) util().getCurrentScreen(), this));
+			setDebugEnabled(false);
 		}
 	}
 	
@@ -472,6 +503,45 @@ public class PFHaddon extends HaddonImpl
 	public Identity getIdentity()
 	{
 		return this.identity;
+	}
+	
+	@Override
+	public void beginPress()
+	{
+		displayMenu();
+	}
+	
+	@Override
+	public void endPress()
+	{
+	}
+	
+	@Override
+	public void shortPress()
+	{
+	}
+	
+	@Override
+	public void beginHold()
+	{
+	}
+	
+	@Override
+	public void endHold()
+	{
+	}
+	
+	@Override
+	public void onKey(KeyBinding event)
+	{
+		this.keyManager.handleKeyDown(event);
+	}
+	
+	@Override
+	public void onTick()
+	{
+		this.watcher.onTick();
+		this.keyManager.handleRuntime();
 	}
 	
 }
