@@ -183,8 +183,10 @@ public class PFGuiMenu extends GuiScreen
 	public void drawScreen(int par1, int par2, float par3)
 	{
 		// XXX 2014-01-03 : 1.7.2 unsure
-		System.err.println("FIXME: No background");
+		//System.err.println("FIXME: No background");
 		//drawDefaultBackground();
+		drawGradientRect(0, 0, this.width, this.height, 0xC0000000, 0x60000000);
+		
 		drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 0xffffff);
 		
 		super.drawScreen(par1, par2, par3);
