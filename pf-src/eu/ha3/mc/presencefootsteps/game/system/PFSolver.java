@@ -206,6 +206,7 @@ public class PFSolver implements Solver
 		return worked;
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	public String findAssociationForBlock(int xx, int yy, int zz)
 	{
@@ -215,8 +216,10 @@ public class PFSolver implements Solver
 		Block block = PF172Helper.getBlockAt(xx, yy, zz);
 		int metadata = world.getBlockMetadata(xx, yy, zz);
 		// air block
-		if (block == Blocks.field_150350_a)
+		if (false && block == Blocks.field_150350_a)
 		{
+			// what the fuck is this for?
+			
 			//int mm = world.blockGetRenderType(xx, yy - 1, zz);
 			// see Entity, line 885
 			int mm = PF172Helper.getBlockAt(xx, yy - 1, zz).func_149645_b();
