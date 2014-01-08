@@ -1,5 +1,7 @@
 package eu.ha3.mc.presencefootsteps.game.user;
 
+import java.io.File;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiScreenResourcePacks;
@@ -7,6 +9,8 @@ import eu.ha3.mc.gui.HDisplayStringProvider;
 import eu.ha3.mc.gui.HGuiSliderControl;
 import eu.ha3.mc.gui.HSliderListener;
 import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
+import eu.ha3.mc.quick.chat.ChatColorsSimple;
+import eu.ha3.util.property.simple.ConfigProperty;
 
 /* x-placeholder-wtfplv2 */
 
@@ -50,7 +54,7 @@ public class PFGuiMenu extends GuiScreen
 		final int _MIX = _GAP + _UNIT;
 		
 		final int _LEFT = this.width / 2 - _WIDTH / 2;
-		final int _RIGHT = this.width / 2 + _WIDTH / 2;
+		//final int _RIGHT = this.width / 2 + _WIDTH / 2;
 		
 		int id = 0;
 		{
@@ -101,8 +105,8 @@ public class PFGuiMenu extends GuiScreen
 			
 		}
 		
-		final int _ASPLIT = 2;
-		final int _AWID = _WIDTH / _ASPLIT - _GAP * (_ASPLIT - 1) / 2;
+		//final int _ASPLIT = 2;
+		//final int _AWID = _WIDTH / _ASPLIT - _GAP * (_ASPLIT - 1) / 2;
 		
 		final int _SEPARATOR = 10;
 		
@@ -119,7 +123,10 @@ public class PFGuiMenu extends GuiScreen
 				+ " Presence Footsteps Resource Pack"));
 		}
 		
-		final int _TURNOFFWIDTH = _WIDTH / 5;
+		this.buttonList.add(new GuiButton(198, _LEFT + _MIX * 2, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 2), _WIDTH
+			- _MIX * 4, _UNIT, ChatColorsSimple.THEN_ITALIC + "Generate custom block report"));
+		
+		//final int _TURNOFFWIDTH = _WIDTH / 5;
 		
 		this.buttonList.add(new GuiButton(200, _LEFT + _MIX, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _WIDTH
 			- _MIX * 2, _UNIT, "Done"));
@@ -144,6 +151,29 @@ public class PFGuiMenu extends GuiScreen
 		{
 			// This triggers onGuiClosed
 			this.mc.displayGuiScreen(new GuiScreenResourcePacks(this));
+		}
+		else if (par1GuiButton.id == 198)
+		{
+			try
+			{
+				ConfigProperty prop = new GenerateBlockReport().getResults();
+				prop.commit();
+				
+				File loc = new File(this.mod.getUtility().getModsFolder(), "presencefootsteps/report.txt");
+				prop.setSource(loc.getAbsolutePath());
+				prop.save();
+				
+				this.mod.getChatter().printChat(ChatColorsSimple.COLOR_BRIGHTGREEN + "File saved at:");
+				this.mod.getChatter().printChatShort(loc.getAbsolutePath());
+			}
+			catch (Exception e)
+			{
+				this.mod.getChatter().printChat(
+					ChatColorsSimple.COLOR_RED + "Failed to generate custom block report: " + e.getMessage());
+			}
+			this.mod.getChatter().printChatShort(
+				ChatColorsSimple.COLOR_GRAY
+					+ "This tool is used to help making Presence Footsteps compatible with custom blocks.");
 		}
 		else if (par1GuiButton.id == 210)
 		{
