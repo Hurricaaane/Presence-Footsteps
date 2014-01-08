@@ -40,18 +40,28 @@ public class PFResourcePackDealer
 		return foundEntries;
 	}
 	
+	public List<ResourcePackRepository.Entry> findDisabledResourcePacks()
+	{
+		ResourcePackRepository rrr = Minecraft.getMinecraft().getResourcePackRepository();
+		
+		@SuppressWarnings("unchecked")
+		List<ResourcePackRepository.Entry> repo =
+			new ArrayList<ResourcePackRepository.Entry>(rrr.getRepositoryEntriesAll());
+		repo.removeAll(rrr.getRepositoryEntries());
+		
+		List<ResourcePackRepository.Entry> foundEntries = new ArrayList<ResourcePackRepository.Entry>();
+		for (ResourcePackRepository.Entry pack : repo)
+		{
+			if (checkCompatible(pack))
+			{
+				foundEntries.add(pack);
+			}
+		}
+		return foundEntries;
+	}
+	
 	private boolean checkCompatible(ResourcePackRepository.Entry pack)
 	{
-		/*try
-		{
-			InputStream is = pack.getResourcePack().getInputStream(this.pf_pack);
-			is.close();
-			return true;
-		}
-		catch (IOException e)
-		{
-			return false;
-		}*/
 		return pack.getResourcePack().resourceExists(this.pf_pack);
 	}
 	

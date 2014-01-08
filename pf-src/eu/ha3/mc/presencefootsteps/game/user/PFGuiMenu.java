@@ -2,6 +2,7 @@ package eu.ha3.mc.presencefootsteps.game.user;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiScreenResourcePacks;
 import eu.ha3.mc.gui.HDisplayStringProvider;
 import eu.ha3.mc.gui.HGuiSliderControl;
 import eu.ha3.mc.gui.HSliderListener;
@@ -52,7 +53,6 @@ public class PFGuiMenu extends GuiScreen
 		final int _RIGHT = this.width / 2 + _WIDTH / 2;
 		
 		int id = 0;
-		
 		{
 			HGuiSliderControl sliderControl =
 				new HGuiSliderControl(id, _LEFT, _MIX, _WIDTH, _UNIT, "", this.mod.getConfig().getInteger(
@@ -112,10 +112,17 @@ public class PFGuiMenu extends GuiScreen
 			.getConfig().getInteger("custom.stance") == 1 ? "Walking stance: 4-legged" : "Walking stance: Bipedal"));
 		//}
 		
+		if (!this.mod.hasResourcePacksLoaded())
+		{
+			this.buttonList.add(new GuiButton(199, _LEFT + _MIX, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 1), _WIDTH
+				- _MIX * 2, _UNIT, (this.mod.hasNonethelessResourcePacksInstalled() ? "Enable" : "Install")
+				+ " Presence Footsteps Resource Pack"));
+		}
+		
 		final int _TURNOFFWIDTH = _WIDTH / 5;
 		
-		this.buttonList.add(new GuiButton(200, _LEFT + _MIX, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 4), _WIDTH
-			- _MIX * 2 - _GAP - _TURNOFFWIDTH, _UNIT, "Done"));
+		this.buttonList.add(new GuiButton(200, _LEFT + _MIX, _SEPARATOR + _MIX * (this.IDS_PER_PAGE + 3), _WIDTH
+			- _MIX * 2, _UNIT, "Done"));
 		
 		/*this.buttonList.add(new GuiButton(212, _RIGHT - _TURNOFFWIDTH - _MIX, _SEPARATOR
 			+ _MIX * (this.IDS_PER_PAGE + 4), _TURNOFFWIDTH, _UNIT, "Turn Off"));*/
@@ -132,6 +139,11 @@ public class PFGuiMenu extends GuiScreen
 		{
 			// This triggers onGuiClosed
 			this.mc.displayGuiScreen(this.parentScreen);
+		}
+		else if (par1GuiButton.id == 199)
+		{
+			// This triggers onGuiClosed
+			this.mc.displayGuiScreen(new GuiScreenResourcePacks(this));
 		}
 		else if (par1GuiButton.id == 210)
 		{
@@ -182,12 +194,32 @@ public class PFGuiMenu extends GuiScreen
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{
-		// XXX 2014-01-03 : 1.7.2 unsure
-		//System.err.println("FIXME: No background");
 		//drawDefaultBackground();
 		drawGradientRect(0, 0, this.width, this.height, 0xC0000000, 0x60000000);
 		
 		drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 0xffffff);
+		
+		if (!this.mod.hasResourcePacksLoaded())
+		{
+			if (this.mod.hasNonethelessResourcePacksInstalled())
+			{
+				drawCenteredString(
+					this.fontRenderer, "Your Presence Footsteps Resource Pack isn't enabled yet!", this.width / 2, 10
+						+ 22 * 6 - 40 + 20, 0xff0000);
+				drawCenteredString(
+					this.fontRenderer, "Activate it in the Minecraft Options menu for it to run.", this.width / 2, 10
+						+ 22 * 6 - 40 + 28, 0xff0000);
+			}
+			else
+			{
+				drawCenteredString(
+					this.fontRenderer, "You don't have any Presence Footsteps Resource Pack installed!",
+					this.width / 2, 10 + 22 * 6 - 40 + 20, 0xff0000);
+				drawCenteredString(
+					this.fontRenderer, "Put the Resource Pack in the resourcepacks/ folder.", this.width / 2, 10
+						+ 22 * 6 - 40 + 28, 0xff0000);
+			}
+		}
 		
 		super.drawScreen(par1, par2, par3);
 		

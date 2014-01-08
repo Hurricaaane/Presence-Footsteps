@@ -74,10 +74,11 @@ public class PFHaddon extends HaddonImpl
 	private long pressedOptionsTime;
 	
 	// System
-	private PFResourcePackDealer dealer;
+	private PFResourcePackDealer dealer = new PFResourcePackDealer();
 	private PFIsolator isolator;
 	
 	// Binds
+	private final int keyBindDefaultCode = 0;
 	private KeyBinding keyBindingMain;
 	private final KeyWatcher watcher = new KeyWatcher(this);
 	private final Ha3KeyManager keyManager = new Ha3KeyManager();
@@ -86,7 +87,9 @@ public class PFHaddon extends HaddonImpl
 	private boolean firstTickPassed;
 	private boolean mlpDetectedFirst;
 	private boolean hasResourcePacks;
+	private boolean hasDisabledResourcePacks;
 	private boolean hasResourcePacks_FixMe;
+	private int tickRound;
 	
 	@Override
 	public void onLoad()
@@ -101,7 +104,6 @@ public class PFHaddon extends HaddonImpl
 		{
 			this.presenceDir.mkdirs();
 		}
-		//this.cache = new PFCacheRegistry();
 		
 		this.debugButton = new EdgeTrigger(new EdgeModel() {
 			@Override
@@ -119,18 +121,9 @@ public class PFHaddon extends HaddonImpl
 			}
 		});
 		
-		/*if (isInstalledMLP())
-		{
-			this.generator = new PFReaderMLP(this.isolator);
-		}
-		else
-		{
-			this.generator = new PFReader4P(this.isolator);
-		}*/
-		
-		this.dealer = new PFResourcePackDealer();
-		
+		// Config is loaded here
 		reloadEverything(false);
+		
 		if (isInstalledMLP())
 		{
 			if (getConfig().getBoolean("mlp.detected") == false)
@@ -143,18 +136,20 @@ public class PFHaddon extends HaddonImpl
 			}
 		}
 		
-		IResourceManager resMan = Minecraft.getMinecraft().getResourceManager();
-		if (resMan instanceof IReloadableResourceManager)
-		{
-			((IReloadableResourceManager) resMan).registerReloadListener(this);
-		}
-		
-		this.keyBindingMain = new KeyBinding("Presence Footsteps", -1, "key.categories.misc");
+		this.keyBindingMain =
+			new KeyBinding("Presence Footsteps", getConfig().getInteger("key.code"), "key.categories.misc");
 		Minecraft.getMinecraft().gameSettings.keyBindings =
 			ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, this.keyBindingMain);
 		
 		this.watcher.add(this.keyBindingMain);
 		this.keyManager.addKeyBinding(this.keyBindingMain, new Ha3KeyHolding(this, 7));
+		
+		// Hooking
+		IResourceManager resMan = Minecraft.getMinecraft().getResourceManager();
+		if (resMan instanceof IReloadableResourceManager)
+		{
+			((IReloadableResourceManager) resMan).registerReloadListener(this);
+		}
 		
 		((OperatorCaster) op()).setTickEnabled(true);
 		((OperatorCaster) op()).setFrameEnabled(true);
@@ -164,7 +159,6 @@ public class PFHaddon extends HaddonImpl
 	{
 		this.isolator = new PFIsolator(this);
 		
-		// Sets up the pack
 		reloadConfig();
 		
 		List<ResourcePackRepository.Entry> repo = this.dealer.findResourcePacks();
@@ -172,12 +166,19 @@ public class PFHaddon extends HaddonImpl
 		{
 			PFHaddon.log("Presence Footsteps didn't find any compatible resource pack.");
 			this.hasResourcePacks = false;
+			this.hasDisabledResourcePacks = this.dealer.findDisabledResourcePacks().size() > 0;
 			
 			this.isolator.setGenerator(null);
 			
 			return;
 		}
 		this.hasResourcePacks = true;
+		this.hasDisabledResourcePacks = false;
+		
+		for (ResourcePackRepository.Entry pack : repo)
+		{
+			PFHaddon.debug("Will load: " + pack.getResourcePackName());
+		}
 		
 		reloadBlockMap(repo);
 		reloadPrimitiveMap(repo);
@@ -196,6 +197,7 @@ public class PFHaddon extends HaddonImpl
 		this.config.setProperty("user.volume.0-to-100", 70);
 		this.config.setProperty("mlp.detected", false);
 		this.config.setProperty("custom.stance", 0);
+		this.config.setProperty("key.code", this.keyBindDefaultCode);
 		this.config.commit();
 		
 		boolean fileExisted = new File(this.presenceDir, "userconfig.cfg").exists();
@@ -396,11 +398,25 @@ public class PFHaddon extends HaddonImpl
 			if (!this.hasResourcePacks)
 			{
 				this.hasResourcePacks_FixMe = true;
-				this.chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack not loaded!");
-				this.chatter.printChatShort(ChatColorsSimple.COLOR_WHITE, "You need to activate "
-					+ "\"Presence Footsteps Resource Pack\" in the Minecraft Options menu for it to run.");
-				this.chatter.printChatShort(
-					ChatColorsSimple.COLOR_GRAY, "There is also a Presence Footsteps menu key in the Controls menu.");
+				if (this.hasDisabledResourcePacks)
+				{
+					this.chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack not enabled yet!");
+					this.chatter.printChatShort(ChatColorsSimple.COLOR_WHITE, "You need to activate "
+						+ "\"Presence Footsteps Resource Pack\" in the Minecraft Options menu for it to run.");
+				}
+				else
+				{
+					this.chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack missing from resourcepacks/!");
+					this.chatter.printChatShort(
+						ChatColorsSimple.COLOR_WHITE,
+						"You may have forgotten to put the Resource Pack file into your resourcepacks/ folder.");
+				}
+				if (getConfig().getInteger("key.code") == this.keyBindDefaultCode)
+				{
+					this.chatter.printChatShort(
+						ChatColorsSimple.COLOR_GRAY,
+						"There is also a Presence Footsteps menu key in the Controls menu.");
+				}
 			}
 		}
 		if (this.hasResourcePacks_FixMe && this.hasResourcePacks)
@@ -448,6 +464,16 @@ public class PFHaddon extends HaddonImpl
 			}
 		}
 	}*/
+	
+	public boolean hasResourcePacksLoaded()
+	{
+		return this.hasResourcePacks;
+	}
+	
+	public boolean hasNonethelessResourcePacksInstalled()
+	{
+		return this.hasDisabledResourcePacks;
+	}
 	
 	@Override
 	public ConfigProperty getConfig()
@@ -540,8 +566,18 @@ public class PFHaddon extends HaddonImpl
 	@Override
 	public void onTick()
 	{
+		if (this.tickRound == 0)
+		{
+			int keyCode = this.keyBindingMain.getKeyCode();
+			if (keyCode != this.config.getInteger("key.code"))
+			{
+				PFHaddon.log("Key binding changed. Saving...");
+				this.config.setProperty("key.code", keyCode);
+				saveConfig();
+			}
+		}
 		this.watcher.onTick();
 		this.keyManager.handleRuntime();
+		this.tickRound = (this.tickRound + 1) % 100;
 	}
-	
 }
