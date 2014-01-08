@@ -1,10 +1,11 @@
-package eu.ha3.mc.presencefootsteps.game.system;
+package eu.ha3.mc.presencefootsteps.game.system.deprecated;
 
 import net.minecraft.entity.player.EntityPlayer;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 
 /* x-placeholder-wtfplv2 */
 
+@Deprecated
 public class PFReaderMLP extends PFReader4P
 {
 	public PFReaderMLP(Isolator isolator)
