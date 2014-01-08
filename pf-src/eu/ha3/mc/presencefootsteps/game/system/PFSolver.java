@@ -1,5 +1,7 @@
 package eu.ha3.mc.presencefootsteps.game.system;
 
+import java.util.Locale;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -49,7 +51,8 @@ public class PFSolver implements Solver
 		
 		if (assos.startsWith(PFSolver.NO_ASSOCIATION))
 		{
-			// XXX 2014-01-03 : 1.7.2 UNSURE
+			// 2014-01-03 : 1.7.2
+			// Replaced with star because blocks are unlikely to contain this character
 			String[] noAssos = assos.split("*");
 			// Get unique name of block
 			this.isolator.getDefaultStepPlayer().playStep(
@@ -351,37 +354,32 @@ public class PFSolver implements Solver
 		if (registered.field_149762_H == null)
 			return "NOT_EMITTER"; // This could return "" for empty sound, but let the engine try other things
 			
-		// XXX 2014-01-04 do not bother with primitives yet
-		PFHaddon.debug("Primitives are not supported in this version");
-		if (true)
-			return "";
-		return "";
-		
-		/*
-		String soundName = registered.field_149762_H.stepSoundName;
+		// stepSound.stepSoundName
+		String soundName = registered.field_149762_H.field_150501_a;
 		if (soundName == null || soundName.equals(""))
 		{
 			soundName = "UNDEFINED";
 		}
 		
+		// stepSound.stepSoundVolume stepSound.stepSoundPitch 
 		String substrate =
 			String.format(
-				Locale.ENGLISH, "%.2f_%.2f", registered.stepSound.stepSoundVolume, registered.stepSound.stepSoundPitch);
+				Locale.ENGLISH, "%.2f_%.2f", registered.field_149762_H.field_150499_b,
+				registered.field_149762_H.field_150500_c);
 		
 		String primitive = this.isolator.getPrimitiveMap().getPrimitiveMapSubstrate(soundName, substrate);
 		if (primitive == null)
 		{
-			primitive =
-				this.isolator.getPrimitiveMap().getPrimitiveMapSubstrate(
-					soundName, "break_" + registered.stepSound.getBreakSound());
-			System.out.println(soundName + "break_" + registered.stepSound.getBreakSound());
-			
-			System.out.println(primitive);
-			
-			if (primitive == null)
-			{
-				primitive = this.isolator.getPrimitiveMap().getPrimitiveMap(soundName);
-			}
+			//primitive =
+			//	this.isolator.getPrimitiveMap().getPrimitiveMapSubstrate(
+			//		soundName, "break_" + registered.stepSound.getBreakSound());
+			//System.out.println(soundName + "break_" + registered.stepSound.getBreakSound());
+			//System.out.println(primitive);
+			//
+			//if (primitive == null)
+			//{
+			primitive = this.isolator.getPrimitiveMap().getPrimitiveMap(soundName);
+			//}
 		}
 		
 		if (primitive != null)
@@ -393,7 +391,7 @@ public class PFSolver implements Solver
 		{
 			PFHaddon.debug("No primitive for " + soundName + ":" + substrate);
 			return null;
-		}*/
+		}
 	}
 	
 	@Override
