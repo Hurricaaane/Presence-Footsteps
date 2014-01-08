@@ -12,6 +12,20 @@ import eu.ha3.util.property.contract.PropertyHolder;
 
 public class NormalVariator implements Variator
 {
+	public int IMMOBILE_DURATION = 200;
+	
+	public boolean EVENT_ON_JUMP = true;
+	public float LAND_HARD_DISTANCE_MIN = 0.9f;
+	
+	public float SPEED_TO_JUMP_AS_MULTIFOOT = 0.005f;
+	public float SPEED_TO_RUN = 0.022f;
+	
+	public float DISTANCE_HUMAN = 0.95f;
+	public float DISTANCE_STAIR = 0.95f * 0.65f;
+	public float DISTANCE_LADDER = 0.5f;
+	
+	public boolean PLAY_WANDER = true;
+	
 	//public boolean FORCE_HUMANOID = false;
 	//public boolean GALLOP_3STEP = true;
 	//public float GALLOP_DISTANCE_1 = 0.80f;
@@ -24,25 +38,13 @@ public class NormalVariator implements Variator
 	//public float HUGEFALL_LANDING_DISTANCE_MAX = 3f + 9f;
 	
 	//public float HUGEFALL_LANDING_DISTANCE_MIN = 3f;
-	public int IMMOBILE_DURATION = 200;
-	
-	public float LAND_HARD_DISTANCE_MIN = 0.9f;
-	
-	public boolean MODERN_EVENT_ON_JUMP = true;
-	
-	public float MODERN_SPEED_TO_JUMP_AS_MULTIFOOT = 0.005f;
-	public float MODERN_SPEED_TO_RUN = 0.022f;
-	
-	public float MODERN_DISTANCE_HUMAN = 0.95f;
-	public float MODERN_DISTANCE_STAIR = 0.95f * 0.65f;
-	public float MODERN_DISTANCE_LADDER = 0.5f;
 	
 	//public float SLOW_DISTANCE = 0.75f;
 	//public float SLOW_VOLUME = 1f;
 	//public float SPEED_TO_GALLOP = 0.13f;
 	//public float SPEED_TO_WALK = 0.08f;
 	
-	public float STAIRCASE_ANTICHASE_DIFFERENCE = 1f;
+	//public float STAIRCASE_ANTICHASE_DIFFERENCE = 1f;
 	
 	//public float WALK_CHASING_FACTOR = 1f / 7f;
 	
@@ -57,8 +59,6 @@ public class NormalVariator implements Variator
 	//public int WING_SLOW = 550;
 	//public float WING_SPEED_MAX = 0.2f + 0.25f;
 	//public float WING_SPEED_MIN = 0.2f;
-	
-	public boolean MODERN_PLAY_WANDER = true;
 	
 	@Override
 	public void loadConfig(PropertyHolder config)

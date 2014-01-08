@@ -105,7 +105,7 @@ public class PFReaderH implements Generator, VariatorSettable
 		{
 			this.scalStat = !this.scalStat;
 			
-			if (this.scalStat && this.VAR.MODERN_PLAY_WANDER && !this.mod.getSolver().hasSpecialStoppingConditions(ply))
+			if (this.scalStat && this.VAR.PLAY_WANDER && !this.mod.getSolver().hasSpecialStoppingConditions(ply))
 			{
 				String assos = this.mod.getSolver().findAssociationForPlayer(ply, 0d, this.isRightFoot);
 				this.mod.getSolver().playAssociation(ply, assos, EventType.WANDER);
@@ -131,7 +131,7 @@ public class PFReaderH implements Generator, VariatorSettable
 			
 			if (ply.isOnLadder() && !ply.onGround)
 			{
-				distance = this.VAR.MODERN_DISTANCE_LADDER;
+				distance = this.VAR.DISTANCE_LADDER;
 			}
 			else if (!ply.isInWater() && Math.abs(this.yPosition - ply.posY) > 0.4d //&& Math.abs(this.yPosition - ply.posY) < 0.7d)
 			)
@@ -142,7 +142,7 @@ public class PFReaderH implements Generator, VariatorSettable
 				if (this.yPosition < ply.posY)
 				{
 					// Going upstairs
-					distance = this.VAR.MODERN_DISTANCE_STAIR;
+					distance = this.VAR.DISTANCE_STAIR;
 					event = speedDisambiguator(ply, EventType.UP, EventType.UP_RUN);
 				}
 				else if (!ply.isSneaking())
@@ -158,7 +158,7 @@ public class PFReaderH implements Generator, VariatorSettable
 			}
 			else
 			{
-				distance = this.VAR.MODERN_DISTANCE_HUMAN;
+				distance = this.VAR.DISTANCE_HUMAN;
 			}
 			
 			if (event == null)
@@ -241,11 +241,11 @@ public class PFReaderH implements Generator, VariatorSettable
 		
 		if (this.isFlying && PFAccessor_NetMinecraftEntity.getInstance().isJumping(ply)) //ply.isJumping)
 		{
-			if (this.VAR.MODERN_EVENT_ON_JUMP)
+			if (this.VAR.EVENT_ON_JUMP)
 			{
 				double speed = ply.motionX * ply.motionX + ply.motionZ * ply.motionZ;
 				
-				if (speed < this.VAR.MODERN_SPEED_TO_JUMP_AS_MULTIFOOT)
+				if (speed < this.VAR.SPEED_TO_JUMP_AS_MULTIFOOT)
 				{
 					// STILL JUMP
 					// 2 - 0.7531999805212d (magic number for vertical offset?)
@@ -283,7 +283,7 @@ public class PFReaderH implements Generator, VariatorSettable
 	protected EventType speedDisambiguator(EntityPlayer ply, EventType walk, EventType run)
 	{
 		double speed = ply.motionX * ply.motionX + ply.motionZ * ply.motionZ;
-		return speed > this.VAR.MODERN_SPEED_TO_RUN ? run : walk;
+		return speed > this.VAR.SPEED_TO_RUN ? run : walk;
 	}
 	
 	private void simulateBrushes(EntityPlayer ply)
