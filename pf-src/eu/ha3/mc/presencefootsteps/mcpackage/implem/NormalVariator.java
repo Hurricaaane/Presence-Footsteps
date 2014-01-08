@@ -12,18 +12,18 @@ import eu.ha3.util.property.contract.PropertyHolder;
 
 public class NormalVariator implements Variator
 {
-	public boolean FORCE_HUMANOID = false;
-	public boolean GALLOP_3STEP = true;
-	public float GALLOP_DISTANCE_1 = 0.80f;
-	public float GALLOP_DISTANCE_2 = 0.25f;
-	public float GALLOP_DISTANCE_3 = 0.25f;
-	public float GALLOP_DISTANCE_4 = 0.05f;
-	public float GALLOP_VOLUME = 1f;
+	//public boolean FORCE_HUMANOID = false;
+	//public boolean GALLOP_3STEP = true;
+	//public float GALLOP_DISTANCE_1 = 0.80f;
+	//public float GALLOP_DISTANCE_2 = 0.25f;
+	//public float GALLOP_DISTANCE_3 = 0.25f;
+	//public float GALLOP_DISTANCE_4 = 0.05f;
+	//public float GALLOP_VOLUME = 1f;
 	
-	public float GROUND_AIR_STATE_SPEED = 0.2f;
-	public float HUGEFALL_LANDING_DISTANCE_MAX = 3f + 9f;
+	//public float GROUND_AIR_STATE_SPEED = 0.2f;
+	//public float HUGEFALL_LANDING_DISTANCE_MAX = 3f + 9f;
 	
-	public float HUGEFALL_LANDING_DISTANCE_MIN = 3f;
+	//public float HUGEFALL_LANDING_DISTANCE_MIN = 3f;
 	public int IMMOBILE_DURATION = 200;
 	
 	public float LAND_HARD_DISTANCE_MIN = 0.9f;
@@ -37,26 +37,26 @@ public class NormalVariator implements Variator
 	public float MODERN_DISTANCE_STAIR = 0.95f * 0.65f;
 	public float MODERN_DISTANCE_LADDER = 0.5f;
 	
-	public float SLOW_DISTANCE = 0.75f;
-	public float SLOW_VOLUME = 1f;
-	public float SPEED_TO_GALLOP = 0.13f;
-	public float SPEED_TO_WALK = 0.08f;
+	//public float SLOW_DISTANCE = 0.75f;
+	//public float SLOW_VOLUME = 1f;
+	//public float SPEED_TO_GALLOP = 0.13f;
+	//public float SPEED_TO_WALK = 0.08f;
 	
 	public float STAIRCASE_ANTICHASE_DIFFERENCE = 1f;
 	
-	public float WALK_CHASING_FACTOR = 1f / 7f;
+	//public float WALK_CHASING_FACTOR = 1f / 7f;
 	
-	public float WALK_DISTANCE = 0.65f;
-	public int WING_FAST = 550 - 350;
-	public int WING_IMMOBILE_FADE_DURATION = 20000;
+	//public float WALK_DISTANCE = 0.65f;
+	//public int WING_FAST = 550 - 350;
+	//public int WING_IMMOBILE_FADE_DURATION = 20000;
 	
-	public int WING_IMMOBILE_FADE_START = 20000;
+	//public int WING_IMMOBILE_FADE_START = 20000;
 	
-	public int WING_JUMPING_REST_TIME = 700;
+	//public int WING_JUMPING_REST_TIME = 700;
 	
-	public int WING_SLOW = 550;
-	public float WING_SPEED_MAX = 0.2f + 0.25f;
-	public float WING_SPEED_MIN = 0.2f;
+	//public int WING_SLOW = 550;
+	//public float WING_SPEED_MAX = 0.2f + 0.25f;
+	//public float WING_SPEED_MIN = 0.2f;
 	
 	public boolean MODERN_PLAY_WANDER = true;
 	
