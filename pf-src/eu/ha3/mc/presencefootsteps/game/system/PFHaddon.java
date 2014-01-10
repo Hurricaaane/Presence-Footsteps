@@ -13,6 +13,7 @@ import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -96,7 +97,8 @@ public class PFHaddon extends HaddonImpl
 	{
 		this.updateNotifier = new UpdateNotifier(this, "http://q.mc.ha3.eu/query/pf-litemod-version.json?ver=%d");
 		
-		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "c");
+		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "d");
+		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "bd");
 		
 		this.presenceDir = new File(util().getModsFolder(), "presencefootsteps/");
 		
@@ -136,10 +138,11 @@ public class PFHaddon extends HaddonImpl
 			}
 		}
 		
-		this.keyBindingMain =
-			new KeyBinding("Presence Footsteps", getConfig().getInteger("key.code"), "key.categories.misc");
+		this.keyBindingMain = new KeyBinding("Presence Footsteps", 0, "key.categories.misc");
 		Minecraft.getMinecraft().gameSettings.keyBindings =
 			ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, this.keyBindingMain);
+		this.keyBindingMain.setKeyCode(getConfig().getInteger("key.code"));
+		KeyBinding.resetKeyBindingArrayAndHash();
 		
 		this.watcher.add(this.keyBindingMain);
 		this.keyManager.addKeyBinding(this.keyBindingMain, new Ha3KeyHolding(this, 7));
@@ -187,7 +190,7 @@ public class PFHaddon extends HaddonImpl
 		reloadVariator(repo);
 		
 		this.isolator.setGenerator(getConfig().getInteger("custom.stance") == 0
-			? new PFReaderH(this.isolator) : new PFReaderQP(this.isolator));
+			? new PFReaderH(this.isolator, util()) : new PFReaderQP(this.isolator, util()));
 	}
 	
 	private void reloadConfig()

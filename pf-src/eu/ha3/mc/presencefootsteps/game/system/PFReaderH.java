@@ -1,8 +1,8 @@
 package eu.ha3.mc.presencefootsteps.game.system;
 
-import net.minecraft.entity.PFAccessor_NetMinecraftEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
+import eu.ha3.mc.haddon.Utility;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.NormalVariator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Generator;
@@ -16,6 +16,8 @@ public class PFReaderH implements Generator, VariatorSettable
 {
 	// Construct
 	final protected Isolator mod;
+	final protected Utility util;
+	
 	protected NormalVariator VAR;
 	
 	// Footsteps
@@ -41,9 +43,11 @@ public class PFReaderH implements Generator, VariatorSettable
 	private boolean isMessyFoliage;
 	private long brushesTime;
 	
-	public PFReaderH(Isolator isolator)
+	public PFReaderH(Isolator isolator, Utility util)
 	{
 		this.mod = isolator;
+		this.util = util;
+		
 		this.VAR = new NormalVariator();
 	}
 	
@@ -239,7 +243,18 @@ public class PFReaderH implements Generator, VariatorSettable
 		if (this.mod.getSolver().hasSpecialStoppingConditions(ply))
 			return;
 		
-		if (this.isFlying && PFAccessor_NetMinecraftEntity.getInstance().isJumping(ply)) //ply.isJumping)
+		boolean isJumping;
+		try
+		{
+			isJumping = (Boolean) this.util.getPrivate(ply, "isJumping");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException();
+		}
+		
+		if (this.isFlying && isJumping) //ply.isJumping)
 		{
 			if (this.VAR.EVENT_ON_JUMP)
 			{

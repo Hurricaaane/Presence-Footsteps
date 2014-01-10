@@ -3,6 +3,7 @@ package eu.ha3.mc.presencefootsteps.game.system;
 import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
+import eu.ha3.mc.haddon.Utility;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 
@@ -15,9 +16,9 @@ public class PFReaderQP extends PFReaderH
 	private float nextWalkDistanceMultiplier = 0.05f;
 	private final Random rand = new Random();
 	
-	public PFReaderQP(Isolator isolator)
+	public PFReaderQP(Isolator isolator, Utility utility)
 	{
-		super(isolator);
+		super(isolator, utility);
 	}
 	
 	@Override
