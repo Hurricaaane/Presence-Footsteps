@@ -219,9 +219,9 @@ public class PFSolver implements Solver
 		Block block = PF172Helper.getBlockAt(xx, yy, zz);
 		int metadata = world.getBlockMetadata(xx, yy, zz);
 		// air block
-		if (false && block == Blocks.field_150350_a)
+		if (block == Blocks.field_150350_a)
 		{
-			// what the fuck is this for?
+			// This block of code allows detection of fences
 			
 			//int mm = world.blockGetRenderType(xx, yy - 1, zz);
 			// see Entity, line 885
@@ -370,6 +370,8 @@ public class PFSolver implements Solver
 		String primitive = this.isolator.getPrimitiveMap().getPrimitiveMapSubstrate(soundName, substrate);
 		if (primitive == null)
 		{
+			// FIXME 2014-01-03 should fix that, it helps detecting glass primitives
+			
 			//primitive =
 			//	this.isolator.getPrimitiveMap().getPrimitiveMapSubstrate(
 			//		soundName, "break_" + registered.stepSound.getBreakSound());
