@@ -251,7 +251,7 @@ public class PFReaderH implements Generator, VariatorSettable
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 		
 		if (this.isFlying && isJumping) //ply.isJumping)

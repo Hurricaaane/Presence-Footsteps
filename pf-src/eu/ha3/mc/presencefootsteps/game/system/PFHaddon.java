@@ -58,7 +58,7 @@ public class PFHaddon extends HaddonImpl
 {
 	// Identity
 	protected final String NAME = "Presence Footsteps";
-	protected final int VERSION = 2;
+	protected final int VERSION = 3;
 	protected final String FOR = "1.7.2";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);
@@ -97,8 +97,9 @@ public class PFHaddon extends HaddonImpl
 	{
 		this.updateNotifier = new UpdateNotifier(this, "http://q.mc.ha3.eu/query/pf-litemod-version.json?ver=%d");
 		
-		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "d");
-		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "bd");
+		util().registerPrivateSetter(
+			"Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "d");
+		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "bd");
 		
 		this.presenceDir = new File(util().getModsFolder(), "presencefootsteps/");
 		
@@ -222,11 +223,6 @@ public class PFHaddon extends HaddonImpl
 		}
 		
 		this.updateNotifier.loadConfig(this.config);
-		
-		//this.currentPackFolder =
-		//	new File(this.packsFolder, (this.config.getAllProperties().containsKey("user.packname.r0")
-		//		? this.config.getString("user.packname.r0") : PFHaddon.DEFAULT_PACK_NAME)
-		//		+ "/");
 	}
 	
 	private void reloadVariator(List<ResourcePackRepository.Entry> repo)
@@ -437,36 +433,6 @@ public class PFHaddon extends HaddonImpl
 			setDebugEnabled(false);
 		}
 	}
-	
-	/**
-	 * Loads a resource and passes it to Minecraft to install.
-	 */
-	/*private void loadResource(File par1File, String root)
-	{
-		File[] filesInThisDir = par1File.listFiles();
-		int fileCount = filesInThisDir.length;
-		
-		for (int i = 0; i < fileCount; ++i)
-		{
-			File file = filesInThisDir[i];
-			
-			if (file.isDirectory())
-			{
-				loadResource(file, root + file.getName() + "/");
-			}
-			else
-			{
-				try
-				{
-					this.cache.cacheSound(root + file.getName());
-				}
-				catch (Exception var9)
-				{
-					log("Failed to add " + root + file.getName());
-				}
-			}
-		}
-	}*/
 	
 	public boolean hasResourcePacksLoaded()
 	{
