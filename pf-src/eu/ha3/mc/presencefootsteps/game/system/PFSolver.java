@@ -29,9 +29,7 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Solver;
  * Any other association string returned by the findAssociation* methods
  * correspond to an Acoustic name.
  * 
- * 
  * @author Hurry
- * 
  */
 public class PFSolver implements Solver
 {
@@ -209,7 +207,6 @@ public class PFSolver implements Solver
 		return worked;
 	}
 	
-	@SuppressWarnings("unused")
 	@Override
 	public String findAssociationForBlock(int xx, int yy, int zz)
 	{

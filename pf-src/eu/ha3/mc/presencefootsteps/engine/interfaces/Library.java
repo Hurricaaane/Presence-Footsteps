@@ -16,22 +16,19 @@ public interface Library
 	/**
 	 * Plays a acoustic.
 	 * 
+	 * @param location
 	 * @param acousticName
 	 * @param event
-	 * @param x
-	 * @param y
-	 * @param z
 	 */
 	public void playAcoustic(Object location, String acousticName, EventType event);
 	
 	/**
 	 * Plays a acoustic with additional options.
 	 * 
+	 * @param location
 	 * @param acousticName
 	 * @param event
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param options
 	 */
 	public void playAcoustic(Object location, String acousticName, EventType event, Options options);
 	

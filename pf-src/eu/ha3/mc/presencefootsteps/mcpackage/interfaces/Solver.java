@@ -30,6 +30,7 @@ public interface Solver
 	 * @param ply
 	 * @param verticalOffsetAsMinus
 	 * @param isRightFoot
+	 * @return
 	 */
 	public abstract
 		String findAssociationForPlayer(EntityPlayer ply, double verticalOffsetAsMinus, boolean isRightFoot);
@@ -46,7 +47,7 @@ public interface Solver
 	 * 
 	 * @param ply
 	 * @param verticalOffsetAsMinus
-	 * @param isRightFoot
+	 * @return
 	 */
 	public abstract String findAssociationForPlayer(EntityPlayer ply, double verticalOffsetAsMinus);
 	
@@ -81,7 +82,6 @@ public interface Solver
 	 * valid, but has no association in the blockmap. If the carpet was
 	 * selected, this solves to the carpet.
 	 * 
-	 * @param ply
 	 * @param xx
 	 * @param yy
 	 * @param zz
@@ -94,10 +94,10 @@ public interface Solver
 	 * on it, using a custom strategy which strategies are defined by the
 	 * solver.
 	 * 
-	 * @param ply
 	 * @param xx
 	 * @param yy
 	 * @param zz
+	 * @param strategy
 	 * @return
 	 */
 	public abstract String findAssociationForBlock(int xx, int yy, int zz, String strategy);
@@ -107,6 +107,7 @@ public interface Solver
 	 * process.
 	 * 
 	 * @param ply
+	 * @return
 	 */
 	public abstract boolean playSpecialStoppingConditions(EntityPlayer ply);
 	
@@ -114,6 +115,7 @@ public interface Solver
 	 * Tells if footsteps can be played.
 	 * 
 	 * @param ply
+	 * @return
 	 */
 	public abstract boolean hasSpecialStoppingConditions(EntityPlayer ply);
 	

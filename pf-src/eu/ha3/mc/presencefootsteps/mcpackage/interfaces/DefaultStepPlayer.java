@@ -9,7 +9,6 @@ import net.minecraft.entity.EntityLivingBase;
  * Can generate footsteps using the default Minecraft function.
  * 
  * @author Hurry
- * 
  */
 public interface DefaultStepPlayer
 {
@@ -20,7 +19,7 @@ public interface DefaultStepPlayer
 	 * @param xx
 	 * @param yy
 	 * @param zz
-	 * @param block
+	 * @param blockID
 	 */
 	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, Block blockID);
 }

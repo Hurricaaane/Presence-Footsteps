@@ -9,9 +9,11 @@ public interface SoundPlayer
 	/**
 	 * Plays a sound.
 	 * 
+	 * @param location
+	 * @param soundName
 	 * @param volume
 	 * @param pitch
-	 * @param name
+	 * @param options
 	 */
 	public void playSound(Object location, String soundName, float volume, float pitch, Options options);
 	

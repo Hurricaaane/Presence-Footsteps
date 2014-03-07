@@ -10,7 +10,7 @@ public interface BlockMap
 	 * block is a non-emitting block, meaning block resolution must continue on
 	 * its neighbors.
 	 * 
-	 * @param block
+	 * @param blockName
 	 * @param meta
 	 * @return
 	 */
@@ -20,9 +20,9 @@ public interface BlockMap
 	 * This will return null if the substrate does not resolve in the selected
 	 * carpet.
 	 * 
-	 * @param carpet
+	 * @param blockName
 	 * @param meta
-	 * @param event
+	 * @param substrate
 	 * @return
 	 */
 	public abstract String getBlockMapSubstrate(String blockName, int meta, String substrate);

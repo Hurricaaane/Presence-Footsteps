@@ -7,8 +7,7 @@ public interface PrimitiveMap
 	/**
 	 * This will return null if the primitive is not defined.
 	 * 
-	 * @param block
-	 * @param meta
+	 * @param primitive
 	 * @return
 	 */
 	public abstract String getPrimitiveMap(String primitive);
@@ -16,9 +15,8 @@ public interface PrimitiveMap
 	/**
 	 * This will return null if the substrate does not resolve.
 	 * 
-	 * @param carpet
-	 * @param meta
-	 * @param event
+	 * @param primitive
+	 * @param substrate
 	 * @return
 	 */
 	public abstract String getPrimitiveMapSubstrate(String primitive, String substrate);
