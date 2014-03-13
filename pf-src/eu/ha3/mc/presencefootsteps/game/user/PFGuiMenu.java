@@ -227,26 +227,26 @@ public class PFGuiMenu extends GuiScreen
 		//drawDefaultBackground();
 		drawGradientRect(0, 0, this.width, this.height, 0xC0000000, 0x60000000);
 		
-		drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 8, 0xffffff);
+		drawCenteredString(this.fontRendererObj, this.screenTitle, this.width / 2, 8, 0xffffff);
 		
 		if (!this.mod.hasResourcePacksLoaded())
 		{
 			if (this.mod.hasNonethelessResourcePacksInstalled())
 			{
 				drawCenteredString(
-					this.fontRenderer, "Your Presence Footsteps Resource Pack isn't enabled yet!", this.width / 2, 10
-						+ 22 * 6 - 40 + 20, 0xff0000);
+					this.fontRendererObj, "Your Presence Footsteps Resource Pack isn't enabled yet!", this.width / 2,
+					10 + 22 * 6 - 40 + 20, 0xff0000);
 				drawCenteredString(
-					this.fontRenderer, "Activate it in the Minecraft Options menu for it to run.", this.width / 2, 10
-						+ 22 * 6 - 40 + 28, 0xff0000);
+					this.fontRendererObj, "Activate it in the Minecraft Options menu for it to run.", this.width / 2,
+					10 + 22 * 6 - 40 + 28, 0xff0000);
 			}
 			else
 			{
 				drawCenteredString(
-					this.fontRenderer, "You don't have any Presence Footsteps Resource Pack installed!",
+					this.fontRendererObj, "You don't have any Presence Footsteps Resource Pack installed!",
 					this.width / 2, 10 + 22 * 6 - 40 + 20, 0xff0000);
 				drawCenteredString(
-					this.fontRenderer, "Put the Resource Pack in the resourcepacks/ folder.", this.width / 2, 10
+					this.fontRendererObj, "Put the Resource Pack in the resourcepacks/ folder.", this.width / 2, 10
 						+ 22 * 6 - 40 + 28, 0xff0000);
 			}
 		}

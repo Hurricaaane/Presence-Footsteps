@@ -54,7 +54,7 @@ public class PFSolver implements Solver
 			String[] noAssos = assos.split("*");
 			// Get unique name of block
 			this.isolator.getDefaultStepPlayer().playStep(
-				ply, i(noAssos[1]), i(noAssos[2]), i(noAssos[3]), Block.func_149684_b(noAssos[4]));
+				ply, i(noAssos[1]), i(noAssos[2]), i(noAssos[3]), Block.getBlockFromName(noAssos[4]));
 		}
 		else
 		{
@@ -216,13 +216,13 @@ public class PFSolver implements Solver
 		Block block = PF172Helper.getBlockAt(xx, yy, zz);
 		int metadata = world.getBlockMetadata(xx, yy, zz);
 		// air block
-		if (block == Blocks.field_150350_a)
+		if (block == Blocks.air)
 		{
 			// This block of code allows detection of fences
 			
 			//int mm = world.blockGetRenderType(xx, yy - 1, zz);
 			// see Entity, line 885
-			int mm = PF172Helper.getBlockAt(xx, yy - 1, zz).func_149645_b();
+			int mm = PF172Helper.getBlockAt(xx, yy - 1, zz).getRenderType();
 			
 			if (mm == 11 || mm == 32 || mm == 21)
 			{
@@ -236,7 +236,7 @@ public class PFSolver implements Solver
 		//if (block == 0)
 		//	return null;
 		
-		Block xblock = world.func_147439_a(xx, yy + 1, zz);
+		Block xblock = world.getBlock(xx, yy + 1, zz);
 		int xmetadata = world.getBlockMetadata(xx, yy + 1, zz);
 		
 		// Try to see if the block above is a carpet...
@@ -291,7 +291,7 @@ public class PFSolver implements Solver
 				// as defined in the blockmap
 				
 				// air block
-				if (block != Blocks.field_150350_a)
+				if (block != Blocks.air)
 				{
 					PFHaddon.debug("Not emitter for " + block + ":" + metadata);
 				}
@@ -331,7 +331,7 @@ public class PFSolver implements Solver
 	private String resolvePrimitive(Block block, int metadata)
 	{
 		// air block
-		if (block == Blocks.field_150350_a)
+		if (block == Blocks.air)
 			return "NOT_EMITTER";
 		
 		// impossible case?
@@ -348,11 +348,11 @@ public class PFSolver implements Solver
 		//
 		
 		// stepSound <= field_149762_H
-		if (registered.field_149762_H == null)
+		if (registered.stepSound == null)
 			return "NOT_EMITTER"; // This could return "" for empty sound, but let the engine try other things
 			
 		// stepSound.stepSoundName
-		String soundName = registered.field_149762_H.field_150501_a;
+		String soundName = registered.stepSound.field_150501_a;
 		if (soundName == null || soundName.equals(""))
 		{
 			soundName = "UNDEFINED";
@@ -361,8 +361,7 @@ public class PFSolver implements Solver
 		// stepSound.stepSoundVolume stepSound.stepSoundPitch 
 		String substrate =
 			String.format(
-				Locale.ENGLISH, "%.2f_%.2f", registered.field_149762_H.field_150499_b,
-				registered.field_149762_H.field_150500_c);
+				Locale.ENGLISH, "%.2f_%.2f", registered.stepSound.field_150499_b, registered.stepSound.field_150500_c);
 		
 		String primitive = this.isolator.getPrimitiveMap().getPrimitiveMapSubstrate(soundName, substrate);
 		if (primitive == null)
@@ -412,8 +411,7 @@ public class PFSolver implements Solver
 			
 			// material water, see EntityLivingBase line 286
 			this.isolator.getAcoustics().playAcoustic(
-				ply, "_SWIM", ply.isInsideOfMaterial(Material.field_151586_h) ? EventType.SWIM : EventType.WALK,
-				options);
+				ply, "_SWIM", ply.isInsideOfMaterial(Material.water) ? EventType.SWIM : EventType.WALK, options);
 			
 			return true;
 		}
@@ -454,7 +452,7 @@ public class PFSolver implements Solver
 			}
 		}*/
 		
-		Block xblock = world.func_147439_a(xx, yy + 1, zz);
+		Block xblock = world.getBlock(xx, yy + 1, zz);
 		int xmetadata = world.getBlockMetadata(xx, yy + 1, zz);
 		
 		String association = null;

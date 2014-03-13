@@ -22,26 +22,20 @@ public class PFAccessor_NetMinecraftEntity implements DefaultStepPlayer
 		return instance;
 	}
 	
-	@Deprecated
-	public boolean isJumping(EntityLivingBase entityLiving)
-	{
-		return entityLiving.isJumping;
-	}
-	
 	@Override
 	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, Block blockID)
 	{
 		//playStepSound
 		//entity.func_145780_a(xx, yy, zz, blockID);
 		
-		Block.SoundType soundType = blockID.field_149762_H;
+		Block.SoundType soundType = blockID.stepSound;
 		
-		if (Minecraft.getMinecraft().theWorld.func_147439_a(xx, yy + 1, zz) == Blocks.field_150431_aC)
+		if (Minecraft.getMinecraft().theWorld.getBlock(xx, yy + 1, zz) == Blocks.snow_layer)
 		{
-			soundType = Blocks.field_150431_aC.field_149762_H;
+			soundType = Blocks.snow_layer.stepSound;
 			entity.playSound(soundType.func_150498_e(), soundType.func_150497_c() * 0.15F, soundType.func_150494_d());
 		}
-		else if (!blockID.func_149688_o().isLiquid())
+		else if (!blockID.getMaterial().isLiquid())
 		{
 			entity.playSound(soundType.func_150498_e(), soundType.func_150497_c() * 0.15F, soundType.func_150494_d());
 		}

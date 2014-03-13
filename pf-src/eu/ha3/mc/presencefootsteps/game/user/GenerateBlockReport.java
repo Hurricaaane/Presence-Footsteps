@@ -30,24 +30,24 @@ public class GenerateBlockReport
 	{
 		this.results = new ConfigProperty();
 		
-		for (Object o : Block.field_149771_c)
+		for (Object o : Block.blockRegistry)
 		{
 			Block block = (Block) o;
 			String name = PF172Helper.nameOf(block);
 			
 			// stepSound.stepSoundName
 			String soundName;
-			if (block.field_149762_H == null)
+			if (block.stepSound == null)
 			{
 				soundName = "NO_STEP";
 			}
-			else if (block.field_149762_H.field_150501_a == null)
+			else if (block.stepSound.field_150501_a == null)
 			{
 				soundName = "NO_SOUND";
 			}
 			else
 			{
-				soundName = block.field_149762_H.field_150501_a;
+				soundName = block.stepSound.field_150501_a;
 			}
 			
 			if (block instanceof BlockLiquid)
@@ -110,7 +110,7 @@ public class GenerateBlockReport
 			{
 				soundName += "," + "FUNC_POPPABLE";
 			}*/
-			if (!block.func_149662_c())
+			if (!block.isOpaqueCube())
 			{
 				soundName += "," + "HITBOX";
 			}

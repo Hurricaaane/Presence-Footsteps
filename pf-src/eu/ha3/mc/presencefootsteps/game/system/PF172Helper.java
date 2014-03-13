@@ -2,8 +2,6 @@ package eu.ha3.mc.presencefootsteps.game.system;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 /*
@@ -65,7 +63,7 @@ public class PF172Helper
 	 */
 	private static Block getBlockAt(World world, int x, int y, int z)
 	{
-		Block block = world.func_147439_a(x, y, z);
+		Block block = world.getBlock(x, y, z);
 		return block;
 	}
 	
@@ -96,31 +94,6 @@ public class PF172Helper
 	public static String nameOf(Block block)
 	{
 		// RegistryNamespaced
-		return Block.field_149771_c.func_148750_c(block);
+		return Block.blockRegistry.getNameForObject(block);
 	}
-	
-	/**
-	 * Gets the unique name of a given itemstack's item.
-	 * 
-	 * @param itemStack
-	 * @return
-	 */
-	public static String nameOf(ItemStack itemStack)
-	{
-		// RegistryNamespaced
-		return Block.field_149771_c.func_148750_c(itemStack.getItem());
-	}
-	
-	/**
-	 * Gets the unique name of a given item.
-	 * 
-	 * @param item
-	 * @return
-	 */
-	public static String nameOf(Item item)
-	{
-		// RegistryNamespaced
-		return Block.field_149771_c.func_148750_c(item);
-	}
-	
 }
