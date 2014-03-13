@@ -13,14 +13,14 @@
 		},
 		"_SWIM" : {
 			"swim" : {
-				"name"  : "@liquid.swim",
+				"name"  : "@game.player.swim",
 				"vol_min"   : 10,
 				"vol_max"   : 100,
 				"pitch_min" : 90,
 				"pitch_max" : 110
 			},
 			"walk"  : {
-				"name"  : "@liquid.swim",
+				"name"  : "@game.player.swim",
 				"vol_min"   : 10,
 				"vol_max"   : 100,
 				"pitch_min" : 90,
