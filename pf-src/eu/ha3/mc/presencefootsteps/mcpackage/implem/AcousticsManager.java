@@ -7,9 +7,10 @@ import java.util.Locale;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.PFAccessor_NetMinecraftEntity;
+import net.minecraft.init.Blocks;
 import eu.ha3.mc.presencefootsteps.engine.implem.AcousticsLibrary;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
@@ -24,7 +25,6 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
  * A Library that can also play sounds and default footsteps.
  * 
  * @author Hurry
- * 
  */
 public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, DefaultStepPlayer
 {
@@ -50,7 +50,20 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	@Override
 	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, Block blockID)
 	{
-		PFAccessor_NetMinecraftEntity.getInstance().playStep(entity, xx, yy, zz, blockID);
+		//playStepSound
+		//entity.func_145780_a(xx, yy, zz, blockID);
+		
+		Block.SoundType soundType = blockID.stepSound;
+		
+		if (Minecraft.getMinecraft().theWorld.getBlock(xx, yy + 1, zz) == Blocks.snow_layer)
+		{
+			soundType = Blocks.snow_layer.stepSound;
+			entity.playSound(soundType.func_150498_e(), soundType.func_150497_c() * 0.15F, soundType.func_150494_d());
+		}
+		else if (!blockID.getMaterial().isLiquid())
+		{
+			entity.playSound(soundType.func_150498_e(), soundType.func_150497_c() * 0.15F, soundType.func_150494_d());
+		}
 	}
 	
 	@Override
