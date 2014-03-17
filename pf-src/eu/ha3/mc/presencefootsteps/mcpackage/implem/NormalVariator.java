@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
-import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
+import eu.ha3.mc.presencefootsteps.log.PFLog;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.util.property.contract.PropertyHolder;
 
@@ -96,7 +96,7 @@ public class NormalVariator implements Variator
 			}
 			catch (Throwable e)
 			{
-				PFHaddon.log("Incompatible type: " + e.getClass().getName() + ": " + field.getName());
+				PFLog.log("Incompatible type: " + e.getClass().getName() + ": " + field.getName());
 			}
 		}
 	}

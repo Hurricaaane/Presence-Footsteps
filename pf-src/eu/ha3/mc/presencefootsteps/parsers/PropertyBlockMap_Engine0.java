@@ -3,7 +3,7 @@ package eu.ha3.mc.presencefootsteps.parsers;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
+import eu.ha3.mc.presencefootsteps.log.PFLog;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.BlockMap;
 import eu.ha3.util.property.contract.PropertyHolder;
 
@@ -22,7 +22,7 @@ public class PropertyBlockMap_Engine0
 			}
 			catch (Exception e)
 			{
-				PFHaddon.log("Error when registering block " + entry.getKey() + ": " + e.getMessage());
+				PFLog.log("Error when registering block " + entry.getKey() + ": " + e.getMessage());
 			}
 		}
 	}

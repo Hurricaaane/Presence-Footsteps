@@ -2,7 +2,7 @@ package eu.ha3.mc.presencefootsteps.mcpackage.implem;
 
 import net.minecraft.block.Block;
 import eu.ha3.mc.presencefootsteps.game.system.PF172Helper;
-import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
+import eu.ha3.mc.presencefootsteps.log.PFLog;
 
 /*
 --filenotes-placeholder
@@ -32,7 +32,7 @@ public class LegacyCapableBlockMap extends BasicBlockMap
 				String fullKeyRebuild =
 					PF172Helper.nameOf((Block) o) + (endOfNumber == key.length() ? "" : key.substring(endOfNumber));
 				super.register(fullKeyRebuild, value);
-				PFHaddon.debug("Adding legacy key: " + fullKeyRebuild + " for " + key);
+				PFLog.debug("Adding legacy key: " + fullKeyRebuild + " for " + key);
 			}
 			else
 			{

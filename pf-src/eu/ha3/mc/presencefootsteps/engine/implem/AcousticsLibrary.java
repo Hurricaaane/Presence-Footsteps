@@ -10,7 +10,7 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.Library;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.NamedAcoustic;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
-import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
+import eu.ha3.mc.presencefootsteps.log.PFLog;
 
 /* x-placeholder-wtfplv2 */
 
@@ -70,7 +70,7 @@ public abstract class AcousticsLibrary implements Library
 			return;
 		}
 		
-		PFHaddon.debug("  Playing acoustic " + acousticName + " for event " + event.toString().toUpperCase());
+		PFLog.debug("  Playing acoustic " + acousticName + " for event " + event.toString().toUpperCase());
 		this.acoustics.get(acousticName).playSound(mySoundPlayer(), location, event, inputOptions);
 	}
 	

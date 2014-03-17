@@ -15,7 +15,7 @@ import eu.ha3.mc.presencefootsteps.engine.implem.AcousticsLibrary;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
-import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
+import eu.ha3.mc.presencefootsteps.log.PFLog;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 
@@ -100,7 +100,7 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	
 	protected void actuallyPlaySound(Entity location, String soundName, float volume, float pitch)
 	{
-		PFHaddon.debug("    Playing sound "
+		PFLog.debug("    Playing sound "
 			+ soundName + " (" + String.format(Locale.ENGLISH, "v%.2f, p%.2f", volume, pitch) + ")");
 		location.playSound(soundName, volume, pitch);
 	}
@@ -124,7 +124,7 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	@Override
 	protected void onAcousticNotFound(Object location, String acousticName, EventType event, Options inputOptions)
 	{
-		PFHaddon.log("Tried to play a missing acoustic: " + acousticName);
+		PFLog.log("Tried to play a missing acoustic: " + acousticName);
 	}
 	
 	@Override
@@ -149,7 +149,7 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 			{
 				if (this.USING_EARLYNESS && time < sound.getTimeToPlay())
 				{
-					PFHaddon.debug("    Playing early sound (early by "
+					PFLog.debug("    Playing early sound (early by "
 						+ (sound.getTimeToPlay() - time) + "ms, tolerence is "
 						+ Math.pow(sound.getMaximumBase(), this.EARLYNESS_THRESHOLD_POW));
 				}
@@ -163,7 +163,7 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 				}
 				else
 				{
-					PFHaddon.debug("    Skipped late sound (late by "
+					PFLog.debug("    Skipped late sound (late by "
 						+ lateness + "ms, tolerence is " + sound.getMaximumBase() / this.LATENESS_THRESHOLD_DIVIDER
 						+ "ms)");
 				}

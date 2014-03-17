@@ -31,7 +31,6 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.Library;
  * A JSON parser that creates a Library of Acoustics.
  * 
  * @author Hurry
- * 
  */
 public class JasonAcoustics_Engine0
 {
@@ -257,7 +256,7 @@ public class JasonAcoustics_Engine0
 	
 	private void setupSoundName(BasicAcoustic a, String soundName)
 	{
-		if (!soundName.startsWith("@"))
+		if (soundName.charAt(0) != '@')
 		{
 			a.setSoundName(this.soundRoot + soundName);
 		}

@@ -32,6 +32,7 @@ import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsKeyEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
 import eu.ha3.mc.presencefootsteps.game.user.PFGuiMenu;
+import eu.ha3.mc.presencefootsteps.log.PFLog;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.AcousticsManager;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.BasicPrimitiveMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.implem.LegacyCapableBlockMap;
@@ -58,7 +59,7 @@ public class PFHaddon extends HaddonImpl
 {
 	// Identity
 	protected final String NAME = "Presence Footsteps";
-	protected final int VERSION = 3;
+	protected final int VERSION = 4;
 	protected final String FOR = "1.7.2";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);
@@ -70,7 +71,6 @@ public class PFHaddon extends HaddonImpl
 	
 	// Meta
 	private File presenceDir;
-	private static boolean isDebugEnabled;
 	private EdgeTrigger debugButton;
 	private long pressedOptionsTime;
 	
@@ -114,7 +114,7 @@ public class PFHaddon extends HaddonImpl
 			{
 				PFHaddon.this.pressedOptionsTime = System.currentTimeMillis();
 				
-				setDebugEnabled(true);
+				PFLog.setDebugEnabled(true);
 				reloadEverything(false);
 			}
 			
@@ -168,7 +168,7 @@ public class PFHaddon extends HaddonImpl
 		List<ResourcePackRepository.Entry> repo = this.dealer.findResourcePacks();
 		if (repo.size() == 0)
 		{
-			PFHaddon.log("Presence Footsteps didn't find any compatible resource pack.");
+			PFLog.log("Presence Footsteps didn't find any compatible resource pack.");
 			this.hasResourcePacks = false;
 			this.hasDisabledResourcePacks = this.dealer.findDisabledResourcePacks().size() > 0;
 			
@@ -181,7 +181,7 @@ public class PFHaddon extends HaddonImpl
 		
 		for (ResourcePackRepository.Entry pack : repo)
 		{
-			PFHaddon.debug("Will load: " + pack.getResourcePackName());
+			PFLog.debug("Will load: " + pack.getResourcePackName());
 		}
 		
 		reloadBlockMap(repo);
@@ -242,12 +242,12 @@ public class PFHaddon extends HaddonImpl
 			}
 			catch (Exception e)
 			{
-				PFHaddon.debug("No variator found in " + pack.getResourcePackName() + ": " + e.getMessage());
+				PFLog.debug("No variator found in " + pack.getResourcePackName() + ": " + e.getMessage());
 			}
 		}
 		if (working == 0)
 		{
-			PFHaddon.log("No variators found in " + repo.size() + " packs!");
+			PFLog.log("No variators found in " + repo.size() + " packs!");
 		}
 		
 		this.isolator.setVariator(var);
@@ -270,12 +270,12 @@ public class PFHaddon extends HaddonImpl
 			}
 			catch (IOException e)
 			{
-				PFHaddon.debug("No blockmap found in " + pack.getResourcePackName() + ": " + e.getMessage());
+				PFLog.debug("No blockmap found in " + pack.getResourcePackName() + ": " + e.getMessage());
 			}
 		}
 		if (working == 0)
 		{
-			PFHaddon.log("No blockmaps found in " + repo.size() + " packs!");
+			PFLog.log("No blockmaps found in " + repo.size() + " packs!");
 		}
 		
 		this.isolator.setBlockMap(blockMap);
@@ -298,12 +298,12 @@ public class PFHaddon extends HaddonImpl
 			}
 			catch (IOException e)
 			{
-				PFHaddon.debug("No primitivemap found in " + pack.getResourcePackName() + ": " + e.getMessage());
+				PFLog.debug("No primitivemap found in " + pack.getResourcePackName() + ": " + e.getMessage());
 			}
 		}
 		if (working == 0)
 		{
-			PFHaddon.log("No blockmaps found in " + repo.size() + " packs!");
+			PFLog.log("No blockmaps found in " + repo.size() + " packs!");
 		}
 		
 		this.isolator.setPrimitiveMap(primitiveMap);
@@ -326,12 +326,12 @@ public class PFHaddon extends HaddonImpl
 			}
 			catch (IOException e)
 			{
-				PFHaddon.debug("No acoustics found in " + pack.getResourcePackName() + ": " + e.getMessage());
+				PFLog.debug("No acoustics found in " + pack.getResourcePackName() + ": " + e.getMessage());
 			}
 		}
 		if (working == 0)
 		{
-			PFHaddon.log("No blockmaps found in " + repo.size() + " packs!");
+			PFLog.log("No blockmaps found in " + repo.size() + " packs!");
 		}
 		
 		this.isolator.setAcoustics(acoustics);
@@ -430,7 +430,7 @@ public class PFHaddon extends HaddonImpl
 		if (util().isCurrentScreen(null))
 		{
 			Minecraft.getMinecraft().displayGuiScreen(new PFGuiMenu((GuiScreen) util().getCurrentScreen(), this));
-			setDebugEnabled(false);
+			PFLog.setDebugEnabled(false);
 		}
 	}
 	
@@ -450,31 +450,13 @@ public class PFHaddon extends HaddonImpl
 		return this.config;
 	}
 	
-	public static void log(String contents)
-	{
-		System.out.println("(PF) " + contents);
-	}
-	
-	public static void setDebugEnabled(boolean enable)
-	{
-		isDebugEnabled = enable;
-	}
-	
-	public static void debug(String contents)
-	{
-		if (!isDebugEnabled)
-			return;
-		
-		System.out.println("(PF) " + contents);
-	}
-	
 	@Override
 	public void saveConfig()
 	{
 		// If there were changes...
 		if (this.config.commit())
 		{
-			PFHaddon.log("Saving configuration...");
+			PFLog.log("Saving configuration...");
 			
 			// Write changes on disk.
 			this.config.save();
@@ -484,7 +466,7 @@ public class PFHaddon extends HaddonImpl
 	@Override
 	public void onResourceManagerReload(IResourceManager var1)
 	{
-		PFHaddon.log("Resource Pack reload detected...");
+		PFLog.log("Resource Pack reload detected...");
 		reloadEverything(false);
 	}
 	
@@ -540,7 +522,7 @@ public class PFHaddon extends HaddonImpl
 			int keyCode = this.keyBindingMain.getKeyCode();
 			if (keyCode != this.config.getInteger("key.code"))
 			{
-				PFHaddon.log("Key binding changed. Saving...");
+				PFLog.log("Key binding changed. Saving...");
 				this.config.setProperty("key.code", keyCode);
 				saveConfig();
 			}

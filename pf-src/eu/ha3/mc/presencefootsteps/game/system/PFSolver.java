@@ -11,6 +11,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import eu.ha3.mc.presencefootsteps.engine.implem.ConfigOptions;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
+import eu.ha3.mc.presencefootsteps.log.PFLog;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Solver;
 
@@ -105,7 +106,7 @@ public class PFSolver implements Solver
 	{
 		if (ply.isInWater())
 		{
-			PFHaddon.debug("WARNING!!! Playing a sound while in the water! "
+			PFLog.debug("WARNING!!! Playing a sound while in the water! "
 				+ "This is supposed to be halted by the stopping conditions!!");
 		}
 		
@@ -243,7 +244,7 @@ public class PFSolver implements Solver
 		String association =
 			this.isolator.getBlockMap().getBlockMapSubstrate(PF172Helper.nameOf(xblock), xmetadata, "carpet");
 		
-		PFHaddon.debug("Walking on block: "
+		PFLog.debug("Walking on block: "
 			+ PF172Helper.nameOf(block) + " -- Being in block: " + PF172Helper.nameOf(xblock));
 		
 		if (association == null || association.equals("NOT_EMITTER"))
@@ -270,7 +271,7 @@ public class PFSolver implements Solver
 				{
 					association = association + "," + foliage;
 					
-					PFHaddon.debug("Foliage detected: " + foliage);
+					PFLog.debug("Foliage detected: " + foliage);
 				}
 			}
 			// else { the information is discarded anyways, the method returns null or no association }
@@ -280,7 +281,7 @@ public class PFSolver implements Solver
 			yy = yy + 1;
 			block = xblock;
 			metadata = xmetadata;
-			PFHaddon.debug("Carpet detected: " + association);
+			PFLog.debug("Carpet detected: " + association);
 		}
 		
 		if (association != null)
@@ -293,14 +294,14 @@ public class PFSolver implements Solver
 				// air block
 				if (block != Blocks.air)
 				{
-					PFHaddon.debug("Not emitter for " + block + ":" + metadata);
+					PFLog.debug("Not emitter for " + block + ":" + metadata);
 				}
 				
 				return null;
 			}
 			else
 			{
-				PFHaddon.debug("Found association for " + block + ":" + metadata + ": " + association);
+				PFLog.debug("Found association for " + block + ":" + metadata + ": " + association);
 				return association;
 			}
 		}
@@ -311,18 +312,18 @@ public class PFSolver implements Solver
 			{
 				if (primitive.equals("NOT_EMITTER"))
 				{
-					PFHaddon.debug("Primitive for "
+					PFLog.debug("Primitive for "
 						+ block + ":" + metadata + ": " + primitive
 						+ " is NOT_EMITTER! Following behavior is uncertain.");
 					return null;
 				}
 				
-				PFHaddon.debug("Found primitive for " + block + ":" + metadata + ": " + primitive);
+				PFLog.debug("Found primitive for " + block + ":" + metadata + ": " + primitive);
 				return primitive;
 			}
 			else
 			{
-				PFHaddon.debug("No association for " + block + ":" + metadata);
+				PFLog.debug("No association for " + block + ":" + metadata);
 				return NO_ASSOCIATION + "*" + xx + "*" + yy + "*" + zz + "*" + block;
 			}
 		}
@@ -382,12 +383,12 @@ public class PFSolver implements Solver
 		
 		if (primitive != null)
 		{
-			PFHaddon.debug("Primitive found for " + soundName + ":" + substrate);
+			PFLog.debug("Primitive found for " + soundName + ":" + substrate);
 			return primitive;
 		}
 		else
 		{
-			PFHaddon.debug("No primitive for " + soundName + ":" + substrate);
+			PFLog.debug("No primitive for " + soundName + ":" + substrate);
 			return null;
 		}
 	}

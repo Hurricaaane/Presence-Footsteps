@@ -7,7 +7,7 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.Acoustic;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
-import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
+import eu.ha3.mc.presencefootsteps.log.PFLog;
 
 /* x-placeholder-wtfplv2 */
 
@@ -28,7 +28,7 @@ public class ProbabilityWeightsAcoustic implements Acoustic
 		{
 			if (weights.get(i) < 0)
 			{
-				PFHaddon.log("ERROR: A probability weight can't be negative");
+				PFLog.log("ERROR: A probability weight can't be negative");
 				return;
 			}
 			
