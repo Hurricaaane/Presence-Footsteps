@@ -1,6 +1,7 @@
 package eu.ha3.mc.presencefootsteps.game.system;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -36,6 +37,14 @@ public class PFSolver implements Solver
 {
 	private final Isolator isolator;
 	public static String NO_ASSOCIATION = "_NO_ASSOCIATION";
+	public static String NO_ASSOCIATION_SEPARATOR = "*";
+	
+	// 2014-01-03 : 1.7.2
+	// Replaced with star because blocks are unlikely to contain this character
+	// 2014-05-22 : 1.7.2
+	// Pattern.quote fixes a bug where "*" would be taken as a regex.
+	// Instead of escaping \\*, we directly provide a literal pattern
+	private final Pattern noAssosPattern = Pattern.compile(Pattern.quote(NO_ASSOCIATION_SEPARATOR));
 	
 	public PFSolver(Isolator isolator)
 	{
@@ -50,9 +59,7 @@ public class PFSolver implements Solver
 		
 		if (assos.startsWith(PFSolver.NO_ASSOCIATION))
 		{
-			// 2014-01-03 : 1.7.2
-			// Replaced with star because blocks are unlikely to contain this character
-			String[] noAssos = assos.split("*");
+			String[] noAssos = this.noAssosPattern.split(assos);
 			// Get unique name of block
 			this.isolator.getDefaultStepPlayer().playStep(
 				ply, i(noAssos[1]), i(noAssos[2]), i(noAssos[3]), Block.getBlockFromName(noAssos[4]));
@@ -324,7 +331,9 @@ public class PFSolver implements Solver
 			else
 			{
 				PFLog.debug("No association for " + block + ":" + metadata);
-				return NO_ASSOCIATION + "*" + xx + "*" + yy + "*" + zz + "*" + block;
+				return NO_ASSOCIATION
+					+ NO_ASSOCIATION_SEPARATOR + xx + NO_ASSOCIATION_SEPARATOR + yy + NO_ASSOCIATION_SEPARATOR + zz
+					+ NO_ASSOCIATION_SEPARATOR + block;
 			}
 		}
 	}
