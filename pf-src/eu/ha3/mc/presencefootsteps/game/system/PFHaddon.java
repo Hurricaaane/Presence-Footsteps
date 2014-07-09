@@ -99,7 +99,7 @@ public class PFHaddon extends HaddonImpl
 		
 		util().registerPrivateSetter(
 			"Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "d");
-		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "bd");
+		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "bc");
 		
 		this.presenceDir = new File(util().getModsFolder(), "presencefootsteps/");
 		
