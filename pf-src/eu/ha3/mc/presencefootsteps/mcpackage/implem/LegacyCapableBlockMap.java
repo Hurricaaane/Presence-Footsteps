@@ -26,7 +26,7 @@ public class LegacyCapableBlockMap extends BasicBlockMap
 			}
 			String number = key.substring(0, endOfNumber);
 			int id = Integer.parseInt(number);
-			Object o = Block.blockRegistry.getObjectForID(id);
+			Object o = Block.blockRegistry.getObjectById(id);
 			if (o != null && o instanceof Block)
 			{
 				String fullKeyRebuild =
