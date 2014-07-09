@@ -59,8 +59,8 @@ public class PFHaddon extends HaddonImpl
 {
 	// Identity
 	protected final String NAME = "Presence Footsteps";
-	protected final int VERSION = 4;
-	protected final String FOR = "1.7.2";
+	protected final int VERSION = 5;
+	protected final String FOR = "1.7.10";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);
 	
