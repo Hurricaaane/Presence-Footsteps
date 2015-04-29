@@ -50,27 +50,25 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	@Override
 	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, Block blockID)
 	{
-		//playStepSound
-		//entity.func_145780_a(xx, yy, zz, blockID);
-		
-		Block.SoundType soundType = blockID.stepSound;
-		
-		if (Minecraft.getMinecraft().theWorld.getBlock(xx, yy + 1, zz) == Blocks.snow_layer)
-		{
-			soundType = Blocks.snow_layer.stepSound;
-			entity.playSound(soundType.func_150498_e(), soundType.getVolume() * 0.15F, soundType.getPitch());
-		}
-		else if (!blockID.getMaterial().isLiquid())
-		{
-			entity.playSound(soundType.func_150498_e(), soundType.getVolume() * 0.15F, soundType.getPitch());
+		if (blockID != null && blockID.stepSound != null) {
+			Block.SoundType soundType = blockID.stepSound;
+			
+			if (Minecraft.getMinecraft().theWorld.getBlock(xx, yy + 1, zz) == Blocks.snow_layer)
+			{
+				soundType = Blocks.snow_layer.stepSound;
+				entity.playSound(soundType.func_150498_e(), soundType.getVolume() * 0.15F, soundType.getPitch());
+			}
+			else if (!blockID.getMaterial().isLiquid())
+			{
+				entity.playSound(soundType.func_150498_e(), soundType.getVolume() * 0.15F, soundType.getPitch());
+			}
 		}
 	}
 	
 	@Override
 	public void playSound(Object location, String soundName, float volume, float pitch, Options options)
 	{
-		if (!(location instanceof Entity))
-			return;
+		if (!(location instanceof Entity)) return;
 		
 		if (options != null)
 		{
@@ -100,16 +98,13 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	
 	protected void actuallyPlaySound(Entity location, String soundName, float volume, float pitch)
 	{
-		PFLog.debug("    Playing sound "
-			+ soundName + " (" + String.format(Locale.ENGLISH, "v%.2f, p%.2f", volume, pitch) + ")");
+		PFLog.debug("    Playing sound " + soundName + " (" + String.format(Locale.ENGLISH, "v%.2f, p%.2f", volume, pitch) + ")");
 		location.playSound(soundName, volume, pitch);
 	}
 	
 	private long randAB(Random rng, long a, long b)
 	{
-		if (a >= b)
-			return a;
-		
+		if (a >= b) return a;
 		return a + rng.nextInt((int) b + 1);
 	}
 	
@@ -130,11 +125,9 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	@Override
 	public void think()
 	{
-		if (this.pending.isEmpty())
-			return;
+		if (this.pending.isEmpty()) return;
 		
-		if (System.currentTimeMillis() < this.minimum)
-			return;
+		if (System.currentTimeMillis() < this.minimum) return;
 		
 		long newMinimum = Long.MAX_VALUE;
 		long time = System.currentTimeMillis();
@@ -143,29 +136,21 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 		{
 			PendingSound sound = iter.next();
 			
-			if (time >= sound.getTimeToPlay()
-				|| this.USING_EARLYNESS
-				&& time >= sound.getTimeToPlay() - Math.pow(sound.getMaximumBase(), this.EARLYNESS_THRESHOLD_POW))
+			if (time >= sound.getTimeToPlay() || USING_EARLYNESS && time >= sound.getTimeToPlay() - Math.pow(sound.getMaximumBase(), this.EARLYNESS_THRESHOLD_POW))
 			{
-				if (this.USING_EARLYNESS && time < sound.getTimeToPlay())
+				if (USING_EARLYNESS && time < sound.getTimeToPlay())
 				{
-					PFLog.debug("    Playing early sound (early by "
-						+ (sound.getTimeToPlay() - time) + "ms, tolerence is "
-						+ Math.pow(sound.getMaximumBase(), this.EARLYNESS_THRESHOLD_POW));
+					PFLog.debug("    Playing early sound (early by " + (sound.getTimeToPlay() - time) + "ms, tolerence is " + Math.pow(sound.getMaximumBase(), this.EARLYNESS_THRESHOLD_POW));
 				}
 				
 				long lateness = time - sound.getTimeToPlay();
-				if (!this.USING_LATENESS
-					|| sound.getMaximumBase() < 0
-					|| lateness <= sound.getMaximumBase() / this.LATENESS_THRESHOLD_DIVIDER)
+				if (!USING_LATENESS || sound.getMaximumBase() < 0 || lateness <= sound.getMaximumBase() / this.LATENESS_THRESHOLD_DIVIDER)
 				{
 					sound.playSound(this);
 				}
 				else
 				{
-					PFLog.debug("    Skipped late sound (late by "
-						+ lateness + "ms, tolerence is " + sound.getMaximumBase() / this.LATENESS_THRESHOLD_DIVIDER
-						+ "ms)");
+					PFLog.debug("    Skipped late sound (late by " + lateness + "ms, tolerence is " + sound.getMaximumBase() / this.LATENESS_THRESHOLD_DIVIDER + "ms)");
 				}
 				iter.remove();
 			}

@@ -60,7 +60,7 @@ public class PFHaddon extends HaddonImpl
 	// Identity
 	protected final String NAME = "Presence Footsteps";
 	protected final int VERSION = 4;
-	protected final String FOR = "1.7.2";
+	protected final String FOR = "1.7.10";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);
 	
@@ -97,8 +97,7 @@ public class PFHaddon extends HaddonImpl
 	{
 		this.updateNotifier = new UpdateNotifier(this, "http://q.mc.ha3.eu/query/pf-litemod-version.json?ver=%d");
 		
-		util().registerPrivateSetter(
-			"Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "d");
+		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "d");
 		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "bd");
 		
 		this.presenceDir = new File(util().getModsFolder(), "presencefootsteps/");

@@ -61,12 +61,11 @@ public class PFSolver implements Solver
 		{
 			String[] noAssos = this.noAssosPattern.split(assos);
 			// Get unique name of block
-			this.isolator.getDefaultStepPlayer().playStep(
-				ply, i(noAssos[1]), i(noAssos[2]), i(noAssos[3]), Block.getBlockFromName(noAssos[4]));
+			isolator.getDefaultStepPlayer().playStep(ply, i(noAssos[1]), i(noAssos[2]), i(noAssos[3]), Block.getBlockFromName(noAssos[4]));
 		}
 		else
 		{
-			this.isolator.getAcoustics().playAcoustic(ply, assos, eventType);
+			isolator.getAcoustics().playAcoustic(ply, assos, eventType);
 		}
 	}
 	
