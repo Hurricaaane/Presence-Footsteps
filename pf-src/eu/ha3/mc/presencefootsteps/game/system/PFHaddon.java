@@ -309,6 +309,7 @@ public class PFHaddon extends HaddonImpl
 		this.isolator.setPrimitiveMap(primitiveMap);
 	}
 	
+	@SuppressWarnings("resource")
 	private void reloadAcoustics(List<ResourcePackRepository.Entry> repo)
 	{
 		AcousticsManager acoustics = new AcousticsManager(this.isolator);
@@ -318,9 +319,7 @@ public class PFHaddon extends HaddonImpl
 		{
 			try
 			{
-				String jasonString =
-					new Scanner(this.dealer.openAcoustics(pack.getResourcePack())).useDelimiter("\\Z").next();
-				
+				String jasonString = new Scanner(this.dealer.openAcoustics(pack.getResourcePack())).useDelimiter("\\Z").next();
 				new JasonAcoustics_Engine0("").parseJSON(jasonString, acoustics);
 				working = working + 1;
 			}

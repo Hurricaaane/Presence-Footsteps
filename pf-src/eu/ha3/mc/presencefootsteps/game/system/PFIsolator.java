@@ -18,7 +18,6 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.VariatorSettable;
 
 public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 {
-	@SuppressWarnings("unused")
 	private PFHaddon mod; // Unused?
 	
 	private Library acoustics;

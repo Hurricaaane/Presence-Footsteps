@@ -58,11 +58,11 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 		if (Minecraft.getMinecraft().theWorld.getBlock(xx, yy + 1, zz) == Blocks.snow_layer)
 		{
 			soundType = Blocks.snow_layer.stepSound;
-			entity.playSound(soundType.func_150498_e(), soundType.func_150497_c() * 0.15F, soundType.func_150494_d());
+			entity.playSound(soundType.func_150498_e(), soundType.getVolume() * 0.15F, soundType.getPitch());
 		}
 		else if (!blockID.getMaterial().isLiquid())
 		{
-			entity.playSound(soundType.func_150498_e(), soundType.func_150497_c() * 0.15F, soundType.func_150494_d());
+			entity.playSound(soundType.func_150498_e(), soundType.getVolume() * 0.15F, soundType.getPitch());
 		}
 	}
 	
