@@ -57,7 +57,7 @@ import eu.ha3.util.property.simple.InputStreamConfigProperty;
 public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, SupportsTickEvents, IResourceManagerReloadListener, NotifiableHaddon, Ha3HoldActions, SupportsKeyEvents {
 	// Identity
 	protected final String NAME = "Presence Footsteps";
-	protected final int VERSION = 4;
+	protected final int VERSION = 5;
 	protected final String FOR = "1.8";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	protected final Identity identity = new HaddonIdentity(NAME, VERSION, FOR, ADDRESS);
@@ -177,7 +177,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	
 	private void reloadConfig() {
 		config = new ConfigProperty();
-		updateNotifier.fillDefaults(this.config);
+		updateNotifier.fillDefaults(config);
+		config.setProperty("update_found.enabled", false);
 		config.setProperty("user.volume.0-to-100", 70);
 		config.setProperty("mlp.detected", false);
 		config.setProperty("custom.stance", 0);

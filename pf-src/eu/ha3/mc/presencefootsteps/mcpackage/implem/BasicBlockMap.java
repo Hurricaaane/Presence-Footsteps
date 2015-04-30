@@ -17,23 +17,27 @@ public class BasicBlockMap implements BlockMap {
 	}
 	
 	@Override
-	public String getBlockMaterial(IBlockState state) {
-		return getForMapping(PF172Helper.nameOf(state.getBlock()) + "^" + state.getBlock().getMetaFromState(state));
+	public String getBlockMap(IBlockState state) {
+		String blockName = PF172Helper.nameOf(state.getBlock());
+		int meta = state.getBlock().getMetaFromState(state);
+		if (blockMap.containsKey(blockName + "^" + meta)) {
+			return blockMap.get(blockName + "^" + meta);
+		} else if (blockMap.containsKey(blockName)) {
+			return blockMap.get(blockName);
+		}
+		return null;
 	}
 	
 	@Override
 	public String getBlockMapSubstrate(IBlockState state, String substrate) {
-		return getForMapping(PF172Helper.nameOf(state.getBlock()) + "^" + state.getBlock().getMetaFromState(state) + "." + substrate);
-	}
-	
-	private String getForMapping(String mapping) {
-		String material = null;
-		if (this.blockMap.containsKey(mapping)) {
-			material = this.blockMap.get(mapping);
-		} else if (this.blockMap.containsKey(mapping)) {
-			material = this.blockMap.get(mapping);
+		String blockName = PF172Helper.nameOf(state.getBlock());
+		int meta = state.getBlock().getMetaFromState(state);
+		if (blockMap.containsKey(blockName + "^" + meta + "." + substrate)) {
+			return blockMap.get(blockName + "^" + meta + "." + substrate);
+		} else if (blockMap.containsKey(blockName + "." + substrate)) {
+			return blockMap.get(blockName + "." + substrate);
 		}
-		return material;
+		return null;
 	}
 	
 	@Override

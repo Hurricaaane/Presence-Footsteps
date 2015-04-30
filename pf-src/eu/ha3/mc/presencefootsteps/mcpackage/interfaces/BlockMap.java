@@ -16,7 +16,7 @@ public interface BlockMap
 	 * @param meta
 	 * @return
 	 */
-	public abstract String getBlockMaterial(IBlockState state);
+	public abstract String getBlockMap(IBlockState state);
 	
 	/**
 	 * This will return null if the substrate does not resolve in the selected

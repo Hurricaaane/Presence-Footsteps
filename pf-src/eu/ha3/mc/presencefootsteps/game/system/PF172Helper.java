@@ -96,7 +96,6 @@ public class PF172Helper
 	 */
 	public static String nameOf(Block block)
 	{
-		// RegistryNamespaced
-		return ((ResourceLocation)Block.blockRegistry.getNameForObject(block)).getResourcePath();
+		return ((ResourceLocation)Block.blockRegistry.getNameForObject(block)).toString(); // RegistryNamespaced
 	}
 }

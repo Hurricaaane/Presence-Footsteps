@@ -6,20 +6,21 @@ import net.minecraft.block.state.IBlockState;
 public class Association {
 	
 	private IBlockState blockState;
-	private String data;
-	
-	private boolean isPrimative = false;
-	private boolean noAssociation = false;
 	
 	public int x;
 	public int y;
 	public int z;
 	
+	private String data = null;
+	
+	private boolean noAssociation = false;
+	private boolean isPrimative = false;
+	
 	public Association() {
 	}
 	
 	public Association(String raw) {
-		data = raw;
+		setAssociation(raw);
 	}
 	
 	public Association(IBlockState state, int xx, int yy, int zz) {
@@ -40,6 +41,7 @@ public class Association {
 	
 	public Association setAssociation(String association) {
 		data = association;
+		noAssociation = false;
 		return this;
 	}
 	
@@ -52,7 +54,7 @@ public class Association {
 		return noAssociation;
 	}
 	
-	public Association setPrimative(String primative) {
+	public Association setPrimitive(String primative) {
 		data = primative;
 		isPrimative = true;
 		return this;
@@ -71,6 +73,6 @@ public class Association {
 	}
 	
 	public boolean isNotEmitter() {
-		return data.contentEquals("NOT_EMITTER");
+		return data != null && data.contentEquals("NOT_EMITTER");
 	}
 }

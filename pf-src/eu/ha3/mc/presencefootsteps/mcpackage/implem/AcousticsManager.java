@@ -16,6 +16,7 @@ import eu.ha3.mc.presencefootsteps.engine.implem.AcousticsLibrary;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
+import eu.ha3.mc.presencefootsteps.game.system.Association;
 import eu.ha3.mc.presencefootsteps.log.PFLog;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
@@ -49,20 +50,17 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	}
 	
 	@Override
-	public void playStep(EntityLivingBase entity, int xx, int yy, int zz, Block blockID)
+	public void playStep(EntityLivingBase entity, Association assos)
 	{
-		if (blockID != null && blockID.stepSound != null) {
-			Block.SoundType soundType = blockID.stepSound;
+		Block block = assos.getBlock();
+		if (!block.getMaterial().isLiquid() && block.stepSound != null) {
+			Block.SoundType soundType = block.stepSound;
 			
-			if (Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(xx, yy + 1, zz)).getBlock() == Blocks.snow_layer)
-			{
+			if (Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(assos.x, assos.y + 1, assos.z)).getBlock() == Blocks.snow_layer) {
 				soundType = Blocks.snow_layer.stepSound;
-				entity.playSound(soundType.getStepSound(), soundType.getVolume() * 0.15F, soundType.getFrequency());
 			}
-			else if (!blockID.getMaterial().isLiquid())
-			{
-				entity.playSound(soundType.getStepSound(), soundType.getVolume() * 0.15F, soundType.getFrequency());
-			}
+			
+			entity.playSound(soundType.getStepSound(), soundType.getVolume() * 0.15F, soundType.getFrequency());
 		}
 	}
 	
@@ -75,16 +73,14 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 		{
 			if (options.hasOption("delay_min") && options.hasOption("delay_max"))
 			{
-				long delay =
-					randAB(this.random, (Long) options.getOption("delay_min"), (Long) options.getOption("delay_max"));
+				long delay = randAB(this.random, (Long) options.getOption("delay_min"), (Long) options.getOption("delay_max"));
 				
 				if (delay < this.minimum)
 				{
 					this.minimum = delay;
 				}
 				
-				this.pending.add(new PendingSound(location, soundName, volume, pitch, null, System.currentTimeMillis()
-					+ delay, options.hasOption("skippable") ? -1 : (Long) options.getOption("delay_max")));
+				this.pending.add(new PendingSound(location, soundName, volume, pitch, null, System.currentTimeMillis() + delay, options.hasOption("skippable") ? -1 : (Long) options.getOption("delay_max")));
 			}
 			else
 			{
