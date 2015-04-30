@@ -77,8 +77,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	private PFIsolator isolator;
 	
 	// Binds
-	private final int keyBindDefaultCode = 0;
 	private KeyBinding keyBindingMain;
+	private final int keyBindDefaultCode = Keyboard.KEY_P;
 	private final KeyWatcher watcher = new KeyWatcher(this);
 	private final Ha3KeyManager keyManager = new Ha3KeyManager();
 	
@@ -125,7 +125,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 			}
 		}
 		
-		keyBindingMain = new KeyBinding("Presence Footsteps", Keyboard.KEY_P, "key.categories.misc");
+		keyBindingMain = new KeyBinding("Presence Footsteps", keyBindDefaultCode, "key.categories.misc");
 		Minecraft.getMinecraft().gameSettings.keyBindings = ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, keyBindingMain);
 		keyBindingMain.setKeyCode(getConfig().getInteger("key.code"));
 		KeyBinding.resetKeyBindingArrayAndHash();
@@ -182,13 +182,13 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		config.setProperty("user.volume.0-to-100", 70);
 		config.setProperty("mlp.detected", false);
 		config.setProperty("custom.stance", 0);
-		config.setProperty("key.code", this.keyBindDefaultCode);
+		config.setProperty("key.code", keyBindDefaultCode);
 		config.commit();
 		
-		boolean fileExisted = new File(this.presenceDir, "userconfig.cfg").exists();
+		boolean fileExisted = new File(presenceDir, "userconfig.cfg").exists();
 		
 		try {
-			config.setSource(new File(this.presenceDir, "userconfig.cfg").getCanonicalPath());
+			config.setSource(new File(presenceDir, "userconfig.cfg").getCanonicalPath());
 			config.load();
 		} catch (IOException e) {
 			e.printStackTrace();
