@@ -41,13 +41,13 @@ public class GenerateBlockReport
 			{
 				soundName = "NO_STEP";
 			}
-			else if (block.stepSound.field_150501_a == null)
+			else if (block.stepSound.soundName == null)
 			{
 				soundName = "NO_SOUND";
 			}
 			else
 			{
-				soundName = block.stepSound.field_150501_a;
+				soundName = block.stepSound.soundName;
 			}
 			
 			if (block instanceof BlockLiquid)

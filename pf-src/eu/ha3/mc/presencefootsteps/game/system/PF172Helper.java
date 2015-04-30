@@ -1,7 +1,10 @@
 package eu.ha3.mc.presencefootsteps.game.system;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 /*
@@ -63,8 +66,8 @@ public class PF172Helper
 	 */
 	private static Block getBlockAt(World world, int x, int y, int z)
 	{
-		Block block = world.getBlock(x, y, z);
-		return block;
+		IBlockState state = world.getBlockState(new BlockPos(x,y,z));
+		return state.getBlock();
 	}
 	
 	/**
@@ -94,6 +97,6 @@ public class PF172Helper
 	public static String nameOf(Block block)
 	{
 		// RegistryNamespaced
-		return Block.blockRegistry.getNameForObject(block);
+		return ((ResourceLocation)Block.blockRegistry.getNameForObject(block)).getResourcePath();
 	}
 }

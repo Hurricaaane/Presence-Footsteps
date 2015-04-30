@@ -1,6 +1,7 @@
 package eu.ha3.mc.presencefootsteps.game.user;
 
 import java.io.File;
+import java.io.IOException;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -207,7 +208,7 @@ public class PFGuiMenu extends GuiScreen
 	 * Called when the mouse is clicked.
 	 */
 	@Override
-	protected void mouseClicked(int par1, int par2, int par3)
+	protected void mouseClicked(int par1, int par2, int par3) throws IOException
 	{
 		if (this.buttonId >= 0)
 		{

@@ -17,6 +17,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.lwjgl.input.Keyboard;
 
 import eu.ha3.easy.EdgeModel;
 import eu.ha3.easy.EdgeTrigger;
@@ -53,20 +54,17 @@ import eu.ha3.util.property.simple.InputStreamConfigProperty;
 
 /* x-placeholder-wtfplv2 */
 
-public class PFHaddon extends HaddonImpl
-	implements SupportsFrameEvents, SupportsTickEvents, IResourceManagerReloadListener, NotifiableHaddon,
-	Ha3HoldActions, SupportsKeyEvents
-{
+public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, SupportsTickEvents, IResourceManagerReloadListener, NotifiableHaddon, Ha3HoldActions, SupportsKeyEvents {
 	// Identity
 	protected final String NAME = "Presence Footsteps";
 	protected final int VERSION = 4;
-	protected final String FOR = "1.7.10";
+	protected final String FOR = "1.8";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
-	protected final Identity identity = new HaddonIdentity(this.NAME, this.VERSION, this.FOR, this.ADDRESS);
+	protected final Identity identity = new HaddonIdentity(NAME, VERSION, FOR, ADDRESS);
 	
 	// NotifiableHaddon and UpdateNotifier
 	private ConfigProperty config; // Can't be final
-	private final Chatter chatter = new Chatter(this, this.NAME);
+	private final Chatter chatter = new Chatter(this, NAME);
 	private UpdateNotifier updateNotifier;
 	
 	// Meta
@@ -93,64 +91,51 @@ public class PFHaddon extends HaddonImpl
 	private int tickRound;
 	
 	@Override
-	public void onLoad()
-	{
-		this.updateNotifier = new UpdateNotifier(this, "http://q.mc.ha3.eu/query/pf-litemod-version.json?ver=%d");
+	public void onLoad() {
+		updateNotifier = new UpdateNotifier(this, "http://q.mc.ha3.eu/query/pf-litemod-version.json?ver=%d");
 		
-		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "d");
-		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "bd");
+		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "h");
+		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "aW");
 		
-		this.presenceDir = new File(util().getModsFolder(), "presencefootsteps/");
+		presenceDir = new File(util().getModsFolder(), "presencefootsteps/");
 		
-		if (!this.presenceDir.exists())
-		{
-			this.presenceDir.mkdirs();
-		}
+		if (!presenceDir.exists()) presenceDir.mkdirs();
 		
-		this.debugButton = new EdgeTrigger(new EdgeModel() {
+		debugButton = new EdgeTrigger(new EdgeModel() {
 			@Override
-			public void onTrueEdge()
-			{
-				PFHaddon.this.pressedOptionsTime = System.currentTimeMillis();
-				
+			public void onTrueEdge() {
+				pressedOptionsTime = System.currentTimeMillis();
 				PFLog.setDebugEnabled(true);
 				reloadEverything(false);
 			}
 			
 			@Override
-			public void onFalseEdge()
-			{
-			}
+			public void onFalseEdge() {}
 		});
 		
-		// Config is loaded here
-		reloadEverything(false);
+		reloadEverything(false);// Config is loaded here
 		
-		if (isInstalledMLP())
-		{
-			if (getConfig().getBoolean("mlp.detected") == false)
-			{
+		if (isInstalledMLP()) {
+			if (getConfig().getBoolean("mlp.detected") == false) {
 				getConfig().setProperty("mlp.detected", true);
 				getConfig().setProperty("custom.stance", 1);
 				saveConfig();
 				
-				this.mlpDetectedFirst = true;
+				mlpDetectedFirst = true;
 			}
 		}
 		
-		this.keyBindingMain = new KeyBinding("Presence Footsteps", 0, "key.categories.misc");
-		Minecraft.getMinecraft().gameSettings.keyBindings =
-			ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, this.keyBindingMain);
-		this.keyBindingMain.setKeyCode(getConfig().getInteger("key.code"));
+		keyBindingMain = new KeyBinding("Presence Footsteps", Keyboard.KEY_P, "key.categories.misc");
+		Minecraft.getMinecraft().gameSettings.keyBindings = ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, keyBindingMain);
+		keyBindingMain.setKeyCode(getConfig().getInteger("key.code"));
 		KeyBinding.resetKeyBindingArrayAndHash();
 		
-		this.watcher.add(this.keyBindingMain);
-		this.keyManager.addKeyBinding(this.keyBindingMain, new Ha3KeyHolding(this, 7));
+		watcher.add(keyBindingMain);
+		keyManager.addKeyBinding(keyBindingMain, new Ha3KeyHolding(this, 7));
 		
 		// Hooking
 		IResourceManager resMan = Minecraft.getMinecraft().getResourceManager();
-		if (resMan instanceof IReloadableResourceManager)
-		{
+		if (resMan instanceof IReloadableResourceManager) {
 			((IReloadableResourceManager) resMan).registerReloadListener(this);
 		}
 		
@@ -158,375 +143,291 @@ public class PFHaddon extends HaddonImpl
 		((OperatorCaster) op()).setFrameEnabled(true);
 	}
 	
-	public void reloadEverything(boolean nested)
-	{
-		this.isolator = new PFIsolator(this);
+	public void reloadEverything(boolean nested) {
+		isolator = new PFIsolator(this);
 		
 		reloadConfig();
 		
-		List<ResourcePackRepository.Entry> repo = this.dealer.findResourcePacks();
+		List<ResourcePackRepository.Entry> repo = dealer.findResourcePacks();
 		if (repo.size() == 0)
 		{
 			PFLog.log("Presence Footsteps didn't find any compatible resource pack.");
-			this.hasResourcePacks = false;
-			this.hasDisabledResourcePacks = this.dealer.findDisabledResourcePacks().size() > 0;
+			hasResourcePacks = false;
+			hasDisabledResourcePacks = dealer.findDisabledResourcePacks().size() > 0;
 			
-			this.isolator.setGenerator(null);
+			isolator.setGenerator(null);
 			
 			return;
 		}
-		this.hasResourcePacks = true;
-		this.hasDisabledResourcePacks = false;
+		hasResourcePacks = true;
+		hasDisabledResourcePacks = false;
 		
-		for (ResourcePackRepository.Entry pack : repo)
-		{
+		for (ResourcePackRepository.Entry pack : repo) {
 			PFLog.debug("Will load: " + pack.getResourcePackName());
 		}
 		
 		reloadBlockMap(repo);
 		reloadPrimitiveMap(repo);
 		reloadAcoustics(repo);
-		this.isolator.setSolver(new PFSolver(this.isolator));
+		isolator.setSolver(new PFSolver(isolator));
 		reloadVariator(repo);
 		
-		this.isolator.setGenerator(getConfig().getInteger("custom.stance") == 0
-			? new PFReaderH(this.isolator, util()) : new PFReaderQP(this.isolator, util()));
+		isolator.setGenerator(getConfig().getInteger("custom.stance") == 0 ? new PFReaderH(isolator, util()) : new PFReaderQP(isolator, util()));
 	}
 	
-	private void reloadConfig()
-	{
-		this.config = new ConfigProperty();
-		this.updateNotifier.fillDefaults(this.config);
-		this.config.setProperty("user.volume.0-to-100", 70);
-		this.config.setProperty("mlp.detected", false);
-		this.config.setProperty("custom.stance", 0);
-		this.config.setProperty("key.code", this.keyBindDefaultCode);
-		this.config.commit();
+	private void reloadConfig() {
+		config = new ConfigProperty();
+		updateNotifier.fillDefaults(this.config);
+		config.setProperty("user.volume.0-to-100", 70);
+		config.setProperty("mlp.detected", false);
+		config.setProperty("custom.stance", 0);
+		config.setProperty("key.code", this.keyBindDefaultCode);
+		config.commit();
 		
 		boolean fileExisted = new File(this.presenceDir, "userconfig.cfg").exists();
 		
-		try
-		{
-			this.config.setSource(new File(this.presenceDir, "userconfig.cfg").getCanonicalPath());
-			this.config.load();
-		}
-		catch (IOException e)
-		{
+		try {
+			config.setSource(new File(this.presenceDir, "userconfig.cfg").getCanonicalPath());
+			config.load();
+		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Error caused config not to work: " + e.getMessage());
 		}
 		
-		if (!fileExisted)
-		{
-			this.config.save();
+		if (!fileExisted) {
+			config.save();
 		}
 		
-		this.updateNotifier.loadConfig(this.config);
+		updateNotifier.loadConfig(config);
 	}
 	
-	private void reloadVariator(List<ResourcePackRepository.Entry> repo)
-	{
+	private void reloadVariator(List<ResourcePackRepository.Entry> repo) {
 		Variator var = new NormalVariator();
 		
 		int working = 0;
-		for (ResourcePackRepository.Entry pack : repo)
-		{
-			try
-			{
+		for (ResourcePackRepository.Entry pack : repo) {
+			try {
 				InputStreamConfigProperty config = new InputStreamConfigProperty();
 				config.loadStream(this.dealer.openVariator(pack.getResourcePack()));
 				
 				var.loadConfig(config);
 				working = working + 1;
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				PFLog.debug("No variator found in " + pack.getResourcePackName() + ": " + e.getMessage());
 			}
 		}
-		if (working == 0)
-		{
+		if (working == 0) {
 			PFLog.log("No variators found in " + repo.size() + " packs!");
 		}
 		
-		this.isolator.setVariator(var);
+		isolator.setVariator(var);
 	}
 	
-	private void reloadBlockMap(List<ResourcePackRepository.Entry> repo)
-	{
+	private void reloadBlockMap(List<ResourcePackRepository.Entry> repo) {
 		BlockMap blockMap = new LegacyCapableBlockMap();
 		
 		int working = 0;
-		for (ResourcePackRepository.Entry pack : repo)
-		{
-			try
-			{
+		for (ResourcePackRepository.Entry pack : repo) {
+			try {
 				InputStreamConfigProperty blockSound = new InputStreamConfigProperty();
 				blockSound.loadStream(this.dealer.openBlockMap(pack.getResourcePack()));
 				
 				new PropertyBlockMap_Engine0().setup(blockSound, blockMap);
 				working = working + 1;
-			}
-			catch (IOException e)
-			{
+			} catch (IOException e) {
 				PFLog.debug("No blockmap found in " + pack.getResourcePackName() + ": " + e.getMessage());
 			}
 		}
-		if (working == 0)
-		{
+		if (working == 0) {
 			PFLog.log("No blockmaps found in " + repo.size() + " packs!");
 		}
 		
-		this.isolator.setBlockMap(blockMap);
+		isolator.setBlockMap(blockMap);
 	}
 	
-	private void reloadPrimitiveMap(List<ResourcePackRepository.Entry> repo)
-	{
+	private void reloadPrimitiveMap(List<ResourcePackRepository.Entry> repo) {
 		PrimitiveMap primitiveMap = new BasicPrimitiveMap();
 		
 		int working = 0;
-		for (ResourcePackRepository.Entry pack : repo)
-		{
-			try
-			{
+		for (ResourcePackRepository.Entry pack : repo) {
+			try {
 				InputStreamConfigProperty primitiveSound = new InputStreamConfigProperty();
-				primitiveSound.loadStream(this.dealer.openPrimitiveMap(pack.getResourcePack()));
-				
+				primitiveSound.loadStream(dealer.openPrimitiveMap(pack.getResourcePack()));
 				new PropertyPrimitiveMap_Engine0().setup(primitiveSound, primitiveMap);
 				working = working + 1;
-			}
-			catch (IOException e)
-			{
+			} catch (IOException e) {
 				PFLog.debug("No primitivemap found in " + pack.getResourcePackName() + ": " + e.getMessage());
 			}
 		}
-		if (working == 0)
-		{
+		if (working == 0) {
 			PFLog.log("No blockmaps found in " + repo.size() + " packs!");
 		}
 		
-		this.isolator.setPrimitiveMap(primitiveMap);
+		isolator.setPrimitiveMap(primitiveMap);
 	}
 	
 	@SuppressWarnings("resource")
-	private void reloadAcoustics(List<ResourcePackRepository.Entry> repo)
-	{
+	private void reloadAcoustics(List<ResourcePackRepository.Entry> repo) {
 		AcousticsManager acoustics = new AcousticsManager(this.isolator);
 		
 		int working = 0;
-		for (ResourcePackRepository.Entry pack : repo)
-		{
-			try
-			{
-				String jasonString = new Scanner(this.dealer.openAcoustics(pack.getResourcePack())).useDelimiter("\\Z").next();
+		for (ResourcePackRepository.Entry pack : repo) {
+			try {
+				String jasonString = new Scanner(dealer.openAcoustics(pack.getResourcePack())).useDelimiter("\\Z").next();
 				new JasonAcoustics_Engine0("").parseJSON(jasonString, acoustics);
 				working = working + 1;
-			}
-			catch (IOException e)
-			{
+			} catch (IOException e) {
 				PFLog.debug("No acoustics found in " + pack.getResourcePackName() + ": " + e.getMessage());
 			}
 		}
-		if (working == 0)
-		{
+		if (working == 0) {
 			PFLog.log("No blockmaps found in " + repo.size() + " packs!");
 		}
 		
-		this.isolator.setAcoustics(acoustics);
-		this.isolator.setSoundPlayer(new UserConfigSoundPlayerWrapper(acoustics, this.config));
-		this.isolator.setDefaultStepPlayer(acoustics);
+		isolator.setAcoustics(acoustics);
+		isolator.setSoundPlayer(new UserConfigSoundPlayerWrapper(acoustics, config));
+		isolator.setDefaultStepPlayer(acoustics);
 	}
 	
-	//
-	
-	private boolean isInstalledMLP()
-	{
+	private boolean isInstalledMLP() {
 		return Ha3StaticUtilities.classExists("com.minelittlepony.minelp.Pony", this);
 	}
 	
-	//
-	
 	@Override
-	public void onFrame(float semi)
-	{
+	public void onFrame(float semi) {
 		EntityPlayer ply = Minecraft.getMinecraft().thePlayer;
 		
-		if (ply == null)
-			return;
+		if (ply == null) return;
 		
-		this.isolator.onFrame();
+		isolator.onFrame();
 		
 		boolean keysDown = util().areKeysDown(29, 42, 33);
-		this.debugButton.signalState(keysDown); // CTRL SHIFT F
-		if (keysDown && System.currentTimeMillis() - this.pressedOptionsTime > 1000)
-		{
+		debugButton.signalState(keysDown); // CTRL SHIFT F
+		if (keysDown && System.currentTimeMillis() - this.pressedOptionsTime > 1000) {
 			displayMenu();
 		}
 		
-		try
-		{
-			//nextStepDistance
-			util().setPrivate(ply, "Entity_nextStepDistance", Integer.MAX_VALUE);
+		try {
+			util().setPrivate(ply, "Entity_nextStepDistance", Integer.MAX_VALUE); //nextStepDistance
 			//util().setPrivateValueLiteral(Entity.class, ply, "c", 37, Integer.MAX_VALUE);
 			//util().setPrivateValueLiteral(Entity.class, ply, "c", 37, 0);
-			
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		if (!this.firstTickPassed)
-		{
-			this.firstTickPassed = true;
-			this.updateNotifier.attempt();
-			if (this.mlpDetectedFirst)
-			{
-				this.chatter
-					.printChat(
-						ChatColorsSimple.COLOR_TEAL,
-						"Mine Little Pony has been detected! ",
-						ChatColorsSimple.COLOR_WHITE,
-						"4-legged mode has been enabled, which will make running sound like galloping amongst other things. ",
-						ChatColorsSimple.COLOR_GRAY,
-						"You can hold down for 1 second the combination LEFT CTRL + LEFT SHIFT + F to disable it.");
+		if (!this.firstTickPassed) {
+			firstTickPassed = true;
+			updateNotifier.attempt();
+			if (mlpDetectedFirst) {
+				chatter.printChat(ChatColorsSimple.COLOR_TEAL, "Mine Little Pony has been detected! ", ChatColorsSimple.COLOR_WHITE, "4-legged mode has been enabled, which will make running sound like galloping amongst other things. ", ChatColorsSimple.COLOR_GRAY, "You can hold down for 1 second the combination LEFT CTRL + LEFT SHIFT + F to disable it.");
 			}
 			
-			if (!this.hasResourcePacks)
-			{
-				this.hasResourcePacks_FixMe = true;
-				if (this.hasDisabledResourcePacks)
-				{
-					this.chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack not enabled yet!");
-					this.chatter.printChatShort(ChatColorsSimple.COLOR_WHITE, "You need to activate "
-						+ "\"Presence Footsteps Resource Pack\" in the Minecraft Options menu for it to run.");
+			if (!hasResourcePacks) {
+				hasResourcePacks_FixMe = true;
+				if (hasDisabledResourcePacks) {
+					chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack not enabled yet!");
+					chatter.printChatShort(ChatColorsSimple.COLOR_WHITE, "You need to activate \"Presence Footsteps Resource Pack\" in the Minecraft Options menu for it to run.");
+				} else {
+					chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack missing from resourcepacks/!");
+					chatter.printChatShort(ChatColorsSimple.COLOR_WHITE, "You may have forgotten to put the Resource Pack file into your resourcepacks/ folder.");
 				}
-				else
-				{
-					this.chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack missing from resourcepacks/!");
-					this.chatter.printChatShort(
-						ChatColorsSimple.COLOR_WHITE,
-						"You may have forgotten to put the Resource Pack file into your resourcepacks/ folder.");
-				}
-				if (getConfig().getInteger("key.code") == this.keyBindDefaultCode)
-				{
-					this.chatter.printChatShort(
-						ChatColorsSimple.COLOR_GRAY,
-						"There is also a Presence Footsteps menu key in the Controls menu.");
+				if (getConfig().getInteger("key.code") == this.keyBindDefaultCode) {
+					chatter.printChatShort(ChatColorsSimple.COLOR_GRAY, "There is also a Presence Footsteps menu key in the Controls menu.");
 				}
 			}
 		}
-		if (this.hasResourcePacks_FixMe && this.hasResourcePacks)
-		{
-			this.hasResourcePacks_FixMe = false;
-			this.chatter.printChat(ChatColorsSimple.COLOR_BRIGHTGREEN, "It should work now!");
+		if (hasResourcePacks_FixMe && hasResourcePacks) {
+			hasResourcePacks_FixMe = false;
+			chatter.printChat(ChatColorsSimple.COLOR_BRIGHTGREEN, "It should work now!");
 		}
 	}
 	
-	private void displayMenu()
-	{
-		if (util().isCurrentScreen(null))
-		{
+	private void displayMenu() {
+		if (util().isCurrentScreen(null)) {
 			Minecraft.getMinecraft().displayGuiScreen(new PFGuiMenu((GuiScreen) util().getCurrentScreen(), this));
 			PFLog.setDebugEnabled(false);
 		}
 	}
 	
-	public boolean hasResourcePacksLoaded()
-	{
-		return this.hasResourcePacks;
+	public boolean hasResourcePacksLoaded() {
+		return hasResourcePacks;
 	}
 	
-	public boolean hasNonethelessResourcePacksInstalled()
-	{
-		return this.hasDisabledResourcePacks;
-	}
-	
-	@Override
-	public ConfigProperty getConfig()
-	{
-		return this.config;
+	public boolean hasNonethelessResourcePacksInstalled() {
+		return hasDisabledResourcePacks;
 	}
 	
 	@Override
-	public void saveConfig()
-	{
-		// If there were changes...
-		if (this.config.commit())
-		{
+	public ConfigProperty getConfig() {
+		return config;
+	}
+	
+	@Override
+	public void saveConfig() {
+		if (config.commit()) { // If there were changes...
 			PFLog.log("Saving configuration...");
-			
-			// Write changes on disk.
-			this.config.save();
+			config.save(); // Write changes on disk.
 		}
 	}
 	
 	@Override
-	public void onResourceManagerReload(IResourceManager var1)
-	{
+	public void onResourceManagerReload(IResourceManager var1) {
 		PFLog.log("Resource Pack reload detected...");
 		reloadEverything(false);
 	}
 	
 	@Override
-	public Chatter getChatter()
-	{
-		return this.chatter;
+	public Chatter getChatter() {
+		return chatter;
 	}
 	
 	@Override
-	public Identity getIdentity()
-	{
-		return this.identity;
+	public Identity getIdentity() {
+		return identity;
 	}
 	
 	@Override
-	public void beginPress()
-	{
+	public void beginPress() {
 		displayMenu();
 	}
 	
 	@Override
-	public void endPress()
-	{
+	public void endPress() {
+		
 	}
 	
 	@Override
-	public void shortPress()
-	{
+	public void shortPress() {
+		
 	}
 	
 	@Override
-	public void beginHold()
-	{
+	public void beginHold() {
+		
 	}
 	
 	@Override
-	public void endHold()
-	{
+	public void endHold() {
+		
 	}
 	
 	@Override
-	public void onKey(KeyBinding event)
-	{
-		this.keyManager.handleKeyDown(event);
+	public void onKey(KeyBinding event) {
+		keyManager.handleKeyDown(event);
 	}
 	
 	@Override
-	public void onTick()
-	{
-		if (this.tickRound == 0)
-		{
-			int keyCode = this.keyBindingMain.getKeyCode();
-			if (keyCode != this.config.getInteger("key.code"))
-			{
+	public void onTick() {
+		if (tickRound == 0) {
+			int keyCode = keyBindingMain.getKeyCode();
+			if (keyCode != config.getInteger("key.code")) {
 				PFLog.log("Key binding changed. Saving...");
-				this.config.setProperty("key.code", keyCode);
+				config.setProperty("key.code", keyCode);
 				saveConfig();
 			}
 		}
-		this.watcher.onTick();
-		this.keyManager.handleRuntime();
-		this.tickRound = (this.tickRound + 1) % 100;
+		watcher.onTick();
+		keyManager.handleRuntime();
+		tickRound = (this.tickRound + 1) % 100;
 	}
 }

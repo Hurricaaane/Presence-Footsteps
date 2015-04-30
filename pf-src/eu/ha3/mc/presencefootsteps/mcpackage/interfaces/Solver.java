@@ -2,6 +2,7 @@ package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
 
 import net.minecraft.entity.player.EntityPlayer;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
+import eu.ha3.mc.presencefootsteps.game.system.Association;
 
 /* x-placeholder-wtfplv2 */
 
@@ -14,7 +15,7 @@ public interface Solver
 	 * @param assos
 	 * @param eventType
 	 */
-	public abstract void playAssociation(EntityPlayer ply, String assos, EventType eventType);
+	public abstract void playAssociation(EntityPlayer ply, Association assos, EventType eventType);
 	
 	/**
 	 * Find an association for a player particular foot. This will fetch the
@@ -32,8 +33,7 @@ public interface Solver
 	 * @param isRightFoot
 	 * @return
 	 */
-	public abstract
-		String findAssociationForPlayer(EntityPlayer ply, double verticalOffsetAsMinus, boolean isRightFoot);
+	public abstract Association findAssociationForPlayer(EntityPlayer ply, double verticalOffsetAsMinus, boolean isRightFoot);
 	
 	/**
 	 * Find an association for a player. This will take the block right below
@@ -49,7 +49,7 @@ public interface Solver
 	 * @param verticalOffsetAsMinus
 	 * @return
 	 */
-	public abstract String findAssociationForPlayer(EntityPlayer ply, double verticalOffsetAsMinus);
+	public abstract Association findAssociationForPlayer(EntityPlayer ply, double verticalOffsetAsMinus);
 	
 	/**
 	 * Find an association for a player, and a location. This will try to find
@@ -67,7 +67,7 @@ public interface Solver
 	 * @param zz
 	 * @return
 	 */
-	public abstract String findAssociationForLocation(EntityPlayer ply, int xx, int yy, int zz);
+	public abstract Association findAssociationForLocation(EntityPlayer ply, int xx, int yy, int zz);
 	
 	/**
 	 * Find an association for a certain block assuming the player is standing
@@ -87,7 +87,7 @@ public interface Solver
 	 * @param zz
 	 * @return
 	 */
-	public abstract String findAssociationForBlock(int xx, int yy, int zz);
+	public abstract Association findAssociationForBlock(int xx, int yy, int zz);
 	
 	/**
 	 * Find an association for a certain block assuming the player is standing
@@ -100,7 +100,7 @@ public interface Solver
 	 * @param strategy
 	 * @return
 	 */
-	public abstract String findAssociationForBlock(int xx, int yy, int zz, String strategy);
+	public abstract Association findAssociationForBlock(int xx, int yy, int zz, String strategy);
 	
 	/**
 	 * Play special sounds that must stop the usual footstep figuring things out

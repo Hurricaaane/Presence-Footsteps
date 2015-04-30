@@ -3,62 +3,41 @@ package eu.ha3.mc.presencefootsteps.mcpackage.implem;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import net.minecraft.block.state.IBlockState;
+import eu.ha3.mc.presencefootsteps.game.system.PF172Helper;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.BlockMap;
 
 /* x-placeholder-wtfplv2 */
 
-public class BasicBlockMap implements BlockMap
-{
+public class BasicBlockMap implements BlockMap {
 	private Map<String, String> blockMap;
 	
-	public BasicBlockMap()
-	{
-		this.blockMap = new LinkedHashMap<String, String>();
+	public BasicBlockMap() {
+		blockMap = new LinkedHashMap<String, String>();
 	}
 	
 	@Override
-	public String getBlockMap(String blockName, int meta)
-	{
+	public String getBlockMaterial(IBlockState state) {
+		return getForMapping(PF172Helper.nameOf(state.getBlock()) + "^" + state.getBlock().getMetaFromState(state));
+	}
+	
+	@Override
+	public String getBlockMapSubstrate(IBlockState state, String substrate) {
+		return getForMapping(PF172Helper.nameOf(state.getBlock()) + "^" + state.getBlock().getMetaFromState(state) + "." + substrate);
+	}
+	
+	private String getForMapping(String mapping) {
 		String material = null;
-		
-		if (this.blockMap.containsKey(blockName + "^" + meta))
-		{
-			material = this.blockMap.get(blockName + "^" + meta);
+		if (this.blockMap.containsKey(mapping)) {
+			material = this.blockMap.get(mapping);
+		} else if (this.blockMap.containsKey(mapping)) {
+			material = this.blockMap.get(mapping);
 		}
-		else if (this.blockMap.containsKey(blockName))
-		{
-			material = this.blockMap.get(blockName);
-		}
-		else
-		{
-			material = null;
-		}
-		
 		return material;
 	}
 	
 	@Override
-	public String getBlockMapSubstrate(String blockName, int meta, String substrate)
-	{
-		String material = null;
-		
-		if (this.blockMap.containsKey(blockName + "^" + meta + "." + substrate))
-		{
-			material = this.blockMap.get(blockName + "^" + meta + "." + substrate);
-		}
-		else if (this.blockMap.containsKey(blockName + "." + substrate))
-		{
-			material = this.blockMap.get(blockName + "." + substrate);
-		}
-		else
-			return null;
-		
-		return material;
-	}
-	
-	@Override
-	public void register(String key, String value)
-	{
-		this.blockMap.put(key.replace('>', ':'), value);
+	public void register(String key, String value) {
+		blockMap.put(key.replace('>', ':'), value);
 	}
 }

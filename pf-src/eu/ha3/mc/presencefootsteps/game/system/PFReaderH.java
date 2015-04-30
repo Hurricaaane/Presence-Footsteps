@@ -111,8 +111,7 @@ public class PFReaderH implements Generator, VariatorSettable
 			
 			if (this.scalStat && this.VAR.PLAY_WANDER && !this.mod.getSolver().hasSpecialStoppingConditions(ply))
 			{
-				String assos = this.mod.getSolver().findAssociationForPlayer(ply, 0d, this.isRightFoot);
-				this.mod.getSolver().playAssociation(ply, assos, EventType.WANDER);
+				mod.getSolver().playAssociation(ply, mod.getSolver().findAssociationForPlayer(ply, 0d, this.isRightFoot), EventType.WANDER);
 			}
 		}
 		this.xMovec = movX;
@@ -195,61 +194,41 @@ public class PFReaderH implements Generator, VariatorSettable
 		produceStep(ply, event, 0d);
 	}
 	
-	protected void produceStep(EntityPlayer ply, EventType event, double verticalOffsetAsMinus)
-	{
-		if (!this.mod.getSolver().playSpecialStoppingConditions(ply))
-		{
-			if (event == null)
-			{
-				event = speedDisambiguator(ply, EventType.WALK, EventType.RUN);
-			}
+	protected void produceStep(EntityPlayer ply, EventType event, double verticalOffsetAsMinus) {
+		if (!mod.getSolver().playSpecialStoppingConditions(ply)) {
+			if (event == null) event = speedDisambiguator(ply, EventType.WALK, EventType.RUN);
 			
-			String assos = this.mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus, this.isRightFoot);
-			this.mod.getSolver().playAssociation(ply, assos, event);
+			mod.getSolver().playAssociation(ply, mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus, isRightFoot), event);
 			
-			this.isRightFoot = !this.isRightFoot;
+			isRightFoot = !isRightFoot;
 		}
 		
-		this.stepThisFrame = true;
+		stepThisFrame = true;
 	}
 	
-	protected void stepped(EntityPlayer ply, EventType event)
-	{
-	}
+	protected void stepped(EntityPlayer ply, EventType event) {}
 	
-	protected float reevaluateDistance(EventType event, float distance)
-	{
+	protected float reevaluateDistance(EventType event, float distance) {
 		return distance;
 	}
 	
-	protected void simulateAirborne(EntityPlayer ply)
-	{
-		if ((ply.onGround || ply.isOnLadder()) == this.isFlying)
-		{
-			this.isFlying = !this.isFlying;
-			
+	protected void simulateAirborne(EntityPlayer ply) {
+		if ((ply.onGround || ply.isOnLadder()) == isFlying) {
+			isFlying = !isFlying;
 			simulateJumpingLanding(ply);
 		}
 		
-		if (this.isFlying)
-		{
-			this.fallDistance = ply.fallDistance;
-		}
-		
+		if (isFlying) fallDistance = ply.fallDistance;
 	}
 	
 	protected void simulateJumpingLanding(EntityPlayer ply)
 	{
-		if (this.mod.getSolver().hasSpecialStoppingConditions(ply))
-			return;
+		if (mod.getSolver().hasSpecialStoppingConditions(ply)) return;
 		
 		boolean isJumping;
-		try
-		{
+		try {
 			isJumping = (Boolean) this.util.getPrivate(ply, "isJumping");
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
@@ -303,23 +282,18 @@ public class PFReaderH implements Generator, VariatorSettable
 	
 	private void simulateBrushes(EntityPlayer ply)
 	{
-		if (this.brushesTime > System.currentTimeMillis())
-			return;
+		if (brushesTime > System.currentTimeMillis()) return;
 		
-		this.brushesTime = System.currentTimeMillis() + 100;
+		brushesTime = System.currentTimeMillis() + 100;
 		
-		if (ply.motionX == 0d && ply.motionZ == 0d)
-			return;
+		if (ply.motionX == 0d && ply.motionZ == 0d) return;
 		
-		if (ply.isSneaking())
-			return;
+		if (ply.isSneaking()) return;
 		
 		//if (true || ply.onGround || ply.isOnLadder())
 		//{
-		int yy = MathHelper.floor_double(ply.posY - 0.1d - ply.yOffset - (ply.onGround ? 0d : 0.25d));
-		String assos =
-			this.mod.getSolver().findAssociationForBlock(
-				MathHelper.floor_double(ply.posX), yy, MathHelper.floor_double(ply.posZ), "find_messy_foliage");
+		int yy = MathHelper.floor_double(ply.posY - 0.1d - ply.getYOffset() - (ply.onGround ? 0d : 0.25d));
+		Association assos = mod.getSolver().findAssociationForBlock(MathHelper.floor_double(ply.posX), yy, MathHelper.floor_double(ply.posZ), "find_messy_foliage");
 		if (assos != null)
 		{
 			if (!this.isMessyFoliage)
@@ -342,25 +316,23 @@ public class PFReaderH implements Generator, VariatorSettable
 	
 	protected void playSinglefoot(EntityPlayer ply, double verticalOffsetAsMinus, EventType eventType, boolean foot)
 	{
-		String assos = this.mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus, this.isRightFoot);
-		this.mod.getSolver().playAssociation(ply, assos, eventType);
+		Association assos = mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus, this.isRightFoot);
+		mod.getSolver().playAssociation(ply, assos, eventType);
 	}
 	
-	protected void playMultifoot(EntityPlayer ply, double verticalOffsetAsMinus, EventType eventType)
-	{
+	protected void playMultifoot(EntityPlayer ply, double verticalOffsetAsMinus, EventType eventType) {
 		// STILL JUMP
-		String leftFoot = this.mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus, false);
-		String rightFoot = this.mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus, true);
+		Association leftFoot = mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus, false);
+		Association rightFoot = mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus, true);
 		
-		if (leftFoot != null && leftFoot.equals(rightFoot) && !leftFoot.startsWith(PFSolver.NO_ASSOCIATION))
-		{
+		if (leftFoot != null && leftFoot.equals(rightFoot) && !leftFoot.getNoAssociation()) {
 			// If the two feet solve to the same sound, except NO_ASSOCIATION,
 			// only play the sound once
 			rightFoot = null;
 		}
 		
-		this.mod.getSolver().playAssociation(ply, leftFoot, eventType);
-		this.mod.getSolver().playAssociation(ply, rightFoot, eventType);
+		mod.getSolver().playAssociation(ply, leftFoot, eventType);
+		mod.getSolver().playAssociation(ply, rightFoot, eventType);
 	}
 	
 	protected float scalex(float number, float min, float max)

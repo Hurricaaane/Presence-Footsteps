@@ -2,6 +2,8 @@ package eu.ha3.mc.presencefootsteps.engine.interfaces;
 
 import java.util.Set;
 
+import eu.ha3.mc.presencefootsteps.game.system.Association;
+
 /* x-placeholder-wtfplv2 */
 
 public interface Library
@@ -20,7 +22,7 @@ public interface Library
 	 * @param acousticName
 	 * @param event
 	 */
-	public void playAcoustic(Object location, String acousticName, EventType event);
+	public void playAcoustic(Object location, Association acousticName, EventType event);
 	
 	/**
 	 * Plays a acoustic with additional options.
@@ -30,6 +32,8 @@ public interface Library
 	 * @param event
 	 * @param options
 	 */
+	public void playAcoustic(Object location, Association acousticName, EventType event, Options options);
+	
 	public void playAcoustic(Object location, String acousticName, EventType event, Options options);
 	
 	/**

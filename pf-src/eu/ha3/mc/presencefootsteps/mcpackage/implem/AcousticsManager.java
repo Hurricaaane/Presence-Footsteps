@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import eu.ha3.mc.presencefootsteps.engine.implem.AcousticsLibrary;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
@@ -53,14 +54,14 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 		if (blockID != null && blockID.stepSound != null) {
 			Block.SoundType soundType = blockID.stepSound;
 			
-			if (Minecraft.getMinecraft().theWorld.getBlock(xx, yy + 1, zz) == Blocks.snow_layer)
+			if (Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(xx, yy + 1, zz)).getBlock() == Blocks.snow_layer)
 			{
 				soundType = Blocks.snow_layer.stepSound;
-				entity.playSound(soundType.func_150498_e(), soundType.getVolume() * 0.15F, soundType.getPitch());
+				entity.playSound(soundType.getStepSound(), soundType.getVolume() * 0.15F, soundType.getFrequency());
 			}
 			else if (!blockID.getMaterial().isLiquid())
 			{
-				entity.playSound(soundType.func_150498_e(), soundType.getVolume() * 0.15F, soundType.getPitch());
+				entity.playSound(soundType.getStepSound(), soundType.getVolume() * 0.15F, soundType.getFrequency());
 			}
 		}
 	}
