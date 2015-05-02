@@ -55,10 +55,6 @@ public class PFSolver implements Solver {
 		}
 	}
 	
-	private int toInt(String s) {
-		return Integer.parseInt(s);
-	}
-	
 	@Override
 	public Association findAssociationForPlayer(EntityPlayer ply, double verticalOffsetAsMinus, boolean isRightFoot) {
 		int yy = MathHelper.floor_double(ply.getEntityBoundingBox().minY - 0.1d - verticalOffsetAsMinus); // 0.1d: Support for trapdoors
@@ -123,10 +119,8 @@ public class PFSolver implements Solver {
 				// | . . |
 				// | . |
 				// < maxofX- maxofX+ >
-
 				// Take the maximum border to produce the sound
-				if (isXdangMax) {
-					// If we are in the positive border, add 1, else subtract 1
+				if (isXdangMax) { // If we are in the positive border, add 1, else subtract 1
 					worked = findAssociationForBlock(xdang > 0 ? x + 1 : x - 1, y, z);
 				} else {
 					worked = findAssociationForBlock(x, y, zdang > 0 ? z + 1 : z - 1);
@@ -135,8 +129,7 @@ public class PFSolver implements Solver {
 				// If that didn't work, then maybe the footstep hit in the
 				// direction of walking
 				// Try with the other closest block
-				if (worked == null) { // Take the maximum direction and try with
-										// the orthogonal direction of it
+				if (worked == null) { // Take the maximum direction and try with the orthogonal direction of it
 					if (isXdangMax) {
 						worked = findAssociationForBlock(x, y, zdang > 0 ? z + 1 : z - 1);
 					} else {
@@ -151,34 +144,35 @@ public class PFSolver implements Solver {
 	@Override
 	public Association findAssociationForBlock(int xx, int yy, int zz) {
 		World world = Minecraft.getMinecraft().theWorld;
-		IBlockState state = world.getBlockState(new BlockPos(xx, yy, zz));
-		
-		// air block
-		if (state.getBlock() == Blocks.air) { // This block of code allows detection of fences
-			IBlockState below = world.getBlockState(new BlockPos(xx, yy - 1, zz));
-			Block bBelow = below.getBlock();
-			if (bBelow instanceof BlockFence || bBelow instanceof BlockWall || bBelow instanceof BlockFenceGate) {
-				state = below;
-			}
-		}
+		IBlockState in = world.getBlockState(new BlockPos(xx, yy, zz));
 		
 		IBlockState above = world.getBlockState(new BlockPos(xx, yy + 1, zz));
 		String association = isolator.getBlockMap().getBlockMapSubstrate(above, "carpet"); // Try to see if the block above is a carpet...
 		
-		PFLog.debug("Walking on block: " + PF172Helper.nameOf(state.getBlock()) + " -- Being in block: " + PF172Helper.nameOf(above.getBlock()));
+		if ((association == null || association.equals("NOT_EMITTER")) && in.getBlock() == Blocks.air) { // Check for fences and walls only if a carpet was not detected
+			IBlockState below = world.getBlockState(new BlockPos(xx, yy - 1, zz));
+			association = isolator.getBlockMap().getBlockMapSubstrate(below, "bigger");
+			if (association != null) {
+				in = below;
+			} else {
+				Block bBelow = below.getBlock();
+				if (bBelow instanceof BlockFence || bBelow instanceof BlockWall || bBelow instanceof BlockFenceGate) {
+					in = below;
+				}
+			}
+		}
+		
+		PFLog.debug("Walking on block: " + PF172Helper.nameOf(in.getBlock()) + " -- Being in block: " + PF172Helper.nameOf(above.getBlock()));
 
 		if (association == null || association.equals("NOT_EMITTER")) {
-			// This condition implies that
-			// if the carpet is NOT_EMITTER, solving will CONTINUE with the
-			// actual
-			// block surface the player is walking on
+			// This condition implies that if the carpet is NOT_EMITTER, solving will CONTINUE with the actual block surface the player is walking on
 			// > NOT_EMITTER carpets will not cause solving to skip
-			// Not a carpet
-			association = isolator.getBlockMap().getBlockMap(state);
+			if (association == null) {
+				association = isolator.getBlockMap().getBlockMap(in);
+			}
 			
 			if (association != null && !association.equals("NOT_EMITTER")) {
-				// This condition implies that foliage over a NOT_EMITTER block CANNOT PLAY
-				// This block most not be executed if the association is a carpet
+				// This condition implies that foliage over a NOT_EMITTER block CANNOT PLAY This block most not be executed if the association is a carpet
 				// => this block of code is here, not outside this if else group.
 				
 				String foliage = isolator.getBlockMap().getBlockMapSubstrate(above, "foliage");
@@ -189,33 +183,33 @@ public class PFSolver implements Solver {
 			}
 		} else {
 			yy++;
-			state = above;
+			in = above;
 			PFLog.debug("Carpet detected: " + association);
 		}
 		
 		if (association != null) {
 			if (association.contentEquals("NOT_EMITTER")) {
-				if (state.getBlock() != Blocks.air) { // air block
-					PFLog.debug("Not emitter for " + state.getBlock() + ":" + state.getProperties().toString());
+				if (in.getBlock() != Blocks.air) { // air block
+					PFLog.debug("Not emitter for " + in.getBlock() + ":" + in.getProperties().toString());
 				}
 				return null; // Player has stepped on a non-emitter block as defined in the blockmap
 			} else {
-				PFLog.debug("Found association for " + state.getBlock() + ":" + state.getProperties().toString() + ": " + association);
-				return (new Association(state, xx, yy, zz)).setAssociation(association);
+				PFLog.debug("Found association for " + in.getBlock() + ":" + in.getProperties().toString() + ": " + association);
+				return (new Association(in, xx, yy, zz)).setAssociation(association);
 			}
 		} else {
-			String primitive = resolvePrimitive(state);
+			String primitive = resolvePrimitive(in);
 			if (primitive != null) {
 				if (primitive.contentEquals("NOT_EMITTER")) {
-					PFLog.debug("Primitive for " + state.getBlock() + ":" + state.getProperties().toString() + ": " + primitive + " is NOT_EMITTER! Following behavior is uncertain.");
+					PFLog.debug("Primitive for " + in.getBlock() + ":" + in.getProperties().toString() + ": " + primitive + " is NOT_EMITTER! Following behavior is uncertain.");
 					return null;
 				}
 
-				PFLog.debug("Found primitive for " + state.getBlock() + ":" + state.getProperties().toString() + ": " + primitive);
-				return (new Association(state, xx, yy, zz)).setPrimitive(primitive);
+				PFLog.debug("Found primitive for " + in.getBlock() + ":" + in.getProperties().toString() + ": " + primitive);
+				return (new Association(in, xx, yy, zz)).setPrimitive(primitive);
 			} else {
-				PFLog.debug("No association for " + state.getBlock() + ":" + state.getProperties().toString());
-				return (new Association(state, xx, yy, zz)).setNoAssociation();
+				PFLog.debug("No association for " + in.getBlock() + ":" + in.getProperties().toString());
+				return (new Association(in, xx, yy, zz)).setNoAssociation();
 			}
 		}
 	}
@@ -235,7 +229,6 @@ public class PFSolver implements Solver {
 		String substrate = String.format(Locale.ENGLISH, "%.2f_%.2f", block.stepSound.volume, block.stepSound.frequency);
 		
 		String primitive = isolator.getPrimitiveMap().getPrimitiveMapSubstrate(soundName, substrate); // Check for primitive in register 
-		
 		if (primitive == null) {
 			if (block.stepSound.soundName != null) {
 				primitive = isolator.getPrimitiveMap().getPrimitiveMapSubstrate(soundName, "break_" + soundName); // Check for break sound

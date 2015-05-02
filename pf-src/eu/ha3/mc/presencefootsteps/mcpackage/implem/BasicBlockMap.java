@@ -3,6 +3,7 @@ package eu.ha3.mc.presencefootsteps.mcpackage.implem;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import eu.ha3.mc.presencefootsteps.game.system.PF172Helper;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.BlockMap;
@@ -43,5 +44,16 @@ public class BasicBlockMap implements BlockMap {
 	@Override
 	public void register(String key, String value) {
 		blockMap.put(key.replace('>', ':'), value);
+	}
+
+	@Override
+	public boolean hasEntryForBlock(Block block) {
+		String key = PF172Helper.nameOf(block);
+		for (Map.Entry<String, String> i : blockMap.entrySet()) {
+			if (i.getKey().startsWith(key)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -15,6 +15,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumChatFormatting;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
@@ -44,7 +45,6 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.mc.presencefootsteps.parsers.JasonAcoustics_Engine0;
 import eu.ha3.mc.presencefootsteps.parsers.PropertyBlockMap_Engine0;
 import eu.ha3.mc.presencefootsteps.parsers.PropertyPrimitiveMap_Engine0;
-import eu.ha3.mc.quick.chat.ChatColorsSimple;
 import eu.ha3.mc.quick.chat.Chatter;
 import eu.ha3.mc.quick.keys.KeyWatcher;
 import eu.ha3.mc.quick.update.NotifiableHaddon;
@@ -75,16 +75,20 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	// System
 	private PFResourcePackDealer dealer = new PFResourcePackDealer();
 	private PFIsolator isolator;
-	
+		
 	// Binds
 	private KeyBinding keyBindingMain;
-	private final int keyBindDefaultCode = Keyboard.KEY_P;
+	private final int keyBindDefaultCode = Keyboard.KEY_F9;
 	private final KeyWatcher watcher = new KeyWatcher(this);
 	private final Ha3KeyManager keyManager = new Ha3KeyManager();
 	
 	// Use once
 	private boolean firstTickPassed;
+	
+	// Pony stuff
+	private boolean mlpInstalled;
 	private boolean mlpDetectedFirst;
+	
 	private boolean hasResourcePacks;
 	private boolean hasDisabledResourcePacks;
 	private boolean hasResourcePacks_FixMe;
@@ -115,12 +119,10 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		
 		reloadEverything(false);// Config is loaded here
 		
-		if (isInstalledMLP()) {
+		if (mlpInstalled = isInstalledMLP()) {
 			if (getConfig().getBoolean("mlp.detected") == false) {
 				getConfig().setProperty("mlp.detected", true);
-				getConfig().setProperty("custom.stance", 1);
 				saveConfig();
-				
 				mlpDetectedFirst = true;
 			}
 		}
@@ -172,7 +174,9 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		isolator.setSolver(new PFSolver(isolator));
 		reloadVariator(repo);
 		
-		isolator.setGenerator(getConfig().getInteger("custom.stance") == 0 ? new PFReaderH(isolator, util()) : new PFReaderQP(isolator, util()));
+		int stance = getConfig().getInteger("custom.stance");
+		boolean mlpMode = stance == 1 || (stance == 0 && mlpInstalled);
+		isolator.setGenerator(mlpMode ? new PFReaderQP(isolator, util()) : new PFReaderH(isolator, util()));
 	}
 	
 	private void reloadConfig() {
@@ -316,31 +320,44 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 			e.printStackTrace();
 		}
 		
-		if (!this.firstTickPassed) {
+		if (!firstTickPassed) {
 			firstTickPassed = true;
 			updateNotifier.attempt();
 			if (mlpDetectedFirst) {
-				chatter.printChat(ChatColorsSimple.COLOR_TEAL, "Mine Little Pony has been detected! ", ChatColorsSimple.COLOR_WHITE, "4-legged mode has been enabled, which will make running sound like galloping amongst other things. ", ChatColorsSimple.COLOR_GRAY, "You can hold down for 1 second the combination LEFT CTRL + LEFT SHIFT + F to disable it.");
+				chatter.printChat(EnumChatFormatting.AQUA, "Mine Little Pony has been detected!");
+				chatter.printChatShort("4-legged mode has been enabled, which will make running sound like galloping amongst other things.");
+				if (getConfig().getInteger("custom.stance") == 0) {
+					chatter.printChatShort(EnumChatFormatting.GRAY, "This option will turn off automatically when you remove Mine Little Pony. To disable it now or make it permanent press " + getKeyCombinationDescription());
+				} else {
+					chatter.printChatShort(EnumChatFormatting.GRAY, "To disable it " + getKeyCombinationDescription());
+				}
 			}
 			
 			if (!hasResourcePacks) {
 				hasResourcePacks_FixMe = true;
 				if (hasDisabledResourcePacks) {
-					chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack not enabled yet!");
-					chatter.printChatShort(ChatColorsSimple.COLOR_WHITE, "You need to activate \"Presence Footsteps Resource Pack\" in the Minecraft Options menu for it to run.");
+					chatter.printChat(EnumChatFormatting.RED, "Resource Pack not enabled yet!");
+					chatter.printChatShort(EnumChatFormatting.WHITE, "You need to activate the \"Presence Footsteps Resource Pack\" in the Minecraft Options menu for it to run.");
 				} else {
-					chatter.printChat(ChatColorsSimple.COLOR_RED, "Resource Pack missing from resourcepacks/!");
-					chatter.printChatShort(ChatColorsSimple.COLOR_WHITE, "You may have forgotten to put the Resource Pack file into your resourcepacks/ folder.");
+					chatter.printChat(EnumChatFormatting.RED, "Resource Pack missing from resourcepacks/!");
+					chatter.printChatShort(EnumChatFormatting.WHITE, "You may have forgotten to put the Resource Pack file into your resourcepacks/ folder.");
 				}
 				if (getConfig().getInteger("key.code") == this.keyBindDefaultCode) {
-					chatter.printChatShort(ChatColorsSimple.COLOR_GRAY, "There is also a Presence Footsteps menu key in the Controls menu.");
+					chatter.printChatShort(EnumChatFormatting.GRAY, "There is also a Presence Footsteps menu key in the Controls menu.");
 				}
 			}
 		}
 		if (hasResourcePacks_FixMe && hasResourcePacks) {
 			hasResourcePacks_FixMe = false;
-			chatter.printChat(ChatColorsSimple.COLOR_BRIGHTGREEN, "It should work now!");
+			chatter.printChat(EnumChatFormatting.GREEN, "It should work now!");
 		}
+	}
+	
+	private String getKeyCombinationDescription() {
+		if (keyBindingMain.getKeyCode() == 0) {
+			return "hold down the combination LEFT CTRL + LEFT SHIFT + F for 1 second.";
+		}
+		return "press " + Keyboard.getKeyName(keyBindingMain.getKeyCode()) + ".";
 	}
 	
 	private void displayMenu() {
@@ -356,6 +373,10 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	
 	public boolean hasNonethelessResourcePacksInstalled() {
 		return hasDisabledResourcePacks;
+	}
+	
+	public PFIsolator getIsolator() {
+		return isolator;
 	}
 	
 	@Override
@@ -393,24 +414,16 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	}
 	
 	@Override
-	public void endPress() {
-		
-	}
+	public void endPress() {}
 	
 	@Override
-	public void shortPress() {
-		
-	}
+	public void shortPress() {}
 	
 	@Override
-	public void beginHold() {
-		
-	}
+	public void beginHold() {}
 	
 	@Override
-	public void endHold() {
-		
-	}
+	public void endHold() {}
 	
 	@Override
 	public void onKey(KeyBinding event) {

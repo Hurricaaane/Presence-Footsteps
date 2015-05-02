@@ -1,5 +1,6 @@
 package eu.ha3.mc.presencefootsteps.mcpackage.interfaces;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 
 /* x-placeholder-wtfplv2 */
@@ -16,7 +17,7 @@ public interface BlockMap
 	 * @param meta
 	 * @return
 	 */
-	public abstract String getBlockMap(IBlockState state);
+	public String getBlockMap(IBlockState state);
 	
 	/**
 	 * This will return null if the substrate does not resolve in the selected
@@ -27,7 +28,7 @@ public interface BlockMap
 	 * @param substrate
 	 * @return
 	 */
-	public abstract String getBlockMapSubstrate(IBlockState state, String substrate);
+	public String getBlockMapSubstrate(IBlockState state, String substrate);
 	
 	/**
 	 * Register an blockmap entry.
@@ -35,6 +36,9 @@ public interface BlockMap
 	 * @param key
 	 * @param value
 	 */
-	public abstract void register(String key, String value);
+	public void register(String key, String value);
+	
+	
+	public boolean hasEntryForBlock(Block block);
 	
 }
