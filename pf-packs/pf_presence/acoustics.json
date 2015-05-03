@@ -446,7 +446,7 @@
 			"land"  : {
 				"type"  : "simultaneous",
 				"array" : [
-					"walk.mud_walk",
+					"mud.mud_walk",
 					{
 						"type"  : "delayed",
 						"delay" : 50,

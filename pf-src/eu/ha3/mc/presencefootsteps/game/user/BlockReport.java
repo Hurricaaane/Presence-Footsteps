@@ -89,10 +89,6 @@ public class BlockReport {
 		if (block instanceof BlockRotatedPillar) soundName += "," + "EXTENDS_PILLAR";
 		if (block instanceof BlockTorch) soundName += "," + "EXTENDS_TORCH";
 		if (block instanceof BlockCarpet) soundName += "," + "EXTENDS_CARPET";
-		Class directParent = block.getClass().getSuperclass();
-		if (directParent != Block.class && directParent != Object.class) {
-			soundName += ",DIRECT_PARENT: " + directParent.getSimpleName();
-		}
 		if (!block.isOpaqueCube()) soundName += "," + "HITBOX";
 		return soundName;
 	}

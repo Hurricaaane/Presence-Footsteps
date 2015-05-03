@@ -82,7 +82,7 @@ public class PFSolver implements Solver {
 	@Override
 	public Association findAssociationForLocation(EntityPlayer player, int x, int y, int z) {
 		if (Math.abs(player.motionY) < 0.02) return null; // Don't play sounds on every tiny bounce
-		if (player.isInWater()) PFLog.debug("WARNING!!! Playing a sound while in the water! " + "This is supposed to be halted by the stopping conditions!!");
+		if (player.isInWater()) PFLog.debug("WARNING!!! Playing a sound while in the water! This is supposed to be halted by the stopping conditions!!");
 		
 		Association worked = findAssociationForBlock(x, y, z);
 		
@@ -162,7 +162,7 @@ public class PFSolver implements Solver {
 			}
 		}
 		
-		PFLog.debug("Walking on block: " + PF172Helper.nameOf(in.getBlock()) + " -- Being in block: " + PF172Helper.nameOf(above.getBlock()));
+		PFLog.debugf("Walking on block: %0 -- Being in block: %1", in.getBlock(), above.getBlock());
 
 		if (association == null || association.equals("NOT_EMITTER")) {
 			// This condition implies that if the carpet is NOT_EMITTER, solving will CONTINUE with the actual block surface the player is walking on
@@ -190,25 +190,25 @@ public class PFSolver implements Solver {
 		if (association != null) {
 			if (association.contentEquals("NOT_EMITTER")) {
 				if (in.getBlock() != Blocks.air) { // air block
-					PFLog.debug("Not emitter for " + in.getBlock() + ":" + in.getProperties().toString());
+					PFLog.debugf("Not emitter for %0 : %1", in);
 				}
 				return null; // Player has stepped on a non-emitter block as defined in the blockmap
 			} else {
-				PFLog.debug("Found association for " + in.getBlock() + ":" + in.getProperties().toString() + ": " + association);
+				PFLog.debugf("Found association for %0 : %1 : %2", in, association);
 				return (new Association(in, xx, yy, zz)).setAssociation(association);
 			}
 		} else {
 			String primitive = resolvePrimitive(in);
 			if (primitive != null) {
 				if (primitive.contentEquals("NOT_EMITTER")) {
-					PFLog.debug("Primitive for " + in.getBlock() + ":" + in.getProperties().toString() + ": " + primitive + " is NOT_EMITTER! Following behavior is uncertain.");
+					PFLog.debugf("Primitive for %0 : %1 : %2 is NOT_EMITTER! Following behavior is uncertain.", in, primitive);
 					return null;
 				}
 
-				PFLog.debug("Found primitive for " + in.getBlock() + ":" + in.getProperties().toString() + ": " + primitive);
+				PFLog.debugf("Found primitive for %0 : %1 : %2", in, primitive);
 				return (new Association(in, xx, yy, zz)).setPrimitive(primitive);
 			} else {
-				PFLog.debug("No association for " + in.getBlock() + ":" + in.getProperties().toString());
+				PFLog.debugf("No association for %0 : %1", in);
 				return (new Association(in, xx, yy, zz)).setNoAssociation();
 			}
 		}

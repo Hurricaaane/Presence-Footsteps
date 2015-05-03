@@ -59,7 +59,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	protected final int VERSION = 6;
 	protected final String FOR = "1.8";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
-	protected final Identity identity = new HaddonIdentity(NAME, VERSION, FOR, ADDRESS);
+	protected final Identity identity = (new HaddonIdentity(NAME, VERSION, FOR, ADDRESS)).setPrefix("u");
 	
 	// NotifiableHaddon and UpdateNotifier
 	private ConfigProperty config; // Can't be final
@@ -72,7 +72,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	private long pressedOptionsTime;
 	
 	// System
-	private boolean enabled = true;
 	private PFResourcePackDealer dealer = new PFResourcePackDealer();
 	private PFIsolator isolator;
 		
@@ -181,11 +180,11 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	private void reloadConfig() {
 		config = new ConfigProperty();
 		updateNotifier.fillDefaults(config);
-		//config.setProperty("update_found.enabled", false);
-		config.setProperty("user.volume.0-to-100", 70);
+		config.setProperty("user.volume", 70);
 		config.setProperty("mlp.detected", false);
 		config.setProperty("custom.stance", 0);
 		config.setProperty("key.code", keyBindDefaultCode);
+		config.setProperty("user.enabled", true);
 		config.commit();
 		
 		boolean fileExisted = new File(presenceDir, "userconfig.cfg").exists();
@@ -212,7 +211,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		for (ResourcePackRepository.Entry pack : repo) {
 			try {
 				InputStreamConfigProperty config = new InputStreamConfigProperty();
-				config.loadStream(this.dealer.openVariator(pack.getResourcePack()));
+				config.loadStream(dealer.openVariator(pack.getResourcePack()));
 				
 				var.loadConfig(config);
 				working = working + 1;
@@ -234,10 +233,10 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		for (ResourcePackRepository.Entry pack : repo) {
 			try {
 				InputStreamConfigProperty blockSound = new InputStreamConfigProperty();
-				blockSound.loadStream(this.dealer.openBlockMap(pack.getResourcePack()));
+				blockSound.loadStream(dealer.openBlockMap(pack.getResourcePack()));
 				
 				new PropertyBlockMap_Engine0().setup(blockSound, blockMap);
-				working = working + 1;
+				working++;
 			} catch (IOException e) {
 				PFLog.debug("No blockmap found in " + pack.getResourcePackName() + ": " + e.getMessage());
 			}
@@ -298,13 +297,26 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	}
 	
 	public boolean getEnabled() {
-		return enabled;
+		return config.getBoolean("user.enabled");
+	}
+	
+	public int getVolume() {
+		int result = getConfig().getInteger("user.volume");
+		if (result < 0) return 0;
+		if (result > 100) return 100;
+		return result;
+	}
+	
+	public void setVolume(int volume) {
+		getConfig().setProperty("user.volume", volume);
 	}
 	
 	public boolean toggle() {
 		OperatorCaster op = ((OperatorCaster) op());
-		enabled = !op.getFrameEnabled();
+		boolean enabled = !op.getFrameEnabled();
 		op.setFrameEnabled(enabled);
+		config.setProperty("user.enabled", enabled);
+		saveConfig();
 		if (enabled) {
 			reloadEverything(false);
 		} else {
@@ -334,7 +346,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 			displayMenu();
 		}
 		
-		if (enabled && hasResourcePacks) {
+		if (getEnabled() && hasResourcePacks) {
 			isolator.onFrame();
 			setPlayerStepDistance(Integer.MAX_VALUE);
 		}

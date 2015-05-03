@@ -1,7 +1,5 @@
 package eu.ha3.mc.presencefootsteps.game.user;
 
-import java.io.IOException;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiScreenResourcePacks;
@@ -27,18 +25,16 @@ public class PFGuiMenu extends GuiScreen
 	
 	private PFHaddon mod;
 	
-	/** The ID of the button that has been pressed. */
-	private int buttonId;
-	
-	private final int IDS_PER_PAGE = 4;
+	private final int TOP = 45;
 	private final int BUTTON_SPACING = 4;
 	private final int BUTTON_HEIGHT = 20;
-	private final int BUTTON_WIDTH = 300;
+	
+	private final int Y_SPACING = BUTTON_SPACING + BUTTON_HEIGHT;
+	private final int BUTTON_WIDTH = 300 - Y_SPACING * 4;
 	
 	
 	public PFGuiMenu(GuiScreen par1GuiScreen, PFHaddon mod) {
 		screenTitle = "Presence Footsteps Configuration";
-		buttonId = -1;
 		parentScreen = par1GuiScreen;
 		this.mod = mod;
 	}
@@ -48,67 +44,49 @@ public class PFGuiMenu extends GuiScreen
 	 */
 	@Override
 	public void initGui() {
-		final int TOP = 45;
-		final int _MIX = BUTTON_SPACING + BUTTON_HEIGHT;
-		final int _LEFT = width / 2 - BUTTON_WIDTH / 2;
-		final int _RIGHT = width / 2 + BUTTON_WIDTH / 2;
+		final int _LEFT = width / 2 - 300 / 2 + Y_SPACING * 2;
+		final int _RIGHT = width / 2 + 300 / 2 - Y_SPACING * 2;
 		
-		int id = 0;
-		
-		{
-			HGuiSliderControl sliderControl = new HGuiSliderControl(id, _LEFT + _MIX * 2, TOP + _MIX, BUTTON_WIDTH - _MIX * 4 - BUTTON_HEIGHT - 5, BUTTON_HEIGHT, "", mod.getConfig().getInteger("user.volume.0-to-100") / 100f);
-			sliderControl.setListener(new HSliderListener() {
-				@Override
-				public void sliderValueChanged(HGuiSliderControl slider, float value)
-				{
-					float valueSnapped = value * 100;
-					if (valueSnapped % 10 <= 2)
-					{
-						valueSnapped = valueSnapped - valueSnapped % 10;
-					}
-					else if (valueSnapped % 10 >= 10 - 2)
-					{
-						valueSnapped = valueSnapped - valueSnapped % 10 + 10;
-					}
-					int valueSnappedInt = Math.round(valueSnapped);
-					
-					mod.getConfig().setProperty("user.volume.0-to-100", valueSnappedInt);
-					slider.updateDisplayString();
+		HGuiSliderControl sliderControl = new HGuiSliderControl(0, _LEFT, TOP + Y_SPACING, BUTTON_WIDTH - BUTTON_HEIGHT - 5, BUTTON_HEIGHT, "", mod.getVolume() / 100f);
+		sliderControl.setListener(new HSliderListener() {
+			@Override
+			public void sliderValueChanged(HGuiSliderControl slider, float value) {
+				float valueSnapped = value * 100;
+				
+				if (valueSnapped > 100) valueSnapped = 100;
+				if (valueSnapped < 0) valueSnapped = 0;
+				
+				if (valueSnapped % 10 <= 2) {
+					valueSnapped = valueSnapped - valueSnapped % 10;
+				} else if (valueSnapped % 10 >= 8) {
+					valueSnapped = valueSnapped - valueSnapped % 10 + 10;
 				}
 				
-				@Override
-				public void sliderPressed(HGuiSliderControl hGuiSliderControl) {}
-				
-				@Override
-				public void sliderReleased(HGuiSliderControl hGuiSliderControl) {}
-			});
-			sliderControl.setDisplayStringProvider(new HDisplayStringProvider() {
-				@Override
-				public String provideDisplayString() {
-					return "Global Volume: " + mod.getConfig().getInteger("user.volume.0-to-100") + "%";
-				}
-			});
-			sliderControl.updateDisplayString();
+				mod.setVolume(Math.round(valueSnapped));
+				slider.updateDisplayString();
+			}
 			
-			buttonList.add(sliderControl);
-			id++;
+			@Override
+			public void sliderPressed(HGuiSliderControl hGuiSliderControl) {}
 			
-		}
+			@Override
+			public void sliderReleased(HGuiSliderControl hGuiSliderControl) {}
+		});
+		sliderControl.setDisplayStringProvider(new HDisplayStringProvider() {
+			@Override
+			public String provideDisplayString() {
+				return "Global Volume: " + mod.getVolume() + "%";
+			}
+		});
+		sliderControl.updateDisplayString();
 		
-		//final int _ASPLIT = 2;
-		//final int _AWID = _WIDTH / _ASPLIT - _GAP * (_ASPLIT - 1) / 2;
-		
-		buttonList.add(new GuiButton(212, _LEFT + _MIX * 2 + (BUTTON_WIDTH - _MIX * 4 - BUTTON_HEIGHT), TOP + _MIX, BUTTON_HEIGHT, BUTTON_HEIGHT, mod.getEnabled() ? "On" : "Off"));
-		
-		buttonList.add(new GuiButton(210, _LEFT + _MIX * 2, TOP + _MIX * 2, BUTTON_WIDTH - _MIX * 4, BUTTON_HEIGHT,  "Walking stance: " + getStance()));
-		
-		buttonList.add(new GuiButton(199, _LEFT + _MIX * 2, TOP + _MIX * 3 + (IDS_PER_PAGE * 2), BUTTON_WIDTH - _MIX * 4, BUTTON_HEIGHT, getResourcePacks() + " Resource Pack"));
-		
-		buttonList.add(new GuiButton(198, _LEFT + _MIX * 2, TOP + _MIX * 4 + (IDS_PER_PAGE * 2), BUTTON_WIDTH - _MIX * 4, BUTTON_HEIGHT, "Generate custom block report"));
-		
-		buttonList.add(new GuiButton(220, _LEFT + _MIX * 2, TOP + _MIX * 5 + (IDS_PER_PAGE * 2), BUTTON_WIDTH - _MIX * 4, BUTTON_HEIGHT, "Generate unknown blocks report"));
-		
-		buttonList.add(new GuiButton(200, _LEFT + _MIX * 2, TOP + _MIX * 6 + (IDS_PER_PAGE * 4), BUTTON_WIDTH - _MIX * 4, BUTTON_HEIGHT, I18n.format("menu.returnToGame")));
+		buttonList.add(sliderControl);
+		buttonList.add(new GuiButton(212, _RIGHT - BUTTON_HEIGHT, TOP + Y_SPACING, BUTTON_HEIGHT, BUTTON_HEIGHT, mod.getEnabled() ? "On" : "Off"));
+		buttonList.add(new GuiButton(210, _LEFT, TOP + Y_SPACING * 2, BUTTON_WIDTH, BUTTON_HEIGHT,  "Walking stance: " + getStance()));
+		buttonList.add(new GuiButton(199, _LEFT, TOP + Y_SPACING * 3 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, getResourcePacks() + " Resource Pack"));
+		buttonList.add(new GuiButton(198, _LEFT, TOP + Y_SPACING * 4 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, "Generate custom block report"));
+		buttonList.add(new GuiButton(220, _LEFT, TOP + Y_SPACING * 5 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, "Generate unknown blocks report"));
+		buttonList.add(new GuiButton(200, _LEFT, TOP + Y_SPACING * 6 + (BUTTON_SPACING * 4), BUTTON_WIDTH, BUTTON_HEIGHT, I18n.format("menu.returnToGame")));
 	}
 	
 	private String getStance() {
@@ -143,7 +121,6 @@ public class PFGuiMenu extends GuiScreen
 			mod.getConfig().setProperty("custom.stance", (mod.getConfig().getInteger("custom.stance") + 1) % 3);
 			mod.saveConfig();
 			par1GuiButton.displayString = "Walking stance: " + getStance();
-			
 			mod.reloadEverything(false);
 		} else if (par1GuiButton.id == 220) {
 			try {
@@ -163,25 +140,12 @@ public class PFGuiMenu extends GuiScreen
 	}
 	
 	/**
-	 * Called when the mouse is clicked.
-	 */
-	@Override
-	protected void mouseClicked(int par1, int par2, int par3) throws IOException {
-		if (buttonId < 0) {
-			super.mouseClicked(par1, par2, par3);
-		}
-	}
-	
-	/**
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawDefaultBackground();
-		//drawGradientRect(0, 0, width, height, 0xC0000000, 0x60000000);
-		
 		drawCenteredString(fontRendererObj, screenTitle, width / 2, 40, 0xffffff);
-		
 		if (!mod.hasResourcePacksLoaded()) {
 			if (mod.hasNonethelessResourcePacksInstalled()) {
 				drawCenteredString(fontRendererObj, "Your Presence Footsteps Resource Pack isn't enabled yet!", width / 2, 10, 0xff0000);
@@ -191,7 +155,6 @@ public class PFGuiMenu extends GuiScreen
 				drawCenteredString(fontRendererObj, "Put the Resource Pack in the resourcepacks/ folder.", width / 2, 20, 0xff0000);
 			}
 		}
-		
 		super.drawScreen(par1, par2, par3);
 		
 	}
