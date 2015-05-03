@@ -14,7 +14,6 @@ import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -57,14 +56,14 @@ import eu.ha3.util.property.simple.InputStreamConfigProperty;
 public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, SupportsTickEvents, IResourceManagerReloadListener, NotifiableHaddon, Ha3HoldActions, SupportsKeyEvents {
 	// Identity
 	protected final String NAME = "Presence Footsteps";
-	protected final int VERSION = 5;
+	protected final int VERSION = 6;
 	protected final String FOR = "1.8";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	protected final Identity identity = new HaddonIdentity(NAME, VERSION, FOR, ADDRESS);
 	
 	// NotifiableHaddon and UpdateNotifier
 	private ConfigProperty config; // Can't be final
-	private final Chatter chatter = new Chatter(this, NAME);
+	private final Chatter chatter = new Chatter(this, "<PF> ");
 	private UpdateNotifier updateNotifier;
 	
 	// Meta
@@ -73,6 +72,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	private long pressedOptionsTime;
 	
 	// System
+	private boolean enabled = true;
 	private PFResourcePackDealer dealer = new PFResourcePackDealer();
 	private PFIsolator isolator;
 		
@@ -84,15 +84,14 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	
 	// Use once
 	private boolean firstTickPassed;
+	private int tickRound;
+	private boolean hasResourcePacks;
+	private boolean hasDisabledResourcePacks;
+	private boolean hasResourcePacks_FixMe;
 	
 	// Pony stuff
 	private boolean mlpInstalled;
 	private boolean mlpDetectedFirst;
-	
-	private boolean hasResourcePacks;
-	private boolean hasDisabledResourcePacks;
-	private boolean hasResourcePacks_FixMe;
-	private int tickRound;
 	
 	@Override
 	public void onLoad() {
@@ -101,7 +100,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "h");
 		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "aW");
 		
-		presenceDir = new File(util().getModsFolder(), "presencefootsteps/");
+		presenceDir = new File(util().getMcFolder(), "presencefootsteps");
 		
 		if (!presenceDir.exists()) presenceDir.mkdirs();
 		
@@ -182,7 +181,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	private void reloadConfig() {
 		config = new ConfigProperty();
 		updateNotifier.fillDefaults(config);
-		config.setProperty("update_found.enabled", false);
+		//config.setProperty("update_found.enabled", false);
 		config.setProperty("user.volume.0-to-100", 70);
 		config.setProperty("mlp.detected", false);
 		config.setProperty("custom.stance", 0);
@@ -298,26 +297,46 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		return Ha3StaticUtilities.classExists("com.minelittlepony.minelp.Pony", this);
 	}
 	
+	public boolean getEnabled() {
+		return enabled;
+	}
+	
+	public boolean toggle() {
+		OperatorCaster op = ((OperatorCaster) op());
+		enabled = !op.getFrameEnabled();
+		op.setFrameEnabled(enabled);
+		if (enabled) {
+			reloadEverything(false);
+		} else {
+			isolator = new PFIsolator(this);
+			reloadConfig();
+			isolator.setGenerator(null);
+			setPlayerStepDistance(0);
+		}
+		return enabled;
+	}
+	
+	private void setPlayerStepDistance(int value) {
+		try {
+			util().setPrivate(Minecraft.getMinecraft().thePlayer, "Entity_nextStepDistance", value); //nextStepDistance
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void onFrame(float semi) {
-		EntityPlayer ply = Minecraft.getMinecraft().thePlayer;
+		if (Minecraft.getMinecraft().thePlayer == null) return;
 		
-		if (ply == null) return;
-		
-		isolator.onFrame();
-		
-		boolean keysDown = util().areKeysDown(29, 42, 33);
-		debugButton.signalState(keysDown); // CTRL SHIFT F
-		if (keysDown && System.currentTimeMillis() - this.pressedOptionsTime > 1000) {
+		boolean keysDown = util().areKeysDown(29, 42, 33); // CTRL SHIFT F
+		debugButton.signalState(keysDown);
+		if (keysDown && System.currentTimeMillis() - pressedOptionsTime > 1000) {
 			displayMenu();
 		}
 		
-		try {
-			util().setPrivate(ply, "Entity_nextStepDistance", Integer.MAX_VALUE); //nextStepDistance
-			//util().setPrivateValueLiteral(Entity.class, ply, "c", 37, Integer.MAX_VALUE);
-			//util().setPrivateValueLiteral(Entity.class, ply, "c", 37, 0);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (enabled && hasResourcePacks) {
+			isolator.onFrame();
+			setPlayerStepDistance(Integer.MAX_VALUE);
 		}
 		
 		if (!firstTickPassed) {
@@ -362,7 +381,11 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	
 	private void displayMenu() {
 		if (util().isCurrentScreen(null)) {
-			Minecraft.getMinecraft().displayGuiScreen(new PFGuiMenu((GuiScreen) util().getCurrentScreen(), this));
+			Minecraft mc = Minecraft.getMinecraft();
+			mc.displayGuiScreen(new PFGuiMenu((GuiScreen) util().getCurrentScreen(), this));
+			if (mc.isSingleplayer() && !mc.getIntegratedServer().getPublic()) {
+                mc.getSoundHandler().pauseSounds();
+            }
 			PFLog.setDebugEnabled(false);
 		}
 	}
@@ -442,6 +465,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		}
 		watcher.onTick();
 		keyManager.handleRuntime();
-		tickRound = (this.tickRound + 1) % 100;
+		tickRound = (tickRound + 1) % 100;
 	}
 }

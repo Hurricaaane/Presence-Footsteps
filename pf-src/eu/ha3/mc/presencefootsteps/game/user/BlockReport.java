@@ -19,6 +19,7 @@ import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockTorch;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.util.EnumChatFormatting;
 import eu.ha3.mc.presencefootsteps.game.system.PF172Helper;
 import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
@@ -96,11 +97,15 @@ public class BlockReport {
 		return soundName;
 	}
 	
-	public void printResults(String location) {
-		File loc = new File(mod.getUtility().getModsFolder(), location);
+	public void printResults(String location, String ext) {
+		File loc = null;
+		int counter = 0;
+		while (loc == null || loc.exists()) {
+			loc = new File(mod.getUtility().getMcFolder(), location + (counter == 0 ? "" : "_" + counter) + ext);
+			counter++;
+		}
 		results.setSource(loc.getAbsolutePath());
 		results.save();
-		mod.getChatter().printChat(EnumChatFormatting.GREEN, "File saved at:");
-		mod.getChatter().printChatShort(loc.getAbsolutePath());
+		mod.getChatter().printChat(EnumChatFormatting.GREEN, "File saved as: ", new ClickEvent(ClickEvent.Action.OPEN_FILE, loc.getAbsolutePath()), EnumChatFormatting.UNDERLINE, loc.getName());
 	}
 }
