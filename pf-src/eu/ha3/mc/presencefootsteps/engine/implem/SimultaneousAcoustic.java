@@ -9,25 +9,17 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 
-/* x-placeholder-wtfplv2 */
-
-public class SimultaneousAcoustic implements Acoustic
-{
+public class SimultaneousAcoustic implements Acoustic {
 	protected List<Acoustic> acoustics;
 	
-	public SimultaneousAcoustic(Collection<Acoustic> acoustics)
-	{
+	public SimultaneousAcoustic(Collection<Acoustic> acoustics) {
 		this.acoustics = new ArrayList<Acoustic>(acoustics);
 	}
 	
 	@Override
-	public void playSound(SoundPlayer player, Object location, EventType event, Options inputOptions)
-	{
-		for (Acoustic acoustic : this.acoustics)
-		{
+	public void playSound(SoundPlayer player, Object location, EventType event, Options inputOptions) {
+		for (Acoustic acoustic : acoustics) {
 			acoustic.playSound(player, location, event, inputOptions);
 		}
-		
 	}
-	
 }

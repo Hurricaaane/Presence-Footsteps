@@ -20,8 +20,6 @@ import eu.ha3.mc.presencefootsteps.log.PFLog;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Solver;
 
-/* x-placeholder-wtfplv2 */
-
 /**
  * Solves in-world locations and players into associations. Associations are an
  * extension of Acoustic names, with some special codes. They are derived from

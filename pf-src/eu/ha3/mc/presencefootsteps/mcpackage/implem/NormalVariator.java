@@ -1,17 +1,13 @@
 package eu.ha3.mc.presencefootsteps.mcpackage.implem;
 
 import java.lang.reflect.Field;
-import java.util.HashSet;
 import java.util.Set;
 
 import eu.ha3.mc.presencefootsteps.log.PFLog;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.util.property.contract.PropertyHolder;
 
-/* x-placeholder-wtfplv2 */
-
-public class NormalVariator implements Variator
-{
+public class NormalVariator implements Variator {
 	public int IMMOBILE_DURATION = 200;
 	
 	public boolean EVENT_ON_JUMP = true;
@@ -61,41 +57,27 @@ public class NormalVariator implements Variator
 	//public float WING_SPEED_MIN = 0.2f;
 	
 	@Override
-	public void loadConfig(PropertyHolder config)
-	{
-		Set<String> keysFromConfig = config.getAllProperties().keySet();
-		Set<String> keys = new HashSet<String>();
-		for (String key : keysFromConfig)
-		{
-			keys.add(key.toUpperCase());
-		}
+	public void loadConfig(PropertyHolder config) {
+		Set<String> keys = config.getAllProperties().keySet();
 		
+		// TODO: wtf
 		// I am feeling SUPER LAZY today
 		Field[] fields = NormalVariator.class.getDeclaredFields();
-		for (Field field : fields)
-		{
-			try
-			{
+		for (Field field : fields) {
+			try {
 				String fieldName = field.getName();
 				if (keys.contains(fieldName))
 				{
 					String lowercaseField = fieldName.toLowerCase();
-					if (field.getType() == Float.TYPE)
-					{
+					if (field.getType() == Float.TYPE) {
 						field.setFloat(this, config.getFloat(lowercaseField));
-					}
-					else if (field.getType() == Integer.TYPE)
-					{
+					} else if (field.getType() == Integer.TYPE) {
 						field.setInt(this, config.getInteger(lowercaseField));
-					}
-					else if (field.getType() == Boolean.TYPE)
-					{
+					} else if (field.getType() == Boolean.TYPE) {
 						field.setBoolean(this, config.getBoolean(lowercaseField));
 					}
 				}
-			}
-			catch (Throwable e)
-			{
+			} catch (Throwable e) {
 				PFLog.log("Incompatible type: " + e.getClass().getName() + ": " + field.getName());
 			}
 		}

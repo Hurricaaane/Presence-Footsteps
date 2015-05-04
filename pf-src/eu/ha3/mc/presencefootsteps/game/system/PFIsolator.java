@@ -14,11 +14,7 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Solver;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.VariatorSettable;
 
-/* x-placeholder-wtfplv2 */
-
-public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
-{
-	private PFHaddon mod; // Unused?
+public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable {
 	
 	private Library acoustics;
 	private Solver solver;
@@ -31,118 +27,90 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	
 	private Generator generator;
 	
-	public PFIsolator(PFHaddon mod)
-	{
-		this.mod = mod;
+	public PFIsolator(PFHaddon mod) {
+		
 	}
 	
 	@Override
-	public void onFrame()
-	{
-		if (this.generator == null)
-			return;
+	public void onFrame() {
+		if (generator == null) return;
 		
 		EntityPlayer ply = Minecraft.getMinecraft().thePlayer;
 		
-		if (ply == null)
-			return;
+		if (ply == null) return;
 		
-		this.generator.generateFootsteps(ply);
-		
-		// Delayed sounds
-		this.acoustics.think();
-	}
-	
-	//
-	
-	@Override
-	public Library getAcoustics()
-	{
-		return this.acoustics;
+		generator.generateFootsteps(ply);
+		acoustics.think(); // Delayed sounds
 	}
 	
 	@Override
-	public Solver getSolver()
-	{
-		return this.solver;
+	public Library getAcoustics() {
+		return acoustics;
 	}
 	
 	@Override
-	public BlockMap getBlockMap()
-	{
-		return this.blockMap;
+	public Solver getSolver() {
+		return solver;
 	}
 	
 	@Override
-	public PrimitiveMap getPrimitiveMap()
-	{
-		return this.primitiveMap;
+	public BlockMap getBlockMap() {
+		return blockMap;
 	}
 	
 	@Override
-	public SoundPlayer getSoundPlayer()
-	{
-		return this.soundPlayer;
+	public PrimitiveMap getPrimitiveMap() {
+		return primitiveMap;
 	}
 	
 	@Override
-	public DefaultStepPlayer getDefaultStepPlayer()
-	{
-		return this.defaultStepPlayer;
+	public SoundPlayer getSoundPlayer() {
+		return soundPlayer;
 	}
 	
-	//
+	@Override
+	public DefaultStepPlayer getDefaultStepPlayer() {
+		return defaultStepPlayer;
+	}
 	
 	@Override
-	public void setAcoustics(Library acoustics)
-	{
+	public void setAcoustics(Library acoustics) {
 		this.acoustics = acoustics;
 	}
 	
 	@Override
-	public void setSolver(Solver solver)
-	{
+	public void setSolver(Solver solver) {
 		this.solver = solver;
 	}
 	
 	@Override
-	public void setBlockMap(BlockMap blockMap)
-	{
+	public void setBlockMap(BlockMap blockMap) {
 		this.blockMap = blockMap;
 	}
 	
 	@Override
-	public void setPrimitiveMap(PrimitiveMap primitiveMap)
-	{
+	public void setPrimitiveMap(PrimitiveMap primitiveMap) {
 		this.primitiveMap = primitiveMap;
 	}
 	
 	@Override
-	public void setSoundPlayer(SoundPlayer soundPlayer)
-	{
+	public void setSoundPlayer(SoundPlayer soundPlayer) {
 		this.soundPlayer = soundPlayer;
 	}
 	
 	@Override
-	public void setDefaultStepPlayer(DefaultStepPlayer defaultStepPlayer)
-	{
+	public void setDefaultStepPlayer(DefaultStepPlayer defaultStepPlayer) {
 		this.defaultStepPlayer = defaultStepPlayer;
 	}
 	
-	//
-	
 	@Override
-	public void setVariator(Variator var)
-	{
-		this.VAR = var;
-		fixVariator(this.generator);
+	public void setVariator(Variator var) {
+		VAR = var;
+		fixVariator(generator);
 	}
 	
-	//
-	
 	@Override
-	public void setGenerator(Generator generator)
-	{
+	public void setGenerator(Generator generator) {
 		this.generator = generator;
 		fixVariator(this.generator);
 	}
@@ -152,14 +120,9 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	 * 
 	 * @param possiblyAVariator
 	 */
-	private void fixVariator(Object possiblyAVariator)
-	{
-		if (possiblyAVariator == null)
-			return;
-		
-		if (possiblyAVariator instanceof VariatorSettable)
-		{
-			((VariatorSettable) possiblyAVariator).setVariator(this.VAR);
+	private void fixVariator(Object possiblyAVariator) {
+		if (possiblyAVariator != null && possiblyAVariator instanceof VariatorSettable) {
+			((VariatorSettable) possiblyAVariator).setVariator(VAR);
 		}
 	}
 }

@@ -5,35 +5,32 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 
 /* x-placeholder-wtfplv2 */
 
-public interface Isolator
-{
+public interface Isolator {
 	
-	public abstract void onFrame();
+	public void onFrame();
 	
-	public abstract Library getAcoustics();
+	public Library getAcoustics();
 	
-	public abstract Solver getSolver();
+	public Solver getSolver();
 	
-	public abstract BlockMap getBlockMap();
+	public BlockMap getBlockMap();
 	
-	public abstract PrimitiveMap getPrimitiveMap();
+	public PrimitiveMap getPrimitiveMap();
 	
-	public abstract SoundPlayer getSoundPlayer();
+	public SoundPlayer getSoundPlayer();
 	
-	public abstract DefaultStepPlayer getDefaultStepPlayer();
+	public DefaultStepPlayer getDefaultStepPlayer();
 	
-	//
+	public void setAcoustics(Library acoustics);
 	
-	public abstract void setAcoustics(Library acoustics);
+	public void setSolver(Solver solver);
 	
-	public abstract void setSolver(Solver solver);
+	public void setBlockMap(BlockMap blockMap);
 	
-	public abstract void setBlockMap(BlockMap blockMap);
+	public void setPrimitiveMap(PrimitiveMap primitiveMap);
 	
-	public abstract void setPrimitiveMap(PrimitiveMap primitiveMap);
+	public void setSoundPlayer(SoundPlayer soundPlayer);
 	
-	public abstract void setSoundPlayer(SoundPlayer soundPlayer);
-	
-	public abstract void setDefaultStepPlayer(DefaultStepPlayer defaultStepPlayer);
+	public void setDefaultStepPlayer(DefaultStepPlayer defaultStepPlayer);
 	
 }

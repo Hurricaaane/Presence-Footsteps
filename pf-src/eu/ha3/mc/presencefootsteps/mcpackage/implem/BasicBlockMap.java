@@ -5,10 +5,8 @@ import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import eu.ha3.mc.presencefootsteps.game.system.PF172Helper;
+import eu.ha3.mc.presencefootsteps.game.system.PFHelper;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.BlockMap;
-
-/* x-placeholder-wtfplv2 */
 
 public class BasicBlockMap implements BlockMap {
 	private Map<String, String> blockMap;
@@ -19,7 +17,7 @@ public class BasicBlockMap implements BlockMap {
 	
 	@Override
 	public String getBlockMap(IBlockState state) {
-		String blockName = PF172Helper.nameOf(state.getBlock());
+		String blockName = PFHelper.nameOf(state.getBlock());
 		int meta = state.getBlock().getMetaFromState(state);
 		if (blockMap.containsKey(blockName + "^" + meta)) {
 			return blockMap.get(blockName + "^" + meta);
@@ -31,7 +29,7 @@ public class BasicBlockMap implements BlockMap {
 	
 	@Override
 	public String getBlockMapSubstrate(IBlockState state, String substrate) {
-		String blockName = PF172Helper.nameOf(state.getBlock());
+		String blockName = PFHelper.nameOf(state.getBlock());
 		int meta = state.getBlock().getMetaFromState(state);
 		if (blockMap.containsKey(blockName + "^" + meta + "." + substrate)) {
 			return blockMap.get(blockName + "^" + meta + "." + substrate);
@@ -48,7 +46,7 @@ public class BasicBlockMap implements BlockMap {
 
 	@Override
 	public boolean hasEntryForBlock(Block block) {
-		String key = PF172Helper.nameOf(block);
+		String key = PFHelper.nameOf(block);
 		for (Map.Entry<String, String> i : blockMap.entrySet()) {
 			if (i.getKey().startsWith(key)) {
 				return true;

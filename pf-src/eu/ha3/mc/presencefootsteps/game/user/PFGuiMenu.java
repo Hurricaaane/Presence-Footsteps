@@ -10,17 +10,15 @@ import eu.ha3.mc.gui.HGuiSliderControl;
 import eu.ha3.mc.gui.HSliderListener;
 import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
 
-/* x-placeholder-wtfplv2 */
-
-public class PFGuiMenu extends GuiScreen
-{
+public class PFGuiMenu extends GuiScreen {
 	/**
-	 * A reference to the screen object that created  Used for navigating
-	 * between screens.
+	 * A reference to the screen object that created  Used for navigating between screens.
 	 */
 	private GuiScreen parentScreen;
 	
-	/** The title string that is displayed in the top-center of the screen. */
+	/**
+	 * The title string that is displayed in the top-center of the screen.
+	 */
 	protected String screenTitle;
 	
 	private PFHaddon mod;
@@ -33,10 +31,10 @@ public class PFGuiMenu extends GuiScreen
 	private final int BUTTON_WIDTH = 300 - Y_SPACING * 4;
 	
 	
-	public PFGuiMenu(GuiScreen par1GuiScreen, PFHaddon mod) {
+	public PFGuiMenu(GuiScreen par1GuiScreen, PFHaddon haddon) {
 		screenTitle = "Presence Footsteps Configuration";
 		parentScreen = par1GuiScreen;
-		this.mod = mod;
+		mod = haddon;
 	}
 	
 	/**
@@ -156,7 +154,6 @@ public class PFGuiMenu extends GuiScreen
 			}
 		}
 		super.drawScreen(par1, par2, par3);
-		
 	}
 	
 }

@@ -1,12 +1,8 @@
 package eu.ha3.mc.presencefootsteps.log;
 
-import eu.ha3.mc.presencefootsteps.game.system.PF172Helper;
+import eu.ha3.mc.presencefootsteps.game.system.PFHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-
-/*
---filenotes-placeholder
-*/
 
 public class PFLog {
 	private static boolean isDebugEnabled;
@@ -27,7 +23,7 @@ public class PFLog {
 					contents = contents.replace("%" + contentIndex++, ((IBlockState)params[i]).getBlock().toString());
 					contents = contents.replace("%" + contentIndex++, ((IBlockState)params[i]).getProperties().toString());
 				} else if (params[i] instanceof Block) {
-					contents = contents.replace("%" + contentIndex++, PF172Helper.nameOf((Block)params[i]));
+					contents = contents.replace("%" + contentIndex++, PFHelper.nameOf((Block)params[i]));
 				} else {
 					contents = contents.replace("%" + contentIndex++, params[i].toString());
 				}

@@ -21,19 +21,16 @@ import eu.ha3.mc.presencefootsteps.log.PFLog;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.DefaultStepPlayer;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Isolator;
 
-/* x-placeholder-wtfplv2 */
-
 /**
  * A Library that can also play sounds and default footsteps.
  * 
  * @author Hurry
  */
-public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, DefaultStepPlayer
-{
+public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, DefaultStepPlayer {
 	private Isolator isolator;
 	
-	private final Random random;
-	private List<PendingSound> pending;
+	private final Random random = new Random();
+	private List<PendingSound> pending = new ArrayList<PendingSound>();
 	private long minimum;
 	
 	private boolean USING_LATENESS = true;
@@ -41,17 +38,12 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	private float LATENESS_THRESHOLD_DIVIDER = 1.5f;
 	private double EARLYNESS_THRESHOLD_POW = 0.75d;
 	
-	public AcousticsManager(Isolator isolator)
-	{
+	public AcousticsManager(Isolator isolator) {
 		this.isolator = isolator;
-		
-		this.random = new Random();
-		this.pending = new ArrayList<PendingSound>();
 	}
 	
 	@Override
-	public void playStep(EntityLivingBase entity, Association assos)
-	{
+	public void playStep(EntityLivingBase entity, Association assos) {
 		Block block = assos.getBlock();
 		if (!block.getMaterial().isLiquid() && block.stepSound != null) {
 			Block.SoundType soundType = block.stepSound;
@@ -65,104 +57,78 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	}
 	
 	@Override
-	public void playSound(Object location, String soundName, float volume, float pitch, Options options)
-	{
+	public void playSound(Object location, String soundName, float volume, float pitch, Options options) {
 		if (!(location instanceof Entity)) return;
 		
-		if (options != null)
-		{
-			if (options.hasOption("delay_min") && options.hasOption("delay_max"))
-			{
+		if (options != null) {
+			if (options.hasOption("delay_min") && options.hasOption("delay_max")) {
 				long delay = randAB(this.random, (Long) options.getOption("delay_min"), (Long) options.getOption("delay_max"));
 				
-				if (delay < this.minimum)
-				{
-					this.minimum = delay;
+				if (delay < minimum) {
+					minimum = delay;
 				}
 				
-				this.pending.add(new PendingSound(location, soundName, volume, pitch, null, System.currentTimeMillis() + delay, options.hasOption("skippable") ? -1 : (Long) options.getOption("delay_max")));
-			}
-			else
-			{
+				pending.add(new PendingSound(location, soundName, volume, pitch, null, System.currentTimeMillis() + delay, options.hasOption("skippable") ? -1 : (Long) options.getOption("delay_max")));
+			} else {
 				actuallyPlaySound((Entity) location, soundName, volume, pitch);
 			}
-		}
-		else
-		{
+		} else {
 			actuallyPlaySound((Entity) location, soundName, volume, pitch);
 		}
 	}
 	
-	protected void actuallyPlaySound(Entity location, String soundName, float volume, float pitch)
-	{
+	protected void actuallyPlaySound(Entity location, String soundName, float volume, float pitch) {
 		PFLog.debug("    Playing sound " + soundName + " (" + String.format(Locale.ENGLISH, "v%.2f, p%.2f", volume, pitch) + ")");
 		location.playSound(soundName, volume, pitch);
 	}
 	
-	private long randAB(Random rng, long a, long b)
-	{
-		if (a >= b) return a;
-		return a + rng.nextInt((int) b + 1);
-	}
-	
-	//
-	
-	@Override
-	public Random getRNG()
-	{
-		return this.random;
+	private long randAB(Random rng, long a, long b) {
+		return a >= b ? a : a + rng.nextInt((int) b + 1);
 	}
 	
 	@Override
-	protected void onAcousticNotFound(Object location, String acousticName, EventType event, Options inputOptions)
-	{
+	public Random getRNG() {
+		return random;
+	}
+	
+	@Override
+	protected void onAcousticNotFound(Object location, String acousticName, EventType event, Options inputOptions) {
 		PFLog.log("Tried to play a missing acoustic: " + acousticName);
 	}
 	
 	@Override
-	public void think()
-	{
-		if (this.pending.isEmpty()) return;
-		
-		if (System.currentTimeMillis() < this.minimum) return;
+	public void think() {
+		if (pending.isEmpty() || System.currentTimeMillis() < minimum) return;
 		
 		long newMinimum = Long.MAX_VALUE;
 		long time = System.currentTimeMillis();
 		
-		for (Iterator<PendingSound> iter = this.pending.iterator(); iter.hasNext();)
-		{
+		Iterator<PendingSound> iter = pending.iterator();
+		while (iter.hasNext()) {
 			PendingSound sound = iter.next();
 			
-			if (time >= sound.getTimeToPlay() || USING_EARLYNESS && time >= sound.getTimeToPlay() - Math.pow(sound.getMaximumBase(), this.EARLYNESS_THRESHOLD_POW))
-			{
-				if (USING_EARLYNESS && time < sound.getTimeToPlay())
-				{
-					PFLog.debug("    Playing early sound (early by " + (sound.getTimeToPlay() - time) + "ms, tolerence is " + Math.pow(sound.getMaximumBase(), this.EARLYNESS_THRESHOLD_POW));
+			if (time >= sound.getTimeToPlay() || USING_EARLYNESS && time >= sound.getTimeToPlay() - Math.pow(sound.getMaximumBase(), EARLYNESS_THRESHOLD_POW)) {
+				if (USING_EARLYNESS && time < sound.getTimeToPlay()) {
+					PFLog.debug("    Playing early sound (early by " + (sound.getTimeToPlay() - time) + "ms, tolerence is " + Math.pow(sound.getMaximumBase(), EARLYNESS_THRESHOLD_POW));
 				}
 				
 				long lateness = time - sound.getTimeToPlay();
-				if (!USING_LATENESS || sound.getMaximumBase() < 0 || lateness <= sound.getMaximumBase() / this.LATENESS_THRESHOLD_DIVIDER)
-				{
+				if (!USING_LATENESS || sound.getMaximumBase() < 0 || lateness <= sound.getMaximumBase() / LATENESS_THRESHOLD_DIVIDER) {
 					sound.playSound(this);
-				}
-				else
-				{
-					PFLog.debug("    Skipped late sound (late by " + lateness + "ms, tolerence is " + sound.getMaximumBase() / this.LATENESS_THRESHOLD_DIVIDER + "ms)");
+				} else {
+					PFLog.debug("    Skipped late sound (late by " + lateness + "ms, tolerence is " + sound.getMaximumBase() / LATENESS_THRESHOLD_DIVIDER + "ms)");
 				}
 				iter.remove();
-			}
-			else
-			{
+			} else {
 				newMinimum = sound.getTimeToPlay();
 			}
 		}
 		
-		this.minimum = newMinimum;
+		minimum = newMinimum;
 	}
 	
 	@Override
-	protected SoundPlayer mySoundPlayer()
-	{
-		return this.isolator.getSoundPlayer();
+	protected SoundPlayer mySoundPlayer() {
+		return isolator.getSoundPlayer();
 	}
 }

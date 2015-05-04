@@ -13,90 +13,68 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 import eu.ha3.mc.presencefootsteps.game.system.Association;
 import eu.ha3.mc.presencefootsteps.log.PFLog;
 
-/* x-placeholder-wtfplv2 */
-
-public abstract class AcousticsLibrary implements Library
-{
+public abstract class AcousticsLibrary implements Library {
 	private Map<String, Acoustic> acoustics;
 	
-	public AcousticsLibrary()
-	{
-		this.acoustics = new HashMap<String, Acoustic>();
+	public AcousticsLibrary() {
+		acoustics = new HashMap<String, Acoustic>();
 	}
 	
 	@Override
-	public void addAcoustic(NamedAcoustic acoustic)
-	{
-		this.acoustics.put(acoustic.getName(), acoustic);
+	public void addAcoustic(NamedAcoustic acoustic) {
+		acoustics.put(acoustic.getName(), acoustic);
 	}
 	
 	@Override
-	public Set<String> getAcousticsKeySet()
-	{
-		return this.acoustics.keySet();
+	public Set<String> getAcousticsKeySet() {
+		return acoustics.keySet();
 	}
 	
 	@Override
-	public Acoustic getAcoustic(String acoustic)
-	{
-		if (!this.acoustics.containsKey(acoustic))
-			return null;
-		
-		return this.acoustics.get(acoustic);
+	public Acoustic getAcoustic(String acoustic) {
+		if (acoustics.containsKey(acoustic)) {
+			return acoustics.get(acoustic);
+		}
+		return null;
 	}
 	
 	@Override
-	public void playAcoustic(Object location, Association acousticName, EventType event)
-	{
+	public void playAcoustic(Object location, Association acousticName, EventType event) {
 		playAcoustic(location, acousticName, event, null);
 	}
 	
 	@Override
-	public void playAcoustic(Object location, Association acousticName, EventType event, Options inputOptions)
-	{
+	public void playAcoustic(Object location, Association acousticName, EventType event, Options inputOptions) {
 		if (acousticName.getData().contains(",")) {
 			String fragments[] = acousticName.getData().split(",");
 			for (String fragment : fragments) {
 				playAcoustic(location, fragment, event, inputOptions);
 			}
-			
-			return;
-		}
-		
-		if (!acoustics.containsKey(acousticName.getData())) {
+		} else if (!acoustics.containsKey(acousticName.getData())) {
 			onAcousticNotFound(location, acousticName.getData(), event, inputOptions);
-			return;
+		} else {
+			PFLog.debug("  Playing acoustic " + acousticName.getData() + " for event " + event.toString().toUpperCase());
+			acoustics.get(acousticName.getData()).playSound(mySoundPlayer(), location, event, inputOptions);
 		}
-		
-		PFLog.debug("  Playing acoustic " + acousticName.getData() + " for event " + event.toString().toUpperCase());
-		acoustics.get(acousticName.getData()).playSound(mySoundPlayer(), location, event, inputOptions);
 	}
 	
-	public void playAcoustic(Object location, String acousticName, EventType event, Options inputOptions)
-	{
+	public void playAcoustic(Object location, String acousticName, EventType event, Options inputOptions) {
 		if (acousticName.contains(",")) {
 			String fragments[] = acousticName.split(",");
 			for (String fragment : fragments) {
 				playAcoustic(location, fragment, event, inputOptions);
 			}
-			
-			return;
-		}
-		
-		if (!acoustics.containsKey(acousticName))
-		{
+		} else if (!acoustics.containsKey(acousticName)) {
 			onAcousticNotFound(location, acousticName, event, inputOptions);
-			return;
+		} else {
+			PFLog.debug("  Playing acoustic " + acousticName + " for event " + event.toString().toUpperCase());
+			acoustics.get(acousticName).playSound(mySoundPlayer(), location, event, inputOptions);
 		}
-		
-		PFLog.debug("  Playing acoustic " + acousticName + " for event " + event.toString().toUpperCase());
-		acoustics.get(acousticName).playSound(mySoundPlayer(), location, event, inputOptions);
 	}
 	
 	@Override
-	public boolean hasAcoustic(String acousticName)
-	{
-		return this.acoustics.containsKey(acousticName);
+	public boolean hasAcoustic(String acousticName) {
+		return acoustics.containsKey(acousticName);
 	}
 	
 	protected abstract void onAcousticNotFound(Object location, String acousticName, EventType event, Options inputOptions);

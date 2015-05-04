@@ -6,29 +6,23 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 import eu.ha3.util.property.contract.PropertyHolder;
 
-/* x-placeholder-wtfplv2 */
-
-public class UserConfigSoundPlayerWrapper implements SoundPlayer
-{
+public class UserConfigSoundPlayerWrapper implements SoundPlayer {
 	private SoundPlayer wrapped;
 	private PropertyHolder userConfig;
 	
-	public UserConfigSoundPlayerWrapper(SoundPlayer wrapped, PropertyHolder userConfig)
-	{
-		this.userConfig = userConfig;
-		this.wrapped = wrapped;
+	public UserConfigSoundPlayerWrapper(SoundPlayer player, PropertyHolder config) {
+		userConfig = config;
+		wrapped = player;
 	}
 	
 	@Override
-	public void playSound(Object location, String soundName, float volume, float pitch, Options options)
-	{
-		this.wrapped.playSound(location, soundName, volume * this.userConfig.getInteger("user.volume") / 100f, pitch, options);
+	public void playSound(Object location, String soundName, float volume, float pitch, Options options) {
+		wrapped.playSound(location, soundName, volume * userConfig.getInteger("user.volume") / 100f, pitch, options);
 	}
 	
 	@Override
-	public Random getRNG()
-	{
-		return this.wrapped.getRNG();
+	public Random getRNG() {
+		return wrapped.getRNG();
 	}
 	
 }

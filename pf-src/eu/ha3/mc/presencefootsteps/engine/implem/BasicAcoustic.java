@@ -7,10 +7,7 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 
-/* x-placeholder-wtfplv2 */
-
-public class BasicAcoustic implements Acoustic
-{
+public class BasicAcoustic implements Acoustic {
 	protected String soundName;
 	protected float volMin = 1f;
 	protected float volMax = 1f;
@@ -20,72 +17,52 @@ public class BasicAcoustic implements Acoustic
 	protected Options outputOptions;
 	
 	@Override
-	public void playSound(SoundPlayer player, Object location, EventType event, Options inputOptions)
-	{
-		// Special case for intentionnaly empty sounds (as opposed to fallback sounds)
-		if (this.soundName.equals(""))
-			return;
-		
-		float volume = generateVolume(player.getRNG());
-		float pitch = generatePitch(player.getRNG());
-		if (inputOptions != null)
-		{
-			if (inputOptions.hasOption("gliding_volume"))
-			{
-				volume = this.volMin + (this.volMax - this.volMin) * (Float) inputOptions.getOption("gliding_volume");
+	public void playSound(SoundPlayer player, Object location, EventType event, Options inputOptions) {
+		if (!soundName.isEmpty()) { // Special case for intentionally empty sounds (as opposed to fall back sounds)
+			float volume = generateVolume(player.getRNG());
+			float pitch = generatePitch(player.getRNG());
+			if (inputOptions != null) {
+				if (inputOptions.hasOption("gliding_volume")) {
+					volume = volMin + (volMax - volMin) * (Float) inputOptions.getOption("gliding_volume");
+				}
+				if (inputOptions.hasOption("gliding_pitch")) {
+					pitch = pitchMin + (pitchMax - pitchMin) * (Float) inputOptions.getOption("gliding_pitch");
+				}
 			}
-			if (inputOptions.hasOption("gliding_pitch"))
-			{
-				pitch =
-					this.pitchMin + (this.pitchMax - this.pitchMin) * (Float) inputOptions.getOption("gliding_pitch");
-			}
+			player.playSound(location, soundName, volume, pitch, outputOptions);
 		}
-		player.playSound(location, this.soundName, volume, pitch, this.outputOptions);
 	}
 	
-	private float generateVolume(Random rng)
-	{
-		return randAB(rng, this.volMin, this.volMax);
+	private float generateVolume(Random rng) {
+		return randAB(rng, volMin, volMax);
 	}
 	
-	private float generatePitch(Random rng)
-	{
-		return randAB(rng, this.pitchMin, this.pitchMax);
+	private float generatePitch(Random rng) {
+		return randAB(rng, pitchMin, pitchMax);
 	}
 	
-	private float randAB(Random rng, float a, float b)
-	{
-		if (a >= b)
-			return a;
-		
-		return a + rng.nextFloat() * (b - a);
+	private float randAB(Random rng, float a, float b) {
+		return a >= b ? a : a + rng.nextFloat() * (b - a);
 	}
 	
-	//
-	
-	public void setSoundName(String soundName)
-	{
-		this.soundName = soundName;
+	public void setSoundName(String val) {
+		soundName = val;
 	}
 	
-	public void setVolMin(float volMin)
-	{
-		this.volMin = volMin;
+	public void setVolMin(float val) {
+		volMin = val;
 	}
 	
-	public void setVolMax(float volMax)
-	{
-		this.volMax = volMax;
+	public void setVolMax(float val) {
+		volMax = val;
 	}
 	
-	public void setPitchMin(float pitchMin)
-	{
-		this.pitchMin = pitchMin;
+	public void setPitchMin(float val) {
+		pitchMin = val;
 	}
 	
-	public void setPitchMax(float pitchMax)
-	{
-		this.pitchMax = pitchMax;
+	public void setPitchMax(float val) {
+		pitchMax = val;
 	}
 	
 }

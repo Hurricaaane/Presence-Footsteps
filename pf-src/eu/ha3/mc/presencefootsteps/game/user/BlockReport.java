@@ -21,27 +21,23 @@ import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.EnumChatFormatting;
-import eu.ha3.mc.presencefootsteps.game.system.PF172Helper;
+import eu.ha3.mc.presencefootsteps.game.system.PFHelper;
 import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
 import eu.ha3.util.property.simple.ConfigProperty;
-
-/*
---filenotes-placeholder
-*/
 
 public class BlockReport {
 	private final PFHaddon mod;
 	private ConfigProperty results;
 	
-	public BlockReport(PFHaddon mod) {
-		this.mod = mod;
+	public BlockReport(PFHaddon haddon) {
+		mod = haddon;
 	}
 	
 	public BlockReport generateReport() {
 		results = new ConfigProperty();
 		for (Object o : Block.blockRegistry) {
 			Block block = (Block) o;
-			results.setProperty(PF172Helper.nameOf(block), getSoundData(block) + getClassData(block));
+			results.setProperty(PFHelper.nameOf(block), getSoundData(block) + getClassData(block));
 		}
 		results.commit();
 		return this;
@@ -52,7 +48,7 @@ public class BlockReport {
 		for (Object o : Block.blockRegistry) {
 			Block block = (Block) o;
 			if (!mod.getIsolator().getBlockMap().hasEntryForBlock(block)) {
-				results.setProperty(PF172Helper.nameOf(block), getSoundData(block) + getClassData(block));
+				results.setProperty(PFHelper.nameOf(block), getSoundData(block) + getClassData(block));
 			}
 		}
 		results.commit();

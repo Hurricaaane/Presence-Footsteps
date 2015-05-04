@@ -3,10 +3,7 @@ package eu.ha3.mc.presencefootsteps.mcpackage.implem;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.Options;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 
-/* x-placeholder-wtfplv2 */
-
-public class PendingSound
-{
+public class PendingSound {
 	private Object location;
 	private String soundName;
 	private float volume;
@@ -15,9 +12,7 @@ public class PendingSound
 	private long timeToPlay;
 	private long maximum;
 	
-	public PendingSound(
-		Object location, String soundName, float volume, float pitch, Options options, long timeToPlay, long maximum)
-	{
+	public PendingSound(Object location, String soundName, float volume, float pitch, Options options, long timeToPlay, long maximum) {
 		this.location = location;
 		this.soundName = soundName;
 		this.volume = volume;
@@ -30,32 +25,22 @@ public class PendingSound
 	
 	/**
 	 * Play the sound stored in this pending sound.
-	 * 
-	 * @param player
 	 */
-	public void playSound(SoundPlayer player)
-	{
-		player.playSound(this.location, this.soundName, this.volume, this.pitch, this.options);
+	public void playSound(SoundPlayer player) {
+		player.playSound(location, soundName, volume, pitch, options);
 	}
 	
 	/**
 	 * Returns the time after which this sound plays.
-	 * 
-	 * @return
 	 */
-	public long getTimeToPlay()
-	{
-		return this.timeToPlay;
+	public long getTimeToPlay() {
+		return timeToPlay;
 	}
 	
 	/**
-	 * Get the maximum delay of this sound, for threshold purposes. If the value
-	 * is negative, the sound will not be skippable.
-	 * 
-	 * @return
+	 * Get the maximum delay of this sound, for threshold purposes. If the value is negative, the sound will not be skippable.
 	 */
-	public long getMaximumBase()
-	{
-		return this.maximum;
+	public long getMaximumBase() {
+		return maximum;
 	}
 }

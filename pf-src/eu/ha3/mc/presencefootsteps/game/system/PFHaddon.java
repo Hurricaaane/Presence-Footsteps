@@ -41,9 +41,9 @@ import eu.ha3.mc.presencefootsteps.mcpackage.implem.NormalVariator;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.BlockMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.PrimitiveMap;
 import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
-import eu.ha3.mc.presencefootsteps.parsers.JasonAcoustics_Engine0;
-import eu.ha3.mc.presencefootsteps.parsers.PropertyBlockMap_Engine0;
-import eu.ha3.mc.presencefootsteps.parsers.PropertyPrimitiveMap_Engine0;
+import eu.ha3.mc.presencefootsteps.parsers.AcousticsJsonReader;
+import eu.ha3.mc.presencefootsteps.parsers.BlockMapReader;
+import eu.ha3.mc.presencefootsteps.parsers.PrimitiveMapReader;
 import eu.ha3.mc.quick.chat.Chatter;
 import eu.ha3.mc.quick.keys.KeyWatcher;
 import eu.ha3.mc.quick.update.NotifiableHaddon;
@@ -51,15 +51,13 @@ import eu.ha3.mc.quick.update.UpdateNotifier;
 import eu.ha3.util.property.simple.ConfigProperty;
 import eu.ha3.util.property.simple.InputStreamConfigProperty;
 
-/* x-placeholder-wtfplv2 */
-
 public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, SupportsTickEvents, IResourceManagerReloadListener, NotifiableHaddon, Ha3HoldActions, SupportsKeyEvents {
 	// Identity
 	protected final String NAME = "Presence Footsteps";
 	protected final int VERSION = 6;
-	protected final String FOR = "1.8";
+	protected final String MCVERSION = "1.8";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
-	protected final Identity identity = (new HaddonIdentity(NAME, VERSION, FOR, ADDRESS)).setPrefix("u");
+	protected final Identity identity = (new HaddonIdentity(NAME, VERSION, MCVERSION, ADDRESS)).setPrefix("u");
 	
 	// NotifiableHaddon and UpdateNotifier
 	private ConfigProperty config; // Can't be final
@@ -235,7 +233,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 				InputStreamConfigProperty blockSound = new InputStreamConfigProperty();
 				blockSound.loadStream(dealer.openBlockMap(pack.getResourcePack()));
 				
-				new PropertyBlockMap_Engine0().setup(blockSound, blockMap);
+				new BlockMapReader().setup(blockSound, blockMap);
 				working++;
 			} catch (IOException e) {
 				PFLog.debug("No blockmap found in " + pack.getResourcePackName() + ": " + e.getMessage());
@@ -256,7 +254,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 			try {
 				InputStreamConfigProperty primitiveSound = new InputStreamConfigProperty();
 				primitiveSound.loadStream(dealer.openPrimitiveMap(pack.getResourcePack()));
-				new PropertyPrimitiveMap_Engine0().setup(primitiveSound, primitiveMap);
+				new PrimitiveMapReader().setup(primitiveSound, primitiveMap);
 				working = working + 1;
 			} catch (IOException e) {
 				PFLog.debug("No primitivemap found in " + pack.getResourcePackName() + ": " + e.getMessage());
@@ -277,7 +275,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		for (ResourcePackRepository.Entry pack : repo) {
 			try {
 				String jasonString = new Scanner(dealer.openAcoustics(pack.getResourcePack())).useDelimiter("\\Z").next();
-				new JasonAcoustics_Engine0("").parseJSON(jasonString, acoustics);
+				new AcousticsJsonReader("").parseJSON(jasonString, acoustics);
 				working = working + 1;
 			} catch (IOException e) {
 				PFLog.debug("No acoustics found in " + pack.getResourcePackName() + ": " + e.getMessage());

@@ -4,18 +4,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import eu.ha3.mc.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.mc.presencefootsteps.game.system.Association;
 
-/* x-placeholder-wtfplv2 */
-
-public interface Solver
-{
+public interface Solver {
 	/**
 	 * Play an association.
-	 * 
-	 * @param ply
-	 * @param assos
-	 * @param eventType
 	 */
-	public abstract void playAssociation(EntityPlayer ply, Association assos, EventType eventType);
+	public void playAssociation(EntityPlayer ply, Association assos, EventType eventType);
 	
 	/**
 	 * Find an association for a player particular foot. This will fetch the
@@ -27,13 +20,8 @@ public interface Solver
 	 * Returns null if no blocks are valid emitting blocks.<br>
 	 * Returns a string that begins with "_NO_ASSOCIATION" if a matching block
 	 * was found, but has no association in the blockmap.
-	 * 
-	 * @param ply
-	 * @param verticalOffsetAsMinus
-	 * @param isRightFoot
-	 * @return
 	 */
-	public abstract Association findAssociationForPlayer(EntityPlayer ply, double verticalOffsetAsMinus, boolean isRightFoot);
+	public Association findAssociationForPlayer(EntityPlayer ply, double verticalOffsetAsMinus, boolean isRightFoot);
 	
 	/**
 	 * Find an association for a player. This will take the block right below
@@ -44,12 +32,8 @@ public interface Solver
 	 * Returns null if no blocks are valid emitting blocks.<br>
 	 * Returns a string that begins with "_NO_ASSOCIATION" if a matching block
 	 * was found, but has no association in the blockmap.
-	 * 
-	 * @param ply
-	 * @param verticalOffsetAsMinus
-	 * @return
 	 */
-	public abstract Association findAssociationForPlayer(EntityPlayer ply, double verticalOffsetAsMinus);
+	public Association findAssociationForPlayer(EntityPlayer ply, double verticalOffsetAsMinus);
 	
 	/**
 	 * Find an association for a player, and a location. This will try to find
@@ -60,14 +44,8 @@ public interface Solver
 	 * Returns null if no blocks are valid emitting blocks.<br>
 	 * Returns a string that begins with "_NO_ASSOCIATION" if a matching block
 	 * was found, but has no association in the blockmap.
-	 * 
-	 * @param ply
-	 * @param xx
-	 * @param yy
-	 * @param zz
-	 * @return
 	 */
-	public abstract Association findAssociationForLocation(EntityPlayer ply, int xx, int yy, int zz);
+	public Association findAssociationForLocation(EntityPlayer ply, int xx, int yy, int zz);
 	
 	/**
 	 * Find an association for a certain block assuming the player is standing
@@ -81,42 +59,23 @@ public interface Solver
 	 * Returns a string that begins with "_NO_ASSOCIATION" if the block is
 	 * valid, but has no association in the blockmap. If the carpet was
 	 * selected, this solves to the carpet.
-	 * 
-	 * @param xx
-	 * @param yy
-	 * @param zz
-	 * @return
 	 */
-	public abstract Association findAssociationForBlock(int xx, int yy, int zz);
+	public Association findAssociationForBlock(int xx, int yy, int zz);
 	
 	/**
-	 * Find an association for a certain block assuming the player is standing
-	 * on it, using a custom strategy which strategies are defined by the
-	 * solver.
-	 * 
-	 * @param xx
-	 * @param yy
-	 * @param zz
-	 * @param strategy
-	 * @return
+	 * Find an association for a certain block assuming the player is standing on it,
+	 * using a custom strategy which strategies are defined by the solver.
 	 */
-	public abstract Association findAssociationForBlock(int xx, int yy, int zz, String strategy);
+	public Association findAssociationForBlock(int xx, int yy, int zz, String strategy);
 	
 	/**
-	 * Play special sounds that must stop the usual footstep figuring things out
-	 * process.
-	 * 
-	 * @param ply
-	 * @return
+	 * Play special sounds that must stop the usual footstep figuring things out process.
 	 */
-	public abstract boolean playSpecialStoppingConditions(EntityPlayer ply);
+	public boolean playSpecialStoppingConditions(EntityPlayer ply);
 	
 	/**
 	 * Tells if footsteps can be played.
-	 * 
-	 * @param ply
-	 * @return
 	 */
-	public abstract boolean hasSpecialStoppingConditions(EntityPlayer ply);
+	public boolean hasSpecialStoppingConditions(EntityPlayer ply);
 	
 }
