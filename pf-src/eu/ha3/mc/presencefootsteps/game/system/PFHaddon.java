@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -48,6 +49,7 @@ import eu.ha3.mc.quick.chat.Chatter;
 import eu.ha3.mc.quick.keys.KeyWatcher;
 import eu.ha3.mc.quick.update.NotifiableHaddon;
 import eu.ha3.mc.quick.update.UpdateNotifier;
+import eu.ha3.mc.quick.update.Updater;
 import eu.ha3.util.property.simple.ConfigProperty;
 import eu.ha3.util.property.simple.InputStreamConfigProperty;
 
@@ -62,12 +64,14 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	// NotifiableHaddon and UpdateNotifier
 	private ConfigProperty config; // Can't be final
 	private final Chatter chatter = new Chatter(this, "<PF> ");
-	private UpdateNotifier updateNotifier;
+	private Updater updateNotifier;
 	
 	// Meta
 	private File presenceDir;
 	private EdgeTrigger debugButton;
+	private boolean debugState; 
 	private long pressedOptionsTime;
+	private boolean enabled = true;
 	
 	// System
 	private PFResourcePackDealer dealer = new PFResourcePackDealer();
@@ -105,12 +109,22 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 			@Override
 			public void onTrueEdge() {
 				pressedOptionsTime = System.currentTimeMillis();
-				PFLog.setDebugEnabled(true);
-				reloadEverything(false);
+				debugState = true;
 			}
 			
 			@Override
-			public void onFalseEdge() {}
+			public void onFalseEdge() {
+				if (debugState) {
+					if (PFLog.getDebugEnabled()) {
+						PFLog.setDebugEnabled(false);
+						chatter.printChat(I18n.format("pf.debug.off"));
+					} else {
+						PFLog.setDebugEnabled(true);
+						chatter.printChat(I18n.format("pf.debug.on"));
+					}
+					reloadEverything(false);
+				}
+			}
 		});
 		
 		reloadEverything(false);// Config is loaded here
@@ -123,7 +137,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 			}
 		}
 		
-		keyBindingMain = new KeyBinding("Presence Footsteps", keyBindDefaultCode, "key.categories.misc");
+		keyBindingMain = new KeyBinding("key.presencefootsteps", keyBindDefaultCode, "key.categories.misc");
 		Minecraft.getMinecraft().gameSettings.keyBindings = ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, keyBindingMain);
 		keyBindingMain.setKeyCode(getConfig().getInteger("key.code"));
 		KeyBinding.resetKeyBindingArrayAndHash();
@@ -290,12 +304,16 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		isolator.setDefaultStepPlayer(acoustics);
 	}
 	
+	public boolean mlpInstalled() {
+		return mlpInstalled;
+	}
+	
 	private boolean isInstalledMLP() {
 		return Ha3StaticUtilities.classExists("com.minelittlepony.minelp.Pony", this);
 	}
 	
 	public boolean getEnabled() {
-		return config.getBoolean("user.enabled");
+		return enabled;
 	}
 	
 	public int getVolume() {
@@ -310,10 +328,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	}
 	
 	public boolean toggle() {
-		OperatorCaster op = ((OperatorCaster) op());
-		boolean enabled = !op.getFrameEnabled();
-		op.setFrameEnabled(enabled);
-		config.setProperty("user.enabled", enabled);
+		config.setProperty("user.enabled", enabled = !enabled);
 		saveConfig();
 		if (enabled) {
 			reloadEverything(false);
@@ -335,16 +350,33 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	}
 	
 	@Override
+	public void onTick() {
+		if (tickRound == 0) {
+			int keyCode = keyBindingMain.getKeyCode();
+			if (keyCode != config.getInteger("key.code")) {
+				PFLog.log("Key binding changed. Saving...");
+				config.setProperty("key.code", keyCode);
+				saveConfig();
+			}
+		}
+		watcher.onTick();
+		keyManager.handleRuntime();
+		tickRound = (tickRound + 1) % 100;
+	}
+	
+	@Override
 	public void onFrame(float semi) {
 		if (Minecraft.getMinecraft().thePlayer == null) return;
 		
-		boolean keysDown = util().areKeysDown(29, 42, 33); // CTRL SHIFT F
+		
+		boolean keysDown = util().areKeysDown(Keyboard.KEY_LCONTROL, Keyboard.KEY_LSHIFT, Keyboard.KEY_F); 
 		debugButton.signalState(keysDown);
 		if (keysDown && System.currentTimeMillis() - pressedOptionsTime > 1000) {
+			debugState = false;
 			displayMenu();
 		}
 		
-		if (getEnabled() && hasResourcePacks) {
+		if (enabled && hasResourcePacks) {
 			isolator.onFrame();
 			setPlayerStepDistance(Integer.MAX_VALUE);
 		}
@@ -353,40 +385,30 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 			firstTickPassed = true;
 			updateNotifier.attempt();
 			if (mlpDetectedFirst) {
-				chatter.printChat(EnumChatFormatting.AQUA, "Mine Little Pony has been detected!");
-				chatter.printChatShort("4-legged mode has been enabled, which will make running sound like galloping amongst other things.");
+				chatter.printChat(EnumChatFormatting.AQUA, I18n.format("pf.mlp.0"));
+				chatter.printChatShort(I18n.format("pf.mlp.1"));
 				if (getConfig().getInteger("custom.stance") == 0) {
-					chatter.printChatShort(EnumChatFormatting.GRAY, "This option will turn off automatically when you remove Mine Little Pony. To disable it now or make it permanent press " + getKeyCombinationDescription());
+					chatter.printChatShort(EnumChatFormatting.GRAY, I18n.format(keyBindingMain.getKeyCode() == 0 ? "pf.mlp.2.stance" : "pf.mlp.2.stance.button", Keyboard.getKeyName(keyBindingMain.getKeyCode())));
 				} else {
-					chatter.printChatShort(EnumChatFormatting.GRAY, "To disable it " + getKeyCombinationDescription());
+					chatter.printChatShort(EnumChatFormatting.GRAY, I18n.format(keyBindingMain.getKeyCode() == 0 ? "pf.mlp.2" : "pf.mlp.2.button", Keyboard.getKeyName(keyBindingMain.getKeyCode())));
 				}
 			}
 			
 			if (!hasResourcePacks) {
 				hasResourcePacks_FixMe = true;
 				if (hasDisabledResourcePacks) {
-					chatter.printChat(EnumChatFormatting.RED, "Resource Pack not enabled yet!");
-					chatter.printChatShort(EnumChatFormatting.WHITE, "You need to activate the \"Presence Footsteps Resource Pack\" in the Minecraft Options menu for it to run.");
+					chatter.printChat(EnumChatFormatting.RED, I18n.format("pf.pack.disabled.0"));
+					chatter.printChatShort(EnumChatFormatting.WHITE, I18n.format("pf.pack.disabled.1"));
 				} else {
-					chatter.printChat(EnumChatFormatting.RED, "Resource Pack missing from resourcepacks/!");
-					chatter.printChatShort(EnumChatFormatting.WHITE, "You may have forgotten to put the Resource Pack file into your resourcepacks/ folder.");
-				}
-				if (getConfig().getInteger("key.code") == this.keyBindDefaultCode) {
-					chatter.printChatShort(EnumChatFormatting.GRAY, "There is also a Presence Footsteps menu key in the Controls menu.");
+					chatter.printChat(EnumChatFormatting.RED, I18n.format("pf.pack.0"));
+					chatter.printChatShort(EnumChatFormatting.WHITE, I18n.format("pf.pack.1"));
 				}
 			}
 		}
 		if (hasResourcePacks_FixMe && hasResourcePacks) {
 			hasResourcePacks_FixMe = false;
-			chatter.printChat(EnumChatFormatting.GREEN, "It should work now!");
+			chatter.printChat(EnumChatFormatting.GREEN, I18n.format("pf.pack.yay"));
 		}
-	}
-	
-	private String getKeyCombinationDescription() {
-		if (keyBindingMain.getKeyCode() == 0) {
-			return "hold down the combination LEFT CTRL + LEFT SHIFT + F for 1 second.";
-		}
-		return "press " + Keyboard.getKeyName(keyBindingMain.getKeyCode()) + ".";
 	}
 	
 	private void displayMenu() {
@@ -404,7 +426,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		return hasResourcePacks;
 	}
 	
-	public boolean hasNonethelessResourcePacksInstalled() {
+	public boolean hasResourcePacksInstalled() {
 		return hasDisabledResourcePacks;
 	}
 	
@@ -415,6 +437,16 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	@Override
 	public ConfigProperty getConfig() {
 		return config;
+	}
+	
+	@Override
+	public Chatter getChatter() {
+		return chatter;
+	}
+	
+	@Override
+	public Identity getIdentity() {
+		return identity;
 	}
 	
 	@Override
@@ -432,13 +464,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	}
 	
 	@Override
-	public Chatter getChatter() {
-		return chatter;
-	}
-	
-	@Override
-	public Identity getIdentity() {
-		return identity;
+	public void onKey(KeyBinding event) {
+		keyManager.handleKeyDown(event);
 	}
 	
 	@Override
@@ -457,24 +484,4 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	
 	@Override
 	public void endHold() {}
-	
-	@Override
-	public void onKey(KeyBinding event) {
-		keyManager.handleKeyDown(event);
-	}
-	
-	@Override
-	public void onTick() {
-		if (tickRound == 0) {
-			int keyCode = keyBindingMain.getKeyCode();
-			if (keyCode != config.getInteger("key.code")) {
-				PFLog.log("Key binding changed. Saving...");
-				config.setProperty("key.code", keyCode);
-				saveConfig();
-			}
-		}
-		watcher.onTick();
-		keyManager.handleRuntime();
-		tickRound = (tickRound + 1) % 100;
-	}
 }

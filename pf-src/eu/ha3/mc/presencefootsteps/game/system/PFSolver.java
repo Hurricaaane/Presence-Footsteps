@@ -3,9 +3,6 @@ package eu.ha3.mc.presencefootsteps.game.system;
 import java.util.Locale;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFence;
-import net.minecraft.block.BlockFenceGate;
-import net.minecraft.block.BlockWall;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -147,30 +144,29 @@ public class PFSolver implements Solver {
 		IBlockState above = world.getBlockState(new BlockPos(xx, yy + 1, zz));
 		String association = isolator.getBlockMap().getBlockMapSubstrate(above, "carpet"); // Try to see if the block above is a carpet...
 		
-		if ((association == null || association.equals("NOT_EMITTER")) && in.getBlock() == Blocks.air) { // Check for fences and walls only if a carpet was not detected
-			IBlockState below = world.getBlockState(new BlockPos(xx, yy - 1, zz));
-			association = isolator.getBlockMap().getBlockMapSubstrate(below, "bigger");
-			if (association != null) {
-				in = below;
-			} else {
-				Block bBelow = below.getBlock();
-				if (bBelow instanceof BlockFence || bBelow instanceof BlockWall || bBelow instanceof BlockFenceGate) {
-					in = below;
-				}
-			}
-		}
-		
 		PFLog.debugf("Walking on block: %0 -- Being in block: %1", in.getBlock(), above.getBlock());
 
 		if (association == null || association.equals("NOT_EMITTER")) {
 			// This condition implies that if the carpet is NOT_EMITTER, solving will CONTINUE with the actual block surface the player is walking on
 			// > NOT_EMITTER carpets will not cause solving to skip
+			
+			if (in.getBlock() == Blocks.air) {
+				IBlockState below = world.getBlockState(new BlockPos(xx, yy - 1, zz));
+				association = isolator.getBlockMap().getBlockMapSubstrate(below, "bigger");
+				if (association != null) {
+					yy--;
+					in = below;
+					PFLog.debug("Fence detected: " + association);
+				}
+			}
+			
 			if (association == null) {
 				association = isolator.getBlockMap().getBlockMap(in);
 			}
 			
 			if (association != null && !association.equals("NOT_EMITTER")) {
-				// This condition implies that foliage over a NOT_EMITTER block CANNOT PLAY This block most not be executed if the association is a carpet
+				// This condition implies that foliage over a NOT_EMITTER block CANNOT PLAY
+				// This block most not be executed if the association is a carpet
 				// => this block of code is here, not outside this if else group.
 				
 				String foliage = isolator.getBlockMap().getBlockMapSubstrate(above, "foliage");

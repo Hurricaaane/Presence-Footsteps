@@ -32,7 +32,7 @@ public class PFGuiMenu extends GuiScreen {
 	
 	
 	public PFGuiMenu(GuiScreen par1GuiScreen, PFHaddon haddon) {
-		screenTitle = "Presence Footsteps Configuration";
+		screenTitle = I18n.format("menu.pf.title");
 		parentScreen = par1GuiScreen;
 		mod = haddon;
 	}
@@ -73,30 +73,27 @@ public class PFGuiMenu extends GuiScreen {
 		sliderControl.setDisplayStringProvider(new HDisplayStringProvider() {
 			@Override
 			public String provideDisplayString() {
-				return "Global Volume: " + mod.getVolume() + "%";
+				int volume = mod.getVolume();
+				return I18n.format("menu.pf.volume") + ": " + (volume >= 100 ? I18n.format("menu.pf.volume.max") : volume <= 0 ? I18n.format("menu.pf.volume.min") : (volume + "%"));
 			}
 		});
 		sliderControl.updateDisplayString();
 		
 		buttonList.add(sliderControl);
-		buttonList.add(new GuiButton(212, _RIGHT - BUTTON_HEIGHT, TOP + Y_SPACING, BUTTON_HEIGHT, BUTTON_HEIGHT, mod.getEnabled() ? "On" : "Off"));
-		buttonList.add(new GuiButton(210, _LEFT, TOP + Y_SPACING * 2, BUTTON_WIDTH, BUTTON_HEIGHT,  "Walking stance: " + getStance()));
-		buttonList.add(new GuiButton(199, _LEFT, TOP + Y_SPACING * 3 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, getResourcePacks() + " Resource Pack"));
-		buttonList.add(new GuiButton(198, _LEFT, TOP + Y_SPACING * 4 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, "Generate custom block report"));
-		buttonList.add(new GuiButton(220, _LEFT, TOP + Y_SPACING * 5 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, "Generate unknown blocks report"));
+		buttonList.add(new GuiButton(212, _RIGHT - BUTTON_HEIGHT, TOP + Y_SPACING, BUTTON_HEIGHT, BUTTON_HEIGHT, I18n.format(mod.getEnabled() ? "menu.pf.on" : "menu.pf.off")));
+		buttonList.add(new GuiButton(210, _LEFT, TOP + Y_SPACING * 2, BUTTON_WIDTH, BUTTON_HEIGHT, getStance()));
+		buttonList.add(new GuiButton(199, _LEFT, TOP + Y_SPACING * 3 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, I18n.format(getResourcePacks())));
+		buttonList.add(new GuiButton(198, _LEFT, TOP + Y_SPACING * 4 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, I18n.format("menu.pf.report.full")));
+		buttonList.add(new GuiButton(220, _LEFT, TOP + Y_SPACING * 5 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, I18n.format("menu.pf.report.concise")));
 		buttonList.add(new GuiButton(200, _LEFT, TOP + Y_SPACING * 6 + (BUTTON_SPACING * 4), BUTTON_WIDTH, BUTTON_HEIGHT, I18n.format("menu.returnToGame")));
 	}
 	
 	private String getStance() {
-		int stance = mod.getConfig().getInteger("custom.stance");
-		return stance == 0 ? "AUTO" : stance == 1 ? "Quadrupedal" : "Bipedal";
+		return I18n.format("menu.pf.stance") + ": " + I18n.format("menu.pf.stance." + mod.getConfig().getInteger("custom.stance"));
 	}
 	
 	private String getResourcePacks() {
-		if (mod.hasResourcePacksLoaded()) {
-			return "Configure";
-		}
-		return mod.hasNonethelessResourcePacksInstalled() ? "Enable" : "Install";
+		return "menu.pf.resourcepacks." + (mod.hasResourcePacksLoaded() ? "loaded" : mod.hasResourcePacksInstalled() ? "disabled" : "none");
 	}
 	
 	/**
@@ -113,21 +110,21 @@ public class PFGuiMenu extends GuiScreen {
 			try {
 				(new BlockReport(mod)).generateReport().printResults("presencefootsteps/report_full", ".txt");
 			} catch (Exception e) {
-				mod.getChatter().printChat(EnumChatFormatting.RED, "Failed to generate custom block report: " + e.getMessage());
+				mod.getChatter().printChat(EnumChatFormatting.RED, I18n.format("pf.report.error", e.getMessage()));
 			}
 		} else if (par1GuiButton.id == 210) {
 			mod.getConfig().setProperty("custom.stance", (mod.getConfig().getInteger("custom.stance") + 1) % 3);
 			mod.saveConfig();
-			par1GuiButton.displayString = "Walking stance: " + getStance();
+			par1GuiButton.displayString = getStance();
 			mod.reloadEverything(false);
 		} else if (par1GuiButton.id == 220) {
 			try {
 				(new BlockReport(mod)).generateUnknownReport().printResults("presencefootsteps/report_concise", ".txt");
 			} catch (Exception e) {
-				mod.getChatter().printChat(EnumChatFormatting.RED, "Failed to generate custom block report: " + e.getMessage());
+				mod.getChatter().printChat(EnumChatFormatting.RED, I18n.format("pf.report.error", e.getMessage()));
 			}
 		} else if (par1GuiButton.id == 212) {
-			par1GuiButton.displayString = mod.toggle() ? "On" : "Off";
+			par1GuiButton.displayString = I18n.format(mod.toggle() ? "menu.pf.on" : "menu.pf.off");
 		}
 		
 	}
@@ -145,12 +142,12 @@ public class PFGuiMenu extends GuiScreen {
 		drawDefaultBackground();
 		drawCenteredString(fontRendererObj, screenTitle, width / 2, 40, 0xffffff);
 		if (!mod.hasResourcePacksLoaded()) {
-			if (mod.hasNonethelessResourcePacksInstalled()) {
-				drawCenteredString(fontRendererObj, "Your Presence Footsteps Resource Pack isn't enabled yet!", width / 2, 10, 0xff0000);
-				drawCenteredString(fontRendererObj, "Activate it in the Minecraft Options menu for it to run.", width / 2, 20, 0xff0000);
+			if (mod.hasResourcePacksInstalled()) {
+				drawCenteredString(fontRendererObj, I18n.format("menu.pf.warn.0"), width / 2, 10, 0xff0000);
+				drawCenteredString(fontRendererObj, I18n.format("menu.pf.warn.1"), width / 2, 20, 0xff0000);
 			} else {
-				drawCenteredString(fontRendererObj, "You don't have any Presence Footsteps Resource Pack installed!", width / 2, 10, 0xff0000);
-				drawCenteredString(fontRendererObj, "Put the Resource Pack in the resourcepacks/ folder.", width / 2, 20, 0xff0000);
+				drawCenteredString(fontRendererObj, I18n.format("menu.pf.warn.2"), width / 2, 10, 0xff0000);
+				drawCenteredString(fontRendererObj, I18n.format("menu.pf.warn.3"), width / 2, 20, 0xff0000);
 			}
 		}
 		super.drawScreen(par1, par2, par3);

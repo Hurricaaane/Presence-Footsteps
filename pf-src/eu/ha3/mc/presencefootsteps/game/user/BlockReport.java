@@ -20,6 +20,8 @@ import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.event.ClickEvent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import eu.ha3.mc.presencefootsteps.game.system.PFHelper;
 import eu.ha3.mc.presencefootsteps.game.system.PFHaddon;
@@ -98,6 +100,10 @@ public class BlockReport {
 		}
 		results.setSource(loc.getAbsolutePath());
 		results.save();
-		mod.getChatter().printChat(EnumChatFormatting.GREEN, "File saved as: ", new ClickEvent(ClickEvent.Action.OPEN_FILE, loc.getAbsolutePath()), EnumChatFormatting.UNDERLINE, loc.getName());
+		
+		ChatComponentText link = new ChatComponentText(loc.getName());
+		link.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, loc.getAbsolutePath()));
+        link.getChatStyle().setUnderlined(Boolean.valueOf(true));
+		mod.getChatter().printChat(EnumChatFormatting.GREEN, new ChatComponentTranslation("pf.report.save", link));
 	}
 }

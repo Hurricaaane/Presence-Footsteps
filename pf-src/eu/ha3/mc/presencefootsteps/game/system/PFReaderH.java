@@ -118,7 +118,7 @@ public class PFReaderH implements Generator, VariatorSettable {
 					) {
 				// This ensures this does not get recorded as landing, but as a step
 				if (yPosition < ply.posY) { // Going upstairs
-					distance = this.VAR.DISTANCE_STAIR;
+					distance = VAR.DISTANCE_STAIR;
 					event = speedDisambiguator(ply, EventType.UP, EventType.UP_RUN);
 				} else if (!ply.isSneaking()) { // Going downstairs
 					distance = -1f;
@@ -129,7 +129,7 @@ public class PFReaderH implements Generator, VariatorSettable {
 				dwmYChange = distanceReference;
 				
 			} else {
-				distance = this.VAR.DISTANCE_HUMAN;
+				distance = VAR.DISTANCE_HUMAN;
 			}
 			
 			if (event == null) {
@@ -140,7 +140,7 @@ public class PFReaderH implements Generator, VariatorSettable {
 			if (dwm > distance) {
 				produceStep(ply, event, verticalOffsetAsMinus);
 				stepped(ply, event);
-				this.dmwBase = distanceReference;
+				dmwBase = distanceReference;
 			}
 		}
 		

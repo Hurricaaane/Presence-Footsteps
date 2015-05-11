@@ -8,18 +8,49 @@ import eu.ha3.mc.presencefootsteps.mcpackage.interfaces.Variator;
 import eu.ha3.util.property.contract.PropertyHolder;
 
 public class NormalVariator implements Variator {
+	/**
+	 * The maximum time a player can me immobile before PF picks it up as stopped
+	 */
 	public int IMMOBILE_DURATION = 200;
 	
+	/**
+	 * Play sounds based on jumping and landing
+	 */
 	public boolean EVENT_ON_JUMP = true;
+	
+	/**
+	 * The maximum distance a player must fall before it is recognised as a hrad fall
+	 */
 	public float LAND_HARD_DISTANCE_MIN = 0.9f;
 	
+	/**
+	 * Maximum speed for which PF will play sounds for a standing jump
+	 */
 	public float SPEED_TO_JUMP_AS_MULTIFOOT = 0.005f;
+	
+	/**
+	 * The speed a play must be going for PF to recognise it as running
+	 */
 	public float SPEED_TO_RUN = 0.022f;
 	
+	/**
+	 * Normal step distance for humans
+	 */
 	public float DISTANCE_HUMAN = 0.95f;
+	
+	/**
+	 * Step distance when walking on stairs
+	 */
 	public float DISTANCE_STAIR = 0.95f * 0.65f;
+	
+	/**
+	 * Step distance when walking on ladders
+	 */
 	public float DISTANCE_LADDER = 0.5f;
 	
+	/**
+	 * True if PF should play 'wandering' sounds
+	 */
 	public boolean PLAY_WANDER = true;
 	
 	//public boolean FORCE_HUMANOID = false;

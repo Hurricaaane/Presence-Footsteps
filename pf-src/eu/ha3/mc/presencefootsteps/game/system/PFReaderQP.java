@@ -20,7 +20,7 @@ public class PFReaderQP extends PFReaderH {
 	@Override
 	protected void stepped(EntityPlayer ply, EventType event) {
 		if (hoof == 0 || hoof == 2) {
-			nextWalkDistanceMultiplier = this.rand.nextFloat();
+			nextWalkDistanceMultiplier = rand.nextFloat();
 		}
 		
 		if (hoof >= 3) {
@@ -51,7 +51,7 @@ public class PFReaderQP extends PFReaderH {
 					return this.nextWalkDistanceMultiplier * 0.5f;
 				else
 					return ret * (1 - ndm) * overallMultiplier;*/
-				float pond = this.nextWalkDistanceMultiplier;
+				float pond = nextWalkDistanceMultiplier;
 				pond *= pond;
 				pond *= ndm;
 				if (hoof == 1 || hoof == 3) {
@@ -63,12 +63,12 @@ public class PFReaderQP extends PFReaderH {
 				final float ndm = 0.5f;
 				
 				if (hoof == 1 || hoof == 3) {
-					return ret * (ndm + this.nextWalkDistanceMultiplier * ndm * 0.5f) * overallMultiplier;
+					return ret * (ndm + nextWalkDistanceMultiplier * ndm * 0.5f) * overallMultiplier;
 				}
 				return ret * (1 - ndm) * overallMultiplier;
 			} else if (USE_FUNCTION == 0) {
 				final float overallMultiplier = 1.5f;
-				final float ndm = 0.425f + this.nextWalkDistanceMultiplier * 0.15f;
+				final float ndm = 0.425f + nextWalkDistanceMultiplier * 0.15f;
 				
 				if (hoof == 1 || hoof == 3) {
 					return ret * ndm * overallMultiplier;
