@@ -368,7 +368,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	public void onFrame(float semi) {
 		if (Minecraft.getMinecraft().thePlayer == null) return;
 		
-		
 		boolean keysDown = util().areKeysDown(Keyboard.KEY_LCONTROL, Keyboard.KEY_LSHIFT, Keyboard.KEY_F); 
 		debugButton.signalState(keysDown);
 		if (keysDown && System.currentTimeMillis() - pressedOptionsTime > 1000) {
