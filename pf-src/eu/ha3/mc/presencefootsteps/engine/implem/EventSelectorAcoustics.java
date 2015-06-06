@@ -14,8 +14,8 @@ public class EventSelectorAcoustics implements NamedAcoustic {
 	
 	private Map<EventType, Acoustic> pairs;
 	
-	public EventSelectorAcoustics(String name) {
-		this.name = name;
+	public EventSelectorAcoustics(String acousticName) {
+		name = acousticName;
 		pairs = new HashMap<EventType, Acoustic>();
 	}
 	

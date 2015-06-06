@@ -56,7 +56,7 @@ import eu.ha3.util.property.simple.InputStreamConfigProperty;
 public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, SupportsTickEvents, IResourceManagerReloadListener, NotifiableHaddon, Ha3HoldActions, SupportsKeyEvents {
 	// Identity
 	protected final String NAME = "Presence Footsteps";
-	protected final int VERSION = 6;
+	protected final int VERSION = 7;
 	protected final String MCVERSION = "1.8";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	protected final Identity identity = (new HaddonIdentity(NAME, VERSION, MCVERSION, ADDRESS)).setPrefix("u");

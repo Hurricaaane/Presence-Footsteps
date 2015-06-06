@@ -16,6 +16,7 @@ public class DelayedAcoustic extends BasicAcoustic implements Options {
 		return option.equals("delay_min") || option.equals("delay_max");
 	}
 	
+	@SuppressWarnings("null")
 	@Override
 	public Object getOption(String option) {
 		return option.equals("delay_min") ? delayMin : option.equals("delay_max") ? delayMax : null;

@@ -10,12 +10,12 @@ import eu.ha3.mc.presencefootsteps.engine.interfaces.SoundPlayer;
 import eu.ha3.mc.presencefootsteps.log.PFLog;
 
 public class ProbabilityWeightsAcoustic implements Acoustic {
-	protected List<Acoustic> acoustics;
+	protected List<Acoustic> theAcoustics;
 	protected float probabilityThresholds[];
 	protected boolean isUseable;
 	
 	public ProbabilityWeightsAcoustic(List<Acoustic> acoustics, List<Integer> weights) {
-		acoustics = new ArrayList<Acoustic>(acoustics);
+		theAcoustics = new ArrayList<Acoustic>(acoustics);
 		probabilityThresholds = new float[acoustics.size() - 1];
 		
 		float total = 0;
@@ -42,7 +42,7 @@ public class ProbabilityWeightsAcoustic implements Acoustic {
 			while (marker < probabilityThresholds.length && probabilityThresholds[marker] < rand) {
 				marker++;
 			}
-			acoustics.get(marker).playSound(player, location, event, inputOptions);
+			theAcoustics.get(marker).playSound(player, location, event, inputOptions);
 		}
 	}
 }
