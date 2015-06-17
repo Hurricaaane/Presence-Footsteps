@@ -53,7 +53,15 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 		//playStepSound
 		//entity.func_145780_a(xx, yy, zz, blockID);
 		
+		if (blockId == null) {
+			return;
+		}
+		
 		Block.SoundType soundType = blockID.stepSound;
+		
+		if (soundType == null) {
+			return;
+		}
 		
 		if (Minecraft.getMinecraft().theWorld.getBlock(xx, yy + 1, zz) == Blocks.snow_layer)
 		{
