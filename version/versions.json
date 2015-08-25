@@ -1,0 +1,39 @@
+{
+  "versions" : [
+    {
+       "number": 7,
+       "for": "1.8",
+       "type" "u"
+    },
+    {
+       "number" : 5,
+       "for" : "1.7.10",
+       "type": "r"
+    },
+    {
+       "number": 4,
+       "for": "1.7.2",
+       "type": "r"
+    },
+    {
+       "number": 3,
+       "for": "1.7.2",
+       "type": "r"
+    },
+    {
+       "number": 2,
+       "for": "1.7.2",
+       "type": "r"
+    },
+    {
+       "number": 1,
+       "for": "1.6.2",
+       "type": "r"
+    },
+    {
+       "number" : 0,
+       "for" : "1.6.2",
+       "type": "r"
+    }
+  ]
+}
