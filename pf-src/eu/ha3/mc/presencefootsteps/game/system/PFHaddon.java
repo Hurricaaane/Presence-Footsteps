@@ -97,7 +97,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	@Override
 	public void onLoad() {
 		//http://q.mc.ha3.eu/query/pf-litemod-version.json
-		updateNotifier = new UpdateNotifier(this, "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/updateChecker/version/versions.json?ver=%d");
+		updateNotifier = new UpdateNotifier(this, "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d");
 		
 		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "h");
 		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "aW");
@@ -282,18 +282,21 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		isolator.setPrimitiveMap(primitiveMap);
 	}
 	
-	@SuppressWarnings("resource")
 	private void reloadAcoustics(List<ResourcePackRepository.Entry> repo) {
 		AcousticsManager acoustics = new AcousticsManager(this.isolator);
 		
 		int working = 0;
+		Scanner scanner = null;
 		for (ResourcePackRepository.Entry pack : repo) {
 			try {
-				String jasonString = new Scanner(dealer.openAcoustics(pack.getResourcePack())).useDelimiter("\\Z").next();
+				scanner = new Scanner(dealer.openAcoustics(pack.getResourcePack()));
+				String jasonString = scanner.useDelimiter("\\Z").next();
 				new AcousticsJsonReader("").parseJSON(jasonString, acoustics);
 				working = working + 1;
 			} catch (IOException e) {
 				PFLog.debug("No acoustics found in " + pack.getResourcePackName() + ": " + e.getMessage());
+			} finally {
+				if (scanner != null) scanner.close();
 			}
 		}
 		if (working == 0) {
