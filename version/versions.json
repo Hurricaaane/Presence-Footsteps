@@ -1,13 +1,13 @@
 {
-  "versions" : [
+  "versions": [
     {
-       "number": 7,
+       "number": 8,
        "for": "1.8",
-       "type" "u"
+       "type": "u"
     },
     {
-       "number" : 5,
-       "for" : "1.7.10",
+       "number": 5,
+       "for": "1.7.10",
        "type": "r"
     },
     {
@@ -31,8 +31,8 @@
        "type": "r"
     },
     {
-       "number" : 0,
-       "for" : "1.6.2",
+       "number": 0,
+       "for": "1.6.2",
        "type": "r"
     }
   ]

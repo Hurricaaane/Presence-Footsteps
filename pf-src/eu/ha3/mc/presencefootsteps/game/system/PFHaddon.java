@@ -97,7 +97,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	@Override
 	public void onLoad() {
 		//http://q.mc.ha3.eu/query/pf-litemod-version.json
-		updateNotifier = new UpdateNotifier(this, "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d");
+		updateNotifier = new UpdateNotifier(this, "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/updateChecker/version/versions.json?ver=%d");
 		
 		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "h");
 		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "aW");
