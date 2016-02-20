@@ -15,6 +15,7 @@ menu.pf.stance=Walking Stance
 menu.pf.stance.0=AUTO
 menu.pf.stance.1=Quadrupedal
 menu.pf.stance.2=Bipedal
+menu.pf.stance.3=Quad (Pegasus)
 
 menu.pf.report.full=Generate full block report
 menu.pf.report.concise=Generate unknown blocks report
