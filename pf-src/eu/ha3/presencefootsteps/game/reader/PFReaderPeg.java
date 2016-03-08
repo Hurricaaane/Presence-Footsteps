@@ -12,16 +12,22 @@ public class PFReaderPeg extends PFReaderQuad {
 	
 	protected FlightState state = FlightState.IDLE;
 	protected int flapMod = 0;
+	private long lastTimeImmobile;
 	protected long nextFlapTime;
 	
 	public PFReaderPeg(Isolator isolator, Utility utility) {
 		super(isolator, utility);
 	}
 	
+	public void generateFootsteps(EntityPlayer ply) {
+		lastTimeImmobile = timeImmobile;
+		super.generateFootsteps(ply);
+	}
+	
 	protected void simulateAirborne(EntityPlayer ply) {
 		isFalling = ply.motionY < -0.3;
 		super.simulateAirborne(ply);
-		simulateFlying(ply);
+		if (isAirborne) simulateFlying(ply);
 	}
 	
 	protected boolean updateState(double x, double y, double z, double strafe) {
@@ -50,28 +56,20 @@ public class PFReaderPeg extends PFReaderQuad {
 	}
 	
 	protected int getWingSpeed() {
-		int result = VAR.WING_SPEED_IDLE;
 		switch (state) {
 			case COASTING:
-				if (flapMod == 0) {
-					result = VAR.WING_SPEED_COAST;
-				} else {
-					result = VAR.WING_SPEED_NORMAL * flapMod;
-				}
-				break;
+				if (flapMod == 0) return VAR.WING_SPEED_COAST;
+				return VAR.WING_SPEED_NORMAL * flapMod;
 			case COASTING_STRAFING:
-				result = VAR.WING_SPEED_NORMAL * (1 + flapMod);
-				break;
+				return VAR.WING_SPEED_NORMAL * (1 + flapMod);
 			case DASHING:
-				result = VAR.WING_SPEED_RAPID;
-				break;
+				return VAR.WING_SPEED_RAPID;
 			case ASCENDING:
 			case FLYING:
-				result = VAR.WING_SPEED_NORMAL;
-				break;
+				return VAR.WING_SPEED_NORMAL;
 			default:
+				return VAR.WING_SPEED_IDLE;
 		}
-		return result;
 	}
 	
 	protected void simulateJumpingLanding(EntityPlayer ply) {
@@ -92,7 +90,6 @@ public class PFReaderPeg extends PFReaderQuad {
 			} else {
 				mod.getAcoustics().playAcoustic(ply, "_SWIFT", EventType.JUMP, null);
 			}
-			
 		}
 		if (hugeLanding) super.simulateJumpingLanding(ply);
 	}
@@ -109,7 +106,7 @@ public class PFReaderPeg extends PFReaderQuad {
 			flapMod = (flapMod + 1) % (1 + ply.worldObj.rand.nextInt(4));
 			
 			float volume = 1;
-			long diffImmobile = now - timeImmobile;
+			long diffImmobile = now - lastTimeImmobile;
 			if (diffImmobile > VAR.WING_IMMOBILE_FADE_START) {
 				volume -= scalex(diffImmobile, VAR.WING_IMMOBILE_FADE_START, VAR.WING_IMMOBILE_FADE_START + VAR.WING_IMMOBILE_FADE_DURATION);
 			}
