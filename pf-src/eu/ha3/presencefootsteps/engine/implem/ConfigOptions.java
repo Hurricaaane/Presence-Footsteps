@@ -25,4 +25,9 @@ public class ConfigOptions implements Options {
 	public Object getOption(String option) {
 		return map.get(option);
 	}
+	
+	public ConfigOptions withOption(String option, Object value) {
+		map.put(option, value);
+		return this;
+	}
 }

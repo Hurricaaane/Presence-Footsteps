@@ -24,7 +24,7 @@ public class PFReader implements Generator, VariatorSettable {
 	protected double yPosition;
 	
 	// Airborne
-	protected boolean isFlying;
+	protected boolean isAirborne;
 	protected float fallDistance;
 	
 	protected float lastReference;
@@ -170,12 +170,11 @@ public class PFReader implements Generator, VariatorSettable {
 	}
 	
 	protected void simulateAirborne(EntityPlayer ply) {
-		if ((ply.onGround || ply.isOnLadder()) == isFlying) {
-			isFlying = !isFlying;
+		if ((ply.onGround || ply.isOnLadder()) == isAirborne) {
+			isAirborne = !isAirborne;
 			simulateJumpingLanding(ply);
 		}
-		
-		if (isFlying) fallDistance = ply.fallDistance;
+		if (isAirborne) fallDistance = ply.fallDistance;
 	}
 	
 	protected void simulateJumpingLanding(EntityPlayer ply) {
@@ -189,7 +188,7 @@ public class PFReader implements Generator, VariatorSettable {
 			throw new RuntimeException(e);
 		}
 		
-		if (isFlying && isJumping) { //ply.isJumping)
+		if (isAirborne && isJumping) { //ply.isJumping)
 			if (VAR.EVENT_ON_JUMP) {
 				double speed = ply.motionX * ply.motionX + ply.motionZ * ply.motionZ;
 				
@@ -200,7 +199,7 @@ public class PFReader implements Generator, VariatorSettable {
 					// Do not toggle foot: After landing sounds, the first foot will be same as the one used to jump.
 				}
 			}
-		} else if (!isFlying) {
+		} else if (!isAirborne) {
 			if (fallDistance > VAR.LAND_HARD_DISTANCE_MIN) {
 				playMultifoot(ply, 0d, EventType.LAND); // Always assume the player lands on their two feet
 				// Do not toggle foot: After landing sounds, the first foot will be same as the one used to jump.

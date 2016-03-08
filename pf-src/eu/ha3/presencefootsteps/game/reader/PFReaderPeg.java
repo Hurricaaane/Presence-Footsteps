@@ -4,82 +4,120 @@ import eu.ha3.mc.haddon.Utility;
 import eu.ha3.presencefootsteps.engine.implem.ConfigOptions;
 import eu.ha3.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.presencefootsteps.game.interfaces.Isolator;
-import eu.ha3.presencefootsteps.util.PFHelper;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class PFReaderPeg extends PFReaderQuad {
-
+	
+	protected boolean isFalling = false;
+	
+	protected FlightState state = FlightState.IDLE;
+	protected int flapMod = 0;
+	protected long nextFlapTime;
+	
 	public PFReaderPeg(Isolator isolator, Utility utility) {
 		super(isolator, utility);
 	}
 	
-	protected boolean isPegasus = true;
-	
-	// Flying
-	protected long airborneTime;
-	protected long immobileTime;
-
 	protected void simulateAirborne(EntityPlayer ply) {
-		if (!PFHelper.isGamePaused(util)) {
-			simulateFlying(ply);
-		}
+		isFalling = ply.motionY < -0.3;
 		super.simulateAirborne(ply);
+		simulateFlying(ply);
 	}
 	
-	protected void simulateFlying(EntityPlayer ply) {
+	protected boolean updateState(double x, double y, double z, double strafe) {
+		double smotionHor = x*x + z * z;
+		float motionHor = (float)Math.sqrt(smotionHor);
+		float motionFull = (float)Math.sqrt(motionHor + (y*y));
+		FlightState result = FlightState.IDLE;
+		if (motionHor > VAR.MIN_DASH_MOTION) {
+			result = FlightState.DASHING;
+		} else if (motionHor > VAR.MIN_COAST_MOTION && (float)Math.abs(y) < VAR.MIN_COAST_MOTION/20) {
+			if (strafe > VAR.MIN_MOTION_Y) {
+				result = FlightState.COASTING_STRAFING;
+			} else {
+				result = FlightState.COASTING;
+			}
+		} else if (motionHor > VAR.MIN_MOTION_HOR) {
+			result = FlightState.FLYING;
+		} else if (y < 0) {
+			result = FlightState.DESCENDING;
+		} else if ((float)y > VAR.MIN_MOTION_Y) {
+			result = FlightState.ASCENDING;
+		}
+		boolean changed = result != state;
+		state = result;
+		return changed;
+	}
+	
+	protected int getWingSpeed() {
+		int result = VAR.WING_SPEED_IDLE;
+		switch (state) {
+			case COASTING:
+				if (flapMod == 0) {
+					result = VAR.WING_SPEED_COAST;
+				} else {
+					result = VAR.WING_SPEED_NORMAL * flapMod;
+				}
+				break;
+			case COASTING_STRAFING:
+				result = VAR.WING_SPEED_NORMAL * (1 + flapMod);
+				break;
+			case DASHING:
+				result = VAR.WING_SPEED_RAPID;
+				break;
+			case ASCENDING:
+			case FLYING:
+				result = VAR.WING_SPEED_NORMAL;
+				break;
+			default:
+		}
+		return result;
+	}
+	
+	protected void simulateJumpingLanding(EntityPlayer ply) {
 		final long now = System.currentTimeMillis();
 		
 		double xpd = ply.motionX * ply.motionX + ply.motionZ * ply.motionZ;
 		float speed = (float) Math.sqrt(xpd);
 		
-		if ((ply.onGround || ply.isOnLadder()) == isFlying) {
-			isFlying = !isFlying;
-			if (isFlying) {
-				airborneTime = now + VAR.WING_JUMPING_REST_TIME;
+		if (isAirborne) nextFlapTime = now + VAR.WING_JUMPING_REST_TIME;
+		
+		boolean hugeLanding = !isAirborne && fallDistance > VAR.HUGEFALL_LANDING_DISTANCE_MIN;
+		boolean speedingJumpStateChange = speed > VAR.MIN_MOTION_HOR;
+		
+		if (hugeLanding || speedingJumpStateChange) {
+			if (!isAirborne) {
+				float volume = speedingJumpStateChange ? 2 : scalex(fallDistance, VAR.HUGEFALL_LANDING_DISTANCE_MIN, VAR.HUGEFALL_LANDING_DISTANCE_MAX);
+				mod.getAcoustics().playAcoustic(ply, "_SWIFT", EventType.LAND, new ConfigOptions().withOption("gliding_volume", volume));
+			} else {
+				mod.getAcoustics().playAcoustic(ply, "_SWIFT", EventType.JUMP, null);
 			}
 			
-			boolean hugeLanding = !isFlying && fallDistance > VAR.HUGEFALL_LANDING_DISTANCE_MIN;
-			boolean speedingJumpStateChange = speed > VAR.GROUND_AIR_STATE_SPEED;
-			
-			if (hugeLanding || speedingJumpStateChange) {
-				if (!this.isFlying) {
-					float volume = speedingJumpStateChange ? 1 : scalex(fallDistance, VAR.HUGEFALL_LANDING_DISTANCE_MIN, VAR.HUGEFALL_LANDING_DISTANCE_MAX);
-					
-					ConfigOptions options = new ConfigOptions();
-					options.getMap().put("gliding_volume", volume);
-					
-					mod.getAcoustics().playAcoustic(ply, "_WING", EventType.LAND, options);//_SWIFT
-				} else {
-					mod.getAcoustics().playAcoustic(ply, "_WING", EventType.JUMP, null);//_SWIFT
-				}
-				
-			}
-			
-			simulateJumpingLanding(ply);
+		}
+		if (hugeLanding) super.simulateJumpingLanding(ply);
+	}
+	
+	protected void simulateFlying(EntityPlayer ply) {
+		final long now = System.currentTimeMillis();
+		
+		if (updateState(ply.motionX, ply.motionY, ply.motionZ, ply.moveStrafing)) {
+			nextFlapTime = now + VAR.FLIGHT_TRANSITION_TIME;
 		}
 		
-		// Only play wing sounds if pegasus
-		if (!ply.isInWater() && isPegasus && isFlying && now > airborneTime) {
-			int period = VAR.WING_SLOW;
-			float volumetricSpeed = (float) Math.sqrt(xpd + ply.motionY * ply.motionY);
+		if (!ply.isInWater() && !isFalling && now > nextFlapTime) {
+			nextFlapTime = now + getWingSpeed() + (ply.worldObj.rand.nextInt(100) - 50);
+			flapMod = (flapMod + 1) % (1 + ply.worldObj.rand.nextInt(4));
 			
-			if (volumetricSpeed > VAR.WING_SPEED_MIN) {
-				period = (int) (period - (VAR.WING_SLOW - VAR.WING_FAST) * scalex(volumetricSpeed, VAR.WING_SPEED_MIN, VAR.WING_SPEED_MAX));
-			}
-			
-			airborneTime = now + period;
-			
-			float volume = 1f;
-			long diffImmobile = now - immobileTime;
+			float volume = 1;
+			long diffImmobile = now - timeImmobile;
 			if (diffImmobile > VAR.WING_IMMOBILE_FADE_START) {
 				volume -= scalex(diffImmobile, VAR.WING_IMMOBILE_FADE_START, VAR.WING_IMMOBILE_FADE_START + VAR.WING_IMMOBILE_FADE_DURATION);
 			}
-			
-			ConfigOptions options = new ConfigOptions();
-			options.getMap().put("gliding_volume", volume);
-			
-			mod.getAcoustics().playAcoustic(ply, "_WING", EventType.WALK, options);
+			mod.getAcoustics().playAcoustic(ply, "_WING", EventType.WALK, new ConfigOptions().withOption("gliding_volume", volume));
 		}
-		
+	}
+	
+	private enum FlightState {
+		DASHING, COASTING, COASTING_STRAFING, FLYING, IDLE, ASCENDING, DESCENDING
 	}
 }

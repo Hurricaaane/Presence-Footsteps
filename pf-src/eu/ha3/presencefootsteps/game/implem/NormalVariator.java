@@ -75,12 +75,17 @@ public class NormalVariator implements Variator {
 	
 	//public float WALK_CHASING_FACTOR = 1f / 7f;
 	
-	public int WING_SLOW = 550;
-	public float WING_SPEED_MIN = 0.1f;
-	public float WING_SPEED_MAX = WING_SPEED_MIN + 0.1f;
+	public float MIN_DASH_MOTION = 0.8f;
+	public float MIN_COAST_MOTION = 0.4f;
+	public float MIN_MOTION_HOR = 0.2f;
+	public float MIN_MOTION_Y = 0.2f;
 	
-	//public float WALK_DISTANCE = 0.65f;
-	public int WING_FAST = WING_SLOW - 200;
+	public int FLIGHT_TRANSITION_TIME = 200;
+	
+	public int WING_SPEED_RAPID = 250;
+	public int WING_SPEED_NORMAL = 500;
+	public int WING_SPEED_IDLE = 900;
+	public int WING_SPEED_COAST = 2000;
 	
 	public int WING_IMMOBILE_FADE_DURATION = 20000;
 	public int WING_IMMOBILE_FADE_START = 20000;
@@ -95,8 +100,7 @@ public class NormalVariator implements Variator {
 		for (Field field : fields) {
 			try {
 				String fieldName = field.getName();
-				if (keys.contains(fieldName))
-				{
+				if (keys.contains(fieldName)) {
 					String lowercaseField = fieldName.toLowerCase();
 					if (field.getType() == Float.TYPE) {
 						field.setFloat(this, config.getFloat(lowercaseField));

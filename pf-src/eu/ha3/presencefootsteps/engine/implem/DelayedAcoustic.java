@@ -21,6 +21,13 @@ public class DelayedAcoustic extends BasicAcoustic implements Options {
 		return option.equals("delay_min") ? delayMin : option.equals("delay_max") ? delayMax : null;
 	}
 	
+	@Override
+	public DelayedAcoustic withOption(String option, Object value) {
+		if (option.equals("delay_min")) setDelayMin((long)value);
+		if (option.equals("delay_max")) setDelayMax((long)value);
+		return this;
+	}
+	
 	public void setDelayMin(long delay) {
 		delayMin = delay;
 	}
