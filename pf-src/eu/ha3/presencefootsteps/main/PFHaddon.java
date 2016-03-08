@@ -59,6 +59,7 @@ import eu.ha3.presencefootsteps.resources.AcousticsJsonReader;
 import eu.ha3.presencefootsteps.resources.BlockMapReader;
 import eu.ha3.presencefootsteps.resources.PFResourcePackDealer;
 import eu.ha3.presencefootsteps.resources.PrimitiveMapReader;
+import eu.ha3.presencefootsteps.util.PFHelper;
 import eu.ha3.util.property.simple.ConfigProperty;
 import eu.ha3.util.property.simple.InputStreamConfigProperty;
 
@@ -396,7 +397,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 			displayMenu();
 		}
 		
-		if (enabled && hasResourcePacks) {
+		if (enabled && hasResourcePacks && !PFHelper.isGamePaused(util())) {
 			isolator.onFrame();
 			setPlayerStepDistance(Integer.MAX_VALUE);
 		}
