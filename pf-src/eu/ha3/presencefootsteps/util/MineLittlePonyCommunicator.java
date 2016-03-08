@@ -9,7 +9,10 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class MineLittlePonyCommunicator {
 	
+	private static boolean MineLPDetected = true;
+	
 	private static boolean arePoniesShown() {
+		if (!MineLPDetected) return false;
 		try {
 			PonyLevel level = PonyManager.getInstance().getPonyLevel();
 			return level == PonyLevel.PONIES || level == PonyLevel.MIXED;
@@ -19,6 +22,7 @@ public class MineLittlePonyCommunicator {
 	}
 	
 	public static int getEffectiveRace() {
+		if (!MineLPDetected) return 0;
 		if (arePoniesShown()) {
 			try {
 				EntityPlayer ply = Minecraft.getMinecraft().thePlayer;
