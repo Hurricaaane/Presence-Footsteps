@@ -11,6 +11,38 @@
 	"contents" : {
 		"none" : {
 		},
+		"_WING" : {
+			"swim" : {
+				"name"  : "wing",
+				"vol_min"   : 10,
+				"vol_max"   : 100,
+				"pitch_min" : 80,
+				"pitch_max" : 100
+			},
+			"walk"  : {
+				"name"  : "wing",
+				"vol_min"   : 10,
+				"vol_max"   : 100,
+				"pitch_min" : 80,
+				"pitch_max" : 100
+			}
+		},
+		"_SWIFT" : {
+			"swim" : {
+				"name"  : "land",
+				"vol_min"   : 10,
+				"vol_max"   : 100,
+				"pitch_min" : 80,
+				"pitch_max" : 100
+			},
+			"walk"  : {
+				"name"  : "land",
+				"vol_min"   : 10,
+				"vol_max"   : 100,
+				"pitch_min" : 80,
+				"pitch_max" : 100
+			}
+		},
 		"_SWIM" : {
 			"swim" : {
 				"name"  : "@game.player.swim",
@@ -450,7 +482,7 @@
 					{
 						"type"  : "delayed",
 						"delay" : 50,
-						"name"  : "walk.mud_walk"
+						"name"  : "mud.mud_walk"
 					}
 				]
 			}

@@ -61,9 +61,13 @@ public class NormalVariator implements Variator {
 	//public float GALLOP_DISTANCE_4 = 0.05f;
 	//public float GALLOP_VOLUME = 1f;
 	
-	public float GROUND_AIR_STATE_SPEED = 0.2f;
+	/**
+	 * Maximum distance the player can fall and still play wing folding sounds.
+	 */
 	public float HUGEFALL_LANDING_DISTANCE_MAX = 12f;
-	
+	/**
+	 * Minimum distance the player must fall in order to play wing folding sounds.
+	 */
 	public float HUGEFALL_LANDING_DISTANCE_MIN = 3f;
 	
 	//public float SLOW_DISTANCE = 0.75f;
@@ -75,20 +79,64 @@ public class NormalVariator implements Variator {
 	
 	//public float WALK_CHASING_FACTOR = 1f / 7f;
 	
+	/**
+	 * Minimum horizontal flight velocity before the player starts dashing.
+	 */
 	public float MIN_DASH_MOTION = 0.8f;
+	
+	/**
+	 * Minimum horizontal flight velocity before the player starts coasting.
+	 */
 	public float MIN_COAST_MOTION = 0.4f;
+	
+	/**
+	 * Minimum horizontal velocity for general flying. Also used when taking off.
+	 */
 	public float MIN_MOTION_HOR = 0.2f;
+	
+	/**
+	 * Minimum vertical flight velocity that a player is considered to be ascending.
+	 */
 	public float MIN_MOTION_Y = 0.2f;
 	
+	/**
+	 * Ticks buffer used when the player's flight state changes.
+	 */
 	public int FLIGHT_TRANSITION_TIME = 200;
 	
-	public int WING_SPEED_RAPID = 250;
+	/**
+	 * Wing flap rate when dashing. (smaller is faster)
+	 */
+	public int WING_SPEED_RAPID = 300;
+	
+	/**
+	 * Wing flap rate during normal flight. (smaller is faster)
+	 */
 	public int WING_SPEED_NORMAL = 500;
+	
+	/**
+	 * Wing flap rate when hovering. (smaller is faster)
+	 */
 	public int WING_SPEED_IDLE = 900;
+	
+	/**
+	 * Wing flap rate whilst coasting. Will alternate between this and the normal rate. (smaller is faster)
+	 */
 	public int WING_SPEED_COAST = 2000;
 	
+	/**
+	 * Number of ticks taken to transition to no sound when the player stops moving.
+	 */
 	public int WING_IMMOBILE_FADE_DURATION = 20000;
+	
+	/**
+	 * Number of ticks before wing sounds start to fade after the player stops moving.
+	 */
 	public int WING_IMMOBILE_FADE_START = 20000;
+	
+	/**
+	 * Number of ticks between when the player takes off and flapping can begin.
+	 */
 	public int WING_JUMPING_REST_TIME = 700;
 	
 	@Override
