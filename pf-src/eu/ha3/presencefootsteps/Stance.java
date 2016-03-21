@@ -16,13 +16,12 @@ public enum Stance {
 		return this == QUAD_PEG;
 	}
 	
-	public static Stance getStance(boolean mlp, int stanceId) {
-		if (stanceId < 0 || stanceId >= values().length) stanceId = 0;
+	public static Stance getStance(int stanceId) {
+		if (stanceId < 0 || stanceId > values().length) stanceId = 0;
 		if (stanceId == 0) {
-			if (mlp) {
-				if (MineLittlePonyCommunicator.getEffectiveRace() == 2) {
-					return QUAD_PEG;
-				}
+			int race = MineLittlePonyCommunicator.instance.getEffectiveRace();
+			if (race > 0) {
+				if (race == 2) return QUAD_PEG;
 				return QUAD;
 			}
 			return BIPED;

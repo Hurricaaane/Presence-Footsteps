@@ -25,7 +25,6 @@ import eu.ha3.easy.EdgeTrigger;
 import eu.ha3.mc.convenience.Ha3HoldActions;
 import eu.ha3.mc.convenience.Ha3KeyHolding;
 import eu.ha3.mc.convenience.Ha3KeyManager;
-import eu.ha3.mc.convenience.Ha3StaticUtilities;
 import eu.ha3.mc.haddon.Identity;
 import eu.ha3.mc.haddon.OperatorCaster;
 import eu.ha3.mc.haddon.implem.HaddonIdentity;
@@ -59,6 +58,7 @@ import eu.ha3.presencefootsteps.resources.AcousticsJsonReader;
 import eu.ha3.presencefootsteps.resources.BlockMapReader;
 import eu.ha3.presencefootsteps.resources.PFResourcePackDealer;
 import eu.ha3.presencefootsteps.resources.PrimitiveMapReader;
+import eu.ha3.presencefootsteps.util.MineLittlePonyCommunicator;
 import eu.ha3.presencefootsteps.util.PFHelper;
 import eu.ha3.util.property.simple.ConfigProperty;
 import eu.ha3.util.property.simple.InputStreamConfigProperty;
@@ -66,8 +66,8 @@ import eu.ha3.util.property.simple.InputStreamConfigProperty;
 public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, SupportsTickEvents, IResourceManagerReloadListener, NotifiableHaddon, Ha3HoldActions, SupportsKeyEvents {
 	// Identity
 	protected final String NAME = "Presence Footsteps";
-	protected final int VERSION = 7;
-	protected final String MCVERSION = "1.8";
+	protected final int VERSION = 8;
+	protected final String MCVERSION = "1.8.9";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	protected final Identity identity = (new HaddonIdentity(NAME, VERSION, MCVERSION, ADDRESS)).setPrefix("u");
 	
@@ -101,7 +101,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	private boolean hasResourcePacks_FixMe;
 	
 	// Pony stuff
-	private boolean mlpInstalled;
 	private boolean mlpDetectedFirst;
 	
 	@Override
@@ -110,7 +109,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		updateNotifier = new UpdateNotifier(this, "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d");
 		
 		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "h");
-		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "aW");
+		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "aY");
 		
 		presenceDir = new File(util().getMcFolder(), "presencefootsteps");
 		
@@ -140,7 +139,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		
 		reloadEverything(false);// Config is loaded here
 		
-		if (mlpInstalled = isInstalledMLP()) {
+		if (mlpInstalled()) {
 			if (getConfig().getBoolean("mlp.detected") == false) {
 				getConfig().setProperty("mlp.detected", true);
 				saveConfig();
@@ -195,7 +194,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		isolator.setSolver(new PFSolver(isolator));
 		reloadVariator(repo);
 		
-		isolator.setGenerator(getReader(Stance.getStance(mlpInstalled, getConfig().getInteger("custom.stance"))));
+		isolator.setGenerator(getReader(Stance.getStance(getConfig().getInteger("custom.stance"))));
 	}
 	
 	private Generator getReader(Stance stance) {
@@ -327,11 +326,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	}
 	
 	public boolean mlpInstalled() {
-		return mlpInstalled;
-	}
-	
-	private boolean isInstalledMLP() {
-		return Ha3StaticUtilities.classExists("com.minelittlepony.minelp.Pony", this);
+		return MineLittlePonyCommunicator.instance.ponyModInstalled();
 	}
 	
 	public boolean getEnabled() {

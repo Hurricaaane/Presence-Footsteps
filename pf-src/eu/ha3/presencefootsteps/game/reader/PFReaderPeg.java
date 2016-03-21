@@ -33,7 +33,6 @@ public class PFReaderPeg extends PFReaderQuad {
 	protected boolean updateState(double x, double y, double z, double strafe) {
 		double smotionHor = x*x + z * z;
 		float motionHor = (float)Math.sqrt(smotionHor);
-		float motionFull = (float)Math.sqrt(motionHor + (y*y));
 		FlightState result = FlightState.IDLE;
 		if (motionHor > VAR.MIN_DASH_MOTION) {
 			result = FlightState.DASHING;
