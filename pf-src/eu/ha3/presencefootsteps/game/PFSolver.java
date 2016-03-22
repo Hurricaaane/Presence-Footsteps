@@ -149,8 +149,8 @@ public class PFSolver implements Solver {
 		if (association == null || association.equals("NOT_EMITTER")) {
 			// This condition implies that if the carpet is NOT_EMITTER, solving will CONTINUE with the actual block surface the player is walking on
 			// > NOT_EMITTER carpets will not cause solving to skip
-			
-			if (in.getBlock() == Blocks.air) {
+			Material mat = in.getBlock().getMaterial();
+			if (mat == Material.air || mat == Material.circuits) {
 				IBlockState below = world.getBlockState(new BlockPos(xx, yy - 1, zz));
 				association = isolator.getBlockMap().getBlockMapSubstrate(below, "bigger");
 				if (association != null) {
