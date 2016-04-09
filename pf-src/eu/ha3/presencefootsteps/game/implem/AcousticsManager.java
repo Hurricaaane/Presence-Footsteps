@@ -8,10 +8,11 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.ResourceLocation;
 import eu.ha3.presencefootsteps.engine.implem.AcousticsLibrary;
 import eu.ha3.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.presencefootsteps.engine.interfaces.Options;
@@ -47,19 +48,18 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 		Block block = assos.getBlock();
 		if (!block.getMaterial().isLiquid() && block.stepSound != null) {
 			Block.SoundType soundType = block.stepSound;
-			
-			if (Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(assos.x, assos.y + 1, assos.z)).getBlock() == Blocks.snow_layer) {
+			if (entity.worldObj.getBlockState(assos.pos(0, 1, 0)).getBlock() == Blocks.snow_layer) {
 				soundType = Blocks.snow_layer.stepSound;
 			}
 			
-			entity.playSound(soundType.getStepSound(), soundType.getVolume() * 0.15F, soundType.getFrequency());
+			//entity.worldObj.playSoundAtEntity(entity, soundType.getStepSound(), soundType.getVolume() * 0.15F, soundType.getFrequency());
+			actuallyPlaySound(entity, soundType.getStepSound(), soundType.getVolume() * 0.15F, soundType.getFrequency());
 		}
 	}
 	
 	@Override
 	public void playSound(Object location, String soundName, float volume, float pitch, Options options) {
 		if (!(location instanceof Entity)) return;
-		
 		if (options != null) {
 			if (options.hasOption("delay_min") && options.hasOption("delay_max")) {
 				long delay = randAB(this.random, (Long) options.getOption("delay_min"), (Long) options.getOption("delay_max"));
@@ -69,17 +69,26 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 				}
 				
 				pending.add(new PendingSound(location, soundName, volume, pitch, null, System.currentTimeMillis() + delay, options.hasOption("skippable") ? -1 : (Long) options.getOption("delay_max")));
-			} else {
-				actuallyPlaySound((Entity) location, soundName, volume, pitch);
+				return;
 			}
-		} else {
-			actuallyPlaySound((Entity) location, soundName, volume, pitch);
 		}
+		PFLog.debug("    Playing sound " + soundName + " (" + String.format(Locale.ENGLISH, "v%.2f, p%.2f", volume, pitch) + ")");
+		actuallyPlaySound((Entity) location, soundName, volume, pitch);
 	}
 	
 	protected void actuallyPlaySound(Entity location, String soundName, float volume, float pitch) {
-		PFLog.debug("    Playing sound " + soundName + " (" + String.format(Locale.ENGLISH, "v%.2f, p%.2f", volume, pitch) + ")");
-		location.playSound(soundName, volume, pitch);
+		//location.worldObj.playSoundAtEntity(location, soundName, volume, pitch);
+		//location.playSound(soundName, volume, pitch);
+		Minecraft mc = Minecraft.getMinecraft();
+		double d0 = mc.getRenderViewEntity().getDistanceSq(location.posX, location.posY, location.posZ);
+        PositionedSoundRecord positionedsoundrecord = new PositionedSoundRecord(new ResourceLocation(soundName), volume, pitch, (float)location.posX, (float)location.posY, (float)location.posZ);
+
+        if (d0 > 100.0D) {
+            double d1 = Math.sqrt(d0) / 40.0D;
+            mc.getSoundHandler().playDelayedSound(positionedsoundrecord, (int)(d1 * 20.0D));
+        } else {
+            mc.getSoundHandler().playSound(positionedsoundrecord);
+        }
 	}
 	
 	private long randAB(Random rng, long a, long b) {

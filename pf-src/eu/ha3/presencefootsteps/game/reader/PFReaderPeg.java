@@ -74,7 +74,7 @@ public class PFReaderPeg extends PFReaderQuad {
 	protected void simulateJumpingLanding(EntityPlayer ply) {
 		final long now = System.currentTimeMillis();
 		
-		double xpd = ply.motionX * ply.motionX + ply.motionZ * ply.motionZ;
+		double xpd = motionX * motionX + motionZ * motionZ;
 		float speed = (float) Math.sqrt(xpd);
 		
 		if (isAirborne) nextFlapTime = now + VAR.WING_JUMPING_REST_TIME;
@@ -96,7 +96,7 @@ public class PFReaderPeg extends PFReaderQuad {
 	protected void simulateFlying(EntityPlayer ply) {
 		final long now = System.currentTimeMillis();
 		
-		if (updateState(ply.motionX, ply.motionY, ply.motionZ, ply.moveStrafing)) {
+		if (updateState(motionX, motionY, motionZ, ply.moveStrafing)) {
 			nextFlapTime = now + VAR.FLIGHT_TRANSITION_TIME;
 		}
 		

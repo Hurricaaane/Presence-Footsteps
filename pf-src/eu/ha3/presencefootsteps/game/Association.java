@@ -2,37 +2,30 @@ package eu.ha3.presencefootsteps.game;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
 
 public class Association {
 	
-	private IBlockState blockState;
+	private Block block;
 	
-	public int x;
-	public int y;
-	public int z;
+	private int x;
+	private int y;
+	private int z;
 	
 	private String data = null;
 	
 	private boolean noAssociation = false;
 	private boolean isPrimative = false;
 	
-	public Association() {
-	}
-	
 	public Association(String raw) {
 		setAssociation(raw);
 	}
 	
 	public Association(IBlockState state, int xx, int yy, int zz) {
-		init(state, xx, yy, zz);
-	}
-	
-	public Association init(IBlockState state, int xx, int yy, int zz) {
-		blockState = state;
+		block = state.getBlock();
 		x = xx;
 		y = yy;
 		z = zz;
-		return this;
 	}
 	
 	public String getData() {
@@ -65,14 +58,14 @@ public class Association {
 	}
 	
 	public Block getBlock() {
-		return blockState.getBlock();
-	}
-	
-	public int getMeta() {
-		return getBlock().getMetaFromState(blockState);
+		return block;
 	}
 	
 	public boolean isNotEmitter() {
 		return data != null && data.contentEquals("NOT_EMITTER");
+	}
+	
+	public BlockPos pos(int offX, int offY, int offZ) {
+		return new BlockPos(x + offX, y + offY, z + offZ);
 	}
 }

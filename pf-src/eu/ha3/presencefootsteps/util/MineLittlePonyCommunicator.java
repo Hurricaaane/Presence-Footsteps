@@ -7,7 +7,6 @@ import com.sollace.unicopia.Race;
 import com.sollace.unicopia.server.PlayerSpeciesRegister;
 
 import eu.ha3.mc.convenience.Ha3StaticUtilities;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class MineLittlePonyCommunicator {
@@ -31,8 +30,7 @@ public class MineLittlePonyCommunicator {
 		return MineLPDetected || unicopiaDetected;
 	}
 	
-	public int getEffectiveRace() {
-		EntityPlayer ply = Minecraft.getMinecraft().thePlayer;
+	public int getEffectiveRace(EntityPlayer ply) {
 		//return pegasus if Unicopia is installed and player's current race can fly
 		//overrides MineLP setting
 		if (unicopiaDetected) {

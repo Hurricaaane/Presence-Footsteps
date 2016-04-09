@@ -1,13 +1,15 @@
 package eu.ha3.presencefootsteps.game;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
+
 import eu.ha3.presencefootsteps.engine.interfaces.Library;
 import eu.ha3.presencefootsteps.engine.interfaces.SoundPlayer;
 import eu.ha3.presencefootsteps.game.interfaces.BlockMap;
 import eu.ha3.presencefootsteps.game.interfaces.DefaultStepPlayer;
 import eu.ha3.presencefootsteps.game.interfaces.Generator;
-import eu.ha3.presencefootsteps.game.interfaces.GeneratorSettable;
 import eu.ha3.presencefootsteps.game.interfaces.Isolator;
 import eu.ha3.presencefootsteps.game.interfaces.PrimitiveMap;
 import eu.ha3.presencefootsteps.game.interfaces.Solver;
@@ -15,7 +17,12 @@ import eu.ha3.presencefootsteps.game.interfaces.Variator;
 import eu.ha3.presencefootsteps.game.interfaces.VariatorSettable;
 import eu.ha3.presencefootsteps.main.PFHaddon;
 
-public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable {
+import net.minecraft.entity.player.EntityPlayer;
+
+public class PFIsolator implements Isolator, VariatorSettable {
+	
+	private final Map<UUID, Generator> generators = new HashMap<UUID, Generator>();
+	private final PFHaddon mod;
 	
 	private Library acoustics;
 	private Solver solver;
@@ -26,21 +33,44 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	
 	private Variator VAR;
 	
-	private Generator generator;
-	
 	public PFIsolator(PFHaddon mod) {
-		
+		this.mod = mod;
+	}
+	
+	private Generator getGenerator(EntityPlayer ply) {
+		if (generators.size() > 10) {
+			Iterator<Map.Entry<UUID, Generator>> iter = generators.entrySet().iterator();
+			while (iter.hasNext()) {
+				UUID uuid = iter.next().getKey();
+				if (ply.worldObj.getPlayerEntityByUUID(uuid) == null) {
+					iter.remove();
+				}
+			}
+		}
+		UUID key = ply.getUniqueID();
+		if (generators.containsKey(key)) {
+			return generators.get(ply.getUniqueID());
+		}
+		Generator gen = mod.getReader(ply);
+		if (gen != null) {
+			generators.put(key, gen);
+			fixVariator(gen);
+		}
+		return gen;
 	}
 	
 	@Override
-	public void onFrame() {
-		if (generator == null) return;
+	public void reload() {
+		generators.clear();
+	}
+	
+	@Override
+	public void onFrame(EntityPlayer ply) {
+		if (ply == null || ply.isDead) return;
+		Generator gen = getGenerator(ply);
+		if (gen == null) return;
 		
-		EntityPlayer ply = Minecraft.getMinecraft().thePlayer;
-		
-		if (ply == null) return;
-		
-		generator.generateFootsteps(ply);
+		gen.generateFootsteps(ply);
 		acoustics.think(); // Delayed sounds
 	}
 	
@@ -107,13 +137,7 @@ public class PFIsolator implements Isolator, VariatorSettable, GeneratorSettable
 	@Override
 	public void setVariator(Variator var) {
 		VAR = var;
-		fixVariator(generator);
-	}
-	
-	@Override
-	public void setGenerator(Generator generator) {
-		this.generator = generator;
-		fixVariator(this.generator);
+		reload();
 	}
 	
 	/**

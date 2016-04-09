@@ -5,19 +5,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 
 import eu.ha3.easy.EdgeModel;
@@ -31,6 +29,7 @@ import eu.ha3.mc.haddon.implem.HaddonIdentity;
 import eu.ha3.mc.haddon.implem.HaddonImpl;
 import eu.ha3.mc.haddon.supporting.SupportsFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsKeyEvents;
+import eu.ha3.mc.haddon.supporting.SupportsPlayerFrameEvents;
 import eu.ha3.mc.haddon.supporting.SupportsTickEvents;
 import eu.ha3.mc.quick.chat.Chatter;
 import eu.ha3.mc.quick.keys.KeyWatcher;
@@ -59,11 +58,10 @@ import eu.ha3.presencefootsteps.resources.BlockMapReader;
 import eu.ha3.presencefootsteps.resources.PFResourcePackDealer;
 import eu.ha3.presencefootsteps.resources.PrimitiveMapReader;
 import eu.ha3.presencefootsteps.util.MineLittlePonyCommunicator;
-import eu.ha3.presencefootsteps.util.PFHelper;
 import eu.ha3.util.property.simple.ConfigProperty;
 import eu.ha3.util.property.simple.InputStreamConfigProperty;
 
-public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, SupportsTickEvents, IResourceManagerReloadListener, NotifiableHaddon, Ha3HoldActions, SupportsKeyEvents {
+public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, SupportsPlayerFrameEvents, SupportsTickEvents, IResourceManagerReloadListener, NotifiableHaddon, Ha3HoldActions, SupportsKeyEvents {
 	// Identity
 	protected final String NAME = "Presence Footsteps";
 	protected final int VERSION = 8;
@@ -112,7 +110,6 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "aY");
 		
 		presenceDir = new File(util().getMcFolder(), "presencefootsteps");
-		
 		if (!presenceDir.exists()) presenceDir.mkdirs();
 		
 		debugButton = new EdgeTrigger(new EdgeModel() {
@@ -148,18 +145,13 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		}
 		
 		keyBindingMain = new KeyBinding("key.presencefootsteps", keyBindDefaultCode, "key.categories.misc");
-		Minecraft.getMinecraft().gameSettings.keyBindings = ArrayUtils.addAll(Minecraft.getMinecraft().gameSettings.keyBindings, keyBindingMain);
+		util().getClient().addKeyBinding(keyBindingMain);
 		keyBindingMain.setKeyCode(getConfig().getInteger("key.code"));
-		KeyBinding.resetKeyBindingArrayAndHash();
-		
 		watcher.add(keyBindingMain);
 		keyManager.addKeyBinding(keyBindingMain, new Ha3KeyHolding(this, 7));
 		
 		// Hooking
-		IResourceManager resMan = Minecraft.getMinecraft().getResourceManager();
-		if (resMan instanceof IReloadableResourceManager) {
-			((IReloadableResourceManager) resMan).registerReloadListener(this);
-		}
+		util().getClient().registerReloadListener(this);
 		
 		((OperatorCaster) op()).setTickEnabled(true);
 		((OperatorCaster) op()).setFrameEnabled(true);
@@ -176,9 +168,7 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 			PFLog.log("Presence Footsteps didn't find any compatible resource pack.");
 			hasResourcePacks = false;
 			hasDisabledResourcePacks = dealer.findDisabledResourcePacks().size() > 0;
-			
-			isolator.setGenerator(null);
-			
+			isolator.reload();
 			return;
 		}
 		hasResourcePacks = true;
@@ -193,11 +183,11 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		reloadAcoustics(repo);
 		isolator.setSolver(new PFSolver(isolator));
 		reloadVariator(repo);
-		
-		isolator.setGenerator(getReader(Stance.getStance(getConfig().getInteger("custom.stance"))));
+		isolator.reload();
 	}
 	
-	private Generator getReader(Stance stance) {
+	public Generator getReader(EntityPlayer ply) {
+		Stance stance = Stance.getStance(ply, getConfig().getInteger("custom.stance"));
 		if (stance.isMLP()) {
 			if (stance.isPeg()) {
 				return new PFReaderPeg(isolator, util());
@@ -352,15 +342,15 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		} else {
 			isolator = new PFIsolator(this);
 			reloadConfig();
-			isolator.setGenerator(null);
-			setPlayerStepDistance(0);
+			isolator.reload();
+			setPlayerStepDistance(util().getClient().getPlayer(), 0);
 		}
 		return enabled;
 	}
 	
-	private void setPlayerStepDistance(int value) {
+	private void setPlayerStepDistance(EntityPlayer ply, int value) {
 		try {
-			util().setPrivate(Minecraft.getMinecraft().thePlayer, "Entity_nextStepDistance", value); //nextStepDistance
+			util().setPrivate(ply, "Entity_nextStepDistance", value); //nextStepDistance
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -382,8 +372,17 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	}
 	
 	@Override
+	public void onFrame(EntityPlayer ply, float semi) {
+		if (enabled && hasResourcePacks && !util().isGamePaused()) {
+			isolator.onFrame(ply);
+			setPlayerStepDistance(ply, Integer.MAX_VALUE);
+		}
+	}
+	
+	@Override
 	public void onFrame(float semi) {
-		if (Minecraft.getMinecraft().thePlayer == null) return;
+		EntityPlayer ply = util().getClient().getPlayer();
+		if (ply == null) return;
 		
 		boolean keysDown = util().areKeysDown(Keyboard.KEY_LCONTROL, Keyboard.KEY_LSHIFT, Keyboard.KEY_F); 
 		debugButton.signalState(keysDown);
@@ -392,9 +391,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 			displayMenu();
 		}
 		
-		if (enabled && hasResourcePacks && !PFHelper.isGamePaused(util())) {
-			isolator.onFrame();
-			setPlayerStepDistance(Integer.MAX_VALUE);
+		if (enabled && hasResourcePacks && !util().isGamePaused()) {
+			setPlayerStepDistance(ply, Integer.MAX_VALUE);
 		}
 		
 		if (!firstTickPassed) {
@@ -429,10 +427,9 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	
 	private void displayMenu() {
 		if (util().isCurrentScreen(null)) {
-			Minecraft mc = Minecraft.getMinecraft();
-			mc.displayGuiScreen(new PFGuiMenu((GuiScreen) util().getCurrentScreen(), this));
-			if (mc.isSingleplayer() && !mc.getIntegratedServer().getPublic()) {
-                mc.getSoundHandler().pauseSounds();
+			util().displayScreen(new PFGuiMenu((GuiScreen) util().getCurrentScreen(), this));
+			if (util().isSingleplayer()) {
+				util().pauseSounds(true);
             }
 			PFLog.setDebugEnabled(false);
 		}

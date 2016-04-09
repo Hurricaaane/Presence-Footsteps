@@ -3,11 +3,15 @@ package eu.ha3.presencefootsteps.game.interfaces;
 import eu.ha3.presencefootsteps.engine.interfaces.Library;
 import eu.ha3.presencefootsteps.engine.interfaces.SoundPlayer;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 /* x-placeholder-wtfplv2 */
 
 public interface Isolator {
 	
-	public void onFrame();
+	public void reload();
+	
+	public void onFrame(EntityPlayer ply);
 	
 	public Library getAcoustics();
 	

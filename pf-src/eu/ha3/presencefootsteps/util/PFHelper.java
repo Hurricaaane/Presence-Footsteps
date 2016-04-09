@@ -1,19 +1,21 @@
 package eu.ha3.presencefootsteps.util;
 
-import eu.ha3.mc.haddon.Utility;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class PFHelper {
+	public static Minecraft getClient() {
+		return Minecraft.getMinecraft();
+	}
+	
 	/**
 	 * Gets the block at a certain location in the current world. This method is not safe against locations in undefined space.
 	 */
 	public static Block getBlockAt(BlockPos pos) {
-		return getBlockAt(Minecraft.getMinecraft().theWorld, pos);
+		return getBlockAt(getClient().theWorld, pos);
 	}
 	
 	/**
@@ -22,9 +24,9 @@ public class PFHelper {
 	 * or throws any exception during evaluation), it will return a default string.
 	 */
 	public static String getNameAt(BlockPos pos, String defaultIfFail) {
-		if (pos.getY() > 0 && pos.getY() < Minecraft.getMinecraft().theWorld.getHeight()) {
+		if (pos.getY() > 0 && pos.getY() < getClient().theWorld.getHeight()) {
 			try {
-				return getNameAt(Minecraft.getMinecraft().theWorld, pos);
+				return getNameAt(getClient().theWorld, pos);
 			} catch (Exception e) {}
 		}
 		return defaultIfFail;
@@ -51,16 +53,5 @@ public class PFHelper {
 	 */
 	public static String nameOf(Block block) {
 		return ((ResourceLocation)Block.blockRegistry.getNameForObject(block)).toString(); // RegistryNamespaced
-	}
-	
-	/**
-	 * Checks if the game is paused.
-	 * <p>
-	 * i.e There are no guis currently open that pause the game, we are not on a lan server, nor on a dedicated server. 
-	 */
-	public static boolean isGamePaused(Utility util) {
-		Object current = util.getCurrentScreen();
-		Minecraft mc = Minecraft.getMinecraft();
-		return current != null && (((GuiScreen)current).doesGuiPauseGame() && mc.isSingleplayer() && !mc.getIntegratedServer().getPublic());
 	}
 }

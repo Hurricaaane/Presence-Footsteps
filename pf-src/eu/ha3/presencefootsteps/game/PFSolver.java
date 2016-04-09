@@ -5,7 +5,6 @@ import java.util.Locale;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
@@ -79,10 +78,9 @@ public class PFSolver implements Solver {
 		if (Math.abs(player.motionY) < 0.02) return null; // Don't play sounds on every tiny bounce
 		if (player.isInWater()) PFLog.debug("WARNING!!! Playing a sound while in the water! This is supposed to be halted by the stopping conditions!!");
 		
-		Association worked = findAssociationForBlock(x, y, z);
+		Association worked = findAssociationForBlock(player.worldObj, x, y, z);
 		
-		// If it didn't work, the player has walked over the air on the border
-		// of a block.
+		// If it didn't work, the player has walked over the air on the border of a block.
 		// ------ ------ --> z
 		// | o | < player is here
 		// wool | air |
@@ -108,27 +106,27 @@ public class PFSolver implements Solver {
 				// Find the maximum absolute value of X or Z
 				boolean isXdangMax = Math.abs(xdang) > Math.abs(zdang);
 				// --------------------- ^ maxofZ-
-				// | . . |
-				// | . . |
+				// | . .   |
+				// | . .   |
 				// | o . . |
-				// | . . |
-				// | . |
+				// | . .   |
+				// | .     |
 				// < maxofX- maxofX+ >
 				// Take the maximum border to produce the sound
 				if (isXdangMax) { // If we are in the positive border, add 1, else subtract 1
-					worked = findAssociationForBlock(xdang > 0 ? x + 1 : x - 1, y, z);
+					worked = findAssociationForBlock(player.worldObj, xdang > 0 ? x + 1 : x - 1, y, z);
 				} else {
-					worked = findAssociationForBlock(x, y, zdang > 0 ? z + 1 : z - 1);
+					worked = findAssociationForBlock(player.worldObj, x, y, zdang > 0 ? z + 1 : z - 1);
 				}
-
+				
 				// If that didn't work, then maybe the footstep hit in the
 				// direction of walking
 				// Try with the other closest block
 				if (worked == null) { // Take the maximum direction and try with the orthogonal direction of it
 					if (isXdangMax) {
-						worked = findAssociationForBlock(x, y, zdang > 0 ? z + 1 : z - 1);
+						worked = findAssociationForBlock(player.worldObj, x, y, zdang > 0 ? z + 1 : z - 1);
 					} else {
-						worked = findAssociationForBlock(xdang > 0 ? x + 1 : x - 1, y, z);
+						worked = findAssociationForBlock(player.worldObj, xdang > 0 ? x + 1 : x - 1, y, z);
 					}
 				}
 			}
@@ -137,15 +135,14 @@ public class PFSolver implements Solver {
 	}
 
 	@Override
-	public Association findAssociationForBlock(int xx, int yy, int zz) {
-		World world = Minecraft.getMinecraft().theWorld;
+	public Association findAssociationForBlock(World world, int xx, int yy, int zz) {
 		IBlockState in = world.getBlockState(new BlockPos(xx, yy, zz));
 		
 		IBlockState above = world.getBlockState(new BlockPos(xx, yy + 1, zz));
 		String association = isolator.getBlockMap().getBlockMapSubstrate(above, "carpet"); // Try to see if the block above is a carpet...
 		
 		PFLog.debugf("Walking on block: %0 -- Being in block: %1", in.getBlock(), above.getBlock());
-
+		
 		if (association == null || association.equals("NOT_EMITTER")) {
 			// This condition implies that if the carpet is NOT_EMITTER, solving will CONTINUE with the actual block surface the player is walking on
 			// > NOT_EMITTER carpets will not cause solving to skip
@@ -187,25 +184,21 @@ public class PFSolver implements Solver {
 					PFLog.debugf("Not emitter for %0 : %1", in);
 				}
 				return null; // Player has stepped on a non-emitter block as defined in the blockmap
-			} else {
-				PFLog.debugf("Found association for %0 : %1 : %2", in, association);
-				return (new Association(in, xx, yy, zz)).setAssociation(association);
 			}
-		} else {
-			String primitive = resolvePrimitive(in);
-			if (primitive != null) {
-				if (primitive.contentEquals("NOT_EMITTER")) {
-					PFLog.debugf("Primitive for %0 : %1 : %2 is NOT_EMITTER! Following behavior is uncertain.", in, primitive);
-					return null;
-				}
-
-				PFLog.debugf("Found primitive for %0 : %1 : %2", in, primitive);
-				return (new Association(in, xx, yy, zz)).setPrimitive(primitive);
-			} else {
-				PFLog.debugf("No association for %0 : %1", in);
-				return (new Association(in, xx, yy, zz)).setNoAssociation();
-			}
+			PFLog.debugf("Found association for %0 : %1 : %2", in, association);
+			return (new Association(in, xx, yy, zz)).setAssociation(association);
 		}
+		String primitive = resolvePrimitive(in);
+		if (primitive != null) {
+			if (primitive.contentEquals("NOT_EMITTER")) {
+				PFLog.debugf("Primitive for %0 : %1 : %2 is NOT_EMITTER! Following behavior is uncertain.", in, primitive);
+				return null;
+			}
+			PFLog.debugf("Found primitive for %0 : %1 : %2", in, primitive);
+			return (new Association(in, xx, yy, zz)).setPrimitive(primitive);
+		}
+		PFLog.debugf("No association for %0 : %1", in);
+		return (new Association(in, xx, yy, zz)).setNoAssociation();
 	}
 
 	private String resolvePrimitive(IBlockState state) {
@@ -231,7 +224,7 @@ public class PFSolver implements Solver {
 				primitive = isolator.getPrimitiveMap().getPrimitiveMap(soundName);
 			}
 		}
-
+		
 		if (primitive != null) {
 			PFLog.debug("Primitive found for " + soundName + ":" + substrate);
 			return primitive;
@@ -261,23 +254,22 @@ public class PFSolver implements Solver {
 	}
 
 	@Override
-	public Association findAssociationForBlock(int xx, int yy, int zz,
-			String strategy) {
-		if (!strategy.equals("find_messy_foliage"))
-			return null;
-
-		World world = Minecraft.getMinecraft().theWorld;
-
+	public Association findAssociationForBlock(World world, int xx, int yy, int zz, String strategy) {
+		if (!strategy.equals("find_messy_foliage")) return null;
+		
 		/*
-		 * Block block = PF172Helper.getBlockAt(xx, yy, zz); int metadata =
-		 * world.getBlockMetadata(xx, yy, zz); // air block if (block ==
-		 * Blocks.field_150350_a) { //int mm = world.blockGetRenderType(xx, yy -
-		 * 1, zz); // see Entity, line 885 int mm = PF172Helper.getBlockAt(xx,
-		 * yy - 1, zz).func_149645_b();
+		 * Block block = PF172Helper.getBlockAt(xx, yy, zz);
+		 * int metadata = world.getBlockMetadata(xx, yy, zz); // air block
+		 * if (block == Blocks.field_150350_a) {
+		 * 		//int mm = world.blockGetRenderType(xx, yy - 1, zz);
+		 * 		// see Entity, line 885
+		 * 		int mm = PF172Helper.getBlockAt(xx, yy - 1, zz).func_149645_b();
 		 * 
-		 * if (mm == 11 || mm == 32 || mm == 21) { block =
-		 * PF172Helper.getBlockAt(xx, yy - 1, zz); metadata =
-		 * world.getBlockMetadata(xx, yy - 1, zz); } }
+		 * 		if (mm == 11 || mm == 32 || mm == 21) {
+		 * 			block = PF172Helper.getBlockAt(xx, yy - 1, zz);
+		 * 			metadata = world.getBlockMetadata(xx, yy - 1, zz);
+		 * 		}
+		 * }
 		 */
 
 		IBlockState above = world.getBlockState(new BlockPos(xx, yy + 1, zz));
@@ -286,31 +278,27 @@ public class PFSolver implements Solver {
 		boolean found = false;
 		// Try to see if the block above is a carpet...
 		/*
-		 * String association =
-		 * this.isolator.getBlockMap().getBlockMapSubstrate(
-		 * PF172Helper.nameOf(xblock), xmetadata, "carpet");
+		 * String association = this.isolator.getBlockMap().getBlockMapSubstrate(PF172Helper.nameOf(xblock), xmetadata, "carpet");
 		 * 
-		 * if (association == null || association.equals("NOT_EMITTER")) { //
-		 * This condition implies that // if the carpet is NOT_EMITTER, solving
-		 * will CONTINUE with the actual // block surface the player is walking
-		 * on // > NOT_EMITTER carpets will not cause solving to skip
+		 * if (association == null || association.equals("NOT_EMITTER")) {
+		 * 		//This condition implies that if the carpet is NOT_EMITTER,
+		 * 		// solving will CONTINUE with the actual block surface the player is walking on
+		 * 		// > NOT_EMITTER carpets will not cause solving to skip
 		 * 
-		 * // Not a carpet association =
-		 * this.isolator.getBlockMap().getBlockMap(PF172Helper.nameOf(block),
-		 * metadata);
+		 * 		// Not a carpet
+		 * 		association = this.isolator.getBlockMap().getBlockMap(PF172Helper.nameOf(block), metadata);
 		 * 
-		 * if (association != null && !association.equals("NOT_EMITTER")) { //
-		 * This condition implies that // foliage over a NOT_EMITTER block
-		 * CANNOT PLAY
+		 * 		if (association != null && !association.equals("NOT_EMITTER")) {
+		 * 			// This condition implies that
+		 * 			// foliage over a NOT_EMITTER block CANNOT PLAY
 		 * 
-		 * // This block most not be executed if the association is a carpet //
-		 * => this block of code is here, not outside this if else group.
+		 * 			// This block most not be executed if the association is a carpet
+		 * 			// => this block of code is here, not outside this if else group.
 		 */
 
 		String foliage = isolator.getBlockMap().getBlockMapSubstrate(above, "foliage");
 		if (foliage != null && !foliage.equals("NOT_EMITTER")) {
-			// we discard the normal block association, and mark the foliage as
-			// detected
+			// we discard the normal block association, and mark the foliage as detected
 			// association = association + "," + foliage;
 			association = foliage;
 			String isMessy = isolator.getBlockMap().getBlockMapSubstrate(above, "messy");
@@ -323,7 +311,7 @@ public class PFSolver implements Solver {
 		 */
 		
 		if (found && association != null) {
-			return association.contentEquals("NOT_EMITTER") ? null : (new Association()).setAssociation(association);
+			return association.contentEquals("NOT_EMITTER") ? null : new Association(association);
 		}
 		return null;
 	}

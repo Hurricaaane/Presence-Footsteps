@@ -1,6 +1,7 @@
 package eu.ha3.presencefootsteps.game.interfaces;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 import eu.ha3.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.presencefootsteps.game.Association;
 
@@ -60,13 +61,13 @@ public interface Solver {
 	 * valid, but has no association in the blockmap. If the carpet was
 	 * selected, this solves to the carpet.
 	 */
-	public Association findAssociationForBlock(int xx, int yy, int zz);
+	public Association findAssociationForBlock(World w, int xx, int yy, int zz);
 	
 	/**
 	 * Find an association for a certain block assuming the player is standing on it,
 	 * using a custom strategy which strategies are defined by the solver.
 	 */
-	public Association findAssociationForBlock(int xx, int yy, int zz, String strategy);
+	public Association findAssociationForBlock(World w, int xx, int yy, int zz, String strategy);
 	
 	/**
 	 * Play special sounds that must stop the usual footstep figuring things out process.

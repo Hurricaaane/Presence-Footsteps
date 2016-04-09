@@ -12,6 +12,15 @@ import eu.ha3.presencefootsteps.game.interfaces.Variator;
 import eu.ha3.presencefootsteps.game.interfaces.VariatorSettable;
 
 public class PFReader implements Generator, VariatorSettable {
+	
+	private double lastX;
+	private double lastY;
+	private double lastZ;
+	
+	protected double motionX;
+	protected double motionY;
+	protected double motionZ;
+	
 	// Construct
 	final protected Isolator mod;
 	final protected Utility util;
@@ -56,9 +65,32 @@ public class PFReader implements Generator, VariatorSettable {
 	
 	@Override
 	public void generateFootsteps(EntityPlayer ply) {
+		simulateMotionData(ply);
 		simulateFootsteps(ply);
 		simulateAirborne(ply);
 		simulateBrushes(ply);
+	}
+	
+	protected void simulateMotionData(EntityPlayer ply) {
+		if (isClientPlayer(ply)) {
+			EntityPlayer clientPlayer = util.getClient().getPlayer();
+			motionX = clientPlayer.motionX;
+			motionY = clientPlayer.motionY;
+			motionZ = clientPlayer.motionZ;
+		} else {
+			//Other players don't send their motion data so we have to make out own approximations.
+			//Note: This may change in 1.9. Watch this space!
+			//Not perfect but it will have to suffice.
+			motionX = (ply.posX - lastX);
+			lastX = ply.posX;
+			motionY = (ply.posY - lastY);
+			if (ply.onGround) {
+				motionY += 0.0784000015258789d;
+			}
+			lastY = ply.posY;
+			motionZ = (ply.posZ - lastZ);
+			lastZ = ply.posZ;
+		}
 	}
 	
 	protected boolean stoppedImmobile(float reference) {
@@ -85,8 +117,8 @@ public class PFReader implements Generator, VariatorSettable {
 			dwmYChange = 0;
 		}
 		
-		double movX = ply.motionX;
-		double movZ = ply.motionZ;
+		double movX = ply.posX - lastX;
+		double movZ = ply.posZ - lastZ;
 		
 		double scal = movX * xMovec + movZ * zMovec;
 		if (scalStat != scal < 0.001f) {
@@ -114,7 +146,8 @@ public class PFReader implements Generator, VariatorSettable {
 			
 			if (ply.isOnLadder() && !ply.onGround) {
 				distance = VAR.DISTANCE_LADDER;
-			} else if (!ply.isInWater() && Math.abs(this.yPosition - ply.posY) > 0.4d //&& Math.abs(this.yPosition - ply.posY) < 0.7d)
+			} else if (!ply.isInWater() && Math.abs(this.yPosition - ply.posY) > 0.4d
+					//&& Math.abs(this.yPosition - ply.posY) < 0.7d)
 					) {
 				// This ensures this does not get recorded as landing, but as a step
 				if (yPosition < ply.posY) { // Going upstairs
@@ -188,9 +221,9 @@ public class PFReader implements Generator, VariatorSettable {
 			throw new RuntimeException(e);
 		}
 		
-		if (isAirborne && isJumping) { //ply.isJumping)
+		if (isAirborne && isJumping) {
 			if (VAR.EVENT_ON_JUMP) {
-				double speed = ply.motionX * ply.motionX + ply.motionZ * ply.motionZ;
+				double speed = motionX * motionX + motionZ * motionZ;
 				
 				if (speed < VAR.SPEED_TO_JUMP_AS_MULTIFOOT) { // STILL JUMP
 					playMultifoot(ply, 0.4d, EventType.JUMP); // 2 - 0.7531999805212d (magic number for vertical offset?)
@@ -211,8 +244,20 @@ public class PFReader implements Generator, VariatorSettable {
 		}
 	}
 	
+	private boolean isClientPlayer(EntityPlayer ply) {
+		EntityPlayer clientPlayer = util.getClient().getPlayer();
+		return ply.getUniqueID().equals(clientPlayer.getUniqueID());
+	}
+	
 	protected EventType speedDisambiguator(EntityPlayer ply, EventType walk, EventType run) {
-		double velocity = ply.motionX * ply.motionX + ply.motionZ * ply.motionZ;
+		if (!isClientPlayer(ply)) { //Other players don't send motion data, so have to decide some other way
+			if (ply.isSprinting()) {
+				return run;
+			}
+			return walk;
+		}
+		
+		double velocity = motionX * motionX + motionZ * motionZ;
 		return velocity > VAR.SPEED_TO_RUN ? run : walk;
 	}
 	
@@ -221,31 +266,20 @@ public class PFReader implements Generator, VariatorSettable {
 		
 		brushesTime = System.currentTimeMillis() + 100;
 		
-		if ((ply.motionX == 0d && ply.motionZ == 0d) || ply.isSneaking()) return;
+		if ((motionX == 0d && motionZ == 0d) || ply.isSneaking()) return;
 		
-		//if (true || ply.onGround || ply.isOnLadder())
-		//{
 		int yy = MathHelper.floor_double(ply.posY - 0.1d - ply.getYOffset() - (ply.onGround ? 0d : 0.25d));
-		Association assos = mod.getSolver().findAssociationForBlock(MathHelper.floor_double(ply.posX), yy, MathHelper.floor_double(ply.posZ), "find_messy_foliage");
-		if (assos != null)
-		{
-			if (!this.isMessyFoliage)
-			{
-				this.isMessyFoliage = true;
-				this.mod.getSolver().playAssociation(ply, assos, EventType.WALK);
+		Association assos = mod.getSolver().findAssociationForBlock(ply.worldObj, MathHelper.floor_double(ply.posX), yy, MathHelper.floor_double(ply.posZ), "find_messy_foliage");
+		
+		if (assos != null) {
+			if (!isMessyFoliage) {
+				isMessyFoliage = true;
+				mod.getSolver().playAssociation(ply, assos, EventType.WALK);
 			}
+		} else if (isMessyFoliage) {
+			isMessyFoliage = false;
 		}
-		else
-		{
-			if (this.isMessyFoliage)
-			{
-				this.isMessyFoliage = false;
-			}
-		}
-		//}
 	}
-	
-	// 
 	
 	protected void playSinglefoot(EntityPlayer ply, double verticalOffsetAsMinus, EventType eventType, boolean foot) {
 		Association assos = mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus, isRightFoot);
@@ -268,6 +302,5 @@ public class PFReader implements Generator, VariatorSettable {
 	protected float scalex(float number, float min, float max) {
 		float m = (number - min) / (max - min);
 		return m < 0 ? 0 : m > 1 ? 1 : m;
-		
 	}
 }
