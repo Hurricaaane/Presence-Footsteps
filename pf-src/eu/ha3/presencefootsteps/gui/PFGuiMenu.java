@@ -32,9 +32,9 @@ public class PFGuiMenu extends GuiScreen {
 	private final int BUTTON_WIDTH = 300 - Y_SPACING * 4;
 	
 	
-	public PFGuiMenu(GuiScreen par1GuiScreen, PFHaddon haddon) {
+	public PFGuiMenu(PFHaddon haddon) {
 		screenTitle = I18n.format("menu.pf.title");
-		parentScreen = par1GuiScreen;
+		parentScreen = (GuiScreen)haddon.util().getCurrentScreen();
 		mod = haddon;
 	}
 	
@@ -102,30 +102,30 @@ public class PFGuiMenu extends GuiScreen {
 	 * ActionListener.actionPerformed(ActionEvent e).
 	 */
 	@Override
-	protected void actionPerformed(GuiButton par1GuiButton) {
-		if (par1GuiButton.id == 200) {
+	protected void actionPerformed(GuiButton sender) {
+		if (sender.id == 200) {
 			mc.displayGuiScreen(parentScreen); // This triggers onGuiClosed
-		} else if (par1GuiButton.id == 199) {
+		} else if (sender.id == 199) {
 			mc.displayGuiScreen(new GuiScreenResourcePacks(this)); // This triggers onGuiClosed
-		} else if (par1GuiButton.id == 198) {
+		} else if (sender.id == 198) {
 			try {
 				(new BlockReport(mod)).generateReport().printResults("presencefootsteps/report_full", ".txt");
 			} catch (Exception e) {
 				mod.getChatter().printChat(EnumChatFormatting.RED, I18n.format("pf.report.error", e.getMessage()));
 			}
-		} else if (par1GuiButton.id == 210) {
+		} else if (sender.id == 210) {
 			mod.getConfig().setProperty("custom.stance", (mod.getConfig().getInteger("custom.stance") + 1) % (Stance.values().length + 1));
 			mod.saveConfig();
-			par1GuiButton.displayString = getStance();
+			sender.displayString = getStance();
 			mod.reloadEverything(false);
-		} else if (par1GuiButton.id == 220) {
+		} else if (sender.id == 220) {
 			try {
 				(new BlockReport(mod)).generateUnknownReport().printResults("presencefootsteps/report_concise", ".txt");
 			} catch (Exception e) {
 				mod.getChatter().printChat(EnumChatFormatting.RED, I18n.format("pf.report.error", e.getMessage()));
 			}
-		} else if (par1GuiButton.id == 212) {
-			par1GuiButton.displayString = I18n.format(mod.toggle() ? "menu.pf.on" : "menu.pf.off");
+		} else if (sender.id == 212) {
+			sender.displayString = I18n.format(mod.toggle() ? "menu.pf.on" : "menu.pf.off");
 		}
 		
 	}
@@ -139,7 +139,7 @@ public class PFGuiMenu extends GuiScreen {
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
-	public void drawScreen(int par1, int par2, float par3) {
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
 		drawCenteredString(fontRendererObj, screenTitle, width / 2, 40, 0xffffff);
 		if (!mod.hasResourcePacksLoaded()) {
@@ -151,7 +151,7 @@ public class PFGuiMenu extends GuiScreen {
 				drawCenteredString(fontRendererObj, I18n.format("menu.pf.warn.3"), width / 2, 20, 0xff0000);
 			}
 		}
-		super.drawScreen(par1, par2, par3);
+		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 	
 }

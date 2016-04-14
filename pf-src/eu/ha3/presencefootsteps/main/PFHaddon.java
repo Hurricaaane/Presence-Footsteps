@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.ResourcePackRepository;
@@ -124,10 +122,10 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 				if (debugState) {
 					if (PFLog.getDebugEnabled()) {
 						PFLog.setDebugEnabled(false);
-						chatter.printChat(I18n.format("pf.debug.off"));
+						chatter.printChat("pf.debug.off");
 					} else {
 						PFLog.setDebugEnabled(true);
-						chatter.printChat(I18n.format("pf.debug.on"));
+						chatter.printChat("pf.debug.on");
 					}
 					reloadEverything(false);
 				}
@@ -399,35 +397,35 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 			firstTickPassed = true;
 			updateNotifier.attempt();
 			if (mlpDetectedFirst) {
-				chatter.printChat(EnumChatFormatting.AQUA, I18n.format("pf.mlp.0"));
-				chatter.printChatShort(I18n.format("pf.mlp.1"));
+				chatter.printChat(EnumChatFormatting.AQUA, "pf.mlp.0");
+				chatter.printChatShort("pf.mlp.1");
 				if (getConfig().getInteger("custom.stance") == 0) {
-					chatter.printChatShort(EnumChatFormatting.GRAY, I18n.format(keyBindingMain.getKeyCode() == 0 ? "pf.mlp.2.stance" : "pf.mlp.2.stance.button", Keyboard.getKeyName(keyBindingMain.getKeyCode())));
+					chatter.printChatShort(EnumChatFormatting.GRAY, keyBindingMain.getKeyCode() == 0 ? "pf.mlp.2.stance" : "pf.mlp.2.stance.button", Keyboard.getKeyName(keyBindingMain.getKeyCode()));
 				} else {
-					chatter.printChatShort(EnumChatFormatting.GRAY, I18n.format(keyBindingMain.getKeyCode() == 0 ? "pf.mlp.2" : "pf.mlp.2.button", Keyboard.getKeyName(keyBindingMain.getKeyCode())));
+					chatter.printChatShort(EnumChatFormatting.GRAY, keyBindingMain.getKeyCode() == 0 ? "pf.mlp.2" : "pf.mlp.2.button", Keyboard.getKeyName(keyBindingMain.getKeyCode()));
 				}
 			}
 			
 			if (!hasResourcePacks) {
 				hasResourcePacks_FixMe = true;
 				if (hasDisabledResourcePacks) {
-					chatter.printChat(EnumChatFormatting.RED, I18n.format("pf.pack.disabled.0"));
-					chatter.printChatShort(EnumChatFormatting.WHITE, I18n.format("pf.pack.disabled.1"));
+					chatter.printChat(EnumChatFormatting.RED, "pf.pack.disabled.0");
+					chatter.printChatShort(EnumChatFormatting.WHITE, "pf.pack.disabled.1");
 				} else {
-					chatter.printChat(EnumChatFormatting.RED, I18n.format("pf.pack.0"));
-					chatter.printChatShort(EnumChatFormatting.WHITE, I18n.format("pf.pack.1"));
+					chatter.printChat(EnumChatFormatting.RED, "pf.pack.0");
+					chatter.printChatShort(EnumChatFormatting.WHITE, "pf.pack.1");
 				}
 			}
 		}
 		if (hasResourcePacks_FixMe && hasResourcePacks) {
 			hasResourcePacks_FixMe = false;
-			chatter.printChat(EnumChatFormatting.GREEN, I18n.format("pf.pack.yay"));
+			chatter.printChat(EnumChatFormatting.GREEN, "pf.pack.yay");
 		}
 	}
 	
 	private void displayMenu() {
 		if (util().isCurrentScreen(null)) {
-			util().displayScreen(new PFGuiMenu((GuiScreen) util().getCurrentScreen(), this));
+			util().displayScreen(new PFGuiMenu(this));
 			if (util().isSingleplayer()) {
 				util().pauseSounds(true);
             }
