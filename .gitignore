@@ -1,1 +1,13 @@
 
+.gradle
+jars
+build
+bin
+
+.project
+.classpath
+.settings
+*.launch
+
+dummy
+minelp_dummy

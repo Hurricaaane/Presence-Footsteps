@@ -1,0 +1,4 @@
+[submodule "lib/MC-Commons"]
+	path = lib/MC-Commons
+	url = https://github.com/Sollace/MC-Commons.git
+	branch = master
