@@ -1,5 +1,6 @@
 package eu.ha3.presencefootsteps.game.reader;
 
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import eu.ha3.mc.haddon.Utility;
@@ -71,6 +72,9 @@ public class PFReader implements Generator, VariatorSettable {
 		simulateBrushes(ply);
 	}
 	
+	/**
+	 * Fills in the blanks that aren't present on the client when playing on a remote server.
+	 */
 	protected void simulateMotionData(EntityPlayer ply) {
 		if (isClientPlayer(ply)) {
 			EntityPlayer clientPlayer = util.getClient().getPlayer();
@@ -90,6 +94,19 @@ public class PFReader implements Generator, VariatorSettable {
 			lastY = ply.posY;
 			motionZ = (ply.posZ - lastZ);
 			lastZ = ply.posZ;
+		}
+		if (ply instanceof EntityOtherPlayerMP) {
+			if (ply.worldObj.getWorldTime() % 1 == 0) {
+				ply.distanceWalkedModified += (double)MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ) * 0.8D;
+				if (motionX != 0 || motionZ != 0) {
+					ply.distanceWalkedOnStepModified += (double)MathHelper.sqrt_double(motionX * motionX + motionY * motionY + motionZ * motionZ) * 0.8D;
+				}
+				if (ply.onGround) {
+					ply.fallDistance = 0;
+				} else {
+					if (motionY < 0) ply.fallDistance -= motionY * 200;
+				}
+			}
 		}
 	}
 	
@@ -117,8 +134,8 @@ public class PFReader implements Generator, VariatorSettable {
 			dwmYChange = 0;
 		}
 		
-		double movX = ply.posX - lastX;
-		double movZ = ply.posZ - lastZ;
+		double movX = motionX;
+		double movZ = motionZ;
 		
 		double scal = movX * xMovec + movZ * zMovec;
 		if (scalStat != scal < 0.001f) {
@@ -210,34 +227,44 @@ public class PFReader implements Generator, VariatorSettable {
 		if (isAirborne) fallDistance = ply.fallDistance;
 	}
 	
-	protected void simulateJumpingLanding(EntityPlayer ply) {
-		if (mod.getSolver().hasSpecialStoppingConditions(ply)) return;
-		
-		boolean isJumping;
+	protected boolean isJumping(EntityPlayer ply) {
 		try {
-			isJumping = (boolean)util.getPrivate(ply, "isJumping");
+			return (boolean)util.getPrivate(ply, "isJumping");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+	}
+	
+	protected double getOffsetMinus(EntityPlayer ply) {
+		if (ply instanceof EntityOtherPlayerMP) {
+			return 1;
+		}
+		return 0;
+	}
+	
+	protected void simulateJumpingLanding(EntityPlayer ply) {
+		if (mod.getSolver().hasSpecialStoppingConditions(ply)) return;
+		
+		boolean isJumping = isJumping(ply);
 		
 		if (isAirborne && isJumping) {
 			if (VAR.EVENT_ON_JUMP) {
 				double speed = motionX * motionX + motionZ * motionZ;
 				
 				if (speed < VAR.SPEED_TO_JUMP_AS_MULTIFOOT) { // STILL JUMP
-					playMultifoot(ply, 0.4d, EventType.JUMP); // 2 - 0.7531999805212d (magic number for vertical offset?)
+					playMultifoot(ply, getOffsetMinus(ply) + 0.4d, EventType.JUMP); // 2 - 0.7531999805212d (magic number for vertical offset?)
 				} else {
-					playSinglefoot(ply, 0.4d, EventType.JUMP, isRightFoot); // RUNNING JUMP
+					playSinglefoot(ply, getOffsetMinus(ply) + 0.4d, EventType.JUMP, isRightFoot); // RUNNING JUMP
 					// Do not toggle foot: After landing sounds, the first foot will be same as the one used to jump.
 				}
 			}
 		} else if (!isAirborne) {
 			if (fallDistance > VAR.LAND_HARD_DISTANCE_MIN) {
-				playMultifoot(ply, 0d, EventType.LAND); // Always assume the player lands on their two feet
+				playMultifoot(ply, getOffsetMinus(ply), EventType.LAND); // Always assume the player lands on their two feet
 				// Do not toggle foot: After landing sounds, the first foot will be same as the one used to jump.
 			} else if (!this.stepThisFrame && !ply.isSneaking()) {
-				playSinglefoot(ply, 0d, speedDisambiguator(ply, EventType.CLIMB, EventType.CLIMB_RUN), isRightFoot);
+				playSinglefoot(ply, getOffsetMinus(ply), speedDisambiguator(ply, EventType.CLIMB, EventType.CLIMB_RUN), isRightFoot);
 				isRightFoot = !isRightFoot;
 			}
 			

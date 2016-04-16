@@ -25,7 +25,7 @@ public class PFReaderPeg extends PFReaderQuad {
 	}
 	
 	protected void simulateAirborne(EntityPlayer ply) {
-		isFalling = ply.motionY < -0.3;
+		isFalling = motionY < -0.3;
 		super.simulateAirborne(ply);
 		if (isAirborne) simulateFlying(ply);
 	}
