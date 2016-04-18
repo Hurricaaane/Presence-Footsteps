@@ -11,7 +11,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockFalling;
-import net.minecraft.block.BlockLeavesBase;
+import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockPane;
 import net.minecraft.block.BlockRailBase;
@@ -19,10 +19,10 @@ import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockTorch;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import eu.ha3.presencefootsteps.main.PFHaddon;
 import eu.ha3.presencefootsteps.util.PFHelper;
 import eu.ha3.util.property.simple.ConfigProperty;
@@ -59,12 +59,12 @@ public class BlockReport {
 	
 	private String getSoundData(Block block) {
 		String soundName = "";
-		if (block.stepSound == null) {
+		if (block.getStepSound() == null) {
 			soundName = "NULL";
-		} else if (block.stepSound.soundName == null) {
+		} else if (block.getStepSound().getStepSound() == null) {
 			soundName = "NO_SOUND";
 		} else {
-			soundName = block.stepSound.soundName;
+			soundName = block.getStepSound().getStepSound().getSoundName().getResourcePath();
 		}
 		return soundName;
 	}
@@ -76,7 +76,7 @@ public class BlockReport {
 		if (block instanceof BlockDoublePlant) soundName += "," + "EXTENDS_DOUBLE_PLANT";
 		if (block instanceof BlockCrops) soundName += "," + "EXTENDS_CROPS";
 		if (block instanceof BlockContainer) soundName += "," + "EXTENDS_CONTAINER";
-		if (block instanceof BlockLeavesBase) soundName += "," + "EXTENDS_LEAVES";
+		if (block instanceof BlockLeaves) soundName += "," + "EXTENDS_LEAVES";
 		if (block instanceof BlockRailBase) soundName += "," + "EXTENDS_RAIL";
 		if (block instanceof BlockSlab) soundName += "," + "EXTENDS_SLAB";
 		if (block instanceof BlockBasePressurePlate) soundName += "," + "EXTENDS_PRESSURE_PLATE";
@@ -87,7 +87,7 @@ public class BlockReport {
 		if (block instanceof BlockRotatedPillar) soundName += "," + "EXTENDS_PILLAR";
 		if (block instanceof BlockTorch) soundName += "," + "EXTENDS_TORCH";
 		if (block instanceof BlockCarpet) soundName += "," + "EXTENDS_CARPET";
-		if (!block.isOpaqueCube()) soundName += "," + "HITBOX";
+		if (!block.isFullyOpaque(block.getDefaultState())) soundName += "," + "HITBOX";
 		return soundName;
 	}
 	
@@ -101,9 +101,9 @@ public class BlockReport {
 		results.setSource(loc.getAbsolutePath());
 		results.save();
 		
-		ChatComponentText link = new ChatComponentText(loc.getName());
+		TextComponentString link = new TextComponentString(loc.getName());
 		link.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, loc.getAbsolutePath()));
         link.getChatStyle().setUnderlined(Boolean.valueOf(true));
-		mod.getChatter().printChat(EnumChatFormatting.GREEN, new ChatComponentTranslation("pf.report.save", link));
+		mod.getChatter().printChat(TextFormatting.GREEN, new TextComponentTranslation("pf.report.save", link));
 	}
 }

@@ -12,7 +12,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 import org.lwjgl.input.Keyboard;
 
@@ -62,8 +62,8 @@ import eu.ha3.util.property.simple.InputStreamConfigProperty;
 public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, SupportsPlayerFrameEvents, SupportsTickEvents, IResourceManagerReloadListener, NotifiableHaddon, Ha3HoldActions, SupportsKeyEvents {
 	// Identity
 	protected final String NAME = "Presence Footsteps";
-	protected final int VERSION = 8;
-	protected final String MCVERSION = "1.8.9";
+	protected final int VERSION = 9;
+	protected final String MCVERSION = "1.9";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	protected final Identity identity = (new HaddonIdentity(NAME, VERSION, MCVERSION, ADDRESS)).setPrefix("u");
 	
@@ -397,29 +397,29 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 			firstTickPassed = true;
 			updateNotifier.attempt();
 			if (mlpDetectedFirst) {
-				chatter.printChat(EnumChatFormatting.AQUA, "pf.mlp.0");
+				chatter.printChat(TextFormatting.AQUA, "pf.mlp.0");
 				chatter.printChatShort("pf.mlp.1");
 				if (getConfig().getInteger("custom.stance") == 0) {
-					chatter.printChatShort(EnumChatFormatting.GRAY, keyBindingMain.getKeyCode() == 0 ? "pf.mlp.2.stance" : "pf.mlp.2.stance.button", Keyboard.getKeyName(keyBindingMain.getKeyCode()));
+					chatter.printChatShort(TextFormatting.GRAY, keyBindingMain.getKeyCode() == 0 ? "pf.mlp.2.stance" : "pf.mlp.2.stance.button", Keyboard.getKeyName(keyBindingMain.getKeyCode()));
 				} else {
-					chatter.printChatShort(EnumChatFormatting.GRAY, keyBindingMain.getKeyCode() == 0 ? "pf.mlp.2" : "pf.mlp.2.button", Keyboard.getKeyName(keyBindingMain.getKeyCode()));
+					chatter.printChatShort(TextFormatting.GRAY, keyBindingMain.getKeyCode() == 0 ? "pf.mlp.2" : "pf.mlp.2.button", Keyboard.getKeyName(keyBindingMain.getKeyCode()));
 				}
 			}
 			
 			if (!hasResourcePacks) {
 				hasResourcePacks_FixMe = true;
 				if (hasDisabledResourcePacks) {
-					chatter.printChat(EnumChatFormatting.RED, "pf.pack.disabled.0");
-					chatter.printChatShort(EnumChatFormatting.WHITE, "pf.pack.disabled.1");
+					chatter.printChat(TextFormatting.RED, "pf.pack.disabled.0");
+					chatter.printChatShort(TextFormatting.WHITE, "pf.pack.disabled.1");
 				} else {
-					chatter.printChat(EnumChatFormatting.RED, "pf.pack.0");
-					chatter.printChatShort(EnumChatFormatting.WHITE, "pf.pack.1");
+					chatter.printChat(TextFormatting.RED, "pf.pack.0");
+					chatter.printChatShort(TextFormatting.WHITE, "pf.pack.1");
 				}
 			}
 		}
 		if (hasResourcePacks_FixMe && hasResourcePacks) {
 			hasResourcePacks_FixMe = false;
-			chatter.printChat(EnumChatFormatting.GREEN, "pf.pack.yay");
+			chatter.printChat(TextFormatting.GREEN, "pf.pack.yay");
 		}
 	}
 	

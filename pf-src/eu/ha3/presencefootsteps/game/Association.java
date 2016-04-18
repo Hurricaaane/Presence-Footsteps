@@ -1,12 +1,13 @@
 package eu.ha3.presencefootsteps.game;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 public class Association {
 	
-	private Block block;
+	private IBlockState blockState;
 	
 	private int x;
 	private int y;
@@ -22,7 +23,7 @@ public class Association {
 	}
 	
 	public Association(IBlockState state, int xx, int yy, int zz) {
-		block = state.getBlock();
+		blockState = state;
 		x = xx;
 		y = yy;
 		z = zz;
@@ -58,7 +59,11 @@ public class Association {
 	}
 	
 	public Block getBlock() {
-		return block;
+		return blockState.getBlock();
+	}
+	
+	public Material getMaterial() {
+		return blockState.getMaterial();
 	}
 	
 	public boolean isNotEmitter() {

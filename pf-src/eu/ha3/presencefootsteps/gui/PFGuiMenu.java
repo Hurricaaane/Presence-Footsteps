@@ -4,7 +4,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiScreenResourcePacks;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import eu.ha3.mc.gui.HDisplayStringProvider;
 import eu.ha3.mc.gui.HGuiSliderControl;
 import eu.ha3.mc.gui.HSliderListener;
@@ -111,7 +111,7 @@ public class PFGuiMenu extends GuiScreen {
 			try {
 				(new BlockReport(mod)).generateReport().printResults("presencefootsteps/report_full", ".txt");
 			} catch (Exception e) {
-				mod.getChatter().printChat(EnumChatFormatting.RED, I18n.format("pf.report.error", e.getMessage()));
+				mod.getChatter().printChat(TextFormatting.RED, I18n.format("pf.report.error", e.getMessage()));
 			}
 		} else if (sender.id == 210) {
 			mod.getConfig().setProperty("custom.stance", (mod.getConfig().getInteger("custom.stance") + 1) % (Stance.values().length + 1));
@@ -122,7 +122,7 @@ public class PFGuiMenu extends GuiScreen {
 			try {
 				(new BlockReport(mod)).generateUnknownReport().printResults("presencefootsteps/report_concise", ".txt");
 			} catch (Exception e) {
-				mod.getChatter().printChat(EnumChatFormatting.RED, I18n.format("pf.report.error", e.getMessage()));
+				mod.getChatter().printChat(TextFormatting.RED, I18n.format("pf.report.error", e.getMessage()));
 			}
 		} else if (sender.id == 212) {
 			sender.displayString = I18n.format(mod.toggle() ? "menu.pf.on" : "menu.pf.off");

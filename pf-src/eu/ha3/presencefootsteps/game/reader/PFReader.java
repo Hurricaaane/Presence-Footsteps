@@ -2,7 +2,7 @@ package eu.ha3.presencefootsteps.game.reader;
 
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import eu.ha3.mc.haddon.Utility;
 import eu.ha3.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.presencefootsteps.game.Association;

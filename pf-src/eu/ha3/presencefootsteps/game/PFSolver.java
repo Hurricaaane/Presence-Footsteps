@@ -7,8 +7,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import eu.ha3.presencefootsteps.engine.implem.ConfigOptions;
 import eu.ha3.presencefootsteps.engine.interfaces.EventType;
@@ -148,7 +149,7 @@ public class PFSolver implements Solver {
 		if (association == null || association.equals("NOT_EMITTER")) {
 			// This condition implies that if the carpet is NOT_EMITTER, solving will CONTINUE with the actual block surface the player is walking on
 			// > NOT_EMITTER carpets will not cause solving to skip
-			Material mat = in.getBlock().getMaterial();
+			Material mat = in.getMaterial();
 			if (mat == Material.air || mat == Material.circuits) {
 				IBlockState below = world.getBlockState(new BlockPos(xx, yy - 1, zz));
 				association = isolator.getBlockMap().getBlockMapSubstrate(below, "bigger");
@@ -206,20 +207,24 @@ public class PFSolver implements Solver {
 	private String resolvePrimitive(IBlockState state) {
 		Block block = state.getBlock();
 		
-		if (block == Blocks.air || block.stepSound == null) {
+		if (block == Blocks.air || block.getStepSound() == null) {
 			return "NOT_EMITTER"; // air block
 		}
 		
-		String soundName = block.stepSound.soundName;
-		if (soundName == null || soundName.isEmpty()) {
+		String soundName = "";
+		SoundEvent stepSound = block.getStepSound().getStepSound();
+		if (stepSound != null) {
+			soundName = stepSound.getSoundName().getResourcePath();
+		}
+		if (soundName.isEmpty()) {
 			soundName = "UNDEFINED";
 		}
 		
-		String substrate = String.format(Locale.ENGLISH, "%.2f_%.2f", block.stepSound.volume, block.stepSound.frequency);
+		String substrate = String.format(Locale.ENGLISH, "%.2f_%.2f", block.getStepSound().volume, block.getStepSound().pitch);
 		
 		String primitive = isolator.getPrimitiveMap().getPrimitiveMapSubstrate(soundName, substrate); // Check for primitive in register 
 		if (primitive == null) {
-			if (block.stepSound.soundName != null) {
+			if (stepSound != null) {
 				primitive = isolator.getPrimitiveMap().getPrimitiveMapSubstrate(soundName, "break_" + soundName); // Check for break sound
 			}
 			if (primitive == null) {

@@ -7,12 +7,16 @@ import java.util.Locale;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.resources.IResource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import eu.ha3.presencefootsteps.engine.implem.AcousticsLibrary;
 import eu.ha3.presencefootsteps.engine.interfaces.EventType;
 import eu.ha3.presencefootsteps.engine.interfaces.Options;
@@ -46,14 +50,14 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	@Override
 	public void playStep(EntityLivingBase entity, Association assos) {
 		Block block = assos.getBlock();
-		if (!block.getMaterial().isLiquid() && block.stepSound != null) {
-			Block.SoundType soundType = block.stepSound;
+		SoundType soundType = block.getStepSound();
+		if (!assos.getMaterial().isLiquid() && soundType != null) {
 			if (entity.worldObj.getBlockState(assos.pos(0, 1, 0)).getBlock() == Blocks.snow_layer) {
-				soundType = Blocks.snow_layer.stepSound;
+				soundType = Blocks.snow_layer.getStepSound();
 			}
 			
 			//entity.worldObj.playSoundAtEntity(entity, soundType.getStepSound(), soundType.getVolume() * 0.15F, soundType.getFrequency());
-			actuallyPlaySound(entity, soundType.getStepSound(), soundType.getVolume() * 0.15F, soundType.getFrequency());
+			actuallyPlaySound(entity, soundType.getStepSound().getSoundName().toString(), soundType.getVolume() * 0.15F, soundType.getPitch());
 		}
 	}
 	
@@ -79,13 +83,13 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	protected void actuallyPlaySound(Entity location, String soundName, float volume, float pitch) {
 		//location.worldObj.playSoundAtEntity(location, soundName, volume, pitch);
 		//location.playSound(soundName, volume, pitch);
-		Minecraft mc = Minecraft.getMinecraft();
-		double d0 = mc.getRenderViewEntity().getDistanceSq(location.posX, location.posY, location.posZ);
-        PositionedSoundRecord positionedsoundrecord = new PositionedSoundRecord(new ResourceLocation(soundName), volume, pitch, (float)location.posX, (float)location.posY, (float)location.posZ);
-
-        if (d0 > 100.0D) {
-            double d1 = Math.sqrt(d0) / 40.0D;
-            mc.getSoundHandler().playDelayedSound(positionedsoundrecord, (int)(d1 * 20.0D));
+        PositionedSoundRecord positionedsoundrecord = new PositionedSoundRecord(new ResourceLocation("presencefootsteps", soundName), SoundCategory.MASTER, volume, pitch, false, 0, ISound.AttenuationType.LINEAR, (float)location.posX, (float)location.posY, (float)location.posZ);
+        
+        Minecraft mc = Minecraft.getMinecraft();
+        double distance = mc.getRenderViewEntity().getDistanceSq(location.posX, location.posY, location.posZ);
+        if (distance > 100) {
+            distance = Math.sqrt(distance) / 2;
+            mc.getSoundHandler().playDelayedSound(positionedsoundrecord, (int)Math.floor(distance));
         } else {
             mc.getSoundHandler().playSound(positionedsoundrecord);
         }
