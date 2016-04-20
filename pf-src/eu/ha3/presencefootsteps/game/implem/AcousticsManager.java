@@ -11,7 +11,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.resources.IResource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -83,7 +82,7 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	protected void actuallyPlaySound(Entity location, String soundName, float volume, float pitch) {
 		//location.worldObj.playSoundAtEntity(location, soundName, volume, pitch);
 		//location.playSound(soundName, volume, pitch);
-        PositionedSoundRecord positionedsoundrecord = new PositionedSoundRecord(new ResourceLocation("presencefootsteps", soundName), SoundCategory.MASTER, volume, pitch, false, 0, ISound.AttenuationType.LINEAR, (float)location.posX, (float)location.posY, (float)location.posZ);
+        PositionedSoundRecord positionedsoundrecord = new PositionedSoundRecord(new ResourceLocation(soundName), SoundCategory.MASTER, volume, pitch, false, 0, ISound.AttenuationType.LINEAR, (float)location.posX, (float)location.posY, (float)location.posZ);
         
         Minecraft mc = Minecraft.getMinecraft();
         double distance = mc.getRenderViewEntity().getDistanceSq(location.posX, location.posY, location.posZ);
