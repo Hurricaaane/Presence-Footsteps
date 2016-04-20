@@ -104,8 +104,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		//http://q.mc.ha3.eu/query/pf-litemod-version.json
 		updateNotifier = new UpdateNotifier(this, "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d");
 		
-		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "h");
-		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "aY");
+		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "av");
+		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "bc");
 		
 		presenceDir = new File(util().getMcFolder(), "presencefootsteps");
 		if (!presenceDir.exists()) presenceDir.mkdirs();
