@@ -72,6 +72,8 @@ public class PFReaderPeg extends PFReaderQuad {
 	}
 	
 	protected void simulateJumpingLanding(EntityPlayer ply) {
+		if (mod.getSolver().hasSpecialStoppingConditions(ply)) return;
+		
 		final long now = System.currentTimeMillis();
 		
 		double xpd = motionX * motionX + motionZ * motionZ;
@@ -90,7 +92,14 @@ public class PFReaderPeg extends PFReaderQuad {
 				mod.getAcoustics().playAcoustic(ply, "_SWIFT", EventType.JUMP, null);
 			}
 		}
-		if (hugeLanding) super.simulateJumpingLanding(ply);
+		
+		boolean isJumping = isJumping(ply);
+		
+		if (isAirborne && isJumping) {
+			simulateJumping(ply);
+		} else if (!isAirborne && hugeLanding) {
+			simulateLanding(ply);
+		}
 	}
 	
 	protected void simulateFlying(EntityPlayer ply) {

@@ -51,6 +51,8 @@ public class PFReader implements Generator, VariatorSettable {
 	private boolean isMessyFoliage;
 	private long brushesTime;
 	
+	protected EntityPlayer clientPlayer;
+	
 	public PFReader(Isolator isolator, Utility util) {
 		mod = isolator;
 		this.util = util;
@@ -76,6 +78,7 @@ public class PFReader implements Generator, VariatorSettable {
 	 * Fills in the blanks that aren't present on the client when playing on a remote server.
 	 */
 	protected void simulateMotionData(EntityPlayer ply) {
+		clientPlayer = resolveToClientPlayer(ply);
 		if (isClientPlayer(ply)) {
 			EntityPlayer clientPlayer = util.getClient().getPlayer();
 			motionX = clientPlayer.motionX;
@@ -229,7 +232,7 @@ public class PFReader implements Generator, VariatorSettable {
 	
 	protected boolean isJumping(EntityPlayer ply) {
 		try {
-			return (boolean)util.getPrivate(ply, "isJumping");
+			return (boolean)util.getPrivate(clientPlayer, "isJumping");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -247,33 +250,43 @@ public class PFReader implements Generator, VariatorSettable {
 		if (mod.getSolver().hasSpecialStoppingConditions(ply)) return;
 		
 		boolean isJumping = isJumping(ply);
-		
 		if (isAirborne && isJumping) {
-			if (VAR.EVENT_ON_JUMP) {
-				double speed = motionX * motionX + motionZ * motionZ;
-				
-				if (speed < VAR.SPEED_TO_JUMP_AS_MULTIFOOT) { // STILL JUMP
-					playMultifoot(ply, getOffsetMinus(ply) + 0.4d, EventType.JUMP); // 2 - 0.7531999805212d (magic number for vertical offset?)
-				} else {
-					playSinglefoot(ply, getOffsetMinus(ply) + 0.4d, EventType.JUMP, isRightFoot); // RUNNING JUMP
-					// Do not toggle foot: After landing sounds, the first foot will be same as the one used to jump.
-				}
-			}
+			simulateJumping(ply);
 		} else if (!isAirborne) {
-			if (fallDistance > VAR.LAND_HARD_DISTANCE_MIN) {
-				playMultifoot(ply, getOffsetMinus(ply), EventType.LAND); // Always assume the player lands on their two feet
+			simulateLanding(ply);
+		}
+	}
+	
+	protected void simulateJumping(EntityPlayer ply) {
+		if (VAR.EVENT_ON_JUMP) {
+			double speed = motionX * motionX + motionZ * motionZ;
+			if (speed < VAR.SPEED_TO_JUMP_AS_MULTIFOOT) { // STILL JUMP
+				playMultifoot(ply, getOffsetMinus(ply) + 0.4d, EventType.JUMP); // 2 - 0.7531999805212d (magic number for vertical offset?)
+			} else {
+				playSinglefoot(ply, getOffsetMinus(ply) + 0.4d, EventType.JUMP, isRightFoot); // RUNNING JUMP
 				// Do not toggle foot: After landing sounds, the first foot will be same as the one used to jump.
-			} else if (!this.stepThisFrame && !ply.isSneaking()) {
-				playSinglefoot(ply, getOffsetMinus(ply), speedDisambiguator(ply, EventType.CLIMB, EventType.CLIMB_RUN), isRightFoot);
-				isRightFoot = !isRightFoot;
 			}
-			
+		}
+	}
+	
+	protected void simulateLanding(EntityPlayer ply) {
+		if (fallDistance > VAR.LAND_HARD_DISTANCE_MIN) {
+			playMultifoot(ply, getOffsetMinus(ply), EventType.LAND); // Always assume the player lands on their two feet
+			// Do not toggle foot: After landing sounds, the first foot will be same as the one used to jump.
+		} else if (!this.stepThisFrame && !ply.isSneaking()) {
+			playSinglefoot(ply, getOffsetMinus(ply), speedDisambiguator(ply, EventType.CLIMB, EventType.CLIMB_RUN), isRightFoot);
+			isRightFoot = !isRightFoot;
 		}
 	}
 	
 	private boolean isClientPlayer(EntityPlayer ply) {
 		EntityPlayer clientPlayer = util.getClient().getPlayer();
 		return ply.getUniqueID().equals(clientPlayer.getUniqueID());
+	}
+	
+	private EntityPlayer resolveToClientPlayer(EntityPlayer ply) {
+		EntityPlayer clientPlayer = util.getClient().getPlayer();
+		return ply.getUniqueID().equals(clientPlayer.getUniqueID()) ? clientPlayer : ply;
 	}
 	
 	protected EventType speedDisambiguator(EntityPlayer ply, EventType walk, EventType run) {
