@@ -3,6 +3,9 @@ menu.pf.title=Presence Footsteps Configuration
 menu.pf.on=On
 menu.pf.off=Off
 
+menu.pf.multiplayer.on=Mode: Multiplayer
+menu.pf.multiplayer.off=Mode: Singleplayer
+
 menu.pf.volume.min=Minimum
 menu.pf.volume.max=Maximum
 menu.pf.volume=Volume

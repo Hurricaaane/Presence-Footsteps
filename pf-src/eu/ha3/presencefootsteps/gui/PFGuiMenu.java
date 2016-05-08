@@ -29,7 +29,7 @@ public class PFGuiMenu extends GuiScreen {
 	private final int BUTTON_HEIGHT = 20;
 	
 	private final int Y_SPACING = BUTTON_SPACING + BUTTON_HEIGHT;
-	private final int BUTTON_WIDTH = 300 - Y_SPACING * 4;
+	private final int BUTTON_WIDTH = 270 - Y_SPACING * 4;
 	
 	
 	public PFGuiMenu(PFHaddon haddon) {
@@ -46,7 +46,7 @@ public class PFGuiMenu extends GuiScreen {
 		final int _LEFT = width / 2 - 300 / 2 + Y_SPACING * 2;
 		final int _RIGHT = width / 2 + 300 / 2 - Y_SPACING * 2;
 		
-		HGuiSliderControl sliderControl = new HGuiSliderControl(0, _LEFT, TOP + Y_SPACING, BUTTON_WIDTH - BUTTON_HEIGHT - 5, BUTTON_HEIGHT, "", mod.getVolume() / 100f);
+		HGuiSliderControl sliderControl = new HGuiSliderControl(0, _LEFT + BUTTON_WIDTH/2 + BUTTON_SPACING/2, TOP + Y_SPACING, BUTTON_WIDTH - BUTTON_HEIGHT - 5, BUTTON_HEIGHT, "", mod.getVolume() / 100f);
 		sliderControl.setListener(new HSliderListener() {
 			@Override
 			public void sliderValueChanged(HGuiSliderControl slider, float value) {
@@ -81,12 +81,17 @@ public class PFGuiMenu extends GuiScreen {
 		sliderControl.updateDisplayString();
 		
 		buttonList.add(sliderControl);
-		buttonList.add(new GuiButton(212, _RIGHT - BUTTON_HEIGHT, TOP + Y_SPACING, BUTTON_HEIGHT, BUTTON_HEIGHT, I18n.format(mod.getEnabled() ? "menu.pf.on" : "menu.pf.off")));
-		buttonList.add(new GuiButton(210, _LEFT, TOP + Y_SPACING * 2, BUTTON_WIDTH, BUTTON_HEIGHT, getStance()));
-		buttonList.add(new GuiButton(199, _LEFT, TOP + Y_SPACING * 3 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, I18n.format(getResourcePacks())));
-		buttonList.add(new GuiButton(198, _LEFT, TOP + Y_SPACING * 4 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, I18n.format("menu.pf.report.full")));
-		buttonList.add(new GuiButton(220, _LEFT, TOP + Y_SPACING * 5 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, I18n.format("menu.pf.report.concise")));
+		buttonList.add(new GuiButton(212, _RIGHT + BUTTON_HEIGHT*2 - BUTTON_SPACING/2, TOP + Y_SPACING, BUTTON_HEIGHT, BUTTON_HEIGHT, I18n.format(mod.getEnabled() ? "menu.pf.on" : "menu.pf.off")));
+		buttonList.add(new GuiButton(210, _LEFT - BUTTON_WIDTH/2 - BUTTON_SPACING/2, TOP + Y_SPACING, BUTTON_WIDTH, BUTTON_HEIGHT, getStance()));
+		buttonList.add(new GuiButton(199, _LEFT + BUTTON_WIDTH/2 + BUTTON_SPACING/2, TOP + Y_SPACING * 3 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, I18n.format(getResourcePacks())));
+		buttonList.add(new GuiButton(213, _LEFT - BUTTON_WIDTH/2 - BUTTON_SPACING/2, TOP + Y_SPACING * 3 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, I18n.format(getMP())));
+		buttonList.add(new GuiButton(198, _LEFT - BUTTON_WIDTH/2 - BUTTON_SPACING/2, TOP + Y_SPACING * 4 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, I18n.format("menu.pf.report.full")));
+		buttonList.add(new GuiButton(220, _LEFT + BUTTON_WIDTH/2 + BUTTON_SPACING/2, TOP + Y_SPACING * 4 + (BUTTON_SPACING * 2), BUTTON_WIDTH, BUTTON_HEIGHT, I18n.format("menu.pf.report.concise")));
 		buttonList.add(new GuiButton(200, _LEFT, TOP + Y_SPACING * 6 + (BUTTON_SPACING * 4), BUTTON_WIDTH, BUTTON_HEIGHT, I18n.format("menu.returnToGame")));
+	}
+	
+	private String getMP() {
+		return I18n.format(mod.getEnabledMP() ? "menu.pf.multiplayer.on" : "menu.pf.multiplayer.off");
 	}
 	
 	private String getStance() {
@@ -126,6 +131,8 @@ public class PFGuiMenu extends GuiScreen {
 			}
 		} else if (sender.id == 212) {
 			sender.displayString = I18n.format(mod.toggle() ? "menu.pf.on" : "menu.pf.off");
+		} else if (sender.id == 213) {
+			sender.displayString = I18n.format(mod.toggleMP() ? "menu.pf.multiplayer.on" : "menu.pf.multiplayer.off");
 		}
 		
 	}
