@@ -17,7 +17,7 @@ public class LegacyCapableBlockMap extends BasicBlockMap {
 			}
 			String number = key.substring(0, endOfNumber);
 			int id = Integer.parseInt(number);
-			Object o = Block.blockRegistry.getObjectById(id);
+			Object o = Block.REGISTRY.getObjectById(id);
 			if (o != null && o instanceof Block) {
 				String fullKeyRebuild = PFHelper.nameOf((Block) o) + (endOfNumber == key.length() ? "" : key.substring(endOfNumber));
 				super.register(fullKeyRebuild, value);

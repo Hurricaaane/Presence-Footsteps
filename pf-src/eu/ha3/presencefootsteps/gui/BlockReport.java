@@ -37,7 +37,7 @@ public class BlockReport {
 	
 	public BlockReport generateReport() {
 		results = new ConfigProperty();
-		for (Object o : Block.blockRegistry) {
+		for (Object o : Block.REGISTRY) {
 			Block block = (Block) o;
 			results.setProperty(PFHelper.nameOf(block), getSoundData(block) + getClassData(block));
 		}
@@ -47,7 +47,7 @@ public class BlockReport {
 	
 	public BlockReport generateUnknownReport() {
 		results = new ConfigProperty();
-		for (Object o : Block.blockRegistry) {
+		for (Object o : Block.REGISTRY) {
 			Block block = (Block) o;
 			if (!mod.getIsolator().getBlockMap().hasEntryForBlock(block)) {
 				results.setProperty(PFHelper.nameOf(block), getSoundData(block) + getClassData(block));
@@ -58,15 +58,13 @@ public class BlockReport {
 	}
 	
 	private String getSoundData(Block block) {
-		String soundName = "";
-		if (block.getStepSound() == null) {
-			soundName = "NULL";
-		} else if (block.getStepSound().getStepSound() == null) {
-			soundName = "NO_SOUND";
-		} else {
-			soundName = block.getStepSound().getStepSound().getSoundName().getResourcePath();
+		if (block.getSoundType() == null) {
+			return "NULL";
 		}
-		return soundName;
+		if (block.getSoundType().getStepSound() == null) {
+			return "NO_SOUND";
+		}
+		return block.getSoundType().getStepSound().getSoundName().getResourcePath();
 	}
 	
 	private String getClassData(Block block) {
@@ -87,7 +85,7 @@ public class BlockReport {
 		if (block instanceof BlockRotatedPillar) soundName += "," + "EXTENDS_PILLAR";
 		if (block instanceof BlockTorch) soundName += "," + "EXTENDS_TORCH";
 		if (block instanceof BlockCarpet) soundName += "," + "EXTENDS_CARPET";
-		if (!block.isFullyOpaque(block.getDefaultState())) soundName += "," + "HITBOX";
+		if (!block.getDefaultState().isFullyOpaque()) soundName += "," + "HITBOX";
 		return soundName;
 	}
 	
@@ -102,8 +100,8 @@ public class BlockReport {
 		results.save();
 		
 		TextComponentString link = new TextComponentString(loc.getName());
-		link.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, loc.getAbsolutePath()));
-        link.getChatStyle().setUnderlined(Boolean.valueOf(true));
+		link.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, loc.getAbsolutePath()));
+        link.getStyle().setUnderlined(Boolean.valueOf(true));
 		mod.getChatter().printChat(TextFormatting.GREEN, new TextComponentTranslation("pf.report.save", link));
 	}
 }

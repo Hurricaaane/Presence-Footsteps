@@ -54,7 +54,7 @@ public class PFSolver implements Solver {
 	public Association findAssociationForPlayer(EntityPlayer ply, double verticalOffsetAsMinus, boolean isRightFoot) {
 		int yy = MathHelper.floor_double(ply.getEntityBoundingBox().minY - 0.1d - verticalOffsetAsMinus); // 0.1d: Support for trapdoors
 		
-		double rot = Math.toRadians(MathHelper.wrapAngleTo180_float(ply.rotationYaw));
+		double rot = Math.toRadians(MathHelper.wrapDegrees(ply.rotationYaw));
 		double xn = Math.cos(rot);
 		double zn = Math.sin(rot);
 		
@@ -150,7 +150,7 @@ public class PFSolver implements Solver {
 			// This condition implies that if the carpet is NOT_EMITTER, solving will CONTINUE with the actual block surface the player is walking on
 			// > NOT_EMITTER carpets will not cause solving to skip
 			Material mat = in.getMaterial();
-			if (mat == Material.air || mat == Material.circuits) {
+			if (mat == Material.AIR || mat == Material.CIRCUITS) {
 				IBlockState below = world.getBlockState(new BlockPos(xx, yy - 1, zz));
 				association = isolator.getBlockMap().getBlockMapSubstrate(below, "bigger");
 				if (association != null) {
@@ -183,7 +183,7 @@ public class PFSolver implements Solver {
 		
 		if (association != null) {
 			if (association.contentEquals("NOT_EMITTER")) {
-				if (in.getBlock() != Blocks.air) { // air block
+				if (in.getBlock() != Blocks.AIR) { // air block
 					PFLog.debugf("Not emitter for %0 : %1", in);
 				}
 				return null; // Player has stepped on a non-emitter block as defined in the blockmap
@@ -207,12 +207,12 @@ public class PFSolver implements Solver {
 	private String resolvePrimitive(IBlockState state) {
 		Block block = state.getBlock();
 		
-		if (block == Blocks.air || block.getStepSound() == null) {
+		if (block == Blocks.AIR || block.getSoundType() == null) {
 			return "NOT_EMITTER"; // air block
 		}
 		
 		String soundName = "";
-		SoundEvent stepSound = block.getStepSound().getStepSound();
+		SoundEvent stepSound = block.getSoundType().getStepSound();
 		if (stepSound != null) {
 			soundName = stepSound.getSoundName().getResourcePath();
 		}
@@ -220,7 +220,7 @@ public class PFSolver implements Solver {
 			soundName = "UNDEFINED";
 		}
 		
-		String substrate = String.format(Locale.ENGLISH, "%.2f_%.2f", block.getStepSound().volume, block.getStepSound().pitch);
+		String substrate = String.format(Locale.ENGLISH, "%.2f_%.2f", block.getSoundType().volume, block.getSoundType().pitch);
 		
 		String primitive = isolator.getPrimitiveMap().getPrimitiveMapSubstrate(soundName, substrate); // Check for primitive in register 
 		if (primitive == null) {
@@ -248,7 +248,7 @@ public class PFSolver implements Solver {
 			ConfigOptions options = new ConfigOptions();
 			options.getMap().put("gliding_volume", volume > 1 ? 1 : volume);
 			// material water, see EntityLivingBase line 293
-			isolator.getAcoustics().playAcoustic(ply, "_SWIM", ply.isInsideOfMaterial(Material.water) ? EventType.SWIM : EventType.WALK, options);
+			isolator.getAcoustics().playAcoustic(ply, "_SWIM", ply.isInsideOfMaterial(Material.WATER) ? EventType.SWIM : EventType.WALK, options);
 			return true;
 		}
 

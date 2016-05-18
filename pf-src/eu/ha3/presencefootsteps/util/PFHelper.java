@@ -52,6 +52,6 @@ public class PFHelper {
 	 * Gets the unique name of a given block, defined by its resource location identifier.
 	 */
 	public static String nameOf(Block block) {
-		return ((ResourceLocation)Block.blockRegistry.getNameForObject(block)).toString(); // RegistryNamespaced
+		return ((ResourceLocation)Block.REGISTRY.getNameForObject(block)).toString(); // RegistryNamespaced
 	}
 }

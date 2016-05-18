@@ -49,10 +49,10 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 	@Override
 	public void playStep(EntityLivingBase entity, Association assos) {
 		Block block = assos.getBlock();
-		SoundType soundType = block.getStepSound();
+		SoundType soundType = block.getSoundType();
 		if (!assos.getMaterial().isLiquid() && soundType != null) {
-			if (entity.worldObj.getBlockState(assos.pos(0, 1, 0)).getBlock() == Blocks.snow_layer) {
-				soundType = Blocks.snow_layer.getStepSound();
+			if (entity.worldObj.getBlockState(assos.pos(0, 1, 0)).getBlock() == Blocks.SNOW_LAYER) {
+				soundType = Blocks.SNOW_LAYER.getSoundType();
 			}
 			
 			//entity.worldObj.playSoundAtEntity(entity, soundType.getStepSound(), soundType.getVolume() * 0.15F, soundType.getFrequency());
