@@ -5,5 +5,8 @@
     "revision": "1",
     "author": "Hurricaaane (Ha3)",
     "url": "http://presencefootsteps.ha3.eu",
-    "description": "An overly complicated sound mod"
+    "description": "An overly complicated sound mod",
+    "mixinConfigs": [
+        "mixins.presencefootsteps.json"
+    ]
 }

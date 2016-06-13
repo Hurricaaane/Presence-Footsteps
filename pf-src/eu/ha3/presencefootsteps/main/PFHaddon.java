@@ -12,6 +12,9 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 
 import org.lwjgl.input.Keyboard;
@@ -60,10 +63,13 @@ import eu.ha3.util.property.simple.ConfigProperty;
 import eu.ha3.util.property.simple.InputStreamConfigProperty;
 
 public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, SupportsPlayerFrameEvents, SupportsTickEvents, IResourceManagerReloadListener, NotifiableHaddon, Ha3HoldActions, SupportsKeyEvents {
+	
+	public static PFHaddon INSTANCE;
+	
 	// Identity
 	protected final String NAME = "Presence Footsteps";
-	protected final int VERSION = 9;
-	protected final String MCVERSION = "1.9";
+	protected final int VERSION = 10;
+	protected final String MCVERSION = "1.9.4";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	protected final Identity identity = (new HaddonIdentity(NAME, VERSION, MCVERSION, ADDRESS)).setPrefix("u");
 	
@@ -100,13 +106,17 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	// Pony stuff
 	private boolean mlpDetectedFirst;
 	
+	public PFHaddon() {
+		INSTANCE = this;
+	}
+	
 	@Override
 	public void onLoad() {
 		//http://q.mc.ha3.eu/query/pf-litemod-version.json
 		updateNotifier = new UpdateNotifier(this, "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d");
 		
-		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "av");
-		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "bc");
+		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "aw");
+		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "bd");
 		
 		presenceDir = new File(util().getMcFolder(), "presencefootsteps");
 		if (!presenceDir.exists()) presenceDir.mkdirs();
@@ -390,6 +400,24 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 			isolator.onFrame(ply);
 			setPlayerStepDistance(ply, Integer.MAX_VALUE);
 		}
+	}
+	
+	public boolean onSoundRecieved(SoundEvent event, SoundCategory category) {
+		if (getEnabledMP() && getEnabled()) {
+			if (category == SoundCategory.PLAYERS) {
+				if (event == SoundEvents.ENTITY_PLAYER_SWIM || event == SoundEvents.ENTITY_PLAYER_SPLASH) {
+					return true;
+				}
+				if (event == SoundEvents.ENTITY_PLAYER_BIG_FALL || event == SoundEvents.ENTITY_PLAYER_SMALL_FALL) {
+					return true;
+				}
+				String[] name = event.getSoundName().getResourcePath().split("\\.");
+				if (name.length > 0 && "block".contentEquals(name[0]) && "step".contentEquals(name[name.length - 1])) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	@Override

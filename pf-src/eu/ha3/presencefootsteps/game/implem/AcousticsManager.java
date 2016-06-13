@@ -13,6 +13,7 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -55,7 +56,6 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 				soundType = Blocks.SNOW_LAYER.getSoundType();
 			}
 			
-			//entity.worldObj.playSoundAtEntity(entity, soundType.getStepSound(), soundType.getVolume() * 0.15F, soundType.getFrequency());
 			actuallyPlaySound(entity, soundType.getStepSound().getSoundName().toString(), soundType.getVolume() * 0.15F, soundType.getPitch());
 		}
 	}
@@ -79,10 +79,25 @@ public class AcousticsManager extends AcousticsLibrary implements SoundPlayer, D
 		actuallyPlaySound((Entity) location, soundName, volume, pitch);
 	}
 	
+	private boolean isClientPlayer(Entity ply) {
+		EntityPlayer clientPlayer = Minecraft.getMinecraft().thePlayer;
+		return ply.getUniqueID().equals(clientPlayer.getUniqueID());
+	}
+	
 	protected void actuallyPlaySound(Entity location, String soundName, float volume, float pitch) {
 		//location.worldObj.playSoundAtEntity(location, soundName, volume, pitch);
 		//location.playSound(soundName, volume, pitch);
-        PositionedSoundRecord positionedsoundrecord = new PositionedSoundRecord(new ResourceLocation(soundName), SoundCategory.MASTER, volume, pitch, false, 0, ISound.AttenuationType.LINEAR, (float)location.posX, (float)location.posY, (float)location.posZ);
+		ResourceLocation res;
+		if (soundName.indexOf(':') < 0) {
+			String domain = "presencefootsteps";
+			if (!isClientPlayer(location)) {
+				domain += "mono"; // Switch to mono if playing another player
+			}
+			res = new ResourceLocation(domain, soundName);
+		} else {
+			res = new ResourceLocation(soundName);
+		}
+        PositionedSoundRecord positionedsoundrecord = new PositionedSoundRecord(res, SoundCategory.MASTER, volume, pitch, false, 0, ISound.AttenuationType.LINEAR, (float)location.posX, (float)location.posY, (float)location.posZ);
         
         Minecraft mc = Minecraft.getMinecraft();
         double distance = mc.getRenderViewEntity().getDistanceSq(location.posX, location.posY, location.posZ);

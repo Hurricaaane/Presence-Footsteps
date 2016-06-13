@@ -166,7 +166,7 @@ public class PFReader implements Generator, VariatorSettable {
 			
 			if (ply.isOnLadder() && !ply.onGround) {
 				distance = VAR.DISTANCE_LADDER;
-			} else if (!ply.isInWater() && Math.abs(this.yPosition - ply.posY) > 0.4d
+			} else if (!ply.isInWater() && Math.abs(yPosition - ply.posY) > 0.4d
 					//&& Math.abs(this.yPosition - ply.posY) < 0.7d)
 					) {
 				// This ensures this does not get recorded as landing, but as a step
@@ -232,7 +232,7 @@ public class PFReader implements Generator, VariatorSettable {
 	
 	protected boolean isJumping(EntityPlayer ply) {
 		try {
-			return (boolean)util.getPrivate(clientPlayer, "isJumping");
+			return (Boolean)util.getPrivate(clientPlayer, "isJumping");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
