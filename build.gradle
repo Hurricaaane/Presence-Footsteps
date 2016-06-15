@@ -12,8 +12,8 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.liteloader'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 sourceSets {
 	main {
 		java {
@@ -24,6 +24,7 @@ sourceSets {
 		resources {
 			srcDirs "pf-resources"
 		}
+		refMap = "mixins.presencefootsteps.refmap.json"
 	}
 }
 
@@ -37,6 +38,10 @@ minecraft {
 	version = project.mcVersion
 	mappings = project.mcMappings
 	runDir = 'jars'
+}
+
+mixin {
+	defaultObfuscationEnv notch
 }
 
 processResources{
