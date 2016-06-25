@@ -15,7 +15,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
 		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
 		classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
 	}
@@ -40,7 +40,7 @@ sourceSets {
 }
 
 // Basic project information
-version = "u10"
+version = "u11"
 group = "eu.ha3"
 archivesBaseName = 'presencefootsteps'
 ext.revision = "0"

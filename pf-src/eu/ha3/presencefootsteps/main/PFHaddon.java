@@ -68,8 +68,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 	
 	// Identity
 	protected final String NAME = "Presence Footsteps";
-	protected final int VERSION = 10;
-	protected final String MCVERSION = "1.9.4";
+	protected final int VERSION = 11;
+	protected final String MCVERSION = "1.10";
 	protected final String ADDRESS = "http://presencefootsteps.ha3.eu";
 	protected final Identity identity = (new HaddonIdentity(NAME, VERSION, MCVERSION, ADDRESS)).setPrefix("u");
 	
@@ -115,8 +115,8 @@ public class PFHaddon extends HaddonImpl implements SupportsFrameEvents, Support
 		//http://q.mc.ha3.eu/query/pf-litemod-version.json
 		updateNotifier = new UpdateNotifier(this, "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d");
 		
-		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "aw");
-		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "bd");
+		util().registerPrivateSetter("Entity_nextStepDistance", Entity.class, -1, "nextStepDistance", "field_70150_b", "ax");
+		util().registerPrivateGetter("isJumping", EntityLivingBase.class, -1, "isJumping", "field_70703_bu", "be");
 		
 		presenceDir = new File(util().getMcFolder(), "presencefootsteps");
 		if (!presenceDir.exists()) presenceDir.mkdirs();
