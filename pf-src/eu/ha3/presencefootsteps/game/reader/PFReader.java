@@ -41,6 +41,9 @@ public class PFReader implements Generator, VariatorSettable {
 	protected boolean isImmobile;
 	protected long timeImmobile;
 	
+	protected long immobilePlayback;
+	protected int immobileInterval;
+	
 	protected boolean isRightFoot;
 	
 	protected double xMovec;
@@ -72,6 +75,23 @@ public class PFReader implements Generator, VariatorSettable {
 		simulateFootsteps(ply);
 		simulateAirborne(ply);
 		simulateBrushes(ply);
+		simulateStationary(ply);
+	}
+	
+	protected void simulateStationary(EntityPlayer ply) {
+		if (isImmobile && (ply.onGround || !ply.isInWater()) && playbackImmobile()) {
+			mod.getSolver().playAssociation(ply, mod.getSolver().findAssociationForPlayer(ply, 0d, isRightFoot), EventType.STAND);
+		}
+	}
+	
+	protected boolean playbackImmobile() {
+		long now = System.currentTimeMillis();
+		if (now - immobilePlayback > immobileInterval) {
+			immobilePlayback = now;
+			immobileInterval = (int)Math.floor((Math.random() * (VAR.IMOBILE_INTERVAL_MAX - VAR.IMOBILE_INTERVAL_MIN)) + VAR.IMOBILE_INTERVAL_MIN);
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -273,9 +293,9 @@ public class PFReader implements Generator, VariatorSettable {
 		if (fallDistance > VAR.LAND_HARD_DISTANCE_MIN) {
 			playMultifoot(ply, getOffsetMinus(ply), EventType.LAND); // Always assume the player lands on their two feet
 			// Do not toggle foot: After landing sounds, the first foot will be same as the one used to jump.
-		} else if (!this.stepThisFrame && !ply.isSneaking()) {
+		} else if (/*!this.stepThisFrame && */!ply.isSneaking()) {
 			playSinglefoot(ply, getOffsetMinus(ply), speedDisambiguator(ply, EventType.CLIMB, EventType.CLIMB_RUN), isRightFoot);
-			isRightFoot = !isRightFoot;
+			if (!this.stepThisFrame) isRightFoot = !isRightFoot;
 		}
 	}
 	
@@ -323,6 +343,9 @@ public class PFReader implements Generator, VariatorSettable {
 	
 	protected void playSinglefoot(EntityPlayer ply, double verticalOffsetAsMinus, EventType eventType, boolean foot) {
 		Association assos = mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus, isRightFoot);
+		if (assos == null || assos.isNotEmitter()) {
+			assos = mod.getSolver().findAssociationForPlayer(ply, verticalOffsetAsMinus + 1, isRightFoot);
+		}
 		mod.getSolver().playAssociation(ply, assos, eventType);
 	}
 	

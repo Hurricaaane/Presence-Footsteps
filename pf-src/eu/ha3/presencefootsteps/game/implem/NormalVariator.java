@@ -14,6 +14,16 @@ public class NormalVariator implements Variator {
 	public int IMMOBILE_DURATION = 200;
 	
 	/**
+	 * Shortest interval before playing an immobile sound effect
+	 */
+	public int IMOBILE_INTERVAL_MIN = 500;
+	
+	/**
+	 * Longest interval before playing an immobile sound effect
+	 */
+	public int IMOBILE_INTERVAL_MAX = 3000;
+	
+	/**
 	 * Play sounds based on jumping and landing
 	 */
 	public boolean EVENT_ON_JUMP = true;

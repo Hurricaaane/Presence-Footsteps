@@ -1,6 +1,7 @@
 package eu.ha3.presencefootsteps.engine.interfaces;
 
 public enum EventType {
+	STAND(null),//		final form
 	WALK(null),//		final form
 	WANDER(null),//		final form
 	SWIM(null),//		final form

@@ -77,8 +77,11 @@ public class PFSolver implements Solver {
 
 	@Override
 	public Association findAssociationForLocation(EntityPlayer player, int x, int y, int z) {
-		if (!(player instanceof EntityOtherPlayerMP) && (player.motionX != 0 && player.motionY != 0 || player.motionZ != 0)) {
-			if (Math.abs(player.motionY) < 0.02) return null; // Don't play sounds on every tiny bounce
+		if (!(player instanceof EntityOtherPlayerMP) &&
+				(player.motionX != 0 || player.motionY != 0 || player.motionZ != 0)) {
+			if (Math.abs(player.motionY) < 0.02) {
+				return null; // Don't play sounds on every tiny bounce
+			}
 		}
 		if (player.isInWater()) PFLog.debug("WARNING!!! Playing a sound while in the water! This is supposed to be halted by the stopping conditions!!");
 		
