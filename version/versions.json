@@ -1,6 +1,11 @@
 {
   "versions": [
     {
+       "number": 11,
+       "for": 1.10,
+       "type": "u"
+    },
+    {
        "number": 10,
        "for": "1.9.4",
        "type": "u"
