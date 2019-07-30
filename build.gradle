@@ -15,16 +15,16 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+		classpath 'net.minecraftforge.gradle:ForgeGradle:' + project.forgeGradleVersion
 		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
-		classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:' + project.mixinGradleVersion
 	}
 }
 apply plugin: 'net.minecraftforge.gradle.liteloader'
 apply plugin: 'org.spongepowered.mixin'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 sourceSets {
 	main {
 		java {
@@ -40,15 +40,22 @@ sourceSets {
 }
 
 // Basic project information
-version = "u12"
+def ver = "${project.mcVersion}.${project.buildVersion}-${project.buildType}"
+
+version = ver
 group = "eu.ha3"
-archivesBaseName = 'presencefootsteps'
-ext.revision = "0"
+archivesBaseName = project.modid
+ext.revision = project.buildRevision
 
 minecraft {
 	version = project.mcVersion
 	mappings = project.mcMappings
 	runDir = 'jars'
+	replace '@MODID@', project.modid
+	replace '@NAME@', project.name
+	replace '@AUTHOR@', project.author
+	replace '@VERSION@', ver
+	replace '@DESCRIPTION@', project.description
 }
 
 mixin {
@@ -69,7 +76,7 @@ processResources{
 		// replace version and mcversion
 		expand props
 	}
-	
+
 	// copy everything else, thats not the litemod.json
 	from(sourceSets.main.resources.srcDirs) {
 		exclude 'litemod.json'
