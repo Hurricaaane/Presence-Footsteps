@@ -1,84 +1,71 @@
-buildscript {
-	repositories {
-		jcenter()
-		maven {
-			name 'forge'
-			url 'http://files.minecraftforge.net/maven/'
-		}
-		maven {
-			name = "sonatype"
-			url = "https://oss.sonatype.org/content/repositories/snapshots/"
-		}
-		maven {
-			name = 'sponge'
-			url = 'http://repo.spongepowered.org/maven'
-		}
-	}
-	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:' + project.forgeGradleVersion
-		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
-        classpath 'org.spongepowered:mixingradle:' + project.mixinGradleVersion
-	}
-}
-apply plugin: 'net.minecraftforge.gradle.liteloader'
-apply plugin: 'org.spongepowered.mixin'
+// Fabric build script
+// 03/06/2019
+// https://github.com/FabricMC/fabric-example-mod/blob/master/build.gradle
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-sourceSets {
-	main {
-		java {
-			srcDir "lib/MC-Commons/mc-src"
-			srcDir "pf-src"
-			srcDir "minelp_dummy"
-		}
-		resources {
-			srcDirs "pf-resources"
-		}
-		refMap = "mixins.presencefootsteps.refmap.json"
-	}
+plugins {
+    id 'java-library'
+    id 'fabric-loom' version '0.2.5-SNAPSHOT'
+    id 'maven-publish'
 }
 
-// Basic project information
-def ver = "${project.mcVersion}.${project.buildVersion}-${project.buildType}"
+targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_1_8
 
-version = ver
-group = "eu.ha3"
-archivesBaseName = project.modid
-ext.revision = project.buildRevision
+version = "${project.minecraft_version}-${project.version}"
+
+if (project.release != 'RELEASE') {
+    version += "-${project.release}"
+}
+
+group = project.group
+description = project.displayname
+archivesBaseName = project.name
 
 minecraft {
-	version = project.mcVersion
-	mappings = project.mcMappings
-	runDir = 'jars'
-	replace '@MODID@', project.modid
-	replace '@NAME@', project.name
-	replace '@AUTHOR@', project.author
-	replace '@VERSION@', ver
-	replace '@DESCRIPTION@', project.description
+    refmapName = 'presencefootsteps.mixin.refmap.json'
 }
 
-mixin {
-	defaultObfuscationEnv notch
+// check for updates every build when on CI
+if (System.env.CI) {
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
 }
 
-processResources{
-	// this will ensure that this task is redone when the versions change.
-	def props = [
-		version: version,
-		mcversion: minecraft.version,
-		revision: revision
-	]
-	inputs.properties props
-	// replace stuff in litemod.json, nothing else
-	from(sourceSets.main.resources.srcDirs) {
-		include 'litemod.json'
-		// replace version and mcversion
-		expand props
-	}
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+    modApi "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// copy everything else, thats not the litemod.json
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'litemod.json'
-	}
+    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+
+    modApi "net.fabricmc.fabric-api:fabric-api-base:0.1.0+"
+    modApi "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:0.1.0+"
+    modApi "net.fabricmc.fabric-api:fabric-resource-loader-v0:0.1.0+"
+
+    modImplementation "io.github.prospector.modmenu:ModMenu:1.6.2-93"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "fabric.mod.json"
+        expand "version": project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "fabric.mod.json"
+    }
+
+    from 'LICENSE'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
 }
