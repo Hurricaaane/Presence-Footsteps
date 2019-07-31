@@ -1,50 +1,40 @@
-menu.pf.title=Presence Footsteps Configuration
-
-menu.pf.on=On
-menu.pf.off=Off
-
-menu.pf.multiplayer.on=Mode: Multiplayer
-menu.pf.multiplayer.off=Mode: Singleplayer
-
-menu.pf.volume.min=Minimum
-menu.pf.volume.max=Maximum
-menu.pf.volume=Volume
-
-menu.pf.resourcepacks.loaded=Configure Resource Pack
-menu.pf.resourcepacks.disabled=Enable Resource Pack
-menu.pf.resourcepacks.none=Install Resource Pack
-
-menu.pf.stance=Walking Stance
-menu.pf.stance.0=AUTO
-menu.pf.stance.1=Quadrupedal
-menu.pf.stance.2=Bipedal
-menu.pf.stance.3=Quad (Pegasus)
-
-menu.pf.report.full=Generate full block report
-menu.pf.report.concise=Generate unknown blocks report
-
-menu.pf.warn.0=Your Presence Footsteps Resource Pack isn't enabled yet!
-menu.pf.warn.1=Activate it in the Minecraft Options menu for it to run.
-menu.pf.warn.2=You don't have any Presence Footsteps Resource Pack installed!
-menu.pf.warn.3=Put the Resource Pack in the resourcepacks/ folder.
-
-pf.mlp.0=Mine Little Pony has been detected!
-pf.mlp.1= 4-legged mode is now enabled, which will make running sound like galloping amongst other things.
-pf.mlp.2= To disable it hold down CTRL+SHIFT+F for 1 second.
-pf.mlp.2.button= To disable it press %s.
-pf.mlp.2.stance= This option will turn off automatically when you remove Mine Little Pony. To disable it now or make it permanent hold down CTRL+SHIFT+F for 1 second.
-pf.mlp.2.stance.button= This option will turn off automatically when you remove Mine Little Pony. To disable it now or make it permanent press %s.
-
-pf.pack.disabled.0=Resource Pack not enabled yet!
-pf.pack.disabled.1=You need to activate the "Presence Footsteps Resource Pack" in the Minecraft Options menu for it to run.
-pf.pack.0=Resource Pack missing from resourcepacks/!
-pf.pack.1=You may have forgotten to put the Resource Pack file into your resourcepacks/ folder.
-pf.pack.yay=It should work now!
-
-pf.debug.off=Debugging Disabled
-pf.debug.on=Debugging Enabled
-
-pf.report.save=File saved as: %s
-pf.report.error=Failed to generate report: %s
-
-key.presencefootsteps=Presence Footsteps
+[
+	"menu.pf.title": "Presence Footsteps Configuration",
+	"menu.pf.true": "On",
+	"menu.pf.false: "Off",
+	"menu.pf.multiplayer.true": "Mode: Multiplayer",
+	"menu.pf.multiplayer.false": "Mode: Singleplayer",
+	"menu.pf.volume.min": "Minimum",
+	"menu.pf.volume.max": "Maximum",
+	"menu.pf.volume": "Volume: %s",
+	"menu.pf.resourcepacks.loaded": "Configure Resource Pack",
+	"menu.pf.resourcepacks.disabled": "Enable Resource Pack",
+	"menu.pf.resourcepacks.none": "Install Resource Pack",
+	"menu.pf.stance": "Walking Stance: %s",
+	"menu.pf.stance.unknown": "AUTO",
+	"menu.pf.stance.quadraped": "Quadrupedal",
+	"menu.pf.stance.biped": "Bipedal",
+	"menu.pf.stance.flying": "Quad (Pegasus)",
+	"menu.pf.report.full": "Generate full block report",
+	"menu.pf.report.concise": "Generate unknown blocks report",
+	"menu.pf.warn.unloaded.0": "Your Presence Footsteps Resource Pack isn't enabled yet!",
+	"menu.pf.warn.unloaded.1": "Activate it in the Minecraft Options menu for it to run.",
+	"menu.pf.warn.none.2": "You don't have any Presence Footsteps Resource Packs installed!",",
+	"menu.pf.warn.none.3": "Put the Resource Pack in the resourcepacks/ folder.",
+	"pf.mlp.0": "Mine Little Pony has been detected!",
+	"pf.mlp.1": " 4-legged mode is now enabled, which will make running sound like galloping amongst other things.",
+	"pf.mlp.2": " To disable it hold down CTRL+SHIFT+F for 1 second.",
+	"pf.mlp.2.button": " To disable it press %s.",
+	"pf.mlp.2.stance": " This option will turn off automatically when you remove Mine Little Pony. To disable it now or make it permanent hold down CTRL+SHIFT+F for 1 second.",
+	"pf.mlp.2.stance.button": " This option will turn off automatically when you remove Mine Little Pony. To disable it now or make it permanent press %s.",
+	"pf.pack.unloaded.0": "Resource Pack not enabled yet!",
+	"pf.pack.unloaded.1": "You need to activate the "Presence Footsteps Resource Pack" in the Minecraft Options menu for it to run.",
+	"pf.pack.none.0": "Resource Pack missing from resourcepacks/!",
+	"pf.pack.none.1": "You may have forgotten to put the Resource Pack file into your resourcepacks/ folder.",
+	"pf.pack.yay": "It should work now!",
+	"pf.debug.off": "Debugging Disabled",
+	"pf.debug.on": "Debugging Enabled",
+	"pf.report.save": "File saved as: %s",
+	"pf.report.error": "Failed to generate report: %s",
+	"key.presencefootsteps": "Presence Footsteps"
+]

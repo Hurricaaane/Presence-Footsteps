@@ -32,6 +32,17 @@ if (System.env.CI) {
     }
 }
 
+repositories {
+    maven {
+        name = 'minelp'
+        url = 'http://repo.minelittlepony-mod.com/maven/snapshot'
+    }
+    maven {
+        name = 'minelp-release'
+        url = 'http://repo.minelittlepony-mod.com/maven/release'
+    }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}"
@@ -41,8 +52,13 @@ dependencies {
 
     modApi "net.fabricmc.fabric-api:fabric-api-base:0.1.0+"
     modApi "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:0.1.0+"
+    modApi "net.fabricmc.fabric-api:fabric-keybindings:0.1.0+"
     modApi "net.fabricmc.fabric-api:fabric-resource-loader-v0:0.1.0+"
 
+    modApi "com.minelittlepony:Kirin:${project.kirin_version}"
+    include "com.minelittlepony:Kirin:${project.kirin_version}"
+
+	modImplementation "com.minelittlepony:MineLittlePony:${project.minelp_version}"
     modImplementation "io.github.prospector.modmenu:ModMenu:1.6.2-93"
 }
 
