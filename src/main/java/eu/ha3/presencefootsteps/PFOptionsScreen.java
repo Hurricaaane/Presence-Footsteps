@@ -61,7 +61,7 @@ class PFOptionsScreen extends GameGui {
 
             sender.setMessage(getStance());
 
-            mod.getEngine().reloadEverything();
+            mod.getEngine().reloadEverything(minecraft.getResourceManager());
         })).getStyle()
             .setText(getStance());
 

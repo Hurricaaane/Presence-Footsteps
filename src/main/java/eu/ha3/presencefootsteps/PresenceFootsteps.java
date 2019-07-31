@@ -109,7 +109,7 @@ public class PresenceFootsteps implements ClientModInitializer {
 
     public boolean toggle() {
         if (config.toggleEnabled()) {
-            engine.reloadEverything();
+            engine.reloadEverything(MinecraftClient.getInstance().getResourceManager());
         } else {
             engine.shutdown();
         }
