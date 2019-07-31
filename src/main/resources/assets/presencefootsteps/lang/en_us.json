@@ -1,7 +1,7 @@
-[
+{
 	"menu.pf.title": "Presence Footsteps Configuration",
 	"menu.pf.true": "On",
-	"menu.pf.false: "Off",
+	"menu.pf.false": "Off",
 	"menu.pf.multiplayer.true": "Mode: Multiplayer",
 	"menu.pf.multiplayer.false": "Mode: Singleplayer",
 	"menu.pf.volume.min": "Minimum",
@@ -19,7 +19,7 @@
 	"menu.pf.report.concise": "Generate unknown blocks report",
 	"menu.pf.warn.unloaded.0": "Your Presence Footsteps Resource Pack isn't enabled yet!",
 	"menu.pf.warn.unloaded.1": "Activate it in the Minecraft Options menu for it to run.",
-	"menu.pf.warn.none.2": "You don't have any Presence Footsteps Resource Packs installed!",",
+	"menu.pf.warn.none.2": "You don't have any Presence Footsteps Resource Packs installed!",
 	"menu.pf.warn.none.3": "Put the Resource Pack in the resourcepacks/ folder.",
 	"pf.mlp.0": "Mine Little Pony has been detected!",
 	"pf.mlp.1": "4-legged mode is now enabled, which will make running sound like galloping amongst other things.",
@@ -35,4 +35,4 @@
 	"key.presencefootsteps": "Presence Footsteps",
 	"pf.update.title": "An update is avaiable",
 	"pf.update.text": "Presence Footsteps %s%d for Minecraft %s"
-]
+}
