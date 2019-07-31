@@ -1,7 +1,7 @@
 package eu.ha3.presencefootsteps.sound.generator;
 
-import eu.ha3.presencefootsteps.config.ConfigOptions;
 import eu.ha3.presencefootsteps.sound.State;
+import eu.ha3.presencefootsteps.sound.ConfigOptions;
 import eu.ha3.presencefootsteps.sound.Isolator;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -133,6 +133,12 @@ class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
     }
 
     private enum FlightState {
-        DASHING, COASTING, COASTING_STRAFING, FLYING, IDLE, ASCENDING, DESCENDING
+        DASHING,
+        COASTING,
+        COASTING_STRAFING,
+        FLYING,
+        IDLE,
+        ASCENDING,
+        DESCENDING
     }
 }

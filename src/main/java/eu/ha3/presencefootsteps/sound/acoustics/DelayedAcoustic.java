@@ -2,15 +2,14 @@ package eu.ha3.presencefootsteps.sound.acoustics;
 
 import com.google.gson.JsonObject;
 
-import eu.ha3.presencefootsteps.config.Options;
-import eu.ha3.presencefootsteps.resources.AcousticsJsonReader;
+import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.sound.Period;
 
 public class DelayedAcoustic extends VaryingAcoustic implements Options {
 
     protected final Period delay = new Period(0);
 
-    public DelayedAcoustic(JsonObject json, AcousticsJsonReader context) {
+    public DelayedAcoustic(JsonObject json, AcousticsJsonParser context) {
         super(json, context);
         outputOptions = this;
 

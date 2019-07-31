@@ -1,4 +1,4 @@
-package eu.ha3.presencefootsteps.config;
+package eu.ha3.presencefootsteps.sound;
 
 public interface Options {
     boolean containsKey(String option);

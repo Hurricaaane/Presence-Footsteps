@@ -1,4 +1,4 @@
-package eu.ha3.presencefootsteps.config;
+package eu.ha3.presencefootsteps.sound;
 
 import java.util.HashMap;
 import java.util.Map;

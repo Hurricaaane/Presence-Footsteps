@@ -24,6 +24,8 @@ public class UpdateNotifier extends Thread {
 
 	private transient Reporter reporter = (a,b) -> {};
 
+	private transient boolean checkRun;
+
 	private boolean enabled = true;
 
 	private int displayRemaining = 0;
@@ -55,6 +57,12 @@ public class UpdateNotifier extends Thread {
 	}
 
     public void attempt() {
+        if (checkRun) {
+            return;
+        }
+
+        checkRun = true;
+
 		if (enabled) {
 		    start();
 		}

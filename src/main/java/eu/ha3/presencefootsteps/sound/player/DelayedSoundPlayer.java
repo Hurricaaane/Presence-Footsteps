@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import eu.ha3.presencefootsteps.config.Options;
+import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.util.MathUtil;
 
 public class DelayedSoundPlayer implements SoundPlayer {

@@ -1,13 +1,9 @@
 package eu.ha3.presencefootsteps.config;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-import eu.ha3.presencefootsteps.PresenceFootsteps;
-
 /**
  * Configurable variables used by the solver.
  */
-public class Variator {
+public class Variator extends JsonFile {
     /**
      * The maximum time a player can me immobile before PF picks it up as stopped
      */
@@ -135,28 +131,4 @@ public class Variator {
      * Number of ticks between when the player takes off and flapping can begin.
      */
     public int WING_JUMPING_REST_TIME = 700;
-
-    public void load(ConfigReader config) {
-        Map<String, Property> keys = config.sheet();
-
-        // I am feeling SUPER LAZY today
-        Field[] fields = Variator.class.getDeclaredFields();
-        for (Field field : fields) {
-            try {
-                String lowercaseField = field.getName().toLowerCase();
-
-                if (keys.containsKey(lowercaseField)) {
-                    if (field.getType() == Float.TYPE) {
-                        field.setFloat(this, keys.get(lowercaseField).getFloat());
-                    } else if (field.getType() == Integer.TYPE) {
-                        field.setInt(this, keys.get(lowercaseField).getInteger());
-                    } else if (field.getType() == Boolean.TYPE) {
-                        field.setBoolean(this, keys.get(lowercaseField).getBoolean());
-                    }
-                }
-            } catch (Throwable e) {
-                PresenceFootsteps.logger.error("Incompatible type: " + e.getClass().getName() + ": " + field.getName(), e);
-            }
-        }
-    }
 }

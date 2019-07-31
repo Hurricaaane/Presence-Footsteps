@@ -4,7 +4,7 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import eu.ha3.presencefootsteps.config.Options;
+import eu.ha3.presencefootsteps.sound.Options;
 
 public interface SoundPlayer {
     /**

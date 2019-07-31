@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
+import eu.ha3.presencefootsteps.sound.SoundEngine;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
 import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
@@ -16,7 +17,6 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import eu.ha3.presencefootsteps.resources.SoundEngine;
 
 public class PresenceFootsteps implements ClientModInitializer {
 
@@ -24,7 +24,7 @@ public class PresenceFootsteps implements ClientModInitializer {
 
     public static PresenceFootsteps INSTANCE;
 
-    private final PFConfig config = new PFConfig();
+    private PFConfig config;
 
     private long pressedOptionsTime;
 
@@ -55,7 +55,7 @@ public class PresenceFootsteps implements ClientModInitializer {
         keyBinding = FabricKeyBinding.Builder.create(new Identifier("presencefootsteps", "settings"),
                 InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F9, "key.categories.misc").build();
 
-        config.load(FabricLoader.getInstance()
+        config = new PFConfig(FabricLoader.getInstance()
                 .getConfigDirectory().toPath()
                 .resolve("presencefootsteps")
                 .resolve("userconfig.cfg"));

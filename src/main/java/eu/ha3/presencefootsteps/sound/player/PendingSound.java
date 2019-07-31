@@ -1,7 +1,7 @@
 package eu.ha3.presencefootsteps.sound.player;
 
 import eu.ha3.presencefootsteps.PresenceFootsteps;
-import eu.ha3.presencefootsteps.config.Options;
+import eu.ha3.presencefootsteps.sound.Options;
 
 public class PendingSound {
 

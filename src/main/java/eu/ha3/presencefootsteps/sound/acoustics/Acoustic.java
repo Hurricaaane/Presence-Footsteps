@@ -1,6 +1,6 @@
 package eu.ha3.presencefootsteps.sound.acoustics;
 
-import eu.ha3.presencefootsteps.config.Options;
+import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
 

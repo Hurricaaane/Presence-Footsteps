@@ -1,11 +1,11 @@
-package eu.ha3.presencefootsteps.resources;
+package eu.ha3.presencefootsteps.sound;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import eu.ha3.presencefootsteps.PresenceFootsteps;
@@ -20,7 +20,7 @@ class ResourceDealer {
     public static final Identifier acoustics = new Identifier("presencefootsteps", "acoustics.json");
     public static final Identifier blockmap = new Identifier("presencefootsteps", "blockmap.cfg");
     public static final Identifier primitivemap = new Identifier("presencefootsteps", "primitivemap.cfg");
-    public static final Identifier variator = new Identifier("presencefootsteps", "variator.cfg");
+    public static final Identifier variator = new Identifier("presencefootsteps", "variator.json");
 
     private final MinecraftClient client = MinecraftClient.getInstance();
 
@@ -38,13 +38,12 @@ class ResourceDealer {
         return pack.contains(ResourceType.CLIENT_RESOURCES, pf_pack);
     }
 
-    public <T extends Closeable> void collectResources(Identifier key, List<ResourcePack> repo, Consumer<T> consumer,
-            Function<InputStream, T> converter) {
+    public void collectResources(Identifier key, List<ResourcePack> repo, Consumer<Reader> consumer) {
         int working = 0;
 
         for (ResourcePack pack : repo) {
 
-            try (T stream = converter.apply(open(pack, key))) {
+            try (Reader stream = new InputStreamReader(open(pack, key))) {
                 consumer.accept(stream);
             } catch (Exception e) {
                 PresenceFootsteps.logger.info("No variator found in " + pack.getName() + ": " + e.getMessage());

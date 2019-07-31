@@ -1,24 +1,16 @@
-package eu.ha3.presencefootsteps.resources;
+package eu.ha3.presencefootsteps.sound;
 
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
-import com.google.gson.JsonParseException;
-
 import eu.ha3.presencefootsteps.PFConfig;
 import eu.ha3.presencefootsteps.PresenceFootsteps;
-import eu.ha3.presencefootsteps.config.ConfigReader;
-import eu.ha3.presencefootsteps.config.UserConfigSoundPlayerWrapper;
 import eu.ha3.presencefootsteps.mixins.IEntity;
-import eu.ha3.presencefootsteps.sound.Isolator;
-import eu.ha3.presencefootsteps.sound.PFIsolator;
-import eu.ha3.presencefootsteps.sound.acoustics.AcousticsPlayer;
+import eu.ha3.presencefootsteps.sound.acoustics.AcousticsJsonParser;
 import eu.ha3.presencefootsteps.sound.generator.Locomotion;
 import eu.ha3.presencefootsteps.sound.generator.StepSoundGenerator;
-import eu.ha3.presencefootsteps.world.PFSolver;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -114,78 +106,43 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
         return ID;
     }
 
+
     @Override
-    public CompletableFuture<Void> reload(Synchronizer var1, ResourceManager var2,
-            Profiler var3, Profiler var4,
-            Executor var5, Executor var6) {
-        // TODO Auto-generated method stub
+    public CompletableFuture<Void> reload(Synchronizer sync, ResourceManager sender,
+            Profiler serverProfiler, Profiler clientProfiler,
+            Executor serverExecutor, Executor clientExecutor) {
 
-        PresenceFootsteps.logger.info("Resource Pack reload detected...");
-        reloadEverything();
-
-        return null;
+        sync.getClass();
+        return sync.whenPrepared(null).thenRunAsync(() -> {
+            clientProfiler.startTick();
+            clientProfiler.push("Reloading PF Sounds");
+            reloadEverything();
+            clientProfiler.pop();
+            clientProfiler.endTick();
+        }, clientExecutor);
     }
 
     public void reloadEverything() {
-        isolator = new PFIsolator(this);
-
-        config.load();
-
         List<ResourcePack> repo = dealer.findResourcePacks().collect(Collectors.toList());
 
         hasResourcePacks = !repo.isEmpty();
         hasDisabledResourcePacks = dealer.findDisabledResourcePacks().count() > 0;
 
+        isolator = new PFIsolator(this, config);
+
         if (hasResourcePacks) {
             PresenceFootsteps.logger.info("Presence Footsteps didn't find any compatible resource packs.");
         } else {
-            reloadBlocks(repo);
-            reloadPrimitiveMap(repo);
-            reloadAcoustics(repo);
-
-            isolator.setSolver(new PFSolver(isolator));
-
-            reloadVariator(repo);
+            dealer.collectResources(ResourceDealer.blockmap, repo, isolator.getBlockMap()::load);
+            dealer.collectResources(ResourceDealer.primitivemap, repo, isolator.getPrimitiveMap()::load);
+            dealer.collectResources(ResourceDealer.primitivemap, repo, new AcousticsJsonParser(isolator.getAcoustics())::parse);
+            dealer.collectResources(ResourceDealer.variator, repo, isolator.getVariator()::load);
         }
-
-        isolator.reset();
     }
 
     public void shutdown() {
-        isolator = new PFIsolator(this);
-
-        config.load();
-        isolator.reset();
+        isolator = new PFIsolator(this, config);
 
         ((IEntity) MinecraftClient.getInstance().player).setNextStepDistance(0);
-    }
-
-    private void reloadVariator(List<ResourcePack> repo) {
-        dealer.collectResources(ResourceDealer.variator, repo, isolator.getVariator()::load, ConfigReader::new);
-    }
-
-    private void reloadBlocks(List<ResourcePack> repo) {
-        isolator.getBlockMap().clear();
-        dealer.collectResources(ResourceDealer.blockmap, repo, isolator.getBlockMap()::load, ConfigReader::new);
-    }
-
-    private void reloadPrimitiveMap(List<ResourcePack> repo) {
-        isolator.getPrimitiveMap().clear();
-        dealer.collectResources(ResourceDealer.primitivemap, repo, isolator.getPrimitiveMap()::load, ConfigReader::new);
-    }
-
-    private void reloadAcoustics(List<ResourcePack> repo) {
-        AcousticsPlayer acoustics = new AcousticsPlayer(isolator);
-
-        dealer.collectResources(ResourceDealer.primitivemap, repo, scanner -> {
-            try {
-                new AcousticsJsonReader("").parseJson(scanner.useDelimiter("\\Z").next(), acoustics);
-            } catch (JsonParseException e) {
-                PresenceFootsteps.logger.error("Error whilst loading acoustics", e);
-            }
-        }, Scanner::new);
-
-        isolator.setAcoustics(acoustics);
-        isolator.setSoundPlayer(new UserConfigSoundPlayerWrapper(acoustics, config));
     }
 }

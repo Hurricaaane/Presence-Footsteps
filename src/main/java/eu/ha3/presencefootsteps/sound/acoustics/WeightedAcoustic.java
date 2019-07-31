@@ -9,8 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-import eu.ha3.presencefootsteps.config.Options;
-import eu.ha3.presencefootsteps.resources.AcousticsJsonReader;
+import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
 
@@ -49,7 +48,7 @@ public class WeightedAcoustic implements Acoustic {
         theAcoustics.get(marker).playSound(player, location, event, inputOptions);
     }
 
-    public static Acoustic fromJson(JsonObject json, AcousticsJsonReader context) {
+    public static Acoustic fromJson(JsonObject json, AcousticsJsonParser context) {
         List<Integer> weights = new ArrayList<>();
         List<Acoustic> acoustics = new ArrayList<>();
 

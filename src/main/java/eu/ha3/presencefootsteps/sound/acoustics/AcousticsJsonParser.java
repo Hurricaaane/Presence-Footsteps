@@ -1,5 +1,6 @@
-package eu.ha3.presencefootsteps.resources;
+package eu.ha3.presencefootsteps.sound.acoustics;
 
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.JsonElement;
@@ -7,31 +8,25 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
+import eu.ha3.presencefootsteps.PresenceFootsteps;
 import eu.ha3.presencefootsteps.sound.Range;
-import eu.ha3.presencefootsteps.sound.acoustics.Acoustic;
-import eu.ha3.presencefootsteps.sound.acoustics.VaryingAcoustic;
-import eu.ha3.presencefootsteps.sound.acoustics.DelayedAcoustic;
-import eu.ha3.presencefootsteps.sound.acoustics.EventSelectorAcoustics;
-import eu.ha3.presencefootsteps.sound.acoustics.AcousticLibrary;
-import eu.ha3.presencefootsteps.sound.acoustics.SimultaneousAcoustic;
-import eu.ha3.presencefootsteps.sound.acoustics.WeightedAcoustic;
 
 /**
  * A JSON parser that creates a Library of Acoustics.
  *
  * @author Hurry
  */
-public class AcousticsJsonReader {
+public class AcousticsJsonParser {
     private final int ENGINEVERSION = 1;
 
-    private String soundRoot;
+    private String soundRoot = "";
 
     private static final Map<String, AcousticFactory> factories = new HashMap<>();
 
     private static final JsonParser PARSER = new JsonParser();
 
-    private final Range defaultVolume = new Range(0);
-    private final Range defaultPitch = new Range(0);
+    private final Range defaultVolume = new Range(1);
+    private final Range defaultPitch = new Range(1);
 
     static {
         factories.put("basic", VaryingAcoustic::new);
@@ -40,12 +35,26 @@ public class AcousticsJsonReader {
         factories.put("probability", WeightedAcoustic::fromJson);
     }
 
-    public AcousticsJsonReader(String root) {
-        soundRoot = root;
+    private final AcousticLibrary lib;
+
+    public AcousticsJsonParser(AcousticLibrary lib) {
+        this.lib = lib;
     }
 
-    public void parseJson(String jsonString, AcousticLibrary lib) throws JsonParseException {
-        JsonObject json = PARSER.parse(jsonString).getAsJsonObject();
+    public void parse(Reader reader) {
+        try {
+            doParse(reader);
+        } catch (JsonParseException e) {
+            PresenceFootsteps.logger.error("Error whilst loading acoustics", e);
+        }
+    }
+
+    private void doParse(Reader reader) throws JsonParseException {
+        soundRoot = "";
+        defaultVolume.on(1);
+        defaultPitch.on(1);
+
+        JsonObject json = PARSER.parse(reader).getAsJsonObject();
 
         if (!"library".equals(json.get("type").getAsString())) {
             throw new JsonParseException("Invalid type: \"library\"");
@@ -61,13 +70,8 @@ public class AcousticsJsonReader {
         }
 
         if (json.has("soundroot")) {
-            soundRoot += json.get("soundroot").getAsString();
+            soundRoot = json.get("soundroot").getAsString();
         }
-
-        defaultVolume.min = 1;
-        defaultVolume.max = 1;
-        defaultPitch.min = 1;
-        defaultPitch.max = 1;
 
         if (json.has("defaults")) {
             JsonObject defaults = json.getAsJsonObject("defaults");
@@ -138,6 +142,6 @@ public class AcousticsJsonReader {
     }
 
     public interface AcousticFactory {
-        Acoustic create(JsonObject json, AcousticsJsonReader context);
+        Acoustic create(JsonObject json, AcousticsJsonParser context);
     }
 }

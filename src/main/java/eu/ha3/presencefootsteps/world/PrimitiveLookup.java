@@ -26,9 +26,4 @@ public class PrimitiveLookup implements Lookup<String> {
     public boolean contains(String key) {
         return primitiveMap.containsKey(key);
     }
-
-    @Override
-    public void clear() {
-        primitiveMap.clear();
-    }
 }

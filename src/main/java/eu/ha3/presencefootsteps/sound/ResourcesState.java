@@ -1,4 +1,4 @@
-package eu.ha3.presencefootsteps.resources;
+package eu.ha3.presencefootsteps.sound;
 
 public enum ResourcesState {
     NONE,

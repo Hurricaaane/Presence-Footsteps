@@ -1,11 +1,15 @@
 package eu.ha3.presencefootsteps.world;
 
+import java.io.Reader;
+
 import javax.annotation.Nullable;
 
-import eu.ha3.presencefootsteps.PresenceFootsteps;
-import eu.ha3.presencefootsteps.config.ConfigReader;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public interface Lookup<T> {
+
+    Gson gson = new Gson();
 
     /**
      * This will return null if the block is not defined, and NOT_EMITTER if the
@@ -33,21 +37,12 @@ public interface Lookup<T> {
     boolean contains(T state);
 
     /**
-     * Clears the contents of this lookup table.
-     */
-    void clear();
-
-    /**
      * Loads new entries from the given config reader.
      * The read values will added to any existing ones.
      */
-    default void load(ConfigReader stream) {
-        stream.properties().forEach(property -> {
-            try {
-                add(property.getName(), property.getString());
-            } catch (Exception e) {
-                PresenceFootsteps.logger.error("Error when loading lookup values", e);
-            }
+    default void load(Reader reader) {
+        gson.fromJson(reader, JsonObject.class).entrySet().forEach(entry -> {
+            add(entry.getKey(), entry.getValue().getAsString());
         });
     }
 }

@@ -2,8 +2,7 @@ package eu.ha3.presencefootsteps.sound.acoustics;
 
 import com.google.gson.JsonObject;
 
-import eu.ha3.presencefootsteps.config.Options;
-import eu.ha3.presencefootsteps.resources.AcousticsJsonReader;
+import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.sound.Range;
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
@@ -17,7 +16,7 @@ public class VaryingAcoustic implements Acoustic {
 
     protected Options outputOptions;
 
-    public VaryingAcoustic(JsonObject json, AcousticsJsonReader context) {
+    public VaryingAcoustic(JsonObject json, AcousticsJsonParser context) {
         this(json.get("name").getAsString(), context);
 
         if (json.has("vol_min")) {
@@ -37,7 +36,7 @@ public class VaryingAcoustic implements Acoustic {
         }
     }
 
-    public VaryingAcoustic(String name, AcousticsJsonReader context) {
+    public VaryingAcoustic(String name, AcousticsJsonParser context) {
         volume.copy(context.getVolumeRange());
         pitch.copy(context.getPitchRange());
         setSoundName(context.getSoundName(name));

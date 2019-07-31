@@ -4,14 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import eu.ha3.presencefootsteps.PFConfig;
 import eu.ha3.presencefootsteps.config.Variator;
-import eu.ha3.presencefootsteps.resources.SoundEngine;
 import eu.ha3.presencefootsteps.sound.player.StepSoundPlayer;
+import eu.ha3.presencefootsteps.sound.player.UserConfigSoundPlayerWrapper;
 import eu.ha3.presencefootsteps.sound.acoustics.AcousticLibrary;
+import eu.ha3.presencefootsteps.sound.acoustics.AcousticsPlayer;
 import eu.ha3.presencefootsteps.sound.generator.StepSoundGenerator;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
 import eu.ha3.presencefootsteps.world.LegacyBlockLookup;
 import eu.ha3.presencefootsteps.world.Lookup;
+import eu.ha3.presencefootsteps.world.PFSolver;
 import eu.ha3.presencefootsteps.world.PrimitiveLookup;
 import eu.ha3.presencefootsteps.world.Solver;
 import net.minecraft.block.BlockState;
@@ -29,16 +32,21 @@ public class PFIsolator implements Isolator {
 
     private final Lookup<String> primitiveMap = new PrimitiveLookup();
 
-    private AcousticLibrary acoustics;
+    private final AcousticLibrary acoustics;
 
-    private Solver solver;
+    private final Solver solver = new PFSolver(this);
 
-    private SoundPlayer soundPlayer;
+    private final SoundPlayer soundPlayer;
 
-    private StepSoundPlayer defaultStepPlayer;
+    private final StepSoundPlayer stepPlayer;
 
-    public PFIsolator(SoundEngine engine) {
+    public PFIsolator(SoundEngine engine, PFConfig config) {
         this.engine = engine;
+
+        AcousticsPlayer acoustics = new AcousticsPlayer(this);
+        this.acoustics = acoustics;
+        soundPlayer = new UserConfigSoundPlayerWrapper(acoustics, config);
+        stepPlayer = acoustics;
     }
 
     @Override
@@ -68,27 +76,7 @@ public class PFIsolator implements Isolator {
 
     @Override
     public StepSoundPlayer getStepPlayer() {
-        return defaultStepPlayer;
-    }
-
-    @Override
-    public void setAcoustics(AcousticLibrary acoustics) {
-        this.acoustics = acoustics;
-    }
-
-    @Override
-    public void setSolver(Solver solver) {
-        this.solver = solver;
-    }
-
-    @Override
-    public void setSoundPlayer(SoundPlayer soundPlayer) {
-        this.soundPlayer = soundPlayer;
-    }
-
-    @Override
-    public void setStepPlayer(StepSoundPlayer defaultStepPlayer) {
-        this.defaultStepPlayer = defaultStepPlayer;
+        return stepPlayer;
     }
 
     @Override
@@ -104,11 +92,6 @@ public class PFIsolator implements Isolator {
         return generators.computeIfAbsent(ply.getUuid(), uuid -> {
             return engine.supplyGenerator(ply);
         });
-    }
-
-    @Override
-    public void reset() {
-        generators.clear();
     }
 
     @Override

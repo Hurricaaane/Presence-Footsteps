@@ -41,9 +41,4 @@ public class StateLookup implements Lookup<BlockState> {
 
         return blockMap.entrySet().stream().anyMatch(i -> i.getKey().startsWith(key));
     }
-
-    @Override
-    public void clear() {
-        blockMap.clear();
-    }
 }

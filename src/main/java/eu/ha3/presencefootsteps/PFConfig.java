@@ -1,72 +1,50 @@
 package eu.ha3.presencefootsteps;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
-import eu.ha3.presencefootsteps.config.Properties;
+import eu.ha3.presencefootsteps.config.JsonFile;
 import eu.ha3.presencefootsteps.sound.generator.Locomotion;
 import net.minecraft.util.math.MathHelper;
 
-public class PFConfig {
+public class PFConfig extends JsonFile {
 
-    private final Properties config = new Properties();
+    private int volume = 70;
+
+    private String stance = "UNKNOWN";
 
     private boolean enabled = true;
+    private boolean multiplayer = true;
 
-    private boolean enableMP = true;
-
-    private Path file;
-
-    public void load(Path file) {
-        this.file = file;
-
-        config.setProperty("user.volume", 70);
-        config.setProperty("user.enabled", true);
-        config.setProperty("user.multiplayer", true);
-
-        config.setProperty("custom.stance", 0);
-        config.setProperty("mlp.detected", MineLP.hasPonies());
-
-        load();
-    }
-
-    public void load() {
-        try {
-            config.load(file);
-        } catch (IOException e) {
-            PresenceFootsteps.logger.warn("Error whilst loading config", e);
-        }
-
-        enabled = config.getProperty("user.enabled").getBoolean();
-        enableMP = config.getProperty("user.multiplayer").getBoolean();
+    public PFConfig(Path file) {
+        super(file);
     }
 
     public boolean toggleMultiplayer() {
-        config.setProperty("user.multiplayer", enableMP = !enableMP);
+        multiplayer = !multiplayer;
         save();
-        return enableMP;
+        return multiplayer;
     }
 
     public boolean toggleEnabled() {
-        config.setProperty("user.enabled", enabled = !enabled);
+        enabled = !enabled;
         save();
 
         return enabled;
     }
 
     public Locomotion setLocomotion(Locomotion loco) {
-        config.setProperty("custom.stance", loco);
+        stance = loco.name();
         save();
 
         return loco;
     }
 
     public Locomotion getLocomotion() {
-        return Locomotion.byName(config.getProperty("custom.stance").getString());
+        return Locomotion.byName(stance);
     }
 
     public boolean getEnabledMP() {
-        return enableMP && getEnabled();
+        return multiplayer && getEnabled();
     }
 
     public boolean getEnabled() {
@@ -74,18 +52,10 @@ public class PFConfig {
     }
 
     public int getVolume() {
-        return MathHelper.clamp(config.getProperty("user.volume").getInteger(), 0, 100);
+        return MathHelper.clamp(volume, 0, 100);
     }
 
     public void setVolume(int volume) {
-        config.setProperty("user.volume", volume);
-    }
-
-    public void save() {
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            PresenceFootsteps.logger.warn("Error whilst saving config", e);
-        }
+        this.volume = volume;
     }
 }

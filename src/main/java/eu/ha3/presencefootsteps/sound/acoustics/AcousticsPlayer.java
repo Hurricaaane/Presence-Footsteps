@@ -3,9 +3,9 @@ package eu.ha3.presencefootsteps.sound.acoustics;
 import java.util.HashMap;
 import java.util.Map;
 import eu.ha3.presencefootsteps.PresenceFootsteps;
-import eu.ha3.presencefootsteps.config.Options;
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.Isolator;
+import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.sound.player.ImmediateSoundPlayer;
 
 public class AcousticsPlayer extends ImmediateSoundPlayer implements AcousticLibrary {

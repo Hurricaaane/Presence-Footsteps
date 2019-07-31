@@ -1,9 +1,9 @@
-package eu.ha3.presencefootsteps.config;
+package eu.ha3.presencefootsteps.sound.player;
 
 import java.util.Random;
 
 import eu.ha3.presencefootsteps.PFConfig;
-import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
+import eu.ha3.presencefootsteps.sound.Options;
 
 public class UserConfigSoundPlayerWrapper implements SoundPlayer {
 

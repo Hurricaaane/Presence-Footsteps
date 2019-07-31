@@ -7,6 +7,8 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
+import com.google.gson.stream.JsonWriter;
+
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
@@ -29,13 +31,13 @@ import net.minecraft.block.StairsBlock;
 import net.minecraft.block.TallPlantBlock;
 import net.minecraft.block.TorchBlock;
 import net.minecraft.block.TransparentBlock;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.Registry;
-import eu.ha3.presencefootsteps.config.ConfigWriter;
 
 public class BlockReport {
     private final Path loc;
@@ -58,30 +60,28 @@ public class BlockReport {
             writeReport(filter);
             printResults();
         } catch (Exception e) {
-            Text line = new TranslatableText("pf.report.error", e.getMessage());
-            line.getStyle().setColor(Formatting.RED);
-
-            ChatUtil.addMessage(line);
+            addMessage(new TranslatableText("pf.report.error", e.getMessage()), Formatting.RED);
         }
     }
 
     public void writeReport(@Nullable Predicate<BlockState> filter) throws IOException {
-
         Files.createFile(loc);
 
-        try (ConfigWriter output = new ConfigWriter(Files.newOutputStream(loc))) {
+        try (JsonWriter writer = new JsonWriter(Files.newBufferedWriter(loc))) {
+            writer.beginObject();
             Registry.BLOCK.forEach(block -> {
                 BlockState state = block.getDefaultState();
 
                 try {
                     if (filter == null || filter.test(state)) {
-                        output.writeProperty(Registry.BLOCK.getId(block).toString(),
-                                getSoundData(state) + getClassData(state));
+                        writer.name(Registry.BLOCK.getId(block).toString());
+                        writer.value(getSoundData(state) + getClassData(state));
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
+            writer.endObject();
         }
     }
 
@@ -100,48 +100,30 @@ public class BlockReport {
 
         String soundName = "";
 
-        if (block instanceof AbstractPressurePlateBlock)
-            soundName += ",EXTENDS_PRESSURE_PLATE";
-        if (block instanceof AbstractRailBlock)
-            soundName += ",EXTENDS_RAIL";
-        if (block instanceof BlockWithEntity)
-            soundName += ",EXTENDS_CONTAINER";
-        if (block instanceof FluidBlock)
-            soundName += ",EXTENDS_LIQUID";
-        if (block instanceof PlantBlock)
-            soundName += ",EXTENDS_PLANT";
-        if (block instanceof TallPlantBlock)
-            soundName += ",EXTENDS_DOUBLE_PLANT";
-        if (block instanceof PlantBlock)
-            soundName += ",EXTENDS_CROPS";
-        if (block instanceof ConnectedPlantBlock)
-            soundName += ",EXTENDS_CONNECTED_PLANT";
-        if (block instanceof LeavesBlock)
-            soundName += ",EXTENDS_LEAVES";
-        if (block instanceof SlabBlock)
-            soundName += ",EXTENDS_SLAB";
-        if (block instanceof StairsBlock)
-            soundName += ",EXTENDS_STAIRS";
+        if (block instanceof AbstractPressurePlateBlock) soundName += ",EXTENDS_PRESSURE_PLATE";
+        if (block instanceof AbstractRailBlock) soundName += ",EXTENDS_RAIL";
+        if (block instanceof BlockWithEntity) soundName += ",EXTENDS_CONTAINER";
+        if (block instanceof FluidBlock) soundName += ",EXTENDS_LIQUID";
+        if (block instanceof PlantBlock) soundName += ",EXTENDS_PLANT";
+        if (block instanceof TallPlantBlock) soundName += ",EXTENDS_DOUBLE_PLANT";
+        if (block instanceof PlantBlock) soundName += ",EXTENDS_CROPS";
+        if (block instanceof ConnectedPlantBlock) soundName += ",EXTENDS_CONNECTED_PLANT";
+        if (block instanceof LeavesBlock) soundName += ",EXTENDS_LEAVES";
+        if (block instanceof SlabBlock) soundName += ",EXTENDS_SLAB";
+        if (block instanceof StairsBlock) soundName += ",EXTENDS_STAIRS";
         if (block instanceof SnowyBlock) {
             soundName += ",EXTENDS_SNOWY";
             if (block instanceof SpreadableBlock) {
                 soundName += ",EXTENDS_SPREADABLE";
             }
         }
-        if (block instanceof FallingBlock)
-            soundName += ",EXTENDS_PHYSICALLY_FALLING";
-        if (block instanceof PaneBlock)
-            soundName += ",EXTENDS_PANE";
-        if (block instanceof HorizontalFacingBlock)
-            soundName += ",EXTENDS_PILLAR";
-        if (block instanceof TorchBlock)
-            soundName += ",EXTENDS_TORCH";
-        if (block instanceof CarpetBlock)
-            soundName += ",EXTENDS_CARPET";
-        if (block instanceof InfestedBlock)
-            soundName += ",EXTENDS_INFESTED";
-        if (block instanceof TransparentBlock)
-            soundName += ",EXTENDS_TRANSPARENT";
+        if (block instanceof FallingBlock) soundName += ",EXTENDS_PHYSICALLY_FALLING";
+        if (block instanceof PaneBlock) soundName += ",EXTENDS_PANE";
+        if (block instanceof HorizontalFacingBlock) soundName += ",EXTENDS_PILLAR";
+        if (block instanceof TorchBlock) soundName += ",EXTENDS_TORCH";
+        if (block instanceof CarpetBlock) soundName += ",EXTENDS_CARPET";
+        if (block instanceof InfestedBlock) soundName += ",EXTENDS_INFESTED";
+        if (block instanceof TransparentBlock) soundName += ",EXTENDS_TRANSPARENT";
 
         return soundName;
     }
@@ -149,11 +131,15 @@ public class BlockReport {
     public void printResults() {
         Text link = new LiteralText(loc.getFileName().toString());
 
-        link.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, loc.toString())).setUnderline(true);
+        link.getStyle()
+            .setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, loc.toString()))
+            .setUnderline(true);
 
-        link = new TranslatableText("pf.report.save", link);
-        link.getStyle().setColor(Formatting.GREEN);
+        addMessage(new TranslatableText("pf.report.save").append(link), Formatting.GREEN);
+    }
 
-        ChatUtil.addMessage(link);
+    public static void addMessage(Text text, Formatting color) {
+        text.getStyle().setColor(color);
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(text);
     }
 }

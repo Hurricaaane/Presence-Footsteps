@@ -4,7 +4,7 @@ import com.minelittlepony.common.client.gui.GameGui;
 import com.minelittlepony.common.client.gui.element.Button;
 import com.minelittlepony.common.client.gui.element.Slider;
 
-import eu.ha3.presencefootsteps.resources.ResourcesState;
+import eu.ha3.presencefootsteps.sound.ResourcesState;
 import eu.ha3.presencefootsteps.util.BlockReport;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.resourcepack.ResourcePackOptionsScreen;

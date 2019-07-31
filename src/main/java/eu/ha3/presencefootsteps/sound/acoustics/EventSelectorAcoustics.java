@@ -5,8 +5,7 @@ import java.util.Map;
 
 import com.google.gson.JsonObject;
 
-import eu.ha3.presencefootsteps.config.Options;
-import eu.ha3.presencefootsteps.resources.AcousticsJsonReader;
+import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
 
@@ -15,7 +14,7 @@ public class EventSelectorAcoustics implements NamedAcoustic {
 
     private final Map<State, Acoustic> pairs = new HashMap<>();
 
-    public EventSelectorAcoustics(String name, JsonObject json, AcousticsJsonReader context) {
+    public EventSelectorAcoustics(String name, JsonObject json, AcousticsJsonParser context) {
         this.name = name;
 
         for (State i : State.values()) {
