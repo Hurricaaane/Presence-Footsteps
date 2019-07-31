@@ -1,13 +1,13 @@
 package eu.ha3.presencefootsteps;
 
+import javax.annotation.Nullable;
+
 import com.minelittlepony.common.client.gui.GameGui;
 import com.minelittlepony.common.client.gui.element.Button;
 import com.minelittlepony.common.client.gui.element.Slider;
 
-import eu.ha3.presencefootsteps.sound.ResourcesState;
 import eu.ha3.presencefootsteps.util.BlockReport;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.resourcepack.ResourcePackOptionsScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.TranslatableText;
 
@@ -17,11 +17,10 @@ class PFOptionsScreen extends GameGui {
     private static final int yGroupSpacing = 56;
     private static final int xButtonSpacing = 95;
 
-    private PresenceFootsteps mod;
+    private final PresenceFootsteps mod = PresenceFootsteps.INSTANCE;
 
-    public PFOptionsScreen(PresenceFootsteps haddon) {
-        super(new TranslatableText("menu.pf.title"), MinecraftClient.getInstance().currentScreen);
-        mod = haddon;
+    public PFOptionsScreen(@Nullable Screen parent) {
+        super(new TranslatableText("menu.pf.title"), parent);
     }
 
     /**
@@ -68,11 +67,6 @@ class PFOptionsScreen extends GameGui {
 
         row += yGroupSpacing;
 
-        addButton(new Button(rightCol, row).onClick(sender ->
-            minecraft.openScreen(new ResourcePackOptionsScreen(this))
-        )).getStyle()
-            .setText(getResourcePacks());
-
         addButton(new Button(leftCol, row).onClick(sender -> {
             sender.getStyle().setText(mod.getConfig().toggleMultiplayer() ? "menu.pf.multiplayer.on" : "menu.pf.multiplayer.off");
         })).getStyle()
@@ -104,14 +98,6 @@ class PFOptionsScreen extends GameGui {
 
         drawCenteredString(font, getTitle().asString(), width / 2, 40, 0xFFFFFFFF);
 
-        ResourcesState state = mod.getEngine().getResourcesState();
-
-        if (!state.isFunctional()) {
-            String text = "menu.pf.warn." + state.name().toLowerCase();
-            drawCenteredString(font, I18n.translate(text + ".0"), width / 2, 10, 0xFFFF0000);
-            drawCenteredString(font, I18n.translate(text + ".1"), width / 2, 20, 0xFFFF0000);
-        }
-
         super.render(mouseX, mouseY, partialTicks);
     }
 
@@ -134,10 +120,6 @@ class PFOptionsScreen extends GameGui {
 
     private String getStance() {
         return I18n.translate("menu.pf.stance", I18n.translate(mod.getConfig().getLocomotion().getTranslationKey()));
-    }
-
-    private String getResourcePacks() {
-        return "menu.pf.resourcepacks." + mod.getEngine().getResourcesState().name().toLowerCase();
     }
 
     @Override

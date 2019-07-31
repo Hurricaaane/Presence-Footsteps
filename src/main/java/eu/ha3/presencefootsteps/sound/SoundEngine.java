@@ -6,7 +6,6 @@ import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 import eu.ha3.presencefootsteps.PFConfig;
-import eu.ha3.presencefootsteps.PresenceFootsteps;
 import eu.ha3.presencefootsteps.mixins.IEntity;
 import eu.ha3.presencefootsteps.sound.acoustics.AcousticsJsonParser;
 import eu.ha3.presencefootsteps.sound.generator.Locomotion;
@@ -32,9 +31,6 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
 
     private final PFConfig config;
 
-    private boolean hasResourcePacks;
-    private boolean hasDisabledResourcePacks;
-
     public SoundEngine(PFConfig config) {
         this.config = config;
     }
@@ -43,24 +39,12 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
         return isolator;
     }
 
-    public ResourcesState getResourcesState() {
-        if (hasResourcePacks) {
-            return ResourcesState.LOADED;
-        }
-
-        if (hasDisabledResourcePacks) {
-            return ResourcesState.UNLOADED;
-        }
-
-        return ResourcesState.NONE;
-    }
-
     public void onTick(MinecraftClient client) {
         if (client.player == null) {
             return;
         }
 
-        if (config.getEnabled() && hasResourcePacks && !client.isPaused()) {
+        if (config.getEnabled() && !client.isPaused()) {
             if (!config.getEnabledMP()) {
                 isolator.onFrame(client.player);
             }
@@ -125,19 +109,12 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
     public void reloadEverything() {
         List<ResourcePack> repo = dealer.findResourcePacks().collect(Collectors.toList());
 
-        hasResourcePacks = !repo.isEmpty();
-        hasDisabledResourcePacks = dealer.findDisabledResourcePacks().count() > 0;
-
         isolator = new PFIsolator(this, config);
 
-        if (hasResourcePacks) {
-            PresenceFootsteps.logger.info("Presence Footsteps didn't find any compatible resource packs.");
-        } else {
-            dealer.collectResources(ResourceDealer.blockmap, repo, isolator.getBlockMap()::load);
-            dealer.collectResources(ResourceDealer.primitivemap, repo, isolator.getPrimitiveMap()::load);
-            dealer.collectResources(ResourceDealer.primitivemap, repo, new AcousticsJsonParser(isolator.getAcoustics())::parse);
-            dealer.collectResources(ResourceDealer.variator, repo, isolator.getVariator()::load);
-        }
+        dealer.collectResources(ResourceDealer.blockmap, repo, isolator.getBlockMap()::load);
+        dealer.collectResources(ResourceDealer.primitivemap, repo, isolator.getPrimitiveMap()::load);
+        dealer.collectResources(ResourceDealer.primitivemap, repo, new AcousticsJsonParser(isolator.getAcoustics())::parse);
+        dealer.collectResources(ResourceDealer.variator, repo, isolator.getVariator()::load);
     }
 
     public void shutdown() {

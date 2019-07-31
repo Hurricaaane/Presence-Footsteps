@@ -17,10 +17,10 @@ import net.minecraft.util.Identifier;
 
 class ResourceDealer {
     public static final Identifier pf_pack = new Identifier("presencefootsteps", "pf_pack.json");
-    public static final Identifier acoustics = new Identifier("presencefootsteps", "acoustics.json");
-    public static final Identifier blockmap = new Identifier("presencefootsteps", "blockmap.cfg");
-    public static final Identifier primitivemap = new Identifier("presencefootsteps", "primitivemap.cfg");
-    public static final Identifier variator = new Identifier("presencefootsteps", "variator.json");
+    public static final Identifier acoustics = new Identifier("presencefootsteps", "config/acoustics.json");
+    public static final Identifier blockmap = new Identifier("presencefootsteps", "config/blockmap.cfg");
+    public static final Identifier primitivemap = new Identifier("presencefootsteps", "config/primitivemap.cfg");
+    public static final Identifier variator = new Identifier("presencefootsteps", "config/variator.json");
 
     private final MinecraftClient client = MinecraftClient.getInstance();
 
