@@ -1,23 +1,30 @@
 package eu.ha3.mc.quick.update;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.base.Strings;
+import eu.ha3.presencefootsteps.config.JsonFile;
 
 /**
  * The Update Notifier.
  *
- * @author Hurry
+ * @author Hurry (Huricaaaan) (v1)
+ * @author Sollace (v2)
  *
  */
-public class UpdateNotifier extends Thread {
+public class UpdateNotifier extends JsonFile {
+
+    private static final Logger logger = LogManager.getLogger("UpdateNotifier");
 
     private transient final String location;
     private transient final Version currentVersion;
@@ -34,7 +41,9 @@ public class UpdateNotifier extends Thread {
     @Nullable
     private Version lastKnownVersion;
 
-    public UpdateNotifier(String location, Version currentVersion, Reporter reporter) {
+    public UpdateNotifier(Path file, String location, Version currentVersion, Reporter reporter) {
+        super(file);
+
         this.location = location;
         this.currentVersion = currentVersion;
         this.reporter = reporter;
@@ -45,56 +54,46 @@ public class UpdateNotifier extends Thread {
     }
 
     public void attempt() {
-        if (checkRun) {
+        if (checkRun || !enabled) {
             return;
         }
 
         checkRun = true;
 
-        if (enabled) {
-            start();
-        }
+        Thread updateThread = new Thread(this::run);
+        updateThread.setDaemon(true);
+        updateThread.setName("UpdateChecker");
+        updateThread.start();
     }
 
-    @Override
-    public void run() {
+    private void run() {
         try {
-            checkUpdates();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+            Version newVersion = readVersions().getLatest(currentVersion);
 
-    private void checkUpdates() throws Exception {
-        URL url = new URL(String.format(location, currentVersion.number, currentVersion.type));
-        InputStream contents = url.openStream();
-
-        Gson gson = new Gson();
-        Versions version = gson.fromJson(new JsonReader(new InputStreamReader(contents)), Versions.class);
-
-        Version newVersion = version.getLatest(currentVersion);
-
-        if (newVersion.number > currentVersion.number) {
-            if (lastKnownVersion == null) {
+            if (!newVersion.equals(lastKnownVersion)) {
                 lastKnownVersion = newVersion;
                 displayRemaining = displayCount;
             }
 
-            if (displayRemaining-- > 0) {
-                Thread.sleep(10000);
+            if (displayRemaining > 0 && newVersion.number > currentVersion.number) {
+                displayRemaining--;
 
+                Thread.sleep(10000);
                 reporter.report(newVersion, currentVersion);
             }
 
             save();
+        } catch (Exception e) {
+            logger.error("Error occured whilst checking for updates", e);
         }
     }
 
-    public void save() {
+    private Versions readVersions() throws IOException {
+        URL url = new URL(String.format(location, currentVersion.number, currentVersion.type));
 
-    }
-
-    public void loadConfig(Path file) {
+        try (Reader reader = new InputStreamReader(url.openStream())) {
+            return gson.fromJson(reader, Versions.class);
+        }
     }
 
     static class Versions {
@@ -138,6 +137,15 @@ public class UpdateNotifier extends Thread {
             }
 
             return this;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return super.equals(other) ||
+                    (other instanceof Version
+                        && ((Version)other).number == number
+                        && Strings.nullToEmpty(minecraft).equals(((Version)other).minecraft)
+                        && Strings.nullToEmpty(type).equals(((Version)other).type));
         }
     }
 

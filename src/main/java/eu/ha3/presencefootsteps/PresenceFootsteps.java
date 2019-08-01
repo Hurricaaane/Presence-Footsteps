@@ -1,5 +1,7 @@
 package eu.ha3.presencefootsteps;
 
+import java.nio.file.Path;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -32,13 +34,11 @@ public class PresenceFootsteps implements ClientModInitializer {
         return instance;
     }
 
+    private SoundEngine engine;
+
     private PFConfig config;
 
-    private final UpdateNotifier updateNotifier = new UpdateNotifier(
-            "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d",
-            new UpdateNotifier.Version("1.14.4", "r", 15), this::onUpdate);
-
-    private final SoundEngine engine = new SoundEngine(config);
+    private UpdateNotifier updateNotifier;
 
     private FabricKeyBinding keyBinding;
 
@@ -56,15 +56,26 @@ public class PresenceFootsteps implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+
+        Path pfFolder = FabricLoader.getInstance()
+                .getConfigDirectory().toPath()
+                .resolve("presencefootsteps");
+
+        updateNotifier = new UpdateNotifier(
+                pfFolder.resolve("updater.json"),
+                "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d",
+                new UpdateNotifier.Version("1.14.4", "r", 15), this::onUpdate);
+
+        config = new PFConfig(pfFolder
+                .resolve("userconfig.cfg"));
+
         keyBinding = FabricKeyBinding.Builder.create(new Identifier("presencefootsteps", "settings"),
                 InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F9, "key.categories.misc").build();
 
-        config = new PFConfig(FabricLoader.getInstance()
-                .getConfigDirectory().toPath()
-                .resolve("presencefootsteps")
-                .resolve("userconfig.cfg"));
-
         KeyBindingRegistry.INSTANCE.register(keyBinding);
+
+        engine = new SoundEngine(config);
+
         ClientTickCallback.EVENT.register(this::onTick);
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(engine);
     }

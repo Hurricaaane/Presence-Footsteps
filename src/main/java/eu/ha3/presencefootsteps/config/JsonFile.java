@@ -10,8 +10,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.InstanceCreator;
 
+/**
+ * Very simple file loaded from and to json.
+ *
+ * @author Sollace
+ */
 public abstract class JsonFile {
-    private final Gson gson = new GsonBuilder()
+    protected final Gson gson = new GsonBuilder()
             .registerTypeAdapter(getClass(), (InstanceCreator<JsonFile>)t -> this)
             .create();
 
