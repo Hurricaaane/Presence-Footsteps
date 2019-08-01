@@ -25,8 +25,8 @@ import net.minecraft.util.profiler.Profiler;
 
 public class SoundEngine implements IdentifiableResourceReloadListener {
 
-    private static final Identifier blockmap = new Identifier("presencefootsteps", "config/blockmap.cfg");
-    private static final Identifier primitivemap = new Identifier("presencefootsteps", "config/primitivemap.cfg");
+    private static final Identifier blockmap = new Identifier("presencefootsteps", "config/blockmap.json");
+    private static final Identifier primitivemap = new Identifier("presencefootsteps", "config/primitivemap.json");
     private static final Identifier acoustics = new Identifier("presencefootsteps", "config/acoustics.json");
     private static final Identifier variator = new Identifier("presencefootsteps", "config/variator.json");
 
