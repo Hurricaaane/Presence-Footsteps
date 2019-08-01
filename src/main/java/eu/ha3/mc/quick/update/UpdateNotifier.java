@@ -115,7 +115,7 @@ public class UpdateNotifier extends JsonFile {
 
         public String type;
 
-        Version() {}
+        public Version() {}
 
         public Version(String minecraft, String type, int number) {
             this.minecraft = minecraft;

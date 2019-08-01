@@ -17,7 +17,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "eu.ha3.presencefootsteps.PresenseFootsteps"
+      "eu.ha3.presencefootsteps.PresenceFootsteps"
     ]
   },
   "mixins": [

@@ -65,12 +65,14 @@ public class PresenceFootsteps implements ClientModInitializer {
                 pfFolder.resolve("updater.json"),
                 "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d",
                 new UpdateNotifier.Version("1.14.4", "r", 15), this::onUpdate);
+        updateNotifier.load();
 
         config = new PFConfig(pfFolder
-                .resolve("userconfig.cfg"));
+                .resolve("userconfig.json"));
+        config.load();
 
         keyBinding = FabricKeyBinding.Builder.create(new Identifier("presencefootsteps", "settings"),
-                InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F9, "key.categories.misc").build();
+                InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F10, "key.categories.misc").build();
 
         KeyBindingRegistry.INSTANCE.register(keyBinding);
 

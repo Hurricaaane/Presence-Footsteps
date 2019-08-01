@@ -18,7 +18,7 @@ class PFOptionsScreen extends GameGui {
 
     private static final int yButtonSpacing = 24;
     private static final int yGroupSpacing = 56;
-    private static final int xButtonSpacing = 95;
+    private static final int xButtonSpacing = 105;
 
     private final PresenceFootsteps mod = PresenceFootsteps.getInstance();
 
@@ -30,8 +30,6 @@ class PFOptionsScreen extends GameGui {
     public void init() {
         final int center = width / 2;
 
-        final int right = center + 102;
-
         int leftCol =  center - 102 - xButtonSpacing;
         int rightCol = center - 102 + xButtonSpacing;
 
@@ -39,11 +37,6 @@ class PFOptionsScreen extends GameGui {
 
         addButton(new Label(width / 2, 40)).setCentered().getStyle()
                 .setText(getTitle().asString());
-
-        addButton(new Button(right + 32, row).onClick(sender ->
-            sender.getStyle().setText("menu.pf." + mod.getEngine().toggle()))
-        ).getStyle()
-            .setText("menu.pf." + mod.getConfig().getEnabled());
 
         addButton(new Slider(rightCol, row, 0, 100, mod.getConfig().getVolume() * 100))
             .onChange(mod.getConfig()::setVolume)
@@ -57,6 +50,11 @@ class PFOptionsScreen extends GameGui {
         }).setFormatter(Locomotion::getDisplayName));
 
         row += yGroupSpacing;
+
+        addButton(new Button(rightCol, row).onClick(sender ->
+            sender.getStyle().setText("menu.pf." + mod.getEngine().toggle()))
+        ).getStyle()
+            .setText("menu.pf." + mod.getConfig().getEnabled());
 
         addButton(new Button(leftCol, row).onClick(sender -> {
             sender.getStyle().setText("menu.pf.multiplayer." + mod.getConfig().toggleMultiplayer());

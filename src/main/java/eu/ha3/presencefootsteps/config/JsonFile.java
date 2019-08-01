@@ -16,8 +16,10 @@ import com.google.gson.InstanceCreator;
  * @author Sollace
  */
 public abstract class JsonFile {
-    protected final Gson gson = new GsonBuilder()
+
+    protected transient final Gson gson = new GsonBuilder()
             .registerTypeAdapter(getClass(), (InstanceCreator<JsonFile>)t -> this)
+            .setPrettyPrinting()
             .create();
 
     private transient Path file;
@@ -26,7 +28,9 @@ public abstract class JsonFile {
 
     public JsonFile(Path file) {
         this.file = file;
+    }
 
+    public final void load() {
         if (Files.isReadable(file)) {
             try (Reader reader = Files.newBufferedReader(file)) {
                 load(reader);
@@ -44,8 +48,7 @@ public abstract class JsonFile {
 
     public final void save() {
         try {
-            Files.deleteIfExists(file);
-
+            Files.createDirectories(file.getParent());
             try (BufferedWriter writer = Files.newBufferedWriter(file)) {
                 gson.toJson(this, writer);
             }
