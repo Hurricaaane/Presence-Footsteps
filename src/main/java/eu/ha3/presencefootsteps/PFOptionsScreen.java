@@ -38,9 +38,9 @@ class PFOptionsScreen extends GameGui {
         addButton(new Label(width / 2, 40)).setCentered().getStyle()
                 .setText(getTitle().asString());
 
-        addButton(new Slider(rightCol, row, 0, 100, mod.getConfig().getVolume() * 100))
+        addButton(new Slider(rightCol, row, 0, 100, mod.getConfig().getVolume()))
             .onChange(mod.getConfig()::setVolume)
-            .setFormatter(volume -> I18n.translate("menu.pf.volume", formatVolume(volume)));
+            .setFormatter(this::formatVolume);
 
         addButton(new EnumSlider<>(leftCol, row, mod.getConfig().getLocomotion()).onChange(loco -> {
             mod.getConfig().setLocomotion(loco);
@@ -88,14 +88,10 @@ class PFOptionsScreen extends GameGui {
 
     private String formatVolume(float volume) {
 
-        if (volume >= 100) {
-            return I18n.translate("menu.pf.volume.max");
-        }
-
         if (volume <= 0) {
             return I18n.translate("menu.pf.volume.min");
         }
 
-        return volume + "%";
+        return I18n.translate("menu.pf.volume", volume);
     }
 }

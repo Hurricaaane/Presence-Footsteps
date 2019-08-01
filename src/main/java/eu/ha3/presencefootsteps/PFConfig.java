@@ -49,7 +49,7 @@ public class PFConfig extends JsonFile {
     }
 
     public boolean getEnabled() {
-        return enabled;
+        return getVolume() > 0 && enabled;
     }
 
     public int getVolume() {
@@ -57,7 +57,7 @@ public class PFConfig extends JsonFile {
     }
 
     public float setVolume(float volume) {
-        this.volume = Math.round(volume / 100);
+        this.volume = volume > 97 ? 100 : volume < 3 ? 0 : (int)volume;
         save();
 
         return getVolume();
