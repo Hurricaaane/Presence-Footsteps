@@ -2,11 +2,15 @@ package eu.ha3.presencefootsteps.sound.acoustics;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nullable;
+
 import eu.ha3.presencefootsteps.PresenceFootsteps;
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.Isolator;
 import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.sound.player.ImmediateSoundPlayer;
+import net.minecraft.entity.Entity;
 
 public class AcousticsPlayer extends ImmediateSoundPlayer implements AcousticLibrary {
 
@@ -24,7 +28,7 @@ public class AcousticsPlayer extends ImmediateSoundPlayer implements AcousticLib
     }
 
     @Override
-    public void playAcoustic(Object location, String acousticName, State event, Options inputOptions) {
+    public void playAcoustic(Entity location, String acousticName, State event, @Nullable Options inputOptions) {
         if (acousticName.contains(",")) {
             String[] fragments = acousticName.split(",");
 

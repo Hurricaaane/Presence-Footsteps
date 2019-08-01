@@ -64,7 +64,7 @@ public class BlockReport {
         }
     }
 
-    public void writeReport(@Nullable Predicate<BlockState> filter) throws IOException {
+    private void writeReport(@Nullable Predicate<BlockState> filter) throws IOException {
         Files.createFile(loc);
 
         try (JsonWriter writer = new JsonWriter(Files.newBufferedWriter(loc))) {
@@ -128,7 +128,7 @@ public class BlockReport {
         return soundName;
     }
 
-    public void printResults() {
+    private void printResults() {
         Text link = new LiteralText(loc.getFileName().toString());
 
         link.getStyle()

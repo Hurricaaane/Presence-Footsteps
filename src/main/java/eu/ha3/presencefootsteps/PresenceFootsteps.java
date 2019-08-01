@@ -35,7 +35,7 @@ public class PresenceFootsteps implements ClientModInitializer {
 
     private final UpdateNotifier updateNotifier = new UpdateNotifier(
             "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d")
-            .setVersion("1.14.4", 13, "r")
+            .setVersion("1.14.4", 15, "r")
             .setReporter(this::reportUpdate);
 
     private final SoundEngine engine = new SoundEngine(config);

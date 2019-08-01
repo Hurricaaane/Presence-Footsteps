@@ -32,7 +32,7 @@ public class StateLookup implements Lookup<BlockState> {
 
     @Override
     public void add(String key, String value) {
-        blockMap.put(key.replace('>', ':'), value);
+        blockMap.put(key, value);
     }
 
     @Override

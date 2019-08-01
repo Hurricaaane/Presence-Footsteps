@@ -2,8 +2,9 @@ package eu.ha3.presencefootsteps.sound.player;
 
 import eu.ha3.presencefootsteps.PresenceFootsteps;
 import eu.ha3.presencefootsteps.sound.Options;
+import net.minecraft.entity.Entity;
 
-public class PendingSound {
+class PendingSound {
 
     private static final boolean USING_LATENESS = true;
     private static final boolean USING_EARLYNESS = true;
@@ -12,7 +13,7 @@ public class PendingSound {
 
     private static final double EARLYNESS_THRESHOLD_POW = 0.75d;
 
-    private Object location;
+    private Entity location;
 
     private String soundName;
 
@@ -24,7 +25,7 @@ public class PendingSound {
     private long timeToPlay;
     private long maximum;
 
-    public PendingSound(Object location, String soundName, float volume, float pitch, Options options, long timeToPlay, long maximum) {
+    public PendingSound(Entity location, String soundName, float volume, float pitch, Options options, long timeToPlay, long maximum) {
         this.location = location;
         this.soundName = soundName;
         this.volume = volume;

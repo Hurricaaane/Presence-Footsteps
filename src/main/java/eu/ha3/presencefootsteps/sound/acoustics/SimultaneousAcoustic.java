@@ -11,8 +11,9 @@ import com.google.gson.JsonObject;
 import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
+import net.minecraft.entity.Entity;
 
-public class SimultaneousAcoustic implements Acoustic {
+class SimultaneousAcoustic implements Acoustic {
 
     protected final List<Acoustic> acoustics = new ArrayList<>();
 
@@ -27,7 +28,7 @@ public class SimultaneousAcoustic implements Acoustic {
     }
 
     @Override
-    public void playSound(SoundPlayer player, Object location, State event, Options inputOptions) {
+    public void playSound(SoundPlayer player, Entity location, State event, Options inputOptions) {
         acoustics.forEach(acoustic -> acoustic.playSound(player, location, event, inputOptions));
     }
 }

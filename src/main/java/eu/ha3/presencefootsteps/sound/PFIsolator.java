@@ -12,11 +12,11 @@ import eu.ha3.presencefootsteps.sound.acoustics.AcousticLibrary;
 import eu.ha3.presencefootsteps.sound.acoustics.AcousticsPlayer;
 import eu.ha3.presencefootsteps.sound.generator.StepSoundGenerator;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
-import eu.ha3.presencefootsteps.world.LegacyBlockLookup;
 import eu.ha3.presencefootsteps.world.Lookup;
 import eu.ha3.presencefootsteps.world.PFSolver;
 import eu.ha3.presencefootsteps.world.PrimitiveLookup;
 import eu.ha3.presencefootsteps.world.Solver;
+import eu.ha3.presencefootsteps.world.StateLookup;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -28,7 +28,7 @@ public class PFIsolator implements Isolator {
 
     private final Variator variator = new Variator();
 
-    private final Lookup<BlockState> blockMap = new LegacyBlockLookup();
+    private final Lookup<BlockState> blockMap = new StateLookup();
 
     private final Lookup<String> primitiveMap = new PrimitiveLookup();
 

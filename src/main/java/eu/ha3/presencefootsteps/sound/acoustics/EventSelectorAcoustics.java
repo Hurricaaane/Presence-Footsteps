@@ -8,8 +8,9 @@ import com.google.gson.JsonObject;
 import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
+import net.minecraft.entity.Entity;
 
-public class EventSelectorAcoustics implements NamedAcoustic {
+class EventSelectorAcoustics implements NamedAcoustic {
     private final String name;
 
     private final Map<State, Acoustic> pairs = new HashMap<>();
@@ -32,7 +33,7 @@ public class EventSelectorAcoustics implements NamedAcoustic {
     }
 
     @Override
-    public void playSound(SoundPlayer player, Object location, State event, Options inputOptions) {
+    public void playSound(SoundPlayer player, Entity location, State event, Options inputOptions) {
         if (pairs.containsKey(event)) {
             pairs.get(event).playSound(player, location, event, inputOptions);
         } else if (event.canTransition()) {

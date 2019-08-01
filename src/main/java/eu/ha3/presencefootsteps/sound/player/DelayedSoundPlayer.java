@@ -6,8 +6,9 @@ import java.util.Random;
 
 import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.util.MathUtil;
+import net.minecraft.entity.Entity;
 
-public class DelayedSoundPlayer implements SoundPlayer {
+class DelayedSoundPlayer implements SoundPlayer {
 
     private final List<PendingSound> pending = new ArrayList<>();
 
@@ -26,7 +27,7 @@ public class DelayedSoundPlayer implements SoundPlayer {
     }
 
     @Override
-    public void playSound(Object location, String soundName, float volume, float pitch, Options options) {
+    public void playSound(Entity location, String soundName, float volume, float pitch, Options options) {
         long delay = MathUtil.randAB(getRNG(), options.get("delay_min"), options.get("delay_max"));
 
         delay = Math.max(delay, nextPlayTime);

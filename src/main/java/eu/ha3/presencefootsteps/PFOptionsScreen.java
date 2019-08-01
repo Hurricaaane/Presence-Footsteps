@@ -70,7 +70,7 @@ class PFOptionsScreen extends GameGui {
         addButton(new Button(leftCol, row).onClick(sender -> {
             sender.getStyle().setText(mod.getConfig().toggleMultiplayer() ? "menu.pf.multiplayer.on" : "menu.pf.multiplayer.off");
         })).getStyle()
-            .setText(getMP());
+            .setText("menu.pf.multiplayer." + mod.getConfig().getEnabledMP());
 
         row += yButtonSpacing;
 
@@ -112,10 +112,6 @@ class PFOptionsScreen extends GameGui {
         }
 
         return volume + "%";
-    }
-
-    private String getMP() {
-        return "menu.pf.multiplayer." + mod.getConfig().getEnabledMP();
     }
 
     private String getStance() {

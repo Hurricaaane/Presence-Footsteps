@@ -12,8 +12,9 @@ import com.google.gson.JsonParseException;
 import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
+import net.minecraft.entity.Entity;
 
-public class WeightedAcoustic implements Acoustic {
+class WeightedAcoustic implements Acoustic {
 
     protected final List<Acoustic> theAcoustics;
 
@@ -38,7 +39,7 @@ public class WeightedAcoustic implements Acoustic {
     }
 
     @Override
-    public void playSound(SoundPlayer player, Object location, State event, Options inputOptions) {
+    public void playSound(SoundPlayer player, Entity location, State event, Options inputOptions) {
         float rand = player.getRNG().nextFloat();
         int marker = 0;
 

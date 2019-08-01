@@ -1,8 +1,6 @@
-package eu.ha3.presencefootsteps.sound;
+package eu.ha3.presencefootsteps.util;
 
 import java.util.Random;
-
-import eu.ha3.presencefootsteps.util.MathUtil;
 
 public class Period {
 
@@ -37,6 +35,6 @@ public class Period {
     }
 
     public float on(float value) {
-        return MathUtil.clamp(min, max, value);
+        return MathUtil.between(min, max, value);
     }
 }

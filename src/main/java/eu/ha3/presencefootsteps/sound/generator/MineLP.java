@@ -1,11 +1,11 @@
-package eu.ha3.presencefootsteps;
+package eu.ha3.presencefootsteps.sound.generator;
 
 import com.minelittlepony.client.MineLittlePony;
-import eu.ha3.presencefootsteps.sound.generator.Locomotion;
+
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
 
-public class MineLP {
+class MineLP {
     private static boolean checkCompleted = false;
     private static boolean hasMineLP;
 

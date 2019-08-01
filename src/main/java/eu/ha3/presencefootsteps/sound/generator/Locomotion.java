@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import eu.ha3.presencefootsteps.MineLP;
 import eu.ha3.presencefootsteps.sound.Isolator;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;

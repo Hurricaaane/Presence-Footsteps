@@ -3,9 +3,9 @@ package eu.ha3.presencefootsteps.sound.acoustics;
 import com.google.gson.JsonObject;
 
 import eu.ha3.presencefootsteps.sound.Options;
-import eu.ha3.presencefootsteps.sound.Period;
+import eu.ha3.presencefootsteps.util.Period;
 
-public class DelayedAcoustic extends VaryingAcoustic implements Options {
+class DelayedAcoustic extends VaryingAcoustic implements Options {
 
     protected final Period delay = new Period(0);
 
@@ -25,7 +25,7 @@ public class DelayedAcoustic extends VaryingAcoustic implements Options {
     }
 
     @Override
-    public boolean containsKey(String option) {
+    public boolean containsKey(Object option) {
         return option.equals("delay_min") || option.equals("delay_max");
     }
 

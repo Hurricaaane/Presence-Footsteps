@@ -9,7 +9,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import eu.ha3.presencefootsteps.PresenceFootsteps;
-import eu.ha3.presencefootsteps.sound.Range;
+import eu.ha3.presencefootsteps.util.Range;
 
 /**
  * A JSON parser that creates a Library of Acoustics.

@@ -1,8 +1,9 @@
 package eu.ha3.presencefootsteps.sound.generator;
 
 import eu.ha3.presencefootsteps.sound.State;
-import eu.ha3.presencefootsteps.sound.ConfigOptions;
+import eu.ha3.presencefootsteps.util.MathUtil;
 import eu.ha3.presencefootsteps.sound.Isolator;
+import eu.ha3.presencefootsteps.sound.Options;
 import net.minecraft.entity.player.PlayerEntity;
 
 class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
@@ -93,9 +94,9 @@ class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
         if (hugeLanding || speedingJumpStateChange) {
             if (!isAirborne) {
                 float volume = speedingJumpStateChange ? 2
-                        : scalex(fallDistance, VAR.HUGEFALL_LANDING_DISTANCE_MIN, VAR.HUGEFALL_LANDING_DISTANCE_MAX);
+                        : MathUtil.scalex(fallDistance, VAR.HUGEFALL_LANDING_DISTANCE_MIN, VAR.HUGEFALL_LANDING_DISTANCE_MAX);
                 isolator.getAcoustics().playAcoustic(ply, "_SWIFT", State.LAND,
-                        new ConfigOptions().withOption("gliding_volume", volume));
+                        Options.create().withOption("gliding_volume", volume));
             } else {
                 isolator.getAcoustics().playAcoustic(ply, "_SWIFT", State.JUMP, null);
             }
@@ -124,11 +125,11 @@ class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
             float volume = 1;
             long diffImmobile = now - lastTimeImmobile;
             if (diffImmobile > VAR.WING_IMMOBILE_FADE_START) {
-                volume -= scalex(diffImmobile, VAR.WING_IMMOBILE_FADE_START,
+                volume -= MathUtil.scalex(diffImmobile, VAR.WING_IMMOBILE_FADE_START,
                         VAR.WING_IMMOBILE_FADE_START + VAR.WING_IMMOBILE_FADE_DURATION);
             }
             isolator.getAcoustics().playAcoustic(ply, "_WING", State.WALK,
-                    new ConfigOptions().withOption("gliding_volume", volume));
+                    Options.create().withOption("gliding_volume", volume));
         }
     }
 

@@ -10,7 +10,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
@@ -38,23 +37,23 @@ public class ImmediateSoundPlayer implements SoundPlayer, StepSoundPlayer {
     }
 
     @Override
-    public void playStep(LivingEntity entity, Association assos) {
+    public void playStep(Association assos) {
         BlockSoundGroup soundType = assos.getSoundGroup();
 
         if (!assos.getMaterial().isLiquid() && soundType != null) {
-            BlockState beside = entity.world.getBlockState(assos.pos(0, 1, 0));
+            BlockState beside = assos.getSource().world.getBlockState(assos.getPos().up());
 
             if (beside.getBlock() == Blocks.SNOW) {
                 soundType = Blocks.SNOW.getSoundGroup(beside);
             }
 
-            playAttenuatedSound(entity, soundType.getStepSound().getId().toString(), soundType.getVolume() * 0.15F, soundType.getPitch());
+            playAttenuatedSound(assos.getSource(), soundType.getStepSound().getId().toString(), soundType.getVolume() * 0.15F, soundType.getPitch());
         }
     }
 
     @Override
-    public void playSound(Object location, String soundName, float volume, float pitch, @Nullable Options options) {
-        if (!(location instanceof Entity)) {
+    public void playSound(Entity location, String soundName, float volume, float pitch, @Nullable Options options) {
+        if (location == null) {
             return;
         }
 
@@ -64,7 +63,7 @@ public class ImmediateSoundPlayer implements SoundPlayer, StepSoundPlayer {
             return;
         }
 
-        playAttenuatedSound((Entity) location, soundName, volume, pitch);
+        playAttenuatedSound(location, soundName, volume, pitch);
     }
 
     private void playAttenuatedSound(Entity location, String soundName, float volume, float pitch) {

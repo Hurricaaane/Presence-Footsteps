@@ -2,6 +2,8 @@ package eu.ha3.presencefootsteps.util;
 
 import java.util.Random;
 
+import net.minecraft.util.math.MathHelper;
+
 public class MathUtil {
     public static float randAB(Random rng, float a, float b) {
         return a >= b ? a : a + rng.nextFloat() * (b - a);
@@ -11,7 +13,11 @@ public class MathUtil {
         return a >= b ? a : a + rng.nextInt((int) b + 1);
     }
 
-    public static float clamp(float min, float max, float value) {
-        return min + (max - min) * value;
+    public static float between(float from, float to, float value) {
+        return from + (to - from) * value;
+    }
+
+    public static float scalex(float number, float min, float max) {
+        return MathHelper.clamp((number - min) / (max - min), 0, 1);
     }
 }

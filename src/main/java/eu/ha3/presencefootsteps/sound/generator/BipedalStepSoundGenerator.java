@@ -3,6 +3,7 @@ package eu.ha3.presencefootsteps.sound.generator;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import eu.ha3.presencefootsteps.config.Variator;
 import eu.ha3.presencefootsteps.mixins.ILivingEntity;
@@ -338,18 +339,17 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
 
         brushesTime = System.currentTimeMillis() + 100;
 
-        if ((motionX == 0d && motionZ == 0d) || ply.isSneaking())
+        if ((motionX == 0d && motionZ == 0d) || ply.isSneaking()) {
             return;
+        }
 
-        int yy = MathHelper.floor(ply.y - 0.1d - ply.getHeightOffset() - (ply.onGround ? 0d : 0.25d));
+        Association assos = isolator.getSolver().findAssociation(ply.world, new BlockPos(
+            ply.x,
+            ply.y - 0.1d - ply.getHeightOffset() - (ply.onGround ? 0d : 0.25d),
+            ply.z
+        ), "find_messy_foliage");
 
-        Association assos = isolator.getSolver().findAssociation(ply.world,
-                MathHelper.floor(ply.x),
-                yy,
-                MathHelper.floor(ply.z),
-                "find_messy_foliage");
-
-        if (assos != null) {
+        if (!assos.isNull()) {
             if (!isMessyFoliage) {
                 isMessyFoliage = true;
                 isolator.getSolver().playAssociation(ply, assos, State.WALK);
@@ -361,7 +361,8 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
 
     protected void playSinglefoot(PlayerEntity ply, double verticalOffsetAsMinus, State eventType, boolean foot) {
         Association assos = isolator.getSolver().findAssociation(ply, verticalOffsetAsMinus, isRightFoot);
-        if (assos == null || assos.isNotEmitter()) {
+
+        if (assos.isNotEmitter()) {
             assos = isolator.getSolver().findAssociation(ply, verticalOffsetAsMinus + 1, isRightFoot);
         }
         isolator.getSolver().playAssociation(ply, assos, eventType);
@@ -372,17 +373,12 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         Association leftFoot = isolator.getSolver().findAssociation(ply, verticalOffsetAsMinus, false);
         Association rightFoot = isolator.getSolver().findAssociation(ply, verticalOffsetAsMinus, true);
 
-        if (leftFoot != null && leftFoot.equals(rightFoot) && leftFoot.hasAssociation()) {
-            rightFoot = null;
+        if (leftFoot.hasAssociation() && leftFoot.equals(rightFoot)) {
             // If the two feet solve to the same sound, except NO_ASSOCIATION, only play the sound once
+            rightFoot = Association.NOT_EMITTER;
         }
 
         isolator.getSolver().playAssociation(ply, leftFoot, eventType);
         isolator.getSolver().playAssociation(ply, rightFoot, eventType);
-    }
-
-    protected float scalex(float number, float min, float max) {
-        float m = (number - min) / (max - min);
-        return m < 0 ? 0 : m > 1 ? 1 : m;
     }
 }

@@ -1,87 +1,90 @@
 package eu.ha3.presencefootsteps.world;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.math.BlockPos;
 
 public class Association {
 
+    public static final Association NOT_EMITTER = new Association();
+
     private final BlockState blockState;
 
-    private final int x;
-    private final int y;
-    private final int z;
+    private final BlockPos pos;
 
-    private String data = null;
+    private String data = "NOT_EMITTER";
 
     private boolean hasAssociation = false;
-    private boolean isPrimative = false;
+    private Entity source;
 
-    public Association(String raw) {
-        this(Blocks.AIR.getDefaultState(), 0, 0, 0);
-        setAssociation(raw);
+    public Association() {
+        this(Blocks.AIR.getDefaultState(), BlockPos.ORIGIN);
     }
 
-    public Association(BlockState state, int xx, int yy, int zz) {
+    public Association(BlockState state, BlockPos pos) {
         blockState = state;
-        x = xx;
-        y = yy;
-        z = zz;
+        this.pos = pos;
     }
 
-    public String getData() {
-        return data;
-    }
+    public Association at(Entity source) {
 
-    public Association setAssociation(String association) {
-        data = association;
-        hasAssociation = true;
+        if (!isNull()) {
+            this.source = source;
+        }
+
         return this;
     }
 
-    public Association setNoAssociation() {
-        hasAssociation = false;
+    public Association associated() {
+
+        if (!isNull()) {
+            hasAssociation = true;
+        }
+
         return this;
+    }
+
+    public Association with(String data) {
+
+        if (!isNull()) {
+            this.data = data;
+        }
+
+        return this;
+    }
+
+    public boolean isNull() {
+        return this == NOT_EMITTER;
+    }
+
+    public boolean isNotEmitter() {
+        return isNull() || "NOT_EMITTER".contentEquals(data);
     }
 
     public boolean hasAssociation() {
-        return hasAssociation;
+        return !isNotEmitter() && hasAssociation;
     }
 
-    public Association setPrimitive(String primative) {
-        data = primative;
-        isPrimative = true;
-        return this;
+    public String getAcousticName() {
+        return data;
     }
 
-    public boolean isPrimative() {
-        return isPrimative;
-    }
-
-    public Block getBlock() {
-        return blockState.getBlock();
+    public Entity getSource() {
+        return source;
     }
 
     public Material getMaterial() {
         return blockState.getMaterial();
     }
 
-    public BlockState getState() {
-        return blockState;
+    public BlockPos getPos() {
+        return pos;
     }
 
     public BlockSoundGroup getSoundGroup() {
         return blockState.getSoundGroup();
-    }
-
-    public boolean isNotEmitter() {
-        return data != null && data.contentEquals("NOT_EMITTER");
-    }
-
-    public BlockPos pos(int offX, int offY, int offZ) {
-        return new BlockPos(x + offX, y + offY, z + offZ);
     }
 }

@@ -1,8 +1,6 @@
-package eu.ha3.presencefootsteps.sound;
+package eu.ha3.presencefootsteps.util;
 
 import java.util.Random;
-
-import eu.ha3.presencefootsteps.util.MathUtil;
 
 public class Range {
 
@@ -28,6 +26,6 @@ public class Range {
     }
 
     public float on(float value) {
-        return MathUtil.clamp(min, max, value);
+        return MathUtil.between(min, max, value);
     }
 }

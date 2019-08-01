@@ -1,8 +1,11 @@
 package eu.ha3.presencefootsteps.sound.acoustics;
 
+import javax.annotation.Nullable;
+
 import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.world.Association;
+import net.minecraft.entity.Entity;
 
 public interface AcousticLibrary {
     /**
@@ -13,18 +16,18 @@ public interface AcousticLibrary {
     /**
      * Plays an acoustic.
      */
-    default void playAcoustic(Object location, Association acousticName, State event) {
-        playAcoustic(location, acousticName, event, null);
+    default void playAcoustic(Association association, State event) {
+        playAcoustic(association, event, null);
     }
 
     /**
      * Plays an acoustic with additional options.
      */
-    default void playAcoustic(Object location, Association acousticName, State event, Options options) {
-        playAcoustic(location, acousticName.getData(), event, options);
+    default void playAcoustic(Association association, State event, @Nullable Options options) {
+        playAcoustic(association.getSource(), association.getAcousticName(), event, options);
     }
 
-    void playAcoustic(Object location, String acousticName, State event, Options options);
+    void playAcoustic(Entity location, String acousticName, State event, @Nullable Options options);
 
     /**
      * Run various things, such as queued sounds.

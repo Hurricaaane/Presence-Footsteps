@@ -3,11 +3,12 @@ package eu.ha3.presencefootsteps.sound.acoustics;
 import com.google.gson.JsonObject;
 
 import eu.ha3.presencefootsteps.sound.Options;
-import eu.ha3.presencefootsteps.sound.Range;
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
+import eu.ha3.presencefootsteps.util.Range;
+import net.minecraft.entity.Entity;
 
-public class VaryingAcoustic implements Acoustic {
+class VaryingAcoustic implements Acoustic {
 
     protected String soundName;
 
@@ -55,7 +56,7 @@ public class VaryingAcoustic implements Acoustic {
     }
 
     @Override
-    public void playSound(SoundPlayer player, Object location, State event, Options inputOptions) {
+    public void playSound(SoundPlayer player, Entity location, State event, Options inputOptions) {
         if (!soundName.isEmpty()) { // Special case for intentionally empty sounds (as opposed to fall back sounds)
             float volume = this.volume.random(player.getRNG());
             float pitch = this.pitch.random(player.getRNG());

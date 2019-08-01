@@ -4,6 +4,7 @@ import java.util.Random;
 
 import eu.ha3.presencefootsteps.PFConfig;
 import eu.ha3.presencefootsteps.sound.Options;
+import net.minecraft.entity.Entity;
 
 public class UserConfigSoundPlayerWrapper implements SoundPlayer {
 
@@ -17,7 +18,7 @@ public class UserConfigSoundPlayerWrapper implements SoundPlayer {
     }
 
     @Override
-    public void playSound(Object location, String soundName, float volume, float pitch, Options options) {
+    public void playSound(Entity location, String soundName, float volume, float pitch, Options options) {
         wrapped.playSound(location, soundName, volume * userConfig.getVolume() / 100F, pitch, options);
     }
 
