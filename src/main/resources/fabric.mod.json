@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "presencefootsteps",
+  "version": "${version}",
+  "name": "Presence Footsteps",
+  "description": "An overly complicated sound mod.",
+  "authors": [
+    "Hurricaaane (Ha3)", "Sollace"
+  ],
+  "contact": {
+    "homepage": "http://presencefootsteps.ha3.eu",
+    "sources": "http://github.com/Sollace/PresenceFootsteps",
+    "issues": "https://github.com/Sollace/PresenceFootsteps/issues"
+  },
+  "license": "MIT",
+  "icon": "presencefootsteps_logo.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "eu.ha3.presencefootsteps.PresenseFootsteps"
+    ]
+  },
+  "mixins": [
+    "presencefootsteps.mixin.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric-api-base": ">=0.1.0",
+    "fabric-events-lifecycle-v0": ">=0.1.0",
+    "fabric-resource-loader-v0": ">=0.1.0",
+    "kirin": "*"
+  },
+  "suggests": {
+    "minelp": "*"
+  }
+}

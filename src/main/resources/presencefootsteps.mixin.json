@@ -1,12 +1,12 @@
 {
     "required": true,
-    "minVersion": "0.5.2",
+    "minVersion": "0.7",
     "package": "eu.ha3.presencefootsteps.mixins",
-    "refmap": "mixins.presencefootsteps.refmap.json",
-    "injectors": {
-        "defaultRequire": 1
-    },
-    "mixins": [
-    	"MNetHandlerPlayClient"
+    "refmap": "presencefootsteps.mixin.refmap.json",
+    "compatibilityLevel": "JAVA_8",
+    "client": [
+      "IEntity",
+      "ILivingEntity",
+      "MClientPlayNetworkHandler"
     ]
 }
