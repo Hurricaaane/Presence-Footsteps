@@ -38,7 +38,7 @@ class PFOptionsScreen extends GameGui {
         int row = 69;
 
         addButton(new Button(right + 32, row).onClick(sender ->
-            sender.getStyle().setText("menu.pf." + mod.toggle()))
+            sender.getStyle().setText("menu.pf." + mod.getEngine().toggle()))
         ).getStyle()
             .setText("menu.pf." + mod.getConfig().getEnabled());
 

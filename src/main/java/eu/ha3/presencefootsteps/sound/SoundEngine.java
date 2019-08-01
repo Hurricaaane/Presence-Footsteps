@@ -32,7 +32,7 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
 
     private static final Identifier ID = new Identifier("presencefootsteps", "sounds");
 
-    private Isolator isolator;
+    private Isolator isolator = new PFIsolator(this);
 
     private final PFConfig config;
 
@@ -40,21 +40,31 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
         this.config = config;
     }
 
+    public float getGlobalVolume() {
+        return config.getVolume() / 100F;
+    }
+
     public Isolator getIsolator() {
         return isolator;
     }
 
-    public void onTick(MinecraftClient client) {
-        if (client.player == null) {
-            return;
+    public boolean toggle() {
+        if (config.toggleEnabled()) {
+            reloadEverything(MinecraftClient.getInstance().getResourceManager());
+        } else {
+            shutdown();
         }
 
-        if (config.getEnabled() && !client.isPaused()) {
-            if (!config.getEnabledMP()) {
-                isolator.onFrame(client.player);
-            }
+        return config.getEnabled();
+    }
 
-            ((IEntity) client.player).setNextStepDistance(Integer.MAX_VALUE);
+    public void onTick(MinecraftClient client, PlayerEntity player) {
+        if (client.currentScreen == null && !client.isPaused()) {
+            if (config.getEnabled() && (!client.isInSingleplayer() || config.getEnabledMP())) {
+                isolator.onFrame(player);
+
+                ((IEntity) player).setNextStepDistance(Integer.MAX_VALUE);
+            }
         }
     }
 
@@ -95,7 +105,6 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
         return ID;
     }
 
-
     @Override
     public CompletableFuture<Void> reload(Synchronizer sync, ResourceManager sender,
             Profiler serverProfiler, Profiler clientProfiler,
@@ -112,7 +121,7 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
     }
 
     public void reloadEverything(ResourceManager manager) {
-        isolator = new PFIsolator(this, config);
+        isolator = new PFIsolator(this);
 
         collectResources(blockmap, manager, isolator.getBlockMap()::load);
         collectResources(primitivemap, manager, isolator.getPrimitiveMap()::load);
@@ -135,7 +144,7 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
     }
 
     public void shutdown() {
-        isolator = new PFIsolator(this, config);
+        isolator = new PFIsolator(this);
 
         ((IEntity) MinecraftClient.getInstance().player).setNextStepDistance(0);
     }

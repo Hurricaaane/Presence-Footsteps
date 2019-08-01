@@ -2,12 +2,11 @@ package eu.ha3.presencefootsteps.sound;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
-import eu.ha3.presencefootsteps.PFConfig;
 import eu.ha3.presencefootsteps.config.Variator;
 import eu.ha3.presencefootsteps.sound.player.StepSoundPlayer;
-import eu.ha3.presencefootsteps.sound.player.UserConfigSoundPlayerWrapper;
 import eu.ha3.presencefootsteps.sound.acoustics.AcousticLibrary;
 import eu.ha3.presencefootsteps.sound.acoustics.AcousticsPlayer;
 import eu.ha3.presencefootsteps.sound.generator.StepSoundGenerator;
@@ -18,9 +17,10 @@ import eu.ha3.presencefootsteps.world.PrimitiveLookup;
 import eu.ha3.presencefootsteps.world.Solver;
 import eu.ha3.presencefootsteps.world.StateLookup;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 
-public class PFIsolator implements Isolator {
+public class PFIsolator implements Isolator, SoundPlayer {
 
     private final Map<UUID, StepSoundGenerator> generators = new HashMap<>();
 
@@ -32,17 +32,27 @@ public class PFIsolator implements Isolator {
 
     private final Lookup<String> primitiveMap = new PrimitiveLookup();
 
-    private final AcousticsPlayer acoustics;
+    private final AcousticsPlayer acoustics = new AcousticsPlayer(this);
 
     private final Solver solver = new PFSolver(this);
 
-    private final SoundPlayer soundPlayer;
-
-    public PFIsolator(SoundEngine engine, PFConfig config) {
+    public PFIsolator(SoundEngine engine) {
         this.engine = engine;
+    }
 
-        acoustics = new AcousticsPlayer(this);
-        soundPlayer = new UserConfigSoundPlayerWrapper(acoustics, config);
+    @Override
+    public void playSound(Entity location, String soundName, float volume, float pitch, Options options) {
+        acoustics.playSound(location, soundName, volume * engine.getGlobalVolume(), pitch, options);
+    }
+
+    @Override
+    public Random getRNG() {
+        return acoustics.getRNG();
+    }
+
+    @Override
+    public void think() {
+        acoustics.think();
     }
 
     @Override
@@ -67,7 +77,7 @@ public class PFIsolator implements Isolator {
 
     @Override
     public SoundPlayer getSoundPlayer() {
-        return soundPlayer;
+        return this;
     }
 
     @Override
@@ -92,12 +102,7 @@ public class PFIsolator implements Isolator {
 
     @Override
     public void onFrame(PlayerEntity ply) {
-        if (ply.removed) {
-            return;
-        }
-
         getGenerator(ply).generateFootsteps(ply);
-        acoustics.think(); // Delayed sounds
+        think(); // Delayed sounds
     }
-
 }

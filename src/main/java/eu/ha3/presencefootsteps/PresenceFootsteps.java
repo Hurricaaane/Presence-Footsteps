@@ -74,8 +74,9 @@ public class PresenceFootsteps implements ClientModInitializer {
     }
 
     private void onTick(MinecraftClient client) {
-        PlayerEntity ply = MinecraftClient.getInstance().player;
-        if (ply == null) {
+        PlayerEntity ply = client.player;
+
+        if (ply == null || ply.removed) {
             return;
         }
 
@@ -88,14 +89,10 @@ public class PresenceFootsteps implements ClientModInitializer {
         if (keysDown && System.currentTimeMillis() - pressedOptionsTime > 1000) {
             if (client.currentScreen == null) {
                 client.openScreen(new PFOptionsScreen(client.currentScreen));
-
-                if (client.isInSingleplayer()) {
-                    client.getSoundManager().pauseAll();
-                }
             }
         }
 
-        engine.onTick(client);
+        engine.onTick(client, ply);
         updateNotifier.attempt();
     }
 
@@ -105,15 +102,5 @@ public class PresenceFootsteps implements ClientModInitializer {
         SystemToast.show(manager, SystemToast.Type.TUTORIAL_HINT,
                 new TranslatableText("pf.update.title"),
                 new TranslatableText("pf.update.text", newVersion.type, newVersion.number, newVersion.minecraft));
-    }
-
-    public boolean toggle() {
-        if (config.toggleEnabled()) {
-            engine.reloadEverything(MinecraftClient.getInstance().getResourceManager());
-        } else {
-            engine.shutdown();
-        }
-
-        return config.getEnabled();
     }
 }
