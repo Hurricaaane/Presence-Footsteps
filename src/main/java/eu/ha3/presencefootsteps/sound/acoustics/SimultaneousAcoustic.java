@@ -15,7 +15,7 @@ import net.minecraft.entity.Entity;
 
 class SimultaneousAcoustic implements Acoustic {
 
-    protected final List<Acoustic> acoustics = new ArrayList<>();
+    private final List<Acoustic> acoustics = new ArrayList<>();
 
     public SimultaneousAcoustic(JsonObject json, AcousticsJsonParser context) {
         JsonArray sim = json.getAsJsonArray("array");

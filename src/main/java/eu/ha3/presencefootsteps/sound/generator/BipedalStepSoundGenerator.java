@@ -1,15 +1,21 @@
 package eu.ha3.presencefootsteps.sound.generator;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.OtherClientPlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+
+import javax.annotation.Nullable;
+
 import eu.ha3.presencefootsteps.config.Variator;
 import eu.ha3.presencefootsteps.mixins.ILivingEntity;
 import eu.ha3.presencefootsteps.sound.State;
+import eu.ha3.presencefootsteps.sound.acoustics.AcousticLibrary;
+import eu.ha3.presencefootsteps.util.PlayerUtil;
 import eu.ha3.presencefootsteps.sound.Isolator;
 import eu.ha3.presencefootsteps.world.Association;
+import eu.ha3.presencefootsteps.world.Solver;
 
 class BipedalStepSoundGenerator implements StepSoundGenerator {
 
@@ -22,9 +28,9 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
     protected double motionZ;
 
     // Construct
-    final protected Isolator isolator;
-
-    protected Variator VAR;
+    protected final Solver solver;
+    protected final AcousticLibrary acoustics;
+    protected final Variator variator;
 
     // Footsteps
     protected float dmwBase;
@@ -47,6 +53,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
     protected double xMovec;
     protected double zMovec;
     protected boolean scalStat;
+
     private boolean stepThisFrame;
 
     private boolean isMessyFoliage;
@@ -55,12 +62,13 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
     protected PlayerEntity clientPlayer;
 
     public BipedalStepSoundGenerator(Isolator isolator) {
-        this.isolator = isolator;
-        VAR = isolator.getVariator();
+        solver = isolator.getSolver();
+        acoustics = isolator.getAcoustics();
+        variator = isolator.getVariator();
     }
 
     @Override
-    public void generateFootsteps(PlayerEntity ply) {
+    public void generateFootsteps(LivingEntity ply) {
         simulateMotionData(ply);
         simulateFootsteps(ply);
         simulateAirborne(ply);
@@ -68,9 +76,9 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         simulateStationary(ply);
     }
 
-    protected void simulateStationary(PlayerEntity ply) {
+    protected void simulateStationary(LivingEntity ply) {
         if (isImmobile && (ply.onGround || !ply.isInWater()) && playbackImmobile()) {
-            isolator.getSolver().playAssociation(ply, isolator.getSolver().findAssociation(ply, 0d, isRightFoot),
+            solver.playAssociation(ply, solver.findAssociation(ply, 0d, isRightFoot),
                     State.STAND);
         }
     }
@@ -80,7 +88,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         if (now - immobilePlayback > immobileInterval) {
             immobilePlayback = now;
             immobileInterval = (int) Math.floor(
-                    (Math.random() * (VAR.IMOBILE_INTERVAL_MAX - VAR.IMOBILE_INTERVAL_MIN)) + VAR.IMOBILE_INTERVAL_MIN);
+                    (Math.random() * (variator.IMOBILE_INTERVAL_MAX - variator.IMOBILE_INTERVAL_MIN)) + variator.IMOBILE_INTERVAL_MIN);
             return true;
         }
         return false;
@@ -90,10 +98,10 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
      * Fills in the blanks that aren't present on the client when playing on a
      * remote server.
      */
-    protected void simulateMotionData(PlayerEntity ply) {
-        clientPlayer = resolveToClientPlayer(ply);
+    protected void simulateMotionData(LivingEntity ply) {
+        clientPlayer = PlayerUtil.resolveToClientPlayer(ply);
 
-        if (isClientPlayer(ply)) {
+        if (PlayerUtil.isClientPlayer(ply)) {
             motionX = clientPlayer.getVelocity().x;
             motionY = clientPlayer.getVelocity().y;
             motionZ = clientPlayer.getVelocity().z;
@@ -139,13 +147,13 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
             isImmobile = true;
         } else if (isImmobile && diff != 0f) {
             isImmobile = false;
-            return System.currentTimeMillis() - timeImmobile > VAR.IMMOBILE_DURATION;
+            return System.currentTimeMillis() - timeImmobile > variator.IMMOBILE_DURATION;
         }
 
         return false;
     }
 
-    protected void simulateFootsteps(PlayerEntity ply) {
+    protected void simulateFootsteps(LivingEntity ply) {
         final float distanceReference = ply.distanceWalked;
 
         stepThisFrame = false;
@@ -162,8 +170,8 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         if (scalStat != scal < 0.001f) {
             scalStat = !scalStat;
 
-            if (scalStat && VAR.PLAY_WANDER && !isolator.getSolver().hasStoppingConditions(ply)) {
-                isolator.getSolver().playAssociation(ply, isolator.getSolver().findAssociation(ply, 0d, isRightFoot),
+            if (scalStat && variator.PLAY_WANDER && !solver.hasStoppingConditions(ply)) {
+                solver.playAssociation(ply, solver.findAssociation(ply, 0, isRightFoot),
                         State.WANDER);
             }
         }
@@ -184,11 +192,11 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
             double verticalOffsetAsMinus = 0f;
 
             if (ply.isClimbing() && !ply.onGround) {
-                distance = VAR.DISTANCE_LADDER;
+                distance = variator.DISTANCE_LADDER;
             } else if (!ply.isInWater() && Math.abs(yPosition - ply.y) > 0.4) {
                 // This ensures this does not get recorded as landing, but as a step
                 if (yPosition < ply.y) { // Going upstairs
-                    distance = VAR.DISTANCE_STAIR;
+                    distance = variator.DISTANCE_STAIR;
                     event = speedDisambiguator(ply, State.UP, State.UP_RUN);
                 } else if (!ply.isSneaking()) { // Going downstairs
                     distance = -1f;
@@ -199,7 +207,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
                 dwmYChange = distanceReference;
 
             } else {
-                distance = VAR.DISTANCE_HUMAN;
+                distance = variator.DISTANCE_HUMAN;
             }
 
             if (event == null) {
@@ -221,23 +229,24 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         }
     }
 
-    protected void produceStep(PlayerEntity ply, State event) {
+    protected void produceStep(LivingEntity ply, State event) {
         produceStep(ply, event, 0d);
     }
 
-    protected void produceStep(PlayerEntity ply, State event, double verticalOffsetAsMinus) {
-        if (!isolator.getSolver().playStoppingConditions(ply)) {
-            if (event == null)
+    protected void produceStep(LivingEntity ply, @Nullable State event, double verticalOffsetAsMinus) {
+        if (!solver.playStoppingConditions(ply)) {
+            if (event == null) {
                 event = speedDisambiguator(ply, State.WALK, State.RUN);
-            isolator.getSolver().playAssociation(ply,
-                    isolator.getSolver().findAssociation(ply, verticalOffsetAsMinus, isRightFoot), event);
+            }
+
+            solver.playAssociation(ply, solver.findAssociation(ply, verticalOffsetAsMinus, isRightFoot), event);
             isRightFoot = !isRightFoot;
         }
 
         stepThisFrame = true;
     }
 
-    protected void stepped(PlayerEntity ply, State event) {
+    protected void stepped(LivingEntity ply, State event) {
 
     }
 
@@ -245,7 +254,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         return distance;
     }
 
-    protected void simulateAirborne(PlayerEntity ply) {
+    protected void simulateAirborne(LivingEntity ply) {
         if ((ply.onGround || ply.isClimbing()) == isAirborne) {
             isAirborne = !isAirborne;
             simulateJumpingLanding(ply);
@@ -255,50 +264,51 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         }
     }
 
-    protected boolean isJumping(PlayerEntity ply) {
+    protected boolean isJumping(LivingEntity ply) {
         return ((ILivingEntity) ply).isJumping();
     }
 
-    protected double getOffsetMinus(PlayerEntity ply) {
+    protected double getOffsetMinus(LivingEntity ply) {
         if (ply instanceof OtherClientPlayerEntity) {
             return 1;
         }
         return 0;
     }
 
-    protected void simulateJumpingLanding(PlayerEntity ply) {
-        if (isolator.getSolver().hasStoppingConditions(ply))
+    protected void simulateJumpingLanding(LivingEntity ply) {
+        if (solver.hasStoppingConditions(ply)) {
             return;
+        }
 
-        boolean isJumping = isJumping(ply);
-        if (isAirborne && isJumping) {
+        if (isAirborne && isJumping(ply)) {
             simulateJumping(ply);
         } else if (!isAirborne) {
             simulateLanding(ply);
         }
     }
 
-    protected void simulateJumping(PlayerEntity ply) {
-        if (VAR.EVENT_ON_JUMP) {
+    protected void simulateJumping(LivingEntity ply) {
+        if (variator.EVENT_ON_JUMP) {
             double speed = motionX * motionX + motionZ * motionZ;
-            if (speed < VAR.SPEED_TO_JUMP_AS_MULTIFOOT) {
+            if (speed < variator.SPEED_TO_JUMP_AS_MULTIFOOT) {
                 // STILL JUMP
                 playMultifoot(ply, getOffsetMinus(ply) + 0.4d, State.JUMP);
                 // 2 - 0.7531999805212d (magic number for vertical offset?)
             } else {
                 playSinglefoot(ply, getOffsetMinus(ply) + 0.4d, State.JUMP, isRightFoot);
                 // RUNNING JUMP
-                // Do not toggle foot: After landing sounds, the first foot will be same as the
-                // one used to jump.
+                // Do not toggle foot:
+                // After landing sounds, the first foot will be same as the one used to jump.
             }
         }
     }
 
-    protected void simulateLanding(PlayerEntity ply) {
-        if (fallDistance > VAR.LAND_HARD_DISTANCE_MIN) {
-            playMultifoot(ply, getOffsetMinus(ply), State.LAND); // Always assume the player lands on their two feet
-            // Do not toggle foot: After landing sounds, the first foot will be same as the
-            // one used to jump.
+    protected void simulateLanding(LivingEntity ply) {
+        if (fallDistance > variator.LAND_HARD_DISTANCE_MIN) {
+            playMultifoot(ply, getOffsetMinus(ply), State.LAND);
+            // Always assume the player lands on their two feet
+            // Do not toggle foot:
+            // After landing sounds, the first foot will be same as the one used to jump.
         } else if (/* !this.stepThisFrame && */!ply.isSneaking()) {
             playSinglefoot(ply, getOffsetMinus(ply), speedDisambiguator(ply, State.CLIMB, State.CLIMB_RUN),
                     isRightFoot);
@@ -307,21 +317,8 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         }
     }
 
-    private boolean isClientPlayer(PlayerEntity ply) {
-        return resolveToClientPlayer(ply) == ply;
-    }
-
-    private PlayerEntity resolveToClientPlayer(PlayerEntity ply) {
-        PlayerEntity client = MinecraftClient.getInstance().player;
-
-        if (client != null && (client == clientPlayer || client.getUuid().equals(clientPlayer.getUuid()))) {
-            return client;
-        }
-        return ply;
-    }
-
-    protected State speedDisambiguator(PlayerEntity ply, State walk, State run) {
-        if (!isClientPlayer(ply)) { // Other players don't send motion data, so have to decide some other way
+    protected State speedDisambiguator(LivingEntity ply, State walk, State run) {
+        if (!PlayerUtil.isClientPlayer(ply)) { // Other players don't send motion data, so have to decide some other way
             if (ply.isSprinting()) {
                 return run;
             }
@@ -329,56 +326,57 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         }
 
         double velocity = motionX * motionX + motionZ * motionZ;
-        return velocity > VAR.SPEED_TO_RUN ? run : walk;
+        return velocity > variator.SPEED_TO_RUN ? run : walk;
     }
 
-    private void simulateBrushes(PlayerEntity ply) {
+    private void simulateBrushes(LivingEntity ply) {
         if (brushesTime > System.currentTimeMillis()) {
             return;
         }
 
         brushesTime = System.currentTimeMillis() + 100;
 
-        if ((motionX == 0d && motionZ == 0d) || ply.isSneaking()) {
+        if ((motionX == 0 && motionZ == 0) || ply.isSneaking()) {
             return;
         }
 
-        Association assos = isolator.getSolver().findAssociation(ply.world, new BlockPos(
+        Association assos = solver.findAssociation(ply.world, new BlockPos(
             ply.x,
-            ply.y - 0.1d - ply.getHeightOffset() - (ply.onGround ? 0d : 0.25d),
+            ply.y - 0.1D - ply.getHeightOffset() - (ply.onGround ? 0 : 0.25D),
             ply.z
         ), "find_messy_foliage");
 
         if (!assos.isNull()) {
             if (!isMessyFoliage) {
                 isMessyFoliage = true;
-                isolator.getSolver().playAssociation(ply, assos, State.WALK);
+                solver.playAssociation(ply, assos, State.WALK);
             }
         } else if (isMessyFoliage) {
             isMessyFoliage = false;
         }
     }
 
-    protected void playSinglefoot(PlayerEntity ply, double verticalOffsetAsMinus, State eventType, boolean foot) {
-        Association assos = isolator.getSolver().findAssociation(ply, verticalOffsetAsMinus, isRightFoot);
+    protected void playSinglefoot(LivingEntity ply, double verticalOffsetAsMinus, State eventType, boolean foot) {
+        Association assos = solver.findAssociation(ply, verticalOffsetAsMinus, isRightFoot);
 
         if (assos.isNotEmitter()) {
-            assos = isolator.getSolver().findAssociation(ply, verticalOffsetAsMinus + 1, isRightFoot);
+            assos = solver.findAssociation(ply, verticalOffsetAsMinus + 1, isRightFoot);
         }
-        isolator.getSolver().playAssociation(ply, assos, eventType);
+
+        solver.playAssociation(ply, assos, eventType);
     }
 
-    protected void playMultifoot(PlayerEntity ply, double verticalOffsetAsMinus, State eventType) {
+    protected void playMultifoot(LivingEntity ply, double verticalOffsetAsMinus, State eventType) {
         // STILL JUMP
-        Association leftFoot = isolator.getSolver().findAssociation(ply, verticalOffsetAsMinus, false);
-        Association rightFoot = isolator.getSolver().findAssociation(ply, verticalOffsetAsMinus, true);
+        Association leftFoot = solver.findAssociation(ply, verticalOffsetAsMinus, false);
+        Association rightFoot = solver.findAssociation(ply, verticalOffsetAsMinus, true);
 
         if (leftFoot.hasAssociation() && leftFoot.equals(rightFoot)) {
             // If the two feet solve to the same sound, except NO_ASSOCIATION, only play the sound once
             rightFoot = Association.NOT_EMITTER;
         }
 
-        isolator.getSolver().playAssociation(ply, leftFoot, eventType);
-        isolator.getSolver().playAssociation(ply, rightFoot, eventType);
+        solver.playAssociation(ply, leftFoot, eventType);
+        solver.playAssociation(ply, rightFoot, eventType);
     }
 }

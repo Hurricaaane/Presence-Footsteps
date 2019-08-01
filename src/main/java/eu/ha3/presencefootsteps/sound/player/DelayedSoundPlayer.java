@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import eu.ha3.presencefootsteps.sound.Options;
-import eu.ha3.presencefootsteps.util.MathUtil;
 import net.minecraft.entity.Entity;
 
 class DelayedSoundPlayer implements SoundPlayer {
@@ -28,12 +27,7 @@ class DelayedSoundPlayer implements SoundPlayer {
 
     @Override
     public void playSound(Entity location, String soundName, float volume, float pitch, Options options) {
-        long delay = MathUtil.randAB(getRNG(), options.get("delay_min"), options.get("delay_max"));
-
-        delay = Math.max(delay, nextPlayTime);
-
-        pending.add(new PendingSound(location, soundName, volume, pitch, null, System.currentTimeMillis() + delay,
-                        options.containsKey("skippable") ? -1L : options.get("delay_max")));
+        pending.add(new PendingSound(location, soundName, getRNG(), volume, pitch, options, nextPlayTime));
     }
 
     @Override
@@ -51,10 +45,10 @@ class DelayedSoundPlayer implements SoundPlayer {
 
     private boolean tickPendingSound(PendingSound sound) {
         switch (sound.nextState(currentTime)) {
-        case 0:
-            sound.playSound(immediate);
+        case PLAYING:
+            sound.play(immediate);
             return false;
-        case 1:
+        case SKIPPING:
             return true;
         default:
             nextPlayTime = sound.getTimeToPlay();

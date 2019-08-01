@@ -10,12 +10,10 @@ import net.minecraft.entity.Entity;
 
 class VaryingAcoustic implements Acoustic {
 
-    protected String soundName;
+    private final String soundName;
 
-    protected final Range volume = new Range(1);
-    protected final Range pitch = new Range(1);
-
-    protected Options outputOptions;
+    private final Range volume = new Range(1);
+    private final Range pitch = new Range(1);
 
     public VaryingAcoustic(JsonObject json, AcousticsJsonParser context) {
         this(json.get("name").getAsString(), context);
@@ -40,37 +38,32 @@ class VaryingAcoustic implements Acoustic {
     public VaryingAcoustic(String name, AcousticsJsonParser context) {
         volume.copy(context.getVolumeRange());
         pitch.copy(context.getPitchRange());
-        setSoundName(context.getSoundName(name));
+        soundName = context.getSoundName(name);
     }
 
-    public void setSoundName(String val) {
-        soundName = val;
-    }
-
-    public Range getVolumeRange() {
-        return volume;
-    }
-
-    public Range getPitchRange() {
-        return pitch;
+    protected Options getOptions() {
+        return Options.EMPTY;
     }
 
     @Override
     public void playSound(SoundPlayer player, Entity location, State event, Options inputOptions) {
-        if (!soundName.isEmpty()) { // Special case for intentionally empty sounds (as opposed to fall back sounds)
-            float volume = this.volume.random(player.getRNG());
-            float pitch = this.pitch.random(player.getRNG());
-
-            if (inputOptions != null) {
-                if (inputOptions.containsKey("gliding_volume")) {
-                    volume = this.volume.on(inputOptions.get("gliding_volume"));
-                }
-                if (inputOptions.containsKey("gliding_pitch")) {
-                    pitch = this.pitch.on(inputOptions.get("gliding_pitch"));
-                }
-            }
-
-            player.playSound(location, soundName, volume, pitch, outputOptions);
+        if (soundName.isEmpty()) {
+            // Special case for intentionally empty sounds (as opposed to fall back sounds)
+            return;
         }
+
+        float volume = this.volume.random(player.getRNG());
+        float pitch = this.pitch.random(player.getRNG());
+
+        if (inputOptions != null) {
+            if (inputOptions.containsKey("gliding_volume")) {
+                volume = this.volume.on(inputOptions.get("gliding_volume"));
+            }
+            if (inputOptions.containsKey("gliding_pitch")) {
+                pitch = this.pitch.on(inputOptions.get("gliding_pitch"));
+            }
+        }
+
+        player.playSound(location, soundName, volume, pitch, getOptions());
     }
 }

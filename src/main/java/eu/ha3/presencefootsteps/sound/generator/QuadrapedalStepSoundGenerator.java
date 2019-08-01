@@ -4,7 +4,7 @@ import java.util.Random;
 
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.Isolator;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 
 class QuadrapedalStepSoundGenerator extends BipedalStepSoundGenerator {
 
@@ -21,7 +21,7 @@ class QuadrapedalStepSoundGenerator extends BipedalStepSoundGenerator {
     }
 
     @Override
-    protected void stepped(PlayerEntity ply, State event) {
+    protected void stepped(LivingEntity ply, State event) {
         if (hoof == 0 || hoof == 2) {
             nextWalkDistanceMultiplier = rand.nextFloat();
         }

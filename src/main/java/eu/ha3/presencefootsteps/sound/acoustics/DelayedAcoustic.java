@@ -7,42 +7,34 @@ import eu.ha3.presencefootsteps.util.Period;
 
 class DelayedAcoustic extends VaryingAcoustic implements Options {
 
-    protected final Period delay = new Period(0);
+    private final Period delay = new Period(0);
 
     public DelayedAcoustic(JsonObject json, AcousticsJsonParser context) {
         super(json, context);
-        outputOptions = this;
 
         if (json.has("delay")) {
-            getDelayRange().set(json.get("delay").getAsLong());
+            delay.set(json.get("delay").getAsLong());
         } else {
-            getDelayRange().set(json.get("delay_min").getAsLong(), json.get("delay_max").getAsLong());
+            delay.set(json.get("delay_min").getAsLong(), json.get("delay_max").getAsLong());
         }
     }
 
-    public Period getDelayRange() {
-        return delay;
+    @Override
+    protected Options getOptions() {
+        return this;
     }
 
     @Override
     public boolean containsKey(Object option) {
-        return option.equals("delay_min") || option.equals("delay_max");
+        return "delay_min".equals(option)
+            || "delay_max".equals(option);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public Long get(String option) {
-        return option.equals("delay_min") ? delay.min : option.equals("delay_max") ? delay.max : null;
-    }
-
-    @Override
-    public DelayedAcoustic withOption(String option, Object value) {
-        if (option.equals("delay_min")) {
-            delay.min = (Long) value;
-        }
-        if (option.equals("delay_max")) {
-            delay.max = (Long) value;
-        }
-        return this;
+        return "delay_min".equals(option) ? delay.min
+             : "delay_max".equals(option) ? delay.max
+             : null;
     }
 }

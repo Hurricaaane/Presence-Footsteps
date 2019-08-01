@@ -12,7 +12,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.client.network.OtherClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -36,7 +36,7 @@ public class PFSolver implements Solver {
     }
 
     @Override
-    public void playAssociation(PlayerEntity ply, Association assos, State eventType) {
+    public void playAssociation(Entity ply, Association assos, State eventType) {
         if (assos.isNotEmitter()) {
             return;
         }
@@ -44,14 +44,14 @@ public class PFSolver implements Solver {
         assos = assos.at(ply);
 
         if (assos.hasAssociation()) {
-            isolator.getAcoustics().playAcoustic(assos, eventType);
+            isolator.getAcoustics().playAcoustic(assos, eventType, Options.EMPTY);
         } else {
             isolator.getStepPlayer().playStep(assos);
         }
     }
 
     @Override
-    public Association findAssociation(PlayerEntity ply, double verticalOffsetAsMinus, boolean isRightFoot) {
+    public Association findAssociation(Entity ply, double verticalOffsetAsMinus, boolean isRightFoot) {
 
         double rot = Math.toRadians(MathHelper.wrapDegrees(ply.yaw));
 
@@ -66,7 +66,7 @@ public class PFSolver implements Solver {
         ));
     }
 
-    private Association findAssociation(PlayerEntity player, BlockPos pos) {
+    private Association findAssociation(Entity player, BlockPos pos) {
 
         if (player.isInWater()) {
             logger.warn("Playing a sound while in the water! This is supposed to be halted by the stopping conditions!!");
@@ -269,12 +269,11 @@ public class PFSolver implements Solver {
     }
 
     @Override
-    public boolean playStoppingConditions(PlayerEntity ply) {
+    public boolean playStoppingConditions(Entity ply) {
         if (ply.isInWater()) {
             float volume = (float) ply.getVelocity().length() * 0.35F;
 
-            isolator.getAcoustics().playAcoustic(ply, "_SWIM", ply.isInWater() ? State.SWIM : State.WALK, Options.create()
-                    .withOption("gliding_volume", volume > 1 ? 1 : volume));
+            isolator.getAcoustics().playAcoustic(ply, "_SWIM", ply.isInWater() ? State.SWIM : State.WALK, Options.singular("gliding_volume", volume > 1 ? 1 : volume));
             return true;
         }
 
@@ -282,7 +281,7 @@ public class PFSolver implements Solver {
     }
 
     @Override
-    public boolean hasStoppingConditions(PlayerEntity ply) {
+    public boolean hasStoppingConditions(Entity ply) {
         return ply.isInWater();
     }
 

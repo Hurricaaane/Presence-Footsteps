@@ -1,7 +1,10 @@
 package eu.ha3.presencefootsteps.sound.player;
 
+import java.util.Random;
+
 import eu.ha3.presencefootsteps.PresenceFootsteps;
 import eu.ha3.presencefootsteps.sound.Options;
+import eu.ha3.presencefootsteps.util.MathUtil;
 import net.minecraft.entity.Entity;
 
 class PendingSound {
@@ -9,60 +12,61 @@ class PendingSound {
     private static final boolean USING_LATENESS = true;
     private static final boolean USING_EARLYNESS = true;
 
-    private static final float LATENESS_THRESHOLD_DIVIDER = 1.5f;
+    private static final float LATENESS_THRESHOLD = 1.5f;
 
     private static final double EARLYNESS_THRESHOLD_POW = 0.75d;
 
-    private Entity location;
+    private final Entity location;
 
-    private String soundName;
+    private final String soundName;
 
-    private float volume;
-    private float pitch;
+    private final float volume;
+    private final float pitch;
 
-    private Options options;
+    private final long timeToPlay;
+    private final long maximum;
 
-    private long timeToPlay;
-    private long maximum;
-
-    public PendingSound(Entity location, String soundName, float volume, float pitch, Options options, long timeToPlay, long maximum) {
+    public PendingSound(Entity location, String soundName, Random rng, float volume, float pitch, Options options, long nextPlayTime) {
         this.location = location;
         this.soundName = soundName;
         this.volume = volume;
         this.pitch = pitch;
-        this.options = options;
 
-        this.timeToPlay = timeToPlay;
-        this.maximum = maximum;
+        maximum = options.containsKey("skippable") ? -1L : options.get("delay_max");
+        timeToPlay = System.currentTimeMillis() + Math.max(MathUtil.randAB(rng,
+                options.get("delay_min"),
+                options.get("delay_max")
+        ), nextPlayTime);
     }
 
-    public int nextState(long time) {
-        if (time >= getTimeToPlay() || USING_EARLYNESS
-                && time >= getTimeToPlay() - Math.pow(getMaximumBase(), EARLYNESS_THRESHOLD_POW)) {
-            if (USING_EARLYNESS && time < getTimeToPlay()) {
-                PresenceFootsteps.logger.debug("Playing early sound (early by " + (getTimeToPlay() - time) + "ms, tolerence is " + Math.pow(getMaximumBase(), EARLYNESS_THRESHOLD_POW));
+    public State nextState(long time) {
+        if (time >= timeToPlay || USING_EARLYNESS
+         && time >= timeToPlay - Math.pow(maximum, EARLYNESS_THRESHOLD_POW)) {
+            if (USING_EARLYNESS && time < timeToPlay) {
+                PresenceFootsteps.logger.debug("Playing early sound (early by " + (timeToPlay - time) + "ms, tolerence is " + Math.pow(maximum, EARLYNESS_THRESHOLD_POW));
             }
 
-            long lateness = time - getTimeToPlay();
+            long lateness = time - timeToPlay;
+
             if (!USING_LATENESS
-                    || getMaximumBase() < 0
-                    || lateness <= getMaximumBase() / LATENESS_THRESHOLD_DIVIDER) {
-                return 0;
+                    || maximum < 0
+                    || lateness <= maximum / LATENESS_THRESHOLD) {
+                return State.PLAYING;
             }
 
-            PresenceFootsteps.logger.debug("Skipped late sound (late by " + lateness + "ms, tolerence is " + getMaximumBase() / LATENESS_THRESHOLD_DIVIDER + "ms)");
+            PresenceFootsteps.logger.debug("Skipped late sound (late by " + lateness + "ms, tolerence is " + maximum / LATENESS_THRESHOLD + "ms)");
 
-            return 1;
+            return State.SKIPPING;
         }
 
-        return 2;
+        return State.PENDING;
     }
 
     /**
      * Play the sound stored in this pending sound.
      */
-    public void playSound(SoundPlayer player) {
-        player.playSound(location, soundName, volume, pitch, options);
+    public void play(SoundPlayer player) {
+        player.playSound(location, soundName, volume, pitch, Options.EMPTY);
     }
 
     /**
@@ -72,11 +76,9 @@ class PendingSound {
         return timeToPlay;
     }
 
-    /**
-     * Get the maximum delay of this sound, for threshold purposes. If the value is
-     * negative, the sound will not be skippable.
-     */
-    public long getMaximumBase() {
-        return maximum;
+    enum State {
+        PENDING,
+        PLAYING,
+        SKIPPING
     }
 }

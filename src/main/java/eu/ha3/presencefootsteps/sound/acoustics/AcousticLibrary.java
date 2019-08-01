@@ -1,7 +1,5 @@
 package eu.ha3.presencefootsteps.sound.acoustics;
 
-import javax.annotation.Nullable;
-
 import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.world.Association;
@@ -14,20 +12,13 @@ public interface AcousticLibrary {
     void addAcoustic(NamedAcoustic acoustic);
 
     /**
-     * Plays an acoustic.
-     */
-    default void playAcoustic(Association association, State event) {
-        playAcoustic(association, event, null);
-    }
-
-    /**
      * Plays an acoustic with additional options.
      */
-    default void playAcoustic(Association association, State event, @Nullable Options options) {
+    default void playAcoustic(Association association, State event, Options options) {
         playAcoustic(association.getSource(), association.getAcousticName(), event, options);
     }
 
-    void playAcoustic(Entity location, String acousticName, State event, @Nullable Options options);
+    void playAcoustic(Entity location, String acousticName, State event, Options options);
 
     /**
      * Run various things, such as queued sounds.

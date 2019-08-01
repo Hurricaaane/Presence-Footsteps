@@ -32,21 +32,17 @@ public class PFIsolator implements Isolator {
 
     private final Lookup<String> primitiveMap = new PrimitiveLookup();
 
-    private final AcousticLibrary acoustics;
+    private final AcousticsPlayer acoustics;
 
     private final Solver solver = new PFSolver(this);
 
     private final SoundPlayer soundPlayer;
 
-    private final StepSoundPlayer stepPlayer;
-
     public PFIsolator(SoundEngine engine, PFConfig config) {
         this.engine = engine;
 
-        AcousticsPlayer acoustics = new AcousticsPlayer(this);
-        this.acoustics = acoustics;
+        acoustics = new AcousticsPlayer(this);
         soundPlayer = new UserConfigSoundPlayerWrapper(acoustics, config);
-        stepPlayer = acoustics;
     }
 
     @Override
@@ -76,7 +72,7 @@ public class PFIsolator implements Isolator {
 
     @Override
     public StepSoundPlayer getStepPlayer() {
-        return stepPlayer;
+        return acoustics;
     }
 
     @Override
