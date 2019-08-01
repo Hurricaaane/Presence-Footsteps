@@ -1,0 +1,723 @@
+{
+  "pf_presence.wing": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:wing/wing1",
+      "presencefootstepsmono:wing/wing2",
+      "presencefootstepsmono:wing/wing3"
+    ]
+  },
+  "pf_presence.land": {
+    "category": "master",
+    "sounds": [
+       "presencefootstepsmono:wing/wing0"
+    ]
+  },
+  "pf_presence.bluntwood.bluntwood_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:bluntwood/bluntwood_walk1",
+      "presencefootstepsmono:bluntwood/bluntwood_walk10",
+      "presencefootstepsmono:bluntwood/bluntwood_walk11",
+      "presencefootstepsmono:bluntwood/bluntwood_walk2",
+      "presencefootstepsmono:bluntwood/bluntwood_walk3",
+      "presencefootstepsmono:bluntwood/bluntwood_walk4",
+      "presencefootstepsmono:bluntwood/bluntwood_walk5",
+      "presencefootstepsmono:bluntwood/bluntwood_walk6",
+      "presencefootstepsmono:bluntwood/bluntwood_walk7",
+      "presencefootstepsmono:bluntwood/bluntwood_walk8",
+      "presencefootstepsmono:bluntwood/bluntwood_walk9"
+    ]
+  },
+  "pf_presence.bluntwood.bluntwood_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:bluntwood/bluntwood_wander1",
+      "presencefootstepsmono:bluntwood/bluntwood_wander2",
+      "presencefootstepsmono:bluntwood/bluntwood_wander3",
+      "presencefootstepsmono:bluntwood/bluntwood_wander4",
+      "presencefootstepsmono:bluntwood/bluntwood_wander5"
+    ]
+  },
+  "pf_presence.brush.brush_through": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:brush/brush_through1",
+      "presencefootstepsmono:brush/brush_through10",
+      "presencefootstepsmono:brush/brush_through11",
+      "presencefootstepsmono:brush/brush_through2",
+      "presencefootstepsmono:brush/brush_through3",
+      "presencefootstepsmono:brush/brush_through4",
+      "presencefootstepsmono:brush/brush_through5",
+      "presencefootstepsmono:brush/brush_through6",
+      "presencefootstepsmono:brush/brush_through7",
+      "presencefootstepsmono:brush/brush_through8",
+      "presencefootstepsmono:brush/brush_through9"
+    ]
+  },
+  "pf_presence.concrete.concrete_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:concrete/concrete_run1",
+      "presencefootstepsmono:concrete/concrete_run10",
+      "presencefootstepsmono:concrete/concrete_run11",
+      "presencefootstepsmono:concrete/concrete_run2",
+      "presencefootstepsmono:concrete/concrete_run3",
+      "presencefootstepsmono:concrete/concrete_run4",
+      "presencefootstepsmono:concrete/concrete_run5",
+      "presencefootstepsmono:concrete/concrete_run6",
+      "presencefootstepsmono:concrete/concrete_run7",
+      "presencefootstepsmono:concrete/concrete_run8",
+      "presencefootstepsmono:concrete/concrete_run9"
+    ]
+  },
+  "pf_presence.concrete.concrete_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:concrete/concrete_walk1",
+      "presencefootstepsmono:concrete/concrete_walk10",
+      "presencefootstepsmono:concrete/concrete_walk11",
+      "presencefootstepsmono:concrete/concrete_walk2",
+      "presencefootstepsmono:concrete/concrete_walk3",
+      "presencefootstepsmono:concrete/concrete_walk4",
+      "presencefootstepsmono:concrete/concrete_walk5",
+      "presencefootstepsmono:concrete/concrete_walk6",
+      "presencefootstepsmono:concrete/concrete_walk7",
+      "presencefootstepsmono:concrete/concrete_walk8",
+      "presencefootstepsmono:concrete/concrete_walk9"
+    ]
+  },
+  "pf_presence.concrete.concrete_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:concrete/concrete_wander1",
+      "presencefootstepsmono:concrete/concrete_wander2",
+      "presencefootstepsmono:concrete/concrete_wander3",
+      "presencefootstepsmono:concrete/concrete_wander4",
+      "presencefootstepsmono:concrete/concrete_wander5"
+    ]
+  },
+  "pf_presence.deckwood.deckwood_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:deckwood/deckwood_run1",
+      "presencefootstepsmono:deckwood/deckwood_run10",
+      "presencefootstepsmono:deckwood/deckwood_run11",
+      "presencefootstepsmono:deckwood/deckwood_run2",
+      "presencefootstepsmono:deckwood/deckwood_run3",
+      "presencefootstepsmono:deckwood/deckwood_run4",
+      "presencefootstepsmono:deckwood/deckwood_run5",
+      "presencefootstepsmono:deckwood/deckwood_run6",
+      "presencefootstepsmono:deckwood/deckwood_run7",
+      "presencefootstepsmono:deckwood/deckwood_run8",
+      "presencefootstepsmono:deckwood/deckwood_run9"
+    ]
+  },
+  "pf_presence.dirt.dirt_land": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:dirt/dirt_land1",
+      "presencefootstepsmono:dirt/dirt_land2",
+      "presencefootstepsmono:dirt/dirt_land3",
+      "presencefootstepsmono:dirt/dirt_land4"
+    ]
+  },
+  "pf_presence.dirt.dirt_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:dirt/dirt_run1",
+      "presencefootstepsmono:dirt/dirt_run10",
+      "presencefootstepsmono:dirt/dirt_run11",
+      "presencefootstepsmono:dirt/dirt_run2",
+      "presencefootstepsmono:dirt/dirt_run3",
+      "presencefootstepsmono:dirt/dirt_run4",
+      "presencefootstepsmono:dirt/dirt_run5",
+      "presencefootstepsmono:dirt/dirt_run6",
+      "presencefootstepsmono:dirt/dirt_run7",
+      "presencefootstepsmono:dirt/dirt_run8",
+      "presencefootstepsmono:dirt/dirt_run9"
+    ]
+  },
+  "pf_presence.dirt.dirt_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:dirt/dirt_walk1",
+      "presencefootstepsmono:dirt/dirt_walk10",
+      "presencefootstepsmono:dirt/dirt_walk11",
+      "presencefootstepsmono:dirt/dirt_walk2",
+      "presencefootstepsmono:dirt/dirt_walk3",
+      "presencefootstepsmono:dirt/dirt_walk4",
+      "presencefootstepsmono:dirt/dirt_walk5",
+      "presencefootstepsmono:dirt/dirt_walk6",
+      "presencefootstepsmono:dirt/dirt_walk7",
+      "presencefootstepsmono:dirt/dirt_walk8",
+      "presencefootstepsmono:dirt/dirt_walk9"
+    ]
+  },
+  "pf_presence.dirt.dirt_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:dirt/dirt_wander1",
+      "presencefootstepsmono:dirt/dirt_wander2",
+      "presencefootstepsmono:dirt/dirt_wander3",
+      "presencefootstepsmono:dirt/dirt_wander4",
+      "presencefootstepsmono:dirt/dirt_wander5"
+    ]
+  },
+  "pf_presence.glass.glass_hard": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:glass/glass_hard1"
+    ]
+  },
+  "pf_presence.glass.glass_hit": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:glass/glass_hit1",
+      "presencefootstepsmono:glass/glass_hit2"
+    ]
+  },
+  "pf_presence.grass.grass_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:grass/grass_run1",
+      "presencefootstepsmono:grass/grass_run2",
+      "presencefootstepsmono:grass/grass_run3",
+      "presencefootstepsmono:grass/grass_run4"
+    ]
+  },
+  "pf_presence.grass.grass_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:grass/grass_walk1",
+      "presencefootstepsmono:grass/grass_walk10",
+      "presencefootstepsmono:grass/grass_walk2",
+      "presencefootstepsmono:grass/grass_walk3",
+      "presencefootstepsmono:grass/grass_walk4",
+      "presencefootstepsmono:grass/grass_walk5",
+      "presencefootstepsmono:grass/grass_walk6",
+      "presencefootstepsmono:grass/grass_walk7",
+      "presencefootstepsmono:grass/grass_walk8",
+      "presencefootstepsmono:grass/grass_walk9"
+    ]
+  },
+  "pf_presence.grass.grass_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:grass/grass_wander1",
+      "presencefootstepsmono:grass/grass_wander2",
+      "presencefootstepsmono:grass/grass_wander3",
+      "presencefootstepsmono:grass/grass_wander4",
+      "presencefootstepsmono:grass/grass_wander5",
+      "presencefootstepsmono:grass/grass_wander6"
+    ]
+  },
+  "pf_presence.gravel.gravel_land": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:gravel/gravel_land1",
+      "presencefootstepsmono:gravel/gravel_land2"
+    ]
+  },
+  "pf_presence.gravel.gravel_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:gravel/gravel_run1",
+      "presencefootstepsmono:gravel/gravel_run10",
+      "presencefootstepsmono:gravel/gravel_run11",
+      "presencefootstepsmono:gravel/gravel_run2",
+      "presencefootstepsmono:gravel/gravel_run3",
+      "presencefootstepsmono:gravel/gravel_run4",
+      "presencefootstepsmono:gravel/gravel_run5",
+      "presencefootstepsmono:gravel/gravel_run6",
+      "presencefootstepsmono:gravel/gravel_run7",
+      "presencefootstepsmono:gravel/gravel_run8",
+      "presencefootstepsmono:gravel/gravel_run9"
+    ]
+  },
+  "pf_presence.gravel.gravel_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:gravel/gravel_walk1",
+      "presencefootstepsmono:gravel/gravel_walk10",
+      "presencefootstepsmono:gravel/gravel_walk11",
+      "presencefootstepsmono:gravel/gravel_walk2",
+      "presencefootstepsmono:gravel/gravel_walk3",
+      "presencefootstepsmono:gravel/gravel_walk4",
+      "presencefootstepsmono:gravel/gravel_walk5",
+      "presencefootstepsmono:gravel/gravel_walk6",
+      "presencefootstepsmono:gravel/gravel_walk7",
+      "presencefootstepsmono:gravel/gravel_walk8",
+      "presencefootstepsmono:gravel/gravel_walk9"
+    ]
+  },
+  "pf_presence.gravel.gravel_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:gravel/gravel_wander1",
+      "presencefootstepsmono:gravel/gravel_wander2",
+      "presencefootstepsmono:gravel/gravel_wander3"
+    ]
+  },
+  "pf_presence.leaves.leaves_through": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:leaves/leaves_through1",
+      "presencefootstepsmono:leaves/leaves_through2",
+      "presencefootstepsmono:leaves/leaves_through3",
+      "presencefootstepsmono:leaves/leaves_through4",
+      "presencefootstepsmono:leaves/leaves_through5",
+      "presencefootstepsmono:leaves/leaves_through6",
+      "presencefootstepsmono:leaves/leaves_through7"
+    ]
+  },
+  "pf_presence.lino.lino_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:lino/lino_run1",
+      "presencefootstepsmono:lino/lino_run2",
+      "presencefootstepsmono:lino/lino_run3",
+      "presencefootstepsmono:lino/lino_run4",
+      "presencefootstepsmono:lino/lino_run5",
+      "presencefootstepsmono:lino/lino_run6"
+    ]
+  },
+  "pf_presence.lino.lino_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:lino/lino_walk1",
+      "presencefootstepsmono:lino/lino_walk2",
+      "presencefootstepsmono:lino/lino_walk3",
+      "presencefootstepsmono:lino/lino_walk4",
+      "presencefootstepsmono:lino/lino_walk5",
+      "presencefootstepsmono:lino/lino_walk6",
+      "presencefootstepsmono:lino/lino_walk7",
+      "presencefootstepsmono:lino/lino_walk8"
+    ]
+  },
+  "pf_presence.marble.marble_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:marble/marble_run1",
+      "presencefootstepsmono:marble/marble_run10",
+      "presencefootstepsmono:marble/marble_run11",
+      "presencefootstepsmono:marble/marble_run2",
+      "presencefootstepsmono:marble/marble_run3",
+      "presencefootstepsmono:marble/marble_run4",
+      "presencefootstepsmono:marble/marble_run5",
+      "presencefootstepsmono:marble/marble_run6",
+      "presencefootstepsmono:marble/marble_run7",
+      "presencefootstepsmono:marble/marble_run8",
+      "presencefootstepsmono:marble/marble_run9"
+    ]
+  },
+  "pf_presence.marble.marble_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:marble/marble_walk1",
+      "presencefootstepsmono:marble/marble_walk10",
+      "presencefootstepsmono:marble/marble_walk11",
+      "presencefootstepsmono:marble/marble_walk2",
+      "presencefootstepsmono:marble/marble_walk3",
+      "presencefootstepsmono:marble/marble_walk4",
+      "presencefootstepsmono:marble/marble_walk5",
+      "presencefootstepsmono:marble/marble_walk6",
+      "presencefootstepsmono:marble/marble_walk7",
+      "presencefootstepsmono:marble/marble_walk8",
+      "presencefootstepsmono:marble/marble_walk9"
+    ]
+  },
+  "pf_presence.marble.marble_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:marble/marble_wander1",
+      "presencefootstepsmono:marble/marble_wander2",
+      "presencefootstepsmono:marble/marble_wander3",
+      "presencefootstepsmono:marble/marble_wander4",
+      "presencefootstepsmono:marble/marble_wander5",
+      "presencefootstepsmono:marble/marble_wander6",
+      "presencefootstepsmono:marble/marble_wander7"
+    ]
+  },
+  "pf_presence.metalbar.metalbar_land": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:metalbar/metalbar_land1"
+    ]
+  },
+  "pf_presence.metalbar.metalbar_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:metalbar/metalbar_run1",
+      "presencefootstepsmono:metalbar/metalbar_run10",
+      "presencefootstepsmono:metalbar/metalbar_run11",
+      "presencefootstepsmono:metalbar/metalbar_run2",
+      "presencefootstepsmono:metalbar/metalbar_run3",
+      "presencefootstepsmono:metalbar/metalbar_run4",
+      "presencefootstepsmono:metalbar/metalbar_run5",
+      "presencefootstepsmono:metalbar/metalbar_run6",
+      "presencefootstepsmono:metalbar/metalbar_run7",
+      "presencefootstepsmono:metalbar/metalbar_run8",
+      "presencefootstepsmono:metalbar/metalbar_run9"
+    ]
+  },
+  "pf_presence.metalbar.metalbar_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:metalbar/metalbar_walk1",
+      "presencefootstepsmono:metalbar/metalbar_walk10",
+      "presencefootstepsmono:metalbar/metalbar_walk11",
+      "presencefootstepsmono:metalbar/metalbar_walk2",
+      "presencefootstepsmono:metalbar/metalbar_walk3",
+      "presencefootstepsmono:metalbar/metalbar_walk4",
+      "presencefootstepsmono:metalbar/metalbar_walk5",
+      "presencefootstepsmono:metalbar/metalbar_walk6",
+      "presencefootstepsmono:metalbar/metalbar_walk7",
+      "presencefootstepsmono:metalbar/metalbar_walk8",
+      "presencefootstepsmono:metalbar/metalbar_walk9"
+    ]
+  },
+  "pf_presence.metalbar.metalbar_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:metalbar/metalbar_wander1",
+      "presencefootstepsmono:metalbar/metalbar_wander2",
+      "presencefootstepsmono:metalbar/metalbar_wander3",
+      "presencefootstepsmono:metalbar/metalbar_wander4",
+      "presencefootstepsmono:metalbar/metalbar_wander5",
+      "presencefootstepsmono:metalbar/metalbar_wander6"
+    ]
+  },
+  "pf_presence.metalbox.metalbox_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:metalbox/metalbox_run1",
+      "presencefootstepsmono:metalbox/metalbox_run10",
+      "presencefootstepsmono:metalbox/metalbox_run2",
+      "presencefootstepsmono:metalbox/metalbox_run3",
+      "presencefootstepsmono:metalbox/metalbox_run4",
+      "presencefootstepsmono:metalbox/metalbox_run5",
+      "presencefootstepsmono:metalbox/metalbox_run6",
+      "presencefootstepsmono:metalbox/metalbox_run7",
+      "presencefootstepsmono:metalbox/metalbox_run8",
+      "presencefootstepsmono:metalbox/metalbox_run9"
+    ]
+  },
+  "pf_presence.metalbox.metalbox_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:metalbox/metalbox_walk1",
+      "presencefootstepsmono:metalbox/metalbox_walk2",
+      "presencefootstepsmono:metalbox/metalbox_walk3",
+      "presencefootstepsmono:metalbox/metalbox_walk4",
+      "presencefootstepsmono:metalbox/metalbox_walk5",
+      "presencefootstepsmono:metalbox/metalbox_walk6",
+      "presencefootstepsmono:metalbox/metalbox_walk7",
+      "presencefootstepsmono:metalbox/metalbox_walk8",
+      "presencefootstepsmono:metalbox/metalbox_walk9"
+    ]
+  },
+  "pf_presence.metalbox.metalbox_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:metalbox/metalbox_wander1",
+      "presencefootstepsmono:metalbox/metalbox_wander2",
+      "presencefootstepsmono:metalbox/metalbox_wander3",
+      "presencefootstepsmono:metalbox/metalbox_wander4"
+    ]
+  },
+  "pf_presence.mud.mud_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:mud/mud_walk1",
+      "presencefootstepsmono:mud/mud_walk2",
+      "presencefootstepsmono:mud/mud_walk3",
+      "presencefootstepsmono:mud/mud_walk4",
+      "presencefootstepsmono:mud/mud_walk5",
+      "presencefootstepsmono:mud/mud_walk6"
+    ]
+  },
+  "pf_presence.mud.mud_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:mud/mud_wander1",
+      "presencefootstepsmono:mud/mud_wander2",
+      "presencefootstepsmono:mud/mud_wander3",
+      "presencefootstepsmono:mud/mud_wander4"
+    ]
+  },
+  "pf_presence.muffledice.muffledice_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:muffledice/muffledice_walk1",
+      "presencefootstepsmono:muffledice/muffledice_walk10",
+      "presencefootstepsmono:muffledice/muffledice_walk2",
+      "presencefootstepsmono:muffledice/muffledice_walk3",
+      "presencefootstepsmono:muffledice/muffledice_walk4",
+      "presencefootstepsmono:muffledice/muffledice_walk5",
+      "presencefootstepsmono:muffledice/muffledice_walk6",
+      "presencefootstepsmono:muffledice/muffledice_walk7",
+      "presencefootstepsmono:muffledice/muffledice_walk8",
+      "presencefootstepsmono:muffledice/muffledice_walk9"
+    ]
+  },
+  "pf_presence.quicksand.quicksand_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:quicksand/quicksand_walk1",
+      "presencefootstepsmono:quicksand/quicksand_walk10",
+      "presencefootstepsmono:quicksand/quicksand_walk11",
+      "presencefootstepsmono:quicksand/quicksand_walk2",
+      "presencefootstepsmono:quicksand/quicksand_walk3",
+      "presencefootstepsmono:quicksand/quicksand_walk4",
+      "presencefootstepsmono:quicksand/quicksand_walk5",
+      "presencefootstepsmono:quicksand/quicksand_walk6",
+      "presencefootstepsmono:quicksand/quicksand_walk7",
+      "presencefootstepsmono:quicksand/quicksand_walk8",
+      "presencefootstepsmono:quicksand/quicksand_walk9"
+    ]
+  },
+  "pf_presence.rug.rug_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:rug/rug_walk1",
+      "presencefootstepsmono:rug/rug_walk10",
+      "presencefootstepsmono:rug/rug_walk11",
+      "presencefootstepsmono:rug/rug_walk2",
+      "presencefootstepsmono:rug/rug_walk3",
+      "presencefootstepsmono:rug/rug_walk4",
+      "presencefootstepsmono:rug/rug_walk5",
+      "presencefootstepsmono:rug/rug_walk6",
+      "presencefootstepsmono:rug/rug_walk7",
+      "presencefootstepsmono:rug/rug_walk8",
+      "presencefootstepsmono:rug/rug_walk9"
+    ]
+  },
+  "pf_presence.sand.sand_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:sand/sand_run1",
+      "presencefootstepsmono:sand/sand_run10",
+      "presencefootstepsmono:sand/sand_run11",
+      "presencefootstepsmono:sand/sand_run2",
+      "presencefootstepsmono:sand/sand_run3",
+      "presencefootstepsmono:sand/sand_run4",
+      "presencefootstepsmono:sand/sand_run5",
+      "presencefootstepsmono:sand/sand_run6",
+      "presencefootstepsmono:sand/sand_run7",
+      "presencefootstepsmono:sand/sand_run8",
+      "presencefootstepsmono:sand/sand_run9"
+    ]
+  },
+  "pf_presence.sand.sand_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:sand/sand_walk1",
+      "presencefootstepsmono:sand/sand_walk10",
+      "presencefootstepsmono:sand/sand_walk11",
+      "presencefootstepsmono:sand/sand_walk2",
+      "presencefootstepsmono:sand/sand_walk3",
+      "presencefootstepsmono:sand/sand_walk4",
+      "presencefootstepsmono:sand/sand_walk5",
+      "presencefootstepsmono:sand/sand_walk6",
+      "presencefootstepsmono:sand/sand_walk7",
+      "presencefootstepsmono:sand/sand_walk8",
+      "presencefootstepsmono:sand/sand_walk9"
+    ]
+  },
+  "pf_presence.snow.snow_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:snow/snow_run1",
+      "presencefootstepsmono:snow/snow_run10",
+      "presencefootstepsmono:snow/snow_run11",
+      "presencefootstepsmono:snow/snow_run2",
+      "presencefootstepsmono:snow/snow_run3",
+      "presencefootstepsmono:snow/snow_run4",
+      "presencefootstepsmono:snow/snow_run5",
+      "presencefootstepsmono:snow/snow_run6",
+      "presencefootstepsmono:snow/snow_run7",
+      "presencefootstepsmono:snow/snow_run8",
+      "presencefootstepsmono:snow/snow_run9"
+    ]
+  },
+  "pf_presence.snow.snow_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:snow/snow_walk1",
+      "presencefootstepsmono:snow/snow_walk10",
+      "presencefootstepsmono:snow/snow_walk11",
+      "presencefootstepsmono:snow/snow_walk2",
+      "presencefootstepsmono:snow/snow_walk3",
+      "presencefootstepsmono:snow/snow_walk4",
+      "presencefootstepsmono:snow/snow_walk5",
+      "presencefootstepsmono:snow/snow_walk6",
+      "presencefootstepsmono:snow/snow_walk7",
+      "presencefootstepsmono:snow/snow_walk8",
+      "presencefootstepsmono:snow/snow_walk9"
+    ]
+  },
+  "pf_presence.snow.snow_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:snow/snow_wander1",
+      "presencefootstepsmono:snow/snow_wander2",
+      "presencefootstepsmono:snow/snow_wander3",
+      "presencefootstepsmono:snow/snow_wander4",
+      "presencefootstepsmono:snow/snow_wander5"
+    ]
+  },
+  "pf_presence.squeakywood.squeakywood_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:squeakywood/squeakywood_walk1",
+      "presencefootstepsmono:squeakywood/squeakywood_walk10",
+      "presencefootstepsmono:squeakywood/squeakywood_walk11",
+      "presencefootstepsmono:squeakywood/squeakywood_walk2",
+      "presencefootstepsmono:squeakywood/squeakywood_walk3",
+      "presencefootstepsmono:squeakywood/squeakywood_walk4",
+      "presencefootstepsmono:squeakywood/squeakywood_walk5",
+      "presencefootstepsmono:squeakywood/squeakywood_walk6",
+      "presencefootstepsmono:squeakywood/squeakywood_walk7",
+      "presencefootstepsmono:squeakywood/squeakywood_walk8",
+      "presencefootstepsmono:squeakywood/squeakywood_walk9"
+    ]
+  },
+  "pf_presence.squeakywood.squeakywood_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:squeakywood/squeakywood_wander1",
+      "presencefootstepsmono:squeakywood/squeakywood_wander2",
+      "presencefootstepsmono:squeakywood/squeakywood_wander3",
+      "presencefootstepsmono:squeakywood/squeakywood_wander4",
+      "presencefootstepsmono:squeakywood/squeakywood_wander5",
+      "presencefootstepsmono:squeakywood/squeakywood_wander6",
+      "presencefootstepsmono:squeakywood/squeakywood_wander7"
+    ]
+  },
+  "pf_presence.stone.stone_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:stone/stone_run1",
+      "presencefootstepsmono:stone/stone_run10",
+      "presencefootstepsmono:stone/stone_run11",
+      "presencefootstepsmono:stone/stone_run2",
+      "presencefootstepsmono:stone/stone_run3",
+      "presencefootstepsmono:stone/stone_run4",
+      "presencefootstepsmono:stone/stone_run5",
+      "presencefootstepsmono:stone/stone_run6",
+      "presencefootstepsmono:stone/stone_run7",
+      "presencefootstepsmono:stone/stone_run8",
+      "presencefootstepsmono:stone/stone_run9"
+    ]
+  },
+  "pf_presence.stone.stone_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:stone/stone_walk1",
+      "presencefootstepsmono:stone/stone_walk10",
+      "presencefootstepsmono:stone/stone_walk11",
+      "presencefootstepsmono:stone/stone_walk2",
+      "presencefootstepsmono:stone/stone_walk3",
+      "presencefootstepsmono:stone/stone_walk4",
+      "presencefootstepsmono:stone/stone_walk5",
+      "presencefootstepsmono:stone/stone_walk6",
+      "presencefootstepsmono:stone/stone_walk7",
+      "presencefootstepsmono:stone/stone_walk8",
+      "presencefootstepsmono:stone/stone_walk9"
+    ]
+  },
+  "pf_presence.stone.stone_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:stone/stone_wander1",
+      "presencefootstepsmono:stone/stone_wander2",
+      "presencefootstepsmono:stone/stone_wander3",
+      "presencefootstepsmono:stone/stone_wander4",
+      "presencefootstepsmono:stone/stone_wander5"
+    ]
+  },
+  "pf_presence.water.water_through": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:water/water_through1",
+      "presencefootstepsmono:water/water_through10",
+      "presencefootstepsmono:water/water_through11",
+      "presencefootstepsmono:water/water_through2",
+      "presencefootstepsmono:water/water_through3",
+      "presencefootstepsmono:water/water_through4",
+      "presencefootstepsmono:water/water_through5",
+      "presencefootstepsmono:water/water_through6",
+      "presencefootstepsmono:water/water_through7",
+      "presencefootstepsmono:water/water_through8",
+      "presencefootstepsmono:water/water_through9"
+    ]
+  },
+  "pf_presence.water.water_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:water/water_wander1",
+      "presencefootstepsmono:water/water_wander2",
+      "presencefootstepsmono:water/water_wander3",
+      "presencefootstepsmono:water/water_wander4",
+      "presencefootstepsmono:water/water_wander5"
+    ]
+  },
+  "pf_presence.water_stereofix.water_through": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:water_stereofix/water_through1",
+      "presencefootstepsmono:water_stereofix/water_through10",
+      "presencefootstepsmono:water_stereofix/water_through11",
+      "presencefootstepsmono:water_stereofix/water_through2",
+      "presencefootstepsmono:water_stereofix/water_through3",
+      "presencefootstepsmono:water_stereofix/water_through4",
+      "presencefootstepsmono:water_stereofix/water_through5",
+      "presencefootstepsmono:water_stereofix/water_through6",
+      "presencefootstepsmono:water_stereofix/water_through7",
+      "presencefootstepsmono:water_stereofix/water_through8",
+      "presencefootstepsmono:water_stereofix/water_through9"
+    ]
+  },
+  "pf_presence.water_stereofix.water_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:water_stereofix/water_wander1",
+      "presencefootstepsmono:water_stereofix/water_wander2",
+      "presencefootstepsmono:water_stereofix/water_wander3",
+      "presencefootstepsmono:water_stereofix/water_wander4",
+      "presencefootstepsmono:water_stereofix/water_wander5"
+    ]
+  },
+  "pf_presence.weakice.weakice_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:weakice/weakice_walk1",
+      "presencefootstepsmono:weakice/weakice_walk10",
+      "presencefootstepsmono:weakice/weakice_walk2",
+      "presencefootstepsmono:weakice/weakice_walk3",
+      "presencefootstepsmono:weakice/weakice_walk4",
+      "presencefootstepsmono:weakice/weakice_walk5",
+      "presencefootstepsmono:weakice/weakice_walk6",
+      "presencefootstepsmono:weakice/weakice_walk7",
+      "presencefootstepsmono:weakice/weakice_walk8",
+      "presencefootstepsmono:weakice/weakice_walk9"
+    ]
+  },
+  "pf_presence.wood.wood_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootstepsmono:wood/wood_walk1",
+      "presencefootstepsmono:wood/wood_walk10",
+      "presencefootstepsmono:wood/wood_walk11",
+      "presencefootstepsmono:wood/wood_walk2",
+      "presencefootstepsmono:wood/wood_walk3",
+      "presencefootstepsmono:wood/wood_walk4",
+      "presencefootstepsmono:wood/wood_walk5",
+      "presencefootstepsmono:wood/wood_walk6",
+      "presencefootstepsmono:wood/wood_walk7",
+      "presencefootstepsmono:wood/wood_walk8",
+      "presencefootstepsmono:wood/wood_walk9"
+    ]
+  }
+}

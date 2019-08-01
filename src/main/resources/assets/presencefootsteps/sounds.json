@@ -1,0 +1,723 @@
+{
+  "pf_presence.wing": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:wing/wing1",
+      "presencefootsteps:wing/wing2",
+      "presencefootsteps:wing/wing3"
+    ]
+  },
+  "pf_presence.land": {
+    "category": "master",
+    "sounds": [
+       "presencefootsteps:wing/wing0"
+    ]
+  },
+  "pf_presence.bluntwood.bluntwood_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:bluntwood/bluntwood_walk1",
+      "presencefootsteps:bluntwood/bluntwood_walk10",
+      "presencefootsteps:bluntwood/bluntwood_walk11",
+      "presencefootsteps:bluntwood/bluntwood_walk2",
+      "presencefootsteps:bluntwood/bluntwood_walk3",
+      "presencefootsteps:bluntwood/bluntwood_walk4",
+      "presencefootsteps:bluntwood/bluntwood_walk5",
+      "presencefootsteps:bluntwood/bluntwood_walk6",
+      "presencefootsteps:bluntwood/bluntwood_walk7",
+      "presencefootsteps:bluntwood/bluntwood_walk8",
+      "presencefootsteps:bluntwood/bluntwood_walk9"
+    ]
+  },
+  "pf_presence.bluntwood.bluntwood_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:bluntwood/bluntwood_wander1",
+      "presencefootsteps:bluntwood/bluntwood_wander2",
+      "presencefootsteps:bluntwood/bluntwood_wander3",
+      "presencefootsteps:bluntwood/bluntwood_wander4",
+      "presencefootsteps:bluntwood/bluntwood_wander5"
+    ]
+  },
+  "pf_presence.brush.brush_through": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:brush/brush_through1",
+      "presencefootsteps:brush/brush_through10",
+      "presencefootsteps:brush/brush_through11",
+      "presencefootsteps:brush/brush_through2",
+      "presencefootsteps:brush/brush_through3",
+      "presencefootsteps:brush/brush_through4",
+      "presencefootsteps:brush/brush_through5",
+      "presencefootsteps:brush/brush_through6",
+      "presencefootsteps:brush/brush_through7",
+      "presencefootsteps:brush/brush_through8",
+      "presencefootsteps:brush/brush_through9"
+    ]
+  },
+  "pf_presence.concrete.concrete_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:concrete/concrete_run1",
+      "presencefootsteps:concrete/concrete_run10",
+      "presencefootsteps:concrete/concrete_run11",
+      "presencefootsteps:concrete/concrete_run2",
+      "presencefootsteps:concrete/concrete_run3",
+      "presencefootsteps:concrete/concrete_run4",
+      "presencefootsteps:concrete/concrete_run5",
+      "presencefootsteps:concrete/concrete_run6",
+      "presencefootsteps:concrete/concrete_run7",
+      "presencefootsteps:concrete/concrete_run8",
+      "presencefootsteps:concrete/concrete_run9"
+    ]
+  },
+  "pf_presence.concrete.concrete_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:concrete/concrete_walk1",
+      "presencefootsteps:concrete/concrete_walk10",
+      "presencefootsteps:concrete/concrete_walk11",
+      "presencefootsteps:concrete/concrete_walk2",
+      "presencefootsteps:concrete/concrete_walk3",
+      "presencefootsteps:concrete/concrete_walk4",
+      "presencefootsteps:concrete/concrete_walk5",
+      "presencefootsteps:concrete/concrete_walk6",
+      "presencefootsteps:concrete/concrete_walk7",
+      "presencefootsteps:concrete/concrete_walk8",
+      "presencefootsteps:concrete/concrete_walk9"
+    ]
+  },
+  "pf_presence.concrete.concrete_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:concrete/concrete_wander1",
+      "presencefootsteps:concrete/concrete_wander2",
+      "presencefootsteps:concrete/concrete_wander3",
+      "presencefootsteps:concrete/concrete_wander4",
+      "presencefootsteps:concrete/concrete_wander5"
+    ]
+  },
+  "pf_presence.deckwood.deckwood_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:deckwood/deckwood_run1",
+      "presencefootsteps:deckwood/deckwood_run10",
+      "presencefootsteps:deckwood/deckwood_run11",
+      "presencefootsteps:deckwood/deckwood_run2",
+      "presencefootsteps:deckwood/deckwood_run3",
+      "presencefootsteps:deckwood/deckwood_run4",
+      "presencefootsteps:deckwood/deckwood_run5",
+      "presencefootsteps:deckwood/deckwood_run6",
+      "presencefootsteps:deckwood/deckwood_run7",
+      "presencefootsteps:deckwood/deckwood_run8",
+      "presencefootsteps:deckwood/deckwood_run9"
+    ]
+  },
+  "pf_presence.dirt.dirt_land": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:dirt/dirt_land1",
+      "presencefootsteps:dirt/dirt_land2",
+      "presencefootsteps:dirt/dirt_land3",
+      "presencefootsteps:dirt/dirt_land4"
+    ]
+  },
+  "pf_presence.dirt.dirt_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:dirt/dirt_run1",
+      "presencefootsteps:dirt/dirt_run10",
+      "presencefootsteps:dirt/dirt_run11",
+      "presencefootsteps:dirt/dirt_run2",
+      "presencefootsteps:dirt/dirt_run3",
+      "presencefootsteps:dirt/dirt_run4",
+      "presencefootsteps:dirt/dirt_run5",
+      "presencefootsteps:dirt/dirt_run6",
+      "presencefootsteps:dirt/dirt_run7",
+      "presencefootsteps:dirt/dirt_run8",
+      "presencefootsteps:dirt/dirt_run9"
+    ]
+  },
+  "pf_presence.dirt.dirt_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:dirt/dirt_walk1",
+      "presencefootsteps:dirt/dirt_walk10",
+      "presencefootsteps:dirt/dirt_walk11",
+      "presencefootsteps:dirt/dirt_walk2",
+      "presencefootsteps:dirt/dirt_walk3",
+      "presencefootsteps:dirt/dirt_walk4",
+      "presencefootsteps:dirt/dirt_walk5",
+      "presencefootsteps:dirt/dirt_walk6",
+      "presencefootsteps:dirt/dirt_walk7",
+      "presencefootsteps:dirt/dirt_walk8",
+      "presencefootsteps:dirt/dirt_walk9"
+    ]
+  },
+  "pf_presence.dirt.dirt_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:dirt/dirt_wander1",
+      "presencefootsteps:dirt/dirt_wander2",
+      "presencefootsteps:dirt/dirt_wander3",
+      "presencefootsteps:dirt/dirt_wander4",
+      "presencefootsteps:dirt/dirt_wander5"
+    ]
+  },
+  "pf_presence.glass.glass_hard": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:glass/glass_hard1"
+    ]
+  },
+  "pf_presence.glass.glass_hit": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:glass/glass_hit1",
+      "presencefootsteps:glass/glass_hit2"
+    ]
+  },
+  "pf_presence.grass.grass_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:grass/grass_run1",
+      "presencefootsteps:grass/grass_run2",
+      "presencefootsteps:grass/grass_run3",
+      "presencefootsteps:grass/grass_run4"
+    ]
+  },
+  "pf_presence.grass.grass_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:grass/grass_walk1",
+      "presencefootsteps:grass/grass_walk10",
+      "presencefootsteps:grass/grass_walk2",
+      "presencefootsteps:grass/grass_walk3",
+      "presencefootsteps:grass/grass_walk4",
+      "presencefootsteps:grass/grass_walk5",
+      "presencefootsteps:grass/grass_walk6",
+      "presencefootsteps:grass/grass_walk7",
+      "presencefootsteps:grass/grass_walk8",
+      "presencefootsteps:grass/grass_walk9"
+    ]
+  },
+  "pf_presence.grass.grass_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:grass/grass_wander1",
+      "presencefootsteps:grass/grass_wander2",
+      "presencefootsteps:grass/grass_wander3",
+      "presencefootsteps:grass/grass_wander4",
+      "presencefootsteps:grass/grass_wander5",
+      "presencefootsteps:grass/grass_wander6"
+    ]
+  },
+  "pf_presence.gravel.gravel_land": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:gravel/gravel_land1",
+      "presencefootsteps:gravel/gravel_land2"
+    ]
+  },
+  "pf_presence.gravel.gravel_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:gravel/gravel_run1",
+      "presencefootsteps:gravel/gravel_run10",
+      "presencefootsteps:gravel/gravel_run11",
+      "presencefootsteps:gravel/gravel_run2",
+      "presencefootsteps:gravel/gravel_run3",
+      "presencefootsteps:gravel/gravel_run4",
+      "presencefootsteps:gravel/gravel_run5",
+      "presencefootsteps:gravel/gravel_run6",
+      "presencefootsteps:gravel/gravel_run7",
+      "presencefootsteps:gravel/gravel_run8",
+      "presencefootsteps:gravel/gravel_run9"
+    ]
+  },
+  "pf_presence.gravel.gravel_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:gravel/gravel_walk1",
+      "presencefootsteps:gravel/gravel_walk10",
+      "presencefootsteps:gravel/gravel_walk11",
+      "presencefootsteps:gravel/gravel_walk2",
+      "presencefootsteps:gravel/gravel_walk3",
+      "presencefootsteps:gravel/gravel_walk4",
+      "presencefootsteps:gravel/gravel_walk5",
+      "presencefootsteps:gravel/gravel_walk6",
+      "presencefootsteps:gravel/gravel_walk7",
+      "presencefootsteps:gravel/gravel_walk8",
+      "presencefootsteps:gravel/gravel_walk9"
+    ]
+  },
+  "pf_presence.gravel.gravel_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:gravel/gravel_wander1",
+      "presencefootsteps:gravel/gravel_wander2",
+      "presencefootsteps:gravel/gravel_wander3"
+    ]
+  },
+  "pf_presence.leaves.leaves_through": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:leaves/leaves_through1",
+      "presencefootsteps:leaves/leaves_through2",
+      "presencefootsteps:leaves/leaves_through3",
+      "presencefootsteps:leaves/leaves_through4",
+      "presencefootsteps:leaves/leaves_through5",
+      "presencefootsteps:leaves/leaves_through6",
+      "presencefootsteps:leaves/leaves_through7"
+    ]
+  },
+  "pf_presence.lino.lino_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:lino/lino_run1",
+      "presencefootsteps:lino/lino_run2",
+      "presencefootsteps:lino/lino_run3",
+      "presencefootsteps:lino/lino_run4",
+      "presencefootsteps:lino/lino_run5",
+      "presencefootsteps:lino/lino_run6"
+    ]
+  },
+  "pf_presence.lino.lino_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:lino/lino_walk1",
+      "presencefootsteps:lino/lino_walk2",
+      "presencefootsteps:lino/lino_walk3",
+      "presencefootsteps:lino/lino_walk4",
+      "presencefootsteps:lino/lino_walk5",
+      "presencefootsteps:lino/lino_walk6",
+      "presencefootsteps:lino/lino_walk7",
+      "presencefootsteps:lino/lino_walk8"
+    ]
+  },
+  "pf_presence.marble.marble_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:marble/marble_run1",
+      "presencefootsteps:marble/marble_run10",
+      "presencefootsteps:marble/marble_run11",
+      "presencefootsteps:marble/marble_run2",
+      "presencefootsteps:marble/marble_run3",
+      "presencefootsteps:marble/marble_run4",
+      "presencefootsteps:marble/marble_run5",
+      "presencefootsteps:marble/marble_run6",
+      "presencefootsteps:marble/marble_run7",
+      "presencefootsteps:marble/marble_run8",
+      "presencefootsteps:marble/marble_run9"
+    ]
+  },
+  "pf_presence.marble.marble_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:marble/marble_walk1",
+      "presencefootsteps:marble/marble_walk10",
+      "presencefootsteps:marble/marble_walk11",
+      "presencefootsteps:marble/marble_walk2",
+      "presencefootsteps:marble/marble_walk3",
+      "presencefootsteps:marble/marble_walk4",
+      "presencefootsteps:marble/marble_walk5",
+      "presencefootsteps:marble/marble_walk6",
+      "presencefootsteps:marble/marble_walk7",
+      "presencefootsteps:marble/marble_walk8",
+      "presencefootsteps:marble/marble_walk9"
+    ]
+  },
+  "pf_presence.marble.marble_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:marble/marble_wander1",
+      "presencefootsteps:marble/marble_wander2",
+      "presencefootsteps:marble/marble_wander3",
+      "presencefootsteps:marble/marble_wander4",
+      "presencefootsteps:marble/marble_wander5",
+      "presencefootsteps:marble/marble_wander6",
+      "presencefootsteps:marble/marble_wander7"
+    ]
+  },
+  "pf_presence.metalbar.metalbar_land": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:metalbar/metalbar_land1"
+    ]
+  },
+  "pf_presence.metalbar.metalbar_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:metalbar/metalbar_run1",
+      "presencefootsteps:metalbar/metalbar_run10",
+      "presencefootsteps:metalbar/metalbar_run11",
+      "presencefootsteps:metalbar/metalbar_run2",
+      "presencefootsteps:metalbar/metalbar_run3",
+      "presencefootsteps:metalbar/metalbar_run4",
+      "presencefootsteps:metalbar/metalbar_run5",
+      "presencefootsteps:metalbar/metalbar_run6",
+      "presencefootsteps:metalbar/metalbar_run7",
+      "presencefootsteps:metalbar/metalbar_run8",
+      "presencefootsteps:metalbar/metalbar_run9"
+    ]
+  },
+  "pf_presence.metalbar.metalbar_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:metalbar/metalbar_walk1",
+      "presencefootsteps:metalbar/metalbar_walk10",
+      "presencefootsteps:metalbar/metalbar_walk11",
+      "presencefootsteps:metalbar/metalbar_walk2",
+      "presencefootsteps:metalbar/metalbar_walk3",
+      "presencefootsteps:metalbar/metalbar_walk4",
+      "presencefootsteps:metalbar/metalbar_walk5",
+      "presencefootsteps:metalbar/metalbar_walk6",
+      "presencefootsteps:metalbar/metalbar_walk7",
+      "presencefootsteps:metalbar/metalbar_walk8",
+      "presencefootsteps:metalbar/metalbar_walk9"
+    ]
+  },
+  "pf_presence.metalbar.metalbar_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:metalbar/metalbar_wander1",
+      "presencefootsteps:metalbar/metalbar_wander2",
+      "presencefootsteps:metalbar/metalbar_wander3",
+      "presencefootsteps:metalbar/metalbar_wander4",
+      "presencefootsteps:metalbar/metalbar_wander5",
+      "presencefootsteps:metalbar/metalbar_wander6"
+    ]
+  },
+  "pf_presence.metalbox.metalbox_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:metalbox/metalbox_run1",
+      "presencefootsteps:metalbox/metalbox_run10",
+      "presencefootsteps:metalbox/metalbox_run2",
+      "presencefootsteps:metalbox/metalbox_run3",
+      "presencefootsteps:metalbox/metalbox_run4",
+      "presencefootsteps:metalbox/metalbox_run5",
+      "presencefootsteps:metalbox/metalbox_run6",
+      "presencefootsteps:metalbox/metalbox_run7",
+      "presencefootsteps:metalbox/metalbox_run8",
+      "presencefootsteps:metalbox/metalbox_run9"
+    ]
+  },
+  "pf_presence.metalbox.metalbox_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:metalbox/metalbox_walk1",
+      "presencefootsteps:metalbox/metalbox_walk2",
+      "presencefootsteps:metalbox/metalbox_walk3",
+      "presencefootsteps:metalbox/metalbox_walk4",
+      "presencefootsteps:metalbox/metalbox_walk5",
+      "presencefootsteps:metalbox/metalbox_walk6",
+      "presencefootsteps:metalbox/metalbox_walk7",
+      "presencefootsteps:metalbox/metalbox_walk8",
+      "presencefootsteps:metalbox/metalbox_walk9"
+    ]
+  },
+  "pf_presence.metalbox.metalbox_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:metalbox/metalbox_wander1",
+      "presencefootsteps:metalbox/metalbox_wander2",
+      "presencefootsteps:metalbox/metalbox_wander3",
+      "presencefootsteps:metalbox/metalbox_wander4"
+    ]
+  },
+  "pf_presence.mud.mud_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:mud/mud_walk1",
+      "presencefootsteps:mud/mud_walk2",
+      "presencefootsteps:mud/mud_walk3",
+      "presencefootsteps:mud/mud_walk4",
+      "presencefootsteps:mud/mud_walk5",
+      "presencefootsteps:mud/mud_walk6"
+    ]
+  },
+  "pf_presence.mud.mud_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:mud/mud_wander1",
+      "presencefootsteps:mud/mud_wander2",
+      "presencefootsteps:mud/mud_wander3",
+      "presencefootsteps:mud/mud_wander4"
+    ]
+  },
+  "pf_presence.muffledice.muffledice_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:muffledice/muffledice_walk1",
+      "presencefootsteps:muffledice/muffledice_walk10",
+      "presencefootsteps:muffledice/muffledice_walk2",
+      "presencefootsteps:muffledice/muffledice_walk3",
+      "presencefootsteps:muffledice/muffledice_walk4",
+      "presencefootsteps:muffledice/muffledice_walk5",
+      "presencefootsteps:muffledice/muffledice_walk6",
+      "presencefootsteps:muffledice/muffledice_walk7",
+      "presencefootsteps:muffledice/muffledice_walk8",
+      "presencefootsteps:muffledice/muffledice_walk9"
+    ]
+  },
+  "pf_presence.quicksand.quicksand_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:quicksand/quicksand_walk1",
+      "presencefootsteps:quicksand/quicksand_walk10",
+      "presencefootsteps:quicksand/quicksand_walk11",
+      "presencefootsteps:quicksand/quicksand_walk2",
+      "presencefootsteps:quicksand/quicksand_walk3",
+      "presencefootsteps:quicksand/quicksand_walk4",
+      "presencefootsteps:quicksand/quicksand_walk5",
+      "presencefootsteps:quicksand/quicksand_walk6",
+      "presencefootsteps:quicksand/quicksand_walk7",
+      "presencefootsteps:quicksand/quicksand_walk8",
+      "presencefootsteps:quicksand/quicksand_walk9"
+    ]
+  },
+  "pf_presence.rug.rug_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:rug/rug_walk1",
+      "presencefootsteps:rug/rug_walk10",
+      "presencefootsteps:rug/rug_walk11",
+      "presencefootsteps:rug/rug_walk2",
+      "presencefootsteps:rug/rug_walk3",
+      "presencefootsteps:rug/rug_walk4",
+      "presencefootsteps:rug/rug_walk5",
+      "presencefootsteps:rug/rug_walk6",
+      "presencefootsteps:rug/rug_walk7",
+      "presencefootsteps:rug/rug_walk8",
+      "presencefootsteps:rug/rug_walk9"
+    ]
+  },
+  "pf_presence.sand.sand_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:sand/sand_run1",
+      "presencefootsteps:sand/sand_run10",
+      "presencefootsteps:sand/sand_run11",
+      "presencefootsteps:sand/sand_run2",
+      "presencefootsteps:sand/sand_run3",
+      "presencefootsteps:sand/sand_run4",
+      "presencefootsteps:sand/sand_run5",
+      "presencefootsteps:sand/sand_run6",
+      "presencefootsteps:sand/sand_run7",
+      "presencefootsteps:sand/sand_run8",
+      "presencefootsteps:sand/sand_run9"
+    ]
+  },
+  "pf_presence.sand.sand_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:sand/sand_walk1",
+      "presencefootsteps:sand/sand_walk10",
+      "presencefootsteps:sand/sand_walk11",
+      "presencefootsteps:sand/sand_walk2",
+      "presencefootsteps:sand/sand_walk3",
+      "presencefootsteps:sand/sand_walk4",
+      "presencefootsteps:sand/sand_walk5",
+      "presencefootsteps:sand/sand_walk6",
+      "presencefootsteps:sand/sand_walk7",
+      "presencefootsteps:sand/sand_walk8",
+      "presencefootsteps:sand/sand_walk9"
+    ]
+  },
+  "pf_presence.snow.snow_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:snow/snow_run1",
+      "presencefootsteps:snow/snow_run10",
+      "presencefootsteps:snow/snow_run11",
+      "presencefootsteps:snow/snow_run2",
+      "presencefootsteps:snow/snow_run3",
+      "presencefootsteps:snow/snow_run4",
+      "presencefootsteps:snow/snow_run5",
+      "presencefootsteps:snow/snow_run6",
+      "presencefootsteps:snow/snow_run7",
+      "presencefootsteps:snow/snow_run8",
+      "presencefootsteps:snow/snow_run9"
+    ]
+  },
+  "pf_presence.snow.snow_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:snow/snow_walk1",
+      "presencefootsteps:snow/snow_walk10",
+      "presencefootsteps:snow/snow_walk11",
+      "presencefootsteps:snow/snow_walk2",
+      "presencefootsteps:snow/snow_walk3",
+      "presencefootsteps:snow/snow_walk4",
+      "presencefootsteps:snow/snow_walk5",
+      "presencefootsteps:snow/snow_walk6",
+      "presencefootsteps:snow/snow_walk7",
+      "presencefootsteps:snow/snow_walk8",
+      "presencefootsteps:snow/snow_walk9"
+    ]
+  },
+  "pf_presence.snow.snow_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:snow/snow_wander1",
+      "presencefootsteps:snow/snow_wander2",
+      "presencefootsteps:snow/snow_wander3",
+      "presencefootsteps:snow/snow_wander4",
+      "presencefootsteps:snow/snow_wander5"
+    ]
+  },
+  "pf_presence.squeakywood.squeakywood_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:squeakywood/squeakywood_walk1",
+      "presencefootsteps:squeakywood/squeakywood_walk10",
+      "presencefootsteps:squeakywood/squeakywood_walk11",
+      "presencefootsteps:squeakywood/squeakywood_walk2",
+      "presencefootsteps:squeakywood/squeakywood_walk3",
+      "presencefootsteps:squeakywood/squeakywood_walk4",
+      "presencefootsteps:squeakywood/squeakywood_walk5",
+      "presencefootsteps:squeakywood/squeakywood_walk6",
+      "presencefootsteps:squeakywood/squeakywood_walk7",
+      "presencefootsteps:squeakywood/squeakywood_walk8",
+      "presencefootsteps:squeakywood/squeakywood_walk9"
+    ]
+  },
+  "pf_presence.squeakywood.squeakywood_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:squeakywood/squeakywood_wander1",
+      "presencefootsteps:squeakywood/squeakywood_wander2",
+      "presencefootsteps:squeakywood/squeakywood_wander3",
+      "presencefootsteps:squeakywood/squeakywood_wander4",
+      "presencefootsteps:squeakywood/squeakywood_wander5",
+      "presencefootsteps:squeakywood/squeakywood_wander6",
+      "presencefootsteps:squeakywood/squeakywood_wander7"
+    ]
+  },
+  "pf_presence.stone.stone_run": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:stone/stone_run1",
+      "presencefootsteps:stone/stone_run10",
+      "presencefootsteps:stone/stone_run11",
+      "presencefootsteps:stone/stone_run2",
+      "presencefootsteps:stone/stone_run3",
+      "presencefootsteps:stone/stone_run4",
+      "presencefootsteps:stone/stone_run5",
+      "presencefootsteps:stone/stone_run6",
+      "presencefootsteps:stone/stone_run7",
+      "presencefootsteps:stone/stone_run8",
+      "presencefootsteps:stone/stone_run9"
+    ]
+  },
+  "pf_presence.stone.stone_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:stone/stone_walk1",
+      "presencefootsteps:stone/stone_walk10",
+      "presencefootsteps:stone/stone_walk11",
+      "presencefootsteps:stone/stone_walk2",
+      "presencefootsteps:stone/stone_walk3",
+      "presencefootsteps:stone/stone_walk4",
+      "presencefootsteps:stone/stone_walk5",
+      "presencefootsteps:stone/stone_walk6",
+      "presencefootsteps:stone/stone_walk7",
+      "presencefootsteps:stone/stone_walk8",
+      "presencefootsteps:stone/stone_walk9"
+    ]
+  },
+  "pf_presence.stone.stone_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:stone/stone_wander1",
+      "presencefootsteps:stone/stone_wander2",
+      "presencefootsteps:stone/stone_wander3",
+      "presencefootsteps:stone/stone_wander4",
+      "presencefootsteps:stone/stone_wander5"
+    ]
+  },
+  "pf_presence.water.water_through": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:water/water_through1",
+      "presencefootsteps:water/water_through10",
+      "presencefootsteps:water/water_through11",
+      "presencefootsteps:water/water_through2",
+      "presencefootsteps:water/water_through3",
+      "presencefootsteps:water/water_through4",
+      "presencefootsteps:water/water_through5",
+      "presencefootsteps:water/water_through6",
+      "presencefootsteps:water/water_through7",
+      "presencefootsteps:water/water_through8",
+      "presencefootsteps:water/water_through9"
+    ]
+  },
+  "pf_presence.water.water_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:water/water_wander1",
+      "presencefootsteps:water/water_wander2",
+      "presencefootsteps:water/water_wander3",
+      "presencefootsteps:water/water_wander4",
+      "presencefootsteps:water/water_wander5"
+    ]
+  },
+  "pf_presence.water_stereofix.water_through": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:water_stereofix/water_through1",
+      "presencefootsteps:water_stereofix/water_through10",
+      "presencefootsteps:water_stereofix/water_through11",
+      "presencefootsteps:water_stereofix/water_through2",
+      "presencefootsteps:water_stereofix/water_through3",
+      "presencefootsteps:water_stereofix/water_through4",
+      "presencefootsteps:water_stereofix/water_through5",
+      "presencefootsteps:water_stereofix/water_through6",
+      "presencefootsteps:water_stereofix/water_through7",
+      "presencefootsteps:water_stereofix/water_through8",
+      "presencefootsteps:water_stereofix/water_through9"
+    ]
+  },
+  "pf_presence.water_stereofix.water_wander": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:water_stereofix/water_wander1",
+      "presencefootsteps:water_stereofix/water_wander2",
+      "presencefootsteps:water_stereofix/water_wander3",
+      "presencefootsteps:water_stereofix/water_wander4",
+      "presencefootsteps:water_stereofix/water_wander5"
+    ]
+  },
+  "pf_presence.weakice.weakice_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:weakice/weakice_walk1",
+      "presencefootsteps:weakice/weakice_walk10",
+      "presencefootsteps:weakice/weakice_walk2",
+      "presencefootsteps:weakice/weakice_walk3",
+      "presencefootsteps:weakice/weakice_walk4",
+      "presencefootsteps:weakice/weakice_walk5",
+      "presencefootsteps:weakice/weakice_walk6",
+      "presencefootsteps:weakice/weakice_walk7",
+      "presencefootsteps:weakice/weakice_walk8",
+      "presencefootsteps:weakice/weakice_walk9"
+    ]
+  },
+  "pf_presence.wood.wood_walk": {
+    "category": "master",
+    "sounds": [
+      "presencefootsteps:wood/wood_walk1",
+      "presencefootsteps:wood/wood_walk10",
+      "presencefootsteps:wood/wood_walk11",
+      "presencefootsteps:wood/wood_walk2",
+      "presencefootsteps:wood/wood_walk3",
+      "presencefootsteps:wood/wood_walk4",
+      "presencefootsteps:wood/wood_walk5",
+      "presencefootsteps:wood/wood_walk6",
+      "presencefootsteps:wood/wood_walk7",
+      "presencefootsteps:wood/wood_walk8",
+      "presencefootsteps:wood/wood_walk9"
+    ]
+  }
+}
