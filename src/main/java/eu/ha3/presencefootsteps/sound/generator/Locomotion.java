@@ -6,6 +6,7 @@ import java.util.function.Function;
 
 import eu.ha3.presencefootsteps.sound.Isolator;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 
 public enum Locomotion {
@@ -47,8 +48,8 @@ public enum Locomotion {
         return this == FLYING;
     }
 
-    public String getTranslationKey() {
-        return translationKey;
+    public String getDisplayName() {
+        return I18n.translate("menu.pf.stance", I18n.translate(translationKey));
     }
 
     public static Locomotion byName(String name) {

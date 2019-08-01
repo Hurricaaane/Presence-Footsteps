@@ -22,6 +22,7 @@ public class PFConfig extends JsonFile {
     public boolean toggleMultiplayer() {
         multiplayer = !multiplayer;
         save();
+
         return multiplayer;
     }
 
@@ -55,7 +56,10 @@ public class PFConfig extends JsonFile {
         return MathHelper.clamp(volume, 0, 100);
     }
 
-    public void setVolume(int volume) {
-        this.volume = volume;
+    public float setVolume(float volume) {
+        this.volume = Math.round(volume / 100);
+        save();
+
+        return getVolume();
     }
 }

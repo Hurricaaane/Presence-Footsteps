@@ -14,7 +14,6 @@ import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.client.util.InputUtil;
@@ -27,27 +26,24 @@ public class PresenceFootsteps implements ClientModInitializer {
 
     public static final Logger logger = LogManager.getLogger("PFSolver");
 
-    public static PresenceFootsteps INSTANCE;
+    private static PresenceFootsteps instance;
+
+    public static PresenceFootsteps getInstance() {
+        return instance;
+    }
 
     private PFConfig config;
 
-    private long pressedOptionsTime;
-
     private final UpdateNotifier updateNotifier = new UpdateNotifier(
-            "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d")
-            .setVersion("1.14.4", 15, "r")
-            .setReporter(this::reportUpdate);
+            "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d",
+            new UpdateNotifier.Version("1.14.4", "r", 15), this::onUpdate);
 
     private final SoundEngine engine = new SoundEngine(config);
 
     private FabricKeyBinding keyBinding;
 
     public PresenceFootsteps() {
-        INSTANCE = this;
-    }
-
-    public KeyBinding getKeyBinding() {
-        return keyBinding;
+        instance = this;
     }
 
     public SoundEngine getEngine() {
@@ -80,23 +76,15 @@ public class PresenceFootsteps implements ClientModInitializer {
             return;
         }
 
-        long handle = client.window.getHandle();
-
-        boolean keysDown = InputUtil.isKeyPressed(handle, GLFW.GLFW_MOD_CONTROL)
-                && InputUtil.isKeyPressed(handle, GLFW.GLFW_MOD_SHIFT)
-                && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_F);
-
-        if (keysDown && System.currentTimeMillis() - pressedOptionsTime > 1000) {
-            if (client.currentScreen == null) {
-                client.openScreen(new PFOptionsScreen(client.currentScreen));
-            }
+        if (keyBinding.isPressed() && client.currentScreen == null) {
+            client.openScreen(new PFOptionsScreen(client.currentScreen));
         }
 
         engine.onTick(client, ply);
         updateNotifier.attempt();
     }
 
-    private void reportUpdate(Version newVersion, Version currentVersion) {
+    private void onUpdate(Version newVersion, Version currentVersion) {
         ToastManager manager = MinecraftClient.getInstance().getToastManager();
 
         SystemToast.show(manager, SystemToast.Type.TUTORIAL_HINT,

@@ -4,8 +4,11 @@ import javax.annotation.Nullable;
 
 import com.minelittlepony.common.client.gui.GameGui;
 import com.minelittlepony.common.client.gui.element.Button;
+import com.minelittlepony.common.client.gui.element.EnumSlider;
+import com.minelittlepony.common.client.gui.element.Label;
 import com.minelittlepony.common.client.gui.element.Slider;
 
+import eu.ha3.presencefootsteps.sound.generator.Locomotion;
 import eu.ha3.presencefootsteps.util.BlockReport;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
@@ -17,15 +20,12 @@ class PFOptionsScreen extends GameGui {
     private static final int yGroupSpacing = 56;
     private static final int xButtonSpacing = 95;
 
-    private final PresenceFootsteps mod = PresenceFootsteps.INSTANCE;
+    private final PresenceFootsteps mod = PresenceFootsteps.getInstance();
 
     public PFOptionsScreen(@Nullable Screen parent) {
         super(new TranslatableText("menu.pf.title"), parent);
     }
 
-    /**
-     * Adds the buttons (and other controls) to the screen in question.
-     */
     @Override
     public void init() {
         final int center = width / 2;
@@ -37,38 +37,29 @@ class PFOptionsScreen extends GameGui {
 
         int row = 69;
 
+        addButton(new Label(width / 2, 40)).setCentered().getStyle()
+                .setText(getTitle().asString());
+
         addButton(new Button(right + 32, row).onClick(sender ->
             sender.getStyle().setText("menu.pf." + mod.getEngine().toggle()))
         ).getStyle()
             .setText("menu.pf." + mod.getConfig().getEnabled());
 
         addButton(new Slider(rightCol, row, 0, 100, mod.getConfig().getVolume() * 100))
-            .onChange(volume -> {
-                if (volume % 10 <= 2) {
-                    volume -= volume % 10;
-                } else if (volume % 10 >= 8) {
-                    volume -= volume % 10 + 10;
-                }
+            .onChange(mod.getConfig()::setVolume)
+            .setFormatter(volume -> I18n.translate("menu.pf.volume", formatVolume(volume)));
 
-                mod.getConfig().setVolume(Math.round(volume / 100));
-
-                return volume;
-        }).setFormatter(volume -> I18n.translate("menu.pf.volume", formatVolume(volume)));
-
-        addButton(new Button(leftCol, row).onClick(sender -> {
-            mod.getConfig().setLocomotion(null);
-            mod.getConfig().save();
-
-            sender.setMessage(getStance());
-
+        addButton(new EnumSlider<>(leftCol, row, mod.getConfig().getLocomotion()).onChange(loco -> {
+            mod.getConfig().setLocomotion(loco);
             mod.getEngine().reloadEverything(minecraft.getResourceManager());
-        })).getStyle()
-            .setText(getStance());
+
+            return loco;
+        }).setFormatter(Locomotion::getDisplayName));
 
         row += yGroupSpacing;
 
         addButton(new Button(leftCol, row).onClick(sender -> {
-            sender.getStyle().setText(mod.getConfig().toggleMultiplayer() ? "menu.pf.multiplayer.on" : "menu.pf.multiplayer.off");
+            sender.getStyle().setText("menu.pf.multiplayer." + mod.getConfig().toggleMultiplayer());
         })).getStyle()
             .setText("menu.pf.multiplayer." + mod.getConfig().getEnabledMP());
 
@@ -87,17 +78,13 @@ class PFOptionsScreen extends GameGui {
 
         row += yGroupSpacing;
 
-        addButton(new Button(center - 100, row).onClick(sender -> finish()))
-            .getStyle()
+        addButton(new Button(center - 100, row).onClick(sender -> finish())).getStyle()
             .setText("menu.returnToGame");
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         renderBackground();
-
-        drawCenteredString(font, getTitle().asString(), width / 2, 40, 0xFFFFFFFF);
-
         super.render(mouseX, mouseY, partialTicks);
     }
 
@@ -112,14 +99,5 @@ class PFOptionsScreen extends GameGui {
         }
 
         return volume + "%";
-    }
-
-    private String getStance() {
-        return I18n.translate("menu.pf.stance", I18n.translate(mod.getConfig().getLocomotion().getTranslationKey()));
-    }
-
-    @Override
-    public void removed() {
-        mod.getConfig().save();
     }
 }

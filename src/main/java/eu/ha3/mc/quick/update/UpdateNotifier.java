@@ -19,42 +19,30 @@ import com.google.gson.stream.JsonReader;
  */
 public class UpdateNotifier extends Thread {
 
-	private transient final String queryLocation;
-	private transient final Version currentVersion = new Version();
+    private transient final String location;
+    private transient final Version currentVersion;
 
-	private transient Reporter reporter = (a,b) -> {};
+    private transient final Reporter reporter;
 
-	private transient boolean checkRun;
+    private transient boolean checkRun;
 
-	private boolean enabled = true;
+    private boolean enabled = true;
 
-	private int displayRemaining = 0;
-	private int displayCount = 3;
+    private int displayRemaining = 0;
+    private int displayCount = 3;
 
-	@Nullable
-	private Version lastKnownVersion;
+    @Nullable
+    private Version lastKnownVersion;
 
-	public UpdateNotifier(String location) {
-		queryLocation = location;
-	}
+    public UpdateNotifier(String location, Version currentVersion, Reporter reporter) {
+        this.location = location;
+        this.currentVersion = currentVersion;
+        this.reporter = reporter;
+    }
 
-	public UpdateNotifier setVersion(String mc, int number, String type) {
-	    currentVersion.minecraft = mc;
-	    currentVersion.number = number;
-	    currentVersion.type = type;
-
-	    return this;
-	}
-
-	public UpdateNotifier setReporter(Reporter reporter) {
-	    this.reporter = reporter;
-
-	    return this;
-	}
-
-	public int getRemainingNotifications() {
-	    return displayRemaining;
-	}
+    public int getRemainingNotifications() {
+        return displayRemaining;
+    }
 
     public void attempt() {
         if (checkRun) {
@@ -63,51 +51,51 @@ public class UpdateNotifier extends Thread {
 
         checkRun = true;
 
-		if (enabled) {
-		    start();
-		}
-	}
+        if (enabled) {
+            start();
+        }
+    }
 
-	@Override
-	public void run() {
-		try {
-            checkUpdates(queryLocation);
+    @Override
+    public void run() {
+        try {
+            checkUpdates();
         } catch (Exception e) {
             e.printStackTrace();
         }
-	}
+    }
 
-	private void checkUpdates(String queryLoc) throws Exception {
-        URL url = new URL(String.format(queryLoc, currentVersion.number, currentVersion.type));
+    private void checkUpdates() throws Exception {
+        URL url = new URL(String.format(location, currentVersion.number, currentVersion.type));
         InputStream contents = url.openStream();
 
-		Gson gson = new Gson();
-		Versions version = gson.fromJson(new JsonReader(new InputStreamReader(contents)), Versions.class);
+        Gson gson = new Gson();
+        Versions version = gson.fromJson(new JsonReader(new InputStreamReader(contents)), Versions.class);
 
-		Version newVersion = version.getLatest(currentVersion);
+        Version newVersion = version.getLatest(currentVersion);
 
-		if (newVersion.number > currentVersion.number) {
-			if (lastKnownVersion == null) {
-			    lastKnownVersion = newVersion;
-				displayRemaining = displayCount;
-			}
+        if (newVersion.number > currentVersion.number) {
+            if (lastKnownVersion == null) {
+                lastKnownVersion = newVersion;
+                displayRemaining = displayCount;
+            }
 
-			if (displayRemaining-- > 0) {
-			    Thread.sleep(10000);
+            if (displayRemaining-- > 0) {
+                Thread.sleep(10000);
 
-				reporter.report(newVersion, currentVersion);
-			}
+                reporter.report(newVersion, currentVersion);
+            }
 
-			save();
-		}
-	}
+            save();
+        }
+    }
 
-	public void save() {
+    public void save() {
 
-	}
+    }
 
-	public void loadConfig(Path file) {
-	}
+    public void loadConfig(Path file) {
+    }
 
     static class Versions {
         List<Version> versions = new ArrayList<>();
@@ -127,6 +115,14 @@ public class UpdateNotifier extends Thread {
         public String minecraft;
 
         public String type;
+
+        Version() {}
+
+        public Version(String minecraft, String type, int number) {
+            this.minecraft = minecraft;
+            this.type = type;
+            this.number = number;
+        }
 
         Version upgrade(Version other) {
             if (number > other.number) {

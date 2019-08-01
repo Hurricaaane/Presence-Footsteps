@@ -15,7 +15,7 @@ public abstract class MClientPlayNetworkHandler implements ClientPlayPacketListe
 
     @Inject(method = "onPlaySound(Lnet/minecraft/client/network/packet/PlaySoundS2CPacket;)V", at = @At("HEAD"), cancellable = true)
     public void onHandleSoundEffect(PlaySoundS2CPacket packet, CallbackInfo info) {
-        if (PresenceFootsteps.INSTANCE.getEngine().onSoundRecieved(packet.getSound(), packet.getCategory())) {
+        if (PresenceFootsteps.getInstance().getEngine().onSoundRecieved(packet.getSound(), packet.getCategory())) {
             info.cancel();
         }
     }
