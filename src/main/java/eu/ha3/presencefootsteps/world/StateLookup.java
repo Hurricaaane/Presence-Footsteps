@@ -1,18 +1,17 @@
 package eu.ha3.presencefootsteps.world;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
+import eu.ha3.presencefootsteps.PresenceFootsteps;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
@@ -41,6 +40,11 @@ public class StateLookup implements Lookup<BlockState> {
 
     @Override
     public void add(String key, String value) {
+        if (!Emitter.isResult(value)) {
+            PresenceFootsteps.logger.info("Skipping non-result value " + key + "=" + value);
+            return;
+        }
+
         Key k = new Key(key, value);
 
         substrates.computeIfAbsent(k.substrate, Substrate::new).add(k);
@@ -48,13 +52,13 @@ public class StateLookup implements Lookup<BlockState> {
 
     @Override
     public boolean contains(BlockState state) {
-        Matcher matcher = new Matcher(state);
 
-        for (Substrate sub : substrates.values()) {
-            if (sub.contains(matcher)) {
+        for (Substrate substrate : substrates.values()) {
+            if (Emitter.isResult(substrate.get(state))) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -68,10 +72,6 @@ public class StateLookup implements Lookup<BlockState> {
         void add(Key key) {
             buckets.computeIfAbsent(key.identifier, Bucket::new).keys.add(key);
             values.add(key);
-        }
-
-        boolean contains(Matcher matcher) {
-            return values.contains(matcher);
         }
 
         String get(BlockState state) {
@@ -107,20 +107,6 @@ public class StateLookup implements Lookup<BlockState> {
         }
     }
 
-    private static class Matcher {
-
-        private final BlockState state;
-
-        Matcher(BlockState state) {
-            this.state = state;
-        }
-
-        @Override
-        public boolean equals(Object other) {
-            return ((Key)other).matches(state);
-        }
-    }
-
     private static class Key {
 
         public static final Key NULL = new Key();
@@ -150,7 +136,17 @@ public class StateLookup implements Lookup<BlockState> {
             String id = key.split("[\\.\\[]")[0];
 
             this.value = value;
-            identifier = new Identifier(id);
+
+            if (id.indexOf('^') > -1) {
+                identifier = new Identifier(id.split("\\^")[0]);
+                PresenceFootsteps.logger.warn("Metadata entry for " + key + "=" + value + " was ignored");
+            } else {
+                identifier = new Identifier(id);
+            }
+
+            if (!Registry.BLOCK.containsId(identifier)) {
+                PresenceFootsteps.logger.warn("Sound registered for unknown block id " + identifier);
+            }
 
             key = key.replace(id, "");
 
@@ -179,56 +175,32 @@ public class StateLookup implements Lookup<BlockState> {
             }
 
             Map<Property<?>, Comparable<?>> entries = state.getEntries();
+            Set<Property<?>> keys = entries.keySet();
 
-            for (Attribute entry : properties) {
-                if (!Objects.toString(entries.get(entry)).equals(entry.value)) {
-                    return false;
+            for (Attribute property : properties) {
+                for (Property<?> key : keys) {
+                    if (key.getName().equals(property.name)) {
+                        Comparable<?> value = entries.get(key);
+
+                        if (!Objects.toString(value).equals(property.value)) {
+                            return false;
+                        }
+                    }
                 }
             }
 
             return true;
         }
 
-        private static class Attribute implements Property<String> {
-
+        private static class Attribute {
             private final String name;
-            public final String value;
+            private final String value;
 
             Attribute(String prop) {
                 String[] split = prop.split("=");
 
                 this.name = split[0];
                 this.value = split[1];
-            }
-
-            @Override
-            public String getName() {
-                return name;
-            }
-
-            @Override
-            public Collection<String> getValues() {
-                return null;
-            }
-
-            @Override
-            public Class<String> getValueType() {
-                return String.class;
-            }
-
-            @Override
-            public Optional<String> getValue(String var1) {
-                return Optional.empty();
-            }
-
-            @Override
-            public String getName(String var1) {
-                return name;
-            }
-
-            @Override
-            public boolean equals(Object other) {
-                return name.equals(((Property<?>)other).getName());
             }
         }
     }
