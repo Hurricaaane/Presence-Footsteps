@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 
 import com.google.gson.stream.JsonWriter;
 
+import eu.ha3.presencefootsteps.PresenceFootsteps;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
@@ -65,9 +66,10 @@ public class BlockReport {
     }
 
     private void writeReport(@Nullable Predicate<BlockState> filter) throws IOException {
-        Files.createFile(loc);
+        Files.createDirectories(loc.getParent());
 
         try (JsonWriter writer = new JsonWriter(Files.newBufferedWriter(loc))) {
+            writer.setIndent("    ");
             writer.beginObject();
             Registry.BLOCK.forEach(block -> {
                 BlockState state = block.getDefaultState();
@@ -75,7 +77,14 @@ public class BlockReport {
                 try {
                     if (filter == null || filter.test(state)) {
                         writer.name(Registry.BLOCK.getId(block).toString());
-                        writer.value(getSoundData(state) + getClassData(state));
+                        writer.beginObject();
+                        writer.name("class");
+                        writer.value(getClassData(state));
+                        writer.name("sound");
+                        writer.value(getSoundData(state));
+                        writer.name("association");
+                        writer.value(PresenceFootsteps.getInstance().getEngine().getIsolator().getBlockMap().getAssociation(state, ""));
+                        writer.endObject();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
