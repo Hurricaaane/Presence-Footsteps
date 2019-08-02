@@ -1,5 +1,7 @@
 package eu.ha3.presencefootsteps.world;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
@@ -47,9 +49,9 @@ public class Association {
         return this;
     }
 
-    public Association with(String data) {
+    public Association with(@Nullable String data) {
 
-        if (!isNull()) {
+        if (!isNull() && data != null) {
             this.data = data;
         }
 

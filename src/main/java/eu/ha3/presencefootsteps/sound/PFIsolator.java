@@ -19,6 +19,7 @@ import eu.ha3.presencefootsteps.world.StateLookup;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.BlockSoundGroup;
 
 public class PFIsolator implements Isolator, SoundPlayer {
 
@@ -30,7 +31,7 @@ public class PFIsolator implements Isolator, SoundPlayer {
 
     private final Lookup<BlockState> blockMap = new StateLookup();
 
-    private final Lookup<String> primitiveMap = new PrimitiveLookup();
+    private final Lookup<BlockSoundGroup> primitiveMap = new PrimitiveLookup();
 
     private final AcousticsPlayer acoustics = new AcousticsPlayer(this);
 
@@ -71,13 +72,8 @@ public class PFIsolator implements Isolator, SoundPlayer {
     }
 
     @Override
-    public Lookup<String> getPrimitiveMap() {
+    public Lookup<BlockSoundGroup> getPrimitiveMap() {
         return primitiveMap;
-    }
-
-    @Override
-    public SoundPlayer getSoundPlayer() {
-        return this;
     }
 
     @Override

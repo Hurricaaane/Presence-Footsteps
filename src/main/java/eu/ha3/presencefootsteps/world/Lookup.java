@@ -2,28 +2,21 @@ package eu.ha3.presencefootsteps.world;
 
 import java.io.Reader;
 
-import javax.annotation.Nullable;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public interface Lookup<T> {
 
+    String EMPTY_SUBSTRATE = "";
+
     Gson gson = new Gson();
 
     /**
-     * This will return null if the block is not defined, and NOT_EMITTER if the
-     * block is a non-emitting block, meaning block resolution must continue on its
-     * neighbours.
+     * This will return the appropriate association for the given state and substrate.
+     *
+     * Returns Emitter.UNASSIGNED when no mapping exists,
+     * or Emitter.NOT_EMITTER if such a mapping exists and produces no sound.
      */
-    @Nullable
-    String getAssociation(T state);
-
-    /**
-     * This will return null if the substrate does not resolve in the selected
-     * carpet.
-     */
-    @Nullable
     String getAssociation(T state, String substrate);
 
     /**

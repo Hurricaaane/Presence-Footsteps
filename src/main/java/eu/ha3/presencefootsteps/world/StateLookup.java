@@ -1,44 +1,235 @@
 package eu.ha3.presencefootsteps.world;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
+import com.google.common.collect.Lists;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.state.property.Property;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+/**
+ * A state lookup that finds an association for a given block state within a specific substrate (or no substrate).
+ *
+ * @author Sollace
+ */
 public class StateLookup implements Lookup<BlockState> {
 
-    private final Map<String, String> blockMap = new LinkedHashMap<>();
+    private final Map<String, Substrate> substrates = new LinkedHashMap<>();
 
     @Override
-    @Nullable
-    public String getAssociation(BlockState state) {
-        return blockMap.get(state.toString());
-    }
-
-    @Override
-    @Nullable
     public String getAssociation(BlockState state, String substrate) {
-        String key = state.toString() + "." + substrate;
 
-        if (blockMap.containsKey(key)) {
-            return blockMap.get(key);
+        Substrate sub = substrates.get(substrate);
+
+        if (sub != null) {
+            return sub.get(state);
         }
 
-        return getAssociation(state);
+        return Emitter.UNASSIGNED;
     }
 
     @Override
     public void add(String key, String value) {
-        blockMap.put(key, value);
+        Key k = new Key(key, value);
+
+        substrates.computeIfAbsent(k.substrate, Substrate::new).add(k);
     }
 
     @Override
     public boolean contains(BlockState state) {
-        String key = Registry.BLOCK.getId(state.getBlock()).toString();
+        Matcher matcher = new Matcher(state);
 
-        return blockMap.entrySet().stream().anyMatch(i -> i.getKey().startsWith(key));
+        for (Substrate sub : substrates.values()) {
+            if (sub.contains(matcher)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static class Substrate {
+
+        private final Map<Identifier, Bucket> buckets = new LinkedHashMap<>();
+        private final List<Object> values = new LinkedList<>();
+
+        Substrate(String substrate) { }
+
+        void add(Key key) {
+            buckets.computeIfAbsent(key.identifier, Bucket::new).keys.add(key);
+            values.add(key);
+        }
+
+        boolean contains(Matcher matcher) {
+            return values.contains(matcher);
+        }
+
+        String get(BlockState state) {
+
+            Bucket bucket = buckets.get(Registry.BLOCK.getId(state.getBlock()));
+
+            if (bucket != null) {
+                return bucket.get(state);
+            }
+
+            return Emitter.UNASSIGNED;
+        }
+    }
+
+    private static class Bucket {
+        private final Map<BlockState, Key> cache = new LinkedHashMap<>();
+        private final List<Key> keys = new LinkedList<>();
+
+        Bucket(Identifier id) { }
+
+        String get(BlockState state) {
+            return cache.computeIfAbsent(state, this::computekey).value;
+        }
+
+        private Key computekey(BlockState state) {
+            for (Key i : keys) {
+                if (i.matches(state)) {
+                    return i;
+                }
+            }
+
+            return Key.NULL;
+        }
+    }
+
+    private static class Matcher {
+
+        private final BlockState state;
+
+        Matcher(BlockState state) {
+            this.state = state;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return ((Key)other).matches(state);
+        }
+    }
+
+    private static class Key {
+
+        public static final Key NULL = new Key();
+
+        public final Identifier identifier;
+
+        public final String substrate;
+
+        private final Set<Attribute> properties;
+
+        public final String value;
+
+        private final boolean empty;
+
+        private Key() {
+            identifier = new Identifier("air");
+            substrate = "";
+            properties = Collections.emptySet();
+            value = Emitter.UNASSIGNED;
+            empty = true;
+        }
+
+        /*
+         * minecraft:block[one=1,two=2].substrate
+         */
+        Key(String key, String value) {
+            String id = key.split("[\\.\\[]")[0];
+
+            this.value = value;
+            identifier = new Identifier(id);
+
+            key = key.replace(id, "");
+
+            String substrate = key.replaceFirst("\\[[^\\]]+\\]", "");
+
+            if (substrate.indexOf('.') > -1) {
+                this.substrate = substrate.split("\\.")[1];
+
+                key = key.replace(substrate, "");
+            } else {
+                this.substrate = "";
+            }
+
+            properties = Lists.newArrayList(key.replace("[", "").replace("]", "").split(","))
+                .stream()
+                .filter(line -> line.indexOf('=') > -1)
+                .map(Attribute::new)
+                .collect(Collectors.toSet());
+            empty = properties.isEmpty();
+        }
+
+        boolean matches(BlockState state) {
+
+            if (empty) {
+                return true;
+            }
+
+            Map<Property<?>, Comparable<?>> entries = state.getEntries();
+
+            for (Attribute entry : properties) {
+                if (!Objects.toString(entries.get(entry)).equals(entry.value)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static class Attribute implements Property<String> {
+
+            private final String name;
+            public final String value;
+
+            Attribute(String prop) {
+                String[] split = prop.split("=");
+
+                this.name = split[0];
+                this.value = split[1];
+            }
+
+            @Override
+            public String getName() {
+                return name;
+            }
+
+            @Override
+            public Collection<String> getValues() {
+                return null;
+            }
+
+            @Override
+            public Class<String> getValueType() {
+                return String.class;
+            }
+
+            @Override
+            public Optional<String> getValue(String var1) {
+                return Optional.empty();
+            }
+
+            @Override
+            public String getName(String var1) {
+                return name;
+            }
+
+            @Override
+            public boolean equals(Object other) {
+                return name.equals(((Property<?>)other).getName());
+            }
+        }
     }
 }

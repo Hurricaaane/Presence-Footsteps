@@ -2,19 +2,14 @@ package eu.ha3.presencefootsteps.world;
 
 import java.util.Locale;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -143,141 +138,88 @@ public class PFSolver implements Solver {
     private Association findAssociation(World world, BlockPos pos) {
         BlockState in = world.getBlockState(pos);
 
-        BlockState above = world.getBlockState(pos.up());
+        BlockPos up = pos.up();
+        BlockState above = world.getBlockState(up);
         // Try to see if the block above is a carpet...
         String association = isolator.getBlockMap().getAssociation(above, "carpet");
 
-        if (association == null) {
-            association = "NOT_EMITTER";
-        }
-
-        if ("NOT_EMITTER".equals(association)) {
+        if (Emitter.isEmitter(association)) {
+            logger.debug("Carpet detected: " + association);
+            pos = up;
+            in = above;
+        } else {
             // This condition implies that if the carpet is NOT_EMITTER, solving will
             // CONTINUE with the actual block surface the player is walking on
             Material mat = in.getMaterial();
 
             if (mat == Material.AIR || mat == Material.PART) {
-                BlockState below = world.getBlockState(pos.down());
+                BlockPos down = pos.down();
+                BlockState below = world.getBlockState(down);
 
                 association = isolator.getBlockMap().getAssociation(below, "bigger");
 
-                if (association != null) {
-                    pos = pos.down();
-                    in = below;
+                if (Emitter.isResult(association)) {
                     logger.debug("Fence detected: " + association);
+                    pos = down;
+                    in = below;
                 }
             }
 
-            if (association == null) {
-                association = isolator.getBlockMap().getAssociation(in);
+            if (!Emitter.isResult(association)) {
+                association = isolator.getBlockMap().getAssociation(in, Lookup.EMPTY_SUBSTRATE);
             }
 
-            if (!"NOT_EMITTER".equals(association) && association != null) {
+            if (Emitter.isEmitter(association)) {
                 // This condition implies that foliage over a NOT_EMITTER block CANNOT PLAY
                 // This block most not be executed if the association is a carpet
                 String foliage = isolator.getBlockMap().getAssociation(above, "foliage");
 
-                if (foliage == null) {
-                    foliage = "NOT_EMITTER";
-                }
-
-                if (!"NOT_EMITTER".equals(foliage)) {
-                    association += "," + foliage;
+                if (Emitter.isEmitter(foliage)) {
                     logger.debug("Foliage detected: " + foliage);
+                    association += "," + foliage;
                 }
             }
-        } else {
-            pos = pos.up();
-            in = above;
-            logger.debug("Carpet detected: " + association);
         }
 
-        if ("NOT_EMITTER".equals(association)) {
-            if (in.getBlock() != Blocks.AIR) {
-                logger.debug("Not emitter for %0 : %1", in);
-            }
-
-            // Player has stepped on a non-emitter block as defined in the blockmap
+        // Player has stepped on a non-emitter block as defined in the blockmap
+        if (Emitter.isNonEmitter(association)) {
             return Association.NOT_EMITTER;
         }
 
-        if (association != null) {
-            logger.debug("Found association for %0 : %1 : %2", in, association);
+        if (Emitter.isResult(association)) {
             return new Association(in, pos).associated().with(association);
         }
 
-        String primitive = resolvePrimitive(in);
-
-        if ("NOT_EMITTER".equals(primitive)) {
-            logger.debug("Primitive for %0 : %1 : %2 is NOT_EMITTER! Following behavior is uncertain.", in, primitive);
+        if (in.isAir()) {
             return Association.NOT_EMITTER;
         }
 
-        Association assos = new Association(in, pos);
-
-        if (primitive != null) {
-            logger.debug("Found primitive for %0 : %1 : %2", in, primitive);
-
-            assos.with(primitive);
-        }
-
-        logger.debug("No association for %0 : %1", in);
-
-        return assos;
-    }
-
-    @Nullable
-    private String resolvePrimitive(BlockState state) {
-        Block block = state.getBlock();
-
-        if (block.isAir(state)) {
-            return "NOT_EMITTER";
-        }
-
-        BlockSoundGroup sounds = block.getSoundGroup(state);
-
-        SoundEvent stepSound = sounds.getStepSound();
-
-        String soundName = stepSound.getId().getPath();
-
-        if (soundName.isEmpty()) {
-            soundName = "UNDEFINED";
-        }
-
+        BlockSoundGroup sounds = in.getSoundGroup();
         String substrate = String.format(Locale.ENGLISH, "%.2f_%.2f", sounds.volume, sounds.pitch);
 
         // Check for primitive in register
-        String primitive = isolator.getPrimitiveMap().getAssociation(soundName, substrate);
+        String primitive = isolator.getPrimitiveMap().getAssociation(sounds, substrate);
 
-        if (primitive == null) {
-            if (stepSound != null) {
-                // Check for break sound
-                primitive = isolator.getPrimitiveMap().getAssociation(soundName, "break_" + soundName);
-            }
-            if (primitive == null) {
-                primitive = isolator.getPrimitiveMap().getAssociation(soundName);
-            }
+        if (Emitter.isNonEmitter(primitive)) {
+            return Association.NOT_EMITTER;
         }
 
-        if (primitive != null) {
-            logger.debug("Primitive found for " + soundName + ":" + substrate);
-            return primitive;
-        }
-
-        logger.debug("No primitive for " + soundName + ":" + substrate);
-        return null;
+        return new Association(in, pos).with(primitive);
     }
 
     @Override
     public boolean playStoppingConditions(Entity ply) {
-        if (ply.isInWater()) {
-            float volume = (float) ply.getVelocity().length() * 0.35F;
-
-            isolator.getAcoustics().playAcoustic(ply, "_SWIM", ply.isInWater() ? State.SWIM : State.WALK, Options.singular("gliding_volume", volume > 1 ? 1 : volume));
-            return true;
+        if (!hasStoppingConditions(ply)) {
+            return false;
         }
 
-        return false;
+        float volume = Math.min(1, (float) ply.getVelocity().length() * 0.35F);
+        Options options = Options.singular("gliding_volume", volume);
+        State state = ply.isInWater() ? State.SWIM : State.WALK;
+
+        isolator.getAcoustics().playAcoustic(ply, "_SWIM", state, options);
+
+        return true;
     }
 
     @Override
@@ -295,7 +237,7 @@ public class PFSolver implements Solver {
 
         String foliage = isolator.getBlockMap().getAssociation(above, "foliage");
 
-        if (foliage == null || "NOT_EMITTER".equals(foliage)) {
+        if (!Emitter.isEmitter(foliage)) {
             return Association.NOT_EMITTER;
         }
 

@@ -6,7 +6,7 @@
 	"menu.pf.multiplayer.true": "Mode: Multiplayer",
 	"menu.pf.multiplayer.false": "Mode: Singleplayer",
 	"menu.pf.volume.min": "Volume: OFF",
-	"menu.pf.volume": "Volume: %.0f\%\%",
+	"menu.pf.volume": "Volume: %.0f%%",
 	"menu.pf.resourcepacks.loaded": "Configure Resource Pack",
 	"menu.pf.resourcepacks.disabled": "Enable Resource Pack",
 	"menu.pf.resourcepacks.none": "Install Resource Pack",

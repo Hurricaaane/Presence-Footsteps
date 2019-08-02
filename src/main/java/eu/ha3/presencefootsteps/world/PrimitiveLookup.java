@@ -3,27 +3,56 @@ package eu.ha3.presencefootsteps.world;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class PrimitiveLookup implements Lookup<String> {
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.Identifier;
 
-    private final Map<String, String> primitiveMap = new LinkedHashMap<>();
+public class PrimitiveLookup implements Lookup<BlockSoundGroup> {
 
-    @Override
-    public String getAssociation(String primitive) {
-        return primitiveMap.get(primitive);
-    }
+    private final Map<String, Map<Identifier, String>> substrates = new LinkedHashMap<>();
 
     @Override
-    public String getAssociation(String primitive, String substrate) {
-        return getAssociation(primitive + "@" + substrate);
+    public String getAssociation(BlockSoundGroup sounds, String substrate) {
+
+        Map<Identifier, String> primitives = substrates.get(substrate);
+
+        if (primitives == null) {
+            // Check for break sound
+            primitives = substrates.get("break_" + sounds.getStepSound().getId().getPath());
+        }
+
+        if (primitives == null) {
+            // Check for default
+            primitives = substrates.get(EMPTY_SUBSTRATE);
+        }
+
+        if (primitives == null) {
+            return Emitter.UNASSIGNED;
+        }
+
+        return primitives.getOrDefault(sounds.getStepSound().getId(), Emitter.UNASSIGNED);
     }
 
     @Override
     public void add(String key, String value) {
-        primitiveMap.put(key, value);
+        String[] split = key.trim().split("@");
+
+        String primitive = split[0];
+        String substrate = split.length > 1 ? split[1] : EMPTY_SUBSTRATE;
+
+        substrates
+            .computeIfAbsent(substrate, s -> new LinkedHashMap<>())
+            .put(new Identifier(primitive), value);
     }
 
     @Override
-    public boolean contains(String key) {
-        return primitiveMap.containsKey(key);
+    public boolean contains(BlockSoundGroup sounds) {
+        Identifier primitive = sounds.getStepSound().getId();
+
+        for (Map<Identifier, String> primitives : substrates.values()) {
+            if (primitives.containsKey(primitive)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

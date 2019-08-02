@@ -5,7 +5,6 @@ import java.util.Map;
 
 import eu.ha3.presencefootsteps.PresenceFootsteps;
 import eu.ha3.presencefootsteps.sound.State;
-import eu.ha3.presencefootsteps.sound.Isolator;
 import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.sound.player.ImmediateSoundPlayer;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
@@ -17,8 +16,8 @@ public class AcousticsPlayer extends ImmediateSoundPlayer implements AcousticLib
 
     private final Map<String, Acoustic> acoustics = new HashMap<>();
 
-    public AcousticsPlayer(Isolator isolator) {
-        player = isolator.getSoundPlayer();
+    public AcousticsPlayer(SoundPlayer player) {
+        this.player = player;
     }
 
     @Override
