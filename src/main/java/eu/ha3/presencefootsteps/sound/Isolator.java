@@ -6,6 +6,7 @@ import eu.ha3.presencefootsteps.sound.player.StepSoundPlayer;
 import eu.ha3.presencefootsteps.world.Lookup;
 import eu.ha3.presencefootsteps.world.Solver;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 
@@ -16,6 +17,8 @@ public interface Isolator {
     AcousticLibrary getAcoustics();
 
     Solver getSolver();
+
+    Lookup<EntityType<?>> getGolemMap();
 
     Lookup<BlockState> getBlockMap();
 

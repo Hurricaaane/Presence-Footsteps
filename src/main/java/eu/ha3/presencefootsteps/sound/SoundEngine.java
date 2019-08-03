@@ -26,6 +26,7 @@ import net.minecraft.util.profiler.Profiler;
 public class SoundEngine implements IdentifiableResourceReloadListener {
 
     private static final Identifier blockmap = new Identifier("presencefootsteps", "config/blockmap.json");
+    private static final Identifier golemmap = new Identifier("presencefootsteps", "config/golemmap.json");
     private static final Identifier primitivemap = new Identifier("presencefootsteps", "config/primitivemap.json");
     private static final Identifier acoustics = new Identifier("presencefootsteps", "config/acoustics.json");
     private static final Identifier variator = new Identifier("presencefootsteps", "config/variator.json");
@@ -124,6 +125,7 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
         isolator = new PFIsolator(this);
 
         collectResources(blockmap, manager, isolator.getBlockMap()::load);
+        collectResources(golemmap, manager, isolator.getGolemMap()::load);
         collectResources(primitivemap, manager, isolator.getPrimitiveMap()::load);
         collectResources(acoustics, manager, new AcousticsJsonParser(isolator.getAcoustics())::parse);
         collectResources(variator, manager, isolator.getVariator()::load);

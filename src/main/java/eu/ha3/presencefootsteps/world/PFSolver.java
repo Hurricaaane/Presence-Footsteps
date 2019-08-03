@@ -1,5 +1,6 @@
 package eu.ha3.presencefootsteps.world;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.logging.log4j.LogManager;
@@ -9,8 +10,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -135,13 +138,35 @@ public class PFSolver implements Solver {
         return findAssociation(player.world, pos.east(xdang > 0 ? 1 : -1));
     }
 
+    private String findForGolem(World world, BlockPos pos, String substrate) {
+        List<Entity> golems = world.getEntities(Entity.class, new Box(pos), e -> !(e instanceof PlayerEntity));
+
+        if (!golems.isEmpty()) {
+            String golem = isolator.getGolemMap().getAssociation(golems.get(0).getType(), substrate);
+
+            if (Emitter.isEmitter(golem)) {
+                logger.debug("Golem detected: " + golem);
+
+                return golem;
+            }
+        }
+
+        return Emitter.UNASSIGNED;
+    }
+
     private Association findAssociation(World world, BlockPos pos) {
+
         BlockState in = world.getBlockState(pos);
 
         BlockPos up = pos.up();
         BlockState above = world.getBlockState(up);
         // Try to see if the block above is a carpet...
-        String association = isolator.getBlockMap().getAssociation(above, "carpet");
+
+        String association = findForGolem(world, up, "carpet");
+
+        if (!Emitter.isEmitter(association)) {
+            association = isolator.getBlockMap().getAssociation(above, "carpet");
+        }
 
         if (Emitter.isEmitter(association)) {
             logger.debug("Carpet detected: " + association);
@@ -156,7 +181,7 @@ public class PFSolver implements Solver {
                 BlockPos down = pos.down();
                 BlockState below = world.getBlockState(down);
 
-                association = isolator.getBlockMap().getAssociation(below, "bigger");
+                association = isolator.getBlockMap().getAssociation(above, "bigger");
 
                 if (Emitter.isResult(association)) {
                     logger.debug("Fence detected: " + association);
@@ -166,7 +191,11 @@ public class PFSolver implements Solver {
             }
 
             if (!Emitter.isResult(association)) {
-                association = isolator.getBlockMap().getAssociation(in, Lookup.EMPTY_SUBSTRATE);
+                association = findForGolem(world, pos, Lookup.EMPTY_SUBSTRATE);
+
+                if (!Emitter.isEmitter(association)) {
+                    association = isolator.getBlockMap().getAssociation(in, Lookup.EMPTY_SUBSTRATE);
+                }
             }
 
             if (Emitter.isEmitter(association)) {

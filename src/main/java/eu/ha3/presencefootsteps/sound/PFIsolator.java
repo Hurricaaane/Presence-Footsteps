@@ -11,6 +11,7 @@ import eu.ha3.presencefootsteps.sound.acoustics.AcousticLibrary;
 import eu.ha3.presencefootsteps.sound.acoustics.AcousticsPlayer;
 import eu.ha3.presencefootsteps.sound.generator.StepSoundGenerator;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
+import eu.ha3.presencefootsteps.world.GolemLookup;
 import eu.ha3.presencefootsteps.world.Lookup;
 import eu.ha3.presencefootsteps.world.PFSolver;
 import eu.ha3.presencefootsteps.world.PrimitiveLookup;
@@ -18,6 +19,7 @@ import eu.ha3.presencefootsteps.world.Solver;
 import eu.ha3.presencefootsteps.world.StateLookup;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 
@@ -28,6 +30,8 @@ public class PFIsolator implements Isolator, SoundPlayer {
     private final SoundEngine engine;
 
     private final Variator variator = new Variator();
+
+    private final Lookup<EntityType<?>> golemMap = new GolemLookup();
 
     private final Lookup<BlockState> blockMap = new StateLookup();
 
@@ -64,6 +68,11 @@ public class PFIsolator implements Isolator, SoundPlayer {
     @Override
     public Solver getSolver() {
         return solver;
+    }
+
+    @Override
+    public Lookup<EntityType<?>> getGolemMap() {
+        return golemMap;
     }
 
     @Override

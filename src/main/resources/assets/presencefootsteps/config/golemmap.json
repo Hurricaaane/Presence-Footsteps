@@ -1,0 +1,16 @@
+{
+	"minecraft:shulker": "squeakywood",
+	"minecraft:snow_golem": "snow",
+	"minecraft:iron_golem": "hardmetal",
+
+	"minecraft:armor_stand@carpet": "marble",
+
+	"minecraft:boat": "wood",
+	"minecraft:minecart": "metalbar",
+	"minecraft:chest_minecart": "squeakywood",
+	"minecraft:furnace_minecart": "stonemachine",
+	"minecraft:tnt_minecart": "metalbar",
+	"minecraft:hopper_minecart": "metalbar",
+	"minecraft:command_block_minecart": "woodutility",
+	"minecraft:spawner_minecart": "metalbar"
+}
