@@ -12,8 +12,11 @@ import java.util.stream.Collectors;
 import com.google.common.collect.Lists;
 
 import eu.ha3.presencefootsteps.PresenceFootsteps;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.Property;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -24,18 +27,11 @@ import net.minecraft.util.registry.Registry;
  */
 public class StateLookup implements Lookup<BlockState> {
 
-    private final Map<String, Substrate> substrates = new LinkedHashMap<>();
+    private final Map<String, Bucket> substrates = new LinkedHashMap<>();
 
     @Override
     public String getAssociation(BlockState state, String substrate) {
-
-        Substrate sub = substrates.get(substrate);
-
-        if (sub != null) {
-            return sub.get(state);
-        }
-
-        return Emitter.UNASSIGNED;
+        return substrates.getOrDefault(substrate, Bucket.EMPTY).get(state);
     }
 
     @Override
@@ -47,13 +43,12 @@ public class StateLookup implements Lookup<BlockState> {
 
         Key k = new Key(key, value);
 
-        substrates.computeIfAbsent(k.substrate, Substrate::new).add(k);
+        substrates.computeIfAbsent(k.substrate, Bucket.Substrate::new).add(k);
     }
 
     @Override
     public boolean contains(BlockState state) {
-
-        for (Substrate substrate : substrates.values()) {
+        for (Bucket substrate : substrates.values()) {
             if (Emitter.isResult(substrate.get(state))) {
                 return true;
             }
@@ -62,52 +57,74 @@ public class StateLookup implements Lookup<BlockState> {
         return false;
     }
 
-    private static class Substrate {
+    private interface Bucket {
 
-        private final Map<Identifier, Bucket> buckets = new LinkedHashMap<>();
-        private final List<Object> values = new LinkedList<>();
+        Bucket EMPTY = state -> Emitter.UNASSIGNED;
 
-        Substrate(String substrate) { }
+        default void add(Key key) {}
 
-        void add(Key key) {
-            buckets.computeIfAbsent(key.identifier, Bucket::new).keys.add(key);
-            values.add(key);
-        }
+        String get(BlockState state);
 
-        String get(BlockState state) {
+        final class Substrate implements Bucket {
+            private final Map<Identifier, Bucket> blocks = new LinkedHashMap<>();
+            private final Map<Identifier, Bucket> tags = new LinkedHashMap<>();
 
-            Bucket bucket = buckets.get(Registry.BLOCK.getId(state.getBlock()));
+            Substrate(String substrate) { }
 
-            if (bucket != null) {
-                return bucket.get(state);
+            @Override
+            public void add(Key key) {
+                (key.isTag ? tags : blocks).computeIfAbsent(key.identifier, Tile::new).add(key);
             }
 
-            return Emitter.UNASSIGNED;
-        }
-    }
+            @Override
+            public String get(BlockState state) {
+                return blocks.computeIfAbsent(Registry.BLOCK.getId(state.getBlock()), this::computeTile).get(state);
+            }
 
-    private static class Bucket {
-        private final Map<BlockState, Key> cache = new LinkedHashMap<>();
-        private final List<Key> keys = new LinkedList<>();
+            private Bucket computeTile(Identifier id) {
+                Block block = Registry.BLOCK.get(id);
 
-        Bucket(Identifier id) { }
+                for (Identifier tag : tags.keySet()) {
+                    Tag<Block> t = BlockTags.getContainer().get(tag);
 
-        String get(BlockState state) {
-            return cache.computeIfAbsent(state, this::computekey).value;
-        }
-
-        private Key computekey(BlockState state) {
-            for (Key i : keys) {
-                if (i.matches(state)) {
-                    return i;
+                    if (t != null && block.matches(t)) {
+                        return tags.get(tag);
+                    }
                 }
+
+                return Bucket.EMPTY;
+            }
+        }
+
+        final class Tile implements Bucket {
+            private final Map<BlockState, Key> cache = new LinkedHashMap<>();
+            private final List<Key> keys = new LinkedList<>();
+
+            Tile(Identifier id) { }
+
+            @Override
+            public void add(Key key) {
+                keys.add(key);
             }
 
-            return Key.NULL;
+            @Override
+            public String get(BlockState state) {
+                return cache.computeIfAbsent(state, this::computekey).value;
+            }
+
+            private Key computekey(BlockState state) {
+                for (Key i : keys) {
+                    if (i.matches(state)) {
+                        return i;
+                    }
+                }
+
+                return Key.NULL;
+            }
         }
     }
 
-    private static class Key {
+    private static final class Key {
 
         public static final Key NULL = new Key();
 
@@ -121,21 +138,31 @@ public class StateLookup implements Lookup<BlockState> {
 
         private final boolean empty;
 
+        public final boolean isTag;
+
         private Key() {
             identifier = new Identifier("air");
             substrate = "";
             properties = Collections.emptySet();
             value = Emitter.UNASSIGNED;
             empty = true;
+            isTag = false;
         }
 
         /*
          * minecraft:block[one=1,two=2].substrate
+         * #minecraft:blanks[one=1,two=2].substrate
          */
         Key(String key, String value) {
-            String id = key.split("[\\.\\[]")[0];
 
             this.value = value;
+            this.isTag = key.indexOf('#') == 0;
+
+            if (isTag) {
+                key = key.replaceFirst("#", "");
+            }
+
+            String id = key.split("[\\.\\[]")[0];
 
             if (id.indexOf('^') > -1) {
                 identifier = new Identifier(id.split("\\^")[0]);
@@ -144,7 +171,7 @@ public class StateLookup implements Lookup<BlockState> {
                 identifier = new Identifier(id);
             }
 
-            if (!Registry.BLOCK.containsId(identifier)) {
+            if (!isTag && !Registry.BLOCK.containsId(identifier)) {
                 PresenceFootsteps.logger.warn("Sound registered for unknown block id " + identifier);
             }
 
