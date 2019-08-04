@@ -732,7 +732,7 @@
 	"minecraft:lantern": "UNASSIGNED",
 	"minecraft:campfire": "wood,magma",
 
-	"minecraft:sweet_berry_bush": "NOTE_EMITTER",
+	"minecraft:sweet_berry_bush": "NOT_EMITTER",
 	"minecraft:sweet_berry_bush.messy": "straw",
 	"minecraft:sweet_berry_bush.foliage": "brush"
 }
