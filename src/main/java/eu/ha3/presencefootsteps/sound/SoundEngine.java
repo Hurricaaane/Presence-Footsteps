@@ -49,14 +49,12 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
         return isolator;
     }
 
-    public boolean toggle() {
-        if (config.toggleEnabled()) {
+    public void reload() {
+        if (config.getEnabled()) {
             reloadEverything(MinecraftClient.getInstance().getResourceManager());
         } else {
             shutdown();
         }
-
-        return config.getEnabled();
     }
 
     public void onTick(MinecraftClient client, PlayerEntity player) {

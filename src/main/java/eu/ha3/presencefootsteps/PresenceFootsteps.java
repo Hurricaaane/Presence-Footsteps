@@ -67,8 +67,7 @@ public class PresenceFootsteps implements ClientModInitializer {
                 new UpdateNotifier.Version("1.14.4", "r", 15), this::onUpdate);
         updateNotifier.load();
 
-        config = new PFConfig(pfFolder
-                .resolve("userconfig.json"));
+        config = new PFConfig(pfFolder.resolve("userconfig.json"), this);
         config.load();
 
         keyBinding = FabricKeyBinding.Builder.create(new Identifier("presencefootsteps", "settings"),

@@ -12,11 +12,14 @@ public class PFConfig extends JsonFile {
 
     private String stance = "UNKNOWN";
 
-    private boolean enabled = true;
     private boolean multiplayer = true;
 
-    public PFConfig(Path file) {
+    private transient final PresenceFootsteps pf;
+
+    public PFConfig(Path file, PresenceFootsteps pf) {
         super(file);
+
+        this.pf = pf;
     }
 
     public boolean toggleMultiplayer() {
@@ -26,16 +29,14 @@ public class PFConfig extends JsonFile {
         return multiplayer;
     }
 
-    public boolean toggleEnabled() {
-        enabled = !enabled;
-        save();
-
-        return enabled;
-    }
-
     public Locomotion setLocomotion(Locomotion loco) {
-        stance = loco.name();
-        save();
+
+        if (loco != getLocomotion()) {
+            stance = loco.name();
+            save();
+
+            pf.getEngine().reload();
+        }
 
         return loco;
     }
@@ -49,7 +50,7 @@ public class PFConfig extends JsonFile {
     }
 
     public boolean getEnabled() {
-        return getVolume() > 0 && enabled;
+        return getVolume() > 0;
     }
 
     public int getVolume() {
@@ -57,8 +58,18 @@ public class PFConfig extends JsonFile {
     }
 
     public float setVolume(float volume) {
-        this.volume = volume > 97 ? 100 : volume < 3 ? 0 : (int)volume;
-        save();
+        volume = volume > 97 ? 100 : volume < 3 ? 0 : (int)volume;
+
+        if (this.volume != volume) {
+            boolean wasEnabled = getEnabled();
+
+            this.volume = (int)volume;
+            save();
+
+            if (getEnabled() != wasEnabled) {
+                pf.getEngine().reload();
+            }
+        }
 
         return getVolume();
     }

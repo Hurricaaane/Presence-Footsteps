@@ -16,10 +16,6 @@ import net.minecraft.text.TranslatableText;
 
 class PFOptionsScreen extends GameGui {
 
-    private static final int yButtonSpacing = 24;
-    private static final int yGroupSpacing = 56;
-    private static final int xButtonSpacing = 105;
-
     private final PresenceFootsteps mod = PresenceFootsteps.getInstance();
 
     public PFOptionsScreen(@Nullable Screen parent) {
@@ -28,56 +24,39 @@ class PFOptionsScreen extends GameGui {
 
     @Override
     public void init() {
-        final int center = width / 2;
+        int left =  width / 2 - 100;
+        int row = height / 4 + 14;
 
-        int leftCol =  center - 102 - xButtonSpacing;
-        int rightCol = center - 102 + xButtonSpacing;
-
-        int row = 69;
-
-        addButton(new Label(width / 2, 40)).setCentered().getStyle()
+        addButton(new Label(width / 2, 30)).setCentered().getStyle()
                 .setText(getTitle().asString());
 
-        addButton(new Slider(rightCol, row, 0, 100, mod.getConfig().getVolume()))
+        addButton(new Slider(left, row, 0, 100, mod.getConfig().getVolume()))
             .onChange(mod.getConfig()::setVolume)
             .setFormatter(this::formatVolume);
 
-        addButton(new EnumSlider<>(leftCol, row, mod.getConfig().getLocomotion()).onChange(loco -> {
-            mod.getConfig().setLocomotion(loco);
-            mod.getEngine().reloadEverything(minecraft.getResourceManager());
+        addButton(new EnumSlider<>(left, row += 24, mod.getConfig().getLocomotion())
+                .onChange(mod.getConfig()::setLocomotion)
+                .setFormatter(Locomotion::getDisplayName));
 
-            return loco;
-        }).setFormatter(Locomotion::getDisplayName));
-
-        row += yGroupSpacing;
-
-        addButton(new Button(rightCol, row).onClick(sender ->
-            sender.getStyle().setText("menu.pf." + mod.getEngine().toggle()))
-        ).getStyle()
-            .setText("menu.pf." + mod.getConfig().getEnabled());
-
-        addButton(new Button(leftCol, row).onClick(sender -> {
+        addButton(new Button(left, row += 24).onClick(sender -> {
             sender.getStyle().setText("menu.pf.multiplayer." + mod.getConfig().toggleMultiplayer());
         })).getStyle()
             .setText("menu.pf.multiplayer." + mod.getConfig().getEnabledMP());
 
-        row += yButtonSpacing;
-
-        addButton(new Button(rightCol, row).onClick(sender -> {
+        addButton(new Button(left, row += 24, 96, 20).onClick(sender -> {
             new BlockReport("presencefootsteps/report_concise", ".txt").execute(state ->
                 !mod.getEngine().getIsolator().getBlockMap().contains(state));
         })).getStyle()
             .setText("menu.pf.report.concise");
 
-        addButton(new Button(leftCol, row).onClick(sender -> {
-            new BlockReport("presencefootsteps/report_full", ".txt").execute(null);
-        })).getStyle()
-            .setText("menu.pf.report.full");
+        addButton(new Button(left + 104, row, 96, 20)
+            .onClick(sender -> new BlockReport("presencefootsteps/report_full", ".txt").execute(null)))
+            .getStyle()
+                .setText("menu.pf.report.full");
 
-        row += yGroupSpacing;
-
-        addButton(new Button(center - 100, row).onClick(sender -> finish())).getStyle()
-            .setText("menu.returnToGame");
+        addButton(new Button(left, row += 34)
+            .onClick(sender -> finish())).getStyle()
+            .setText("gui.done");
     }
 
     @Override
@@ -92,6 +71,6 @@ class PFOptionsScreen extends GameGui {
             return I18n.translate("menu.pf.volume.min");
         }
 
-        return I18n.translate("menu.pf.volume", volume);
+        return I18n.translate("menu.pf.volume", (int)Math.floor(volume));
     }
 }
