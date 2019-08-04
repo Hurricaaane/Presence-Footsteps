@@ -43,17 +43,8 @@ import net.minecraft.util.registry.Registry;
 public class BlockReport {
     private final Path loc;
 
-    public BlockReport(String location, String ext) {
-        Path folder = FabricLoader.getInstance().getGameDirectory().toPath();
-
-        Path loc = null;
-        int counter = 0;
-        while (loc == null || Files.exists(loc)) {
-            loc = folder.resolve(location + (counter == 0 ? "" : "_" + counter) + ext);
-            counter++;
-        }
-
-        this.loc = loc;
+    public BlockReport(String baseName) {
+        loc = getUniqueFileName(FabricLoader.getInstance().getGameDirectory().toPath().resolve("presencefootsteps"), baseName, ".json");
     }
 
     public void execute(@Nullable Predicate<BlockState> filter) {
@@ -150,5 +141,17 @@ public class BlockReport {
     public static void addMessage(Text text, Formatting color) {
         text.getStyle().setColor(color);
         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(text);
+    }
+
+    static Path getUniqueFileName(Path directory, String baseName, String ext) {
+        Path loc = null;
+
+        int counter = 0;
+        while (loc == null || Files.exists(loc)) {
+            loc = directory.resolve(baseName + (counter == 0 ? "" : "_" + counter) + ext);
+            counter++;
+        }
+
+        return loc;
     }
 }
