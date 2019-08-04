@@ -181,7 +181,7 @@ public class PFSolver implements Solver {
                 BlockPos down = pos.down();
                 BlockState below = world.getBlockState(down);
 
-                association = isolator.getBlockMap().getAssociation(above, "bigger");
+                association = isolator.getBlockMap().getAssociation(below, "bigger");
 
                 if (Emitter.isResult(association)) {
                     logger.debug("Fence detected: " + association);
