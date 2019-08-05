@@ -2,6 +2,7 @@ package eu.ha3.presencefootsteps.world;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
@@ -30,6 +31,11 @@ public class PrimitiveLookup implements Lookup<BlockSoundGroup> {
         }
 
         return primitives.getOrDefault(sounds.getStepSound().getId(), Emitter.UNASSIGNED);
+    }
+
+    @Override
+    public Set<String> getSubstrates() {
+        return substrates.keySet();
     }
 
     @Override

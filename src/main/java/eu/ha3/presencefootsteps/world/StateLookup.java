@@ -47,6 +47,11 @@ public class StateLookup implements Lookup<BlockState> {
     }
 
     @Override
+    public Set<String> getSubstrates() {
+        return substrates.keySet();
+    }
+
+    @Override
     public boolean contains(BlockState state) {
         for (Bucket substrate : substrates.values()) {
             if (Emitter.isResult(substrate.get(state))) {

@@ -1,6 +1,9 @@
 package eu.ha3.presencefootsteps.world;
 
 import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -18,6 +21,28 @@ public interface Lookup<T> {
      * or Emitter.NOT_EMITTER if such a mapping exists and produces no sound.
      */
     String getAssociation(T state, String substrate);
+
+    /**
+     * Gets a set of all the substrates this map contains entries for.
+     */
+    Set<String> getSubstrates();
+
+    /**
+     * Gets all the associations for the given state.
+     */
+    default Map<String, String> getAssociations(T state) {
+        Map<String, String> result = new HashMap<>();
+
+        for (String substrate : getSubstrates()) {
+            String association = getAssociation(state, substrate);
+
+            if (Emitter.isResult(association)) {
+                result.put(substrate, association);
+            }
+        }
+
+        return result;
+    }
 
     /**
      * Register a blockmap entry.

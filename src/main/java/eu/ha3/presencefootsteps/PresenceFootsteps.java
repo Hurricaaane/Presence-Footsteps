@@ -38,12 +38,18 @@ public class PresenceFootsteps implements ClientModInitializer {
 
     private PFConfig config;
 
+    private PFDebugHud debugHud;
+
     private UpdateNotifier updateNotifier;
 
     private FabricKeyBinding keyBinding;
 
     public PresenceFootsteps() {
         instance = this;
+    }
+
+    public PFDebugHud getDebugHud() {
+        return debugHud;
     }
 
     public SoundEngine getEngine() {
@@ -76,6 +82,7 @@ public class PresenceFootsteps implements ClientModInitializer {
         KeyBindingRegistry.INSTANCE.register(keyBinding);
 
         engine = new SoundEngine(config);
+        debugHud = new PFDebugHud(engine);
 
         ClientTickCallback.EVENT.register(this::onTick);
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(engine);

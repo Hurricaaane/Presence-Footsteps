@@ -2,6 +2,7 @@ package eu.ha3.presencefootsteps.world;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
@@ -25,6 +26,11 @@ public class GolemLookup implements Lookup<EntityType<?>> {
         }
 
         return primitives.getOrDefault(EntityType.getId(key), Emitter.UNASSIGNED);
+    }
+
+    @Override
+    public Set<String> getSubstrates() {
+        return substrates.keySet();
     }
 
     @Override
