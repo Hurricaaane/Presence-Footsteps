@@ -146,6 +146,10 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
     public void shutdown() {
         isolator = new PFIsolator(this);
 
-        ((IEntity) MinecraftClient.getInstance().player).setNextStepDistance(0);
+        PlayerEntity player = MinecraftClient.getInstance().player;
+
+        if (player != null) {
+            ((IEntity) player).setNextStepDistance(0);
+        }
     }
 }
