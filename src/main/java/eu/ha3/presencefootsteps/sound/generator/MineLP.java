@@ -19,6 +19,6 @@ class MineLP {
     }
 
     public static Locomotion getLocomotion(PlayerEntity ply) {
-        return MineLittlePony.getInstance().getManager().getPony(ply).canFly() ? Locomotion.FLYING : Locomotion.QUADRAPED;
+        return MineLittlePony.getInstance().getManager().getPony(ply).canFly() ? Locomotion.FLYING : Locomotion.QUADRUPED;
     }
 }

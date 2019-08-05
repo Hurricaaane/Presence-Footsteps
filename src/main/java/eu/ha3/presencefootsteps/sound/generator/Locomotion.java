@@ -12,7 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 public enum Locomotion {
     UNKNOWN(BipedalStepSoundGenerator::new),
     BIPED(BipedalStepSoundGenerator::new),
-    QUADRAPED(QuadrapedalStepSoundGenerator::new),
+    QUADRUPED(QuadrapedalStepSoundGenerator::new),
     FLYING(PegasusStepSoundGenerator::new);
 
     private static final Map<String, Locomotion> registry = new HashMap<>();
