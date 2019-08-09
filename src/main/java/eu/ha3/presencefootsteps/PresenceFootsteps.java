@@ -70,7 +70,7 @@ public class PresenceFootsteps implements ClientModInitializer {
         updateNotifier = new UpdateNotifier(
                 pfFolder.resolve("updater.json"),
                 "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d",
-                new UpdateNotifier.Version("1.14.4", "r", 15), this::onUpdate);
+                new UpdateNotifier.Version("1.14.4", "r", 16), this::onUpdate);
         updateNotifier.load();
 
         config = new PFConfig(pfFolder.resolve("userconfig.json"), this);
