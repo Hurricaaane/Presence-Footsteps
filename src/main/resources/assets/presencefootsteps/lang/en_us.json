@@ -14,6 +14,6 @@
 	"menu.pf.report.concise": "Concise report",
 	"pf.report.save": "File saved as: %s",
 	"pf.report.error": "Failed to generate report: %s",
-	"pf.update.title": "An update is avaiable",
-	"pf.update.text": "Presence Footsteps %s%d for Minecraft %s"
+	"pf.update.title": "An Update is Available",
+	"pf.update.text": "Presence Footsteps %s%d"
 }
