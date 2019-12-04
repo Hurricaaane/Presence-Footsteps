@@ -10,6 +10,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.InstanceCreator;
 
+import eu.ha3.presencefootsteps.PresenceFootsteps;
+
 /**
  * Very simple file loaded from and to json.
  *
@@ -34,8 +36,8 @@ public abstract class JsonFile {
         if (Files.isReadable(file)) {
             try (Reader reader = Files.newBufferedReader(file)) {
                 load(reader);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                PresenceFootsteps.logger.error("Invalid config", e);
             }
         }
 
