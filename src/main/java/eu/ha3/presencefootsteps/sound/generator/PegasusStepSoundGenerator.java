@@ -125,7 +125,8 @@ class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
             float volume = 1;
             long diffImmobile = now - lastTimeImmobile;
             if (diffImmobile > variator.WING_IMMOBILE_FADE_START) {
-                volume -= MathUtil.scalex(diffImmobile, variator.WING_IMMOBILE_FADE_START,
+                volume -= MathUtil.scalex(diffImmobile,
+                        variator.WING_IMMOBILE_FADE_START,
                         variator.WING_IMMOBILE_FADE_START + variator.WING_IMMOBILE_FADE_DURATION);
             }
 

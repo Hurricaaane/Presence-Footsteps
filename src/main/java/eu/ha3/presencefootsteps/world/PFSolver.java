@@ -66,10 +66,6 @@ public class PFSolver implements Solver {
 
     private Association findAssociation(Entity player, BlockPos pos) {
 
-        if (player.isInWater()) {
-            logger.warn("Playing a sound while in the water! This is supposed to be halted by the stopping conditions!!");
-        }
-
         if (!(player instanceof OtherClientPlayerEntity)) {
             Vec3d vel = player.getVelocity();
 
@@ -253,7 +249,7 @@ public class PFSolver implements Solver {
 
     @Override
     public boolean hasStoppingConditions(Entity ply) {
-        return ply.isInWater();
+        return ply.isInsideWater();
     }
 
     @Override
