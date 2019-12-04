@@ -1,4 +1,4 @@
-package eu.ha3.presencefootsteps;
+/*package eu.ha3.presencefootsteps;
 
 import io.github.prospector.modmenu.api.ModMenuApi;
 import net.minecraft.client.gui.screen.Screen;
@@ -17,3 +17,4 @@ public class PFModMenuFactory implements ModMenuApi {
         return PFOptionsScreen::new;
     }
 }
+*/

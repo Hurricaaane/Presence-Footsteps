@@ -14,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -59,7 +60,7 @@ public class PFSolver implements Solver {
 
         return findAssociation(ply, new BlockPos(
             pos.x + Math.cos(rot) * feetDistanceToCenter,
-            ply.getBoundingBox().minY - TRAP_DOOR_OFFSET - verticalOffsetAsMinus,
+            ply.getBoundingBox().getMin(Axis.Y) - TRAP_DOOR_OFFSET - verticalOffsetAsMinus,
             pos.z + Math.sin(rot) * feetDistanceToCenter
         ));
     }
@@ -88,8 +89,8 @@ public class PFSolver implements Solver {
         }
 
         // Create a trigo. mark contained inside the block the player is over
-        double xdang = (player.x - pos.getX()) * 2 - 1;
-        double zdang = (player.z - pos.getZ()) * 2 - 1;
+        double xdang = (player.getX() - pos.getX()) * 2 - 1;
+        double zdang = (player.getZ() - pos.getZ()) * 2 - 1;
         // -1 0 1
         // ------- -1
         // | o |

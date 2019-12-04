@@ -236,6 +236,10 @@
 
 	"#minecraft:wooden_trapdoors": "bluntwood",
 
+	"minecraft:bee_nest": "squeakywood,organic",
+	"#minecraft:beehives": "squeakywood",
+	"minecraft:honeycomb_block": "stone,organic_solid",
+
 	"minecraft:infested_stone": "stone",
 	"minecraft:infested_cobblestone": "stone",
 	"minecraft:infested_stone_bricks": "brickstone",
@@ -370,6 +374,7 @@
 	"minecraft:coal_block": "stone",
 
 	"minecraft:slime_block": "UNASSIGNED",
+	"minecraft:honey_block": "UNASSIGNED",
 	"minecraft:grass_path": "grass",
 
 	"minecraft:sunflower": "NOT_EMITTER",

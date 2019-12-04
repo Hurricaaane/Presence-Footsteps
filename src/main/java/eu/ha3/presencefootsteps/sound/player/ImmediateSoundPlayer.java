@@ -81,7 +81,7 @@ public class ImmediateSoundPlayer implements SoundPlayer, StepSoundPlayer {
 
     private PositionedSoundInstance createSound(Identifier id, float volume, float pitch, Entity entity) {
         return new PositionedSoundInstance(id, SoundCategory.MASTER, volume, pitch, false, 0,
-                SoundInstance.AttenuationType.LINEAR, (float) entity.x, (float) entity.y, (float) entity.z, false);
+                SoundInstance.AttenuationType.LINEAR, (float) entity.getX(), (float) entity.getY(), (float) entity.getZ(), false);
     }
 
     private Identifier getSoundId(String name, Entity location) {

@@ -8,6 +8,6 @@ import net.minecraft.entity.Entity;
 @Mixin(Entity.class)
 public interface IEntity {
 
-    @Accessor("nextStepDistance")
+    @Accessor("nextStepSoundDistance")
     void setNextStepDistance(float value);
 }
