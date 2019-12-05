@@ -1,9 +1,10 @@
-/*package eu.ha3.presencefootsteps;
+package eu.ha3.presencefootsteps;
 
-import io.github.prospector.modmenu.api.ModMenuApi;
 import net.minecraft.client.gui.screen.Screen;
 
 import java.util.function.Function;
+
+import io.github.prospector.modmenu.api.ModMenuApi;
 
 public class PFModMenuFactory implements ModMenuApi {
 
@@ -17,4 +18,3 @@ public class PFModMenuFactory implements ModMenuApi {
         return PFOptionsScreen::new;
     }
 }
-*/

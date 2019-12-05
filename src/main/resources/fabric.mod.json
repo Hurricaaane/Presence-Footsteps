@@ -18,6 +18,9 @@
   "entrypoints": {
     "client": [
       "eu.ha3.presencefootsteps.PresenceFootsteps"
+    ],
+    "modmenu": [
+      "eu.ha3.presencefootsteps.PFModMenuFactory"
     ]
   },
   "mixins": [
