@@ -68,7 +68,7 @@ dependencies {
     include "com.minelittlepony:Kirin:${project.kirin_version}"
 
     modImplementation "com.minelittlepony:MineLittlePony:${project.minelp_version}"
-    // modImplementation "io.github.prospector:modmenu:${project.modmenu_version}"
+    modImplementation "io.github.prospector:modmenu:${project.modmenu_version}"
 }
 
 processResources {

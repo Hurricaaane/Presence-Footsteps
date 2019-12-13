@@ -19,7 +19,7 @@
     "client": [
       "eu.ha3.presencefootsteps.PresenceFootsteps"
     ],
-    "__disabled__modmenu": [
+    "modmenu": [
       "eu.ha3.presencefootsteps.PFModMenuFactory"
     ]
   },
