@@ -117,7 +117,7 @@ public class PFSolver implements Solver {
         if (isXdangMax) { // If we are in the positive border, add 1, else subtract 1
             worked = findAssociation(player.world, pos.east(xdang > 0 ? 1 : -1));
         } else {
-            worked = findAssociation(player.world, pos.north(zdang > 0 ? 1 : -1));
+            worked = findAssociation(player.world, pos.south(zdang > 0 ? 1 : -1));
         }
 
         // If that didn't work, then maybe the footstep hit in the
