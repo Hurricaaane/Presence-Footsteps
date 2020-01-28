@@ -118,7 +118,7 @@ class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
             nextFlapTime = now + variator.FLIGHT_TRANSITION_TIME;
         }
 
-        if (!ply.isInWater() && !isFalling && now > nextFlapTime) {
+        if (!ply.isSubmergedInWater() && !isFalling && now > nextFlapTime) {
             nextFlapTime = now + getWingSpeed() + (ply.world.random.nextInt(100) - 50);
             flapMod = (flapMod + 1) % (1 + ply.world.random.nextInt(4));
 

@@ -241,7 +241,7 @@ public class PFSolver implements Solver {
 
         float volume = Math.min(1, (float) ply.getVelocity().length() * 0.35F);
         Options options = Options.singular("gliding_volume", volume);
-        State state = ply.isInWater() ? State.SWIM : State.WALK;
+        State state = ply.isSubmergedInWater() ? State.SWIM : State.WALK;
 
         isolator.getAcoustics().playAcoustic(ply, "_SWIM", state, options);
 
@@ -250,7 +250,7 @@ public class PFSolver implements Solver {
 
     @Override
     public boolean hasStoppingConditions(Entity ply) {
-        return ply.isInsideWater();
+        return ply.isSubmergedInWater();
     }
 
     @Override
