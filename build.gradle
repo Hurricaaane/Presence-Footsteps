@@ -45,11 +45,11 @@ minecraft {
 repositories {
     maven {
         name = 'minelp'
-        url = 'http://repo.minelittlepony-mod.com/maven/snapshot'
+        url = 'https://repo.minelittlepony-mod.com/maven/snapshot'
     }
     maven {
         name = 'minelp-release'
-        url = 'http://repo.minelittlepony-mod.com/maven/release'
+        url = 'https://repo.minelittlepony-mod.com/maven/release'
     }
 }
 
