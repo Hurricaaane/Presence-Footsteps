@@ -22,9 +22,7 @@ public abstract class MDebugHud extends DrawableHelper {
     @Shadow
     private HitResult fluidHit;
 
-    @Inject(method = "getRightText",
-            at = @At("RETURN")
-    )
+    @Inject(method = "getRightText", at = @At("RETURN"))
     protected void onGetRightText(CallbackInfoReturnable<List<String>> info) {
         PresenceFootsteps.getInstance().getDebugHud().render(blockHit, fluidHit, info.getReturnValue());
     }

@@ -17,7 +17,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.CarpetBlock;
-import net.minecraft.block.ConnectedPlantBlock;
+import net.minecraft.block.ConnectingBlock;
 import net.minecraft.block.FallingBlock;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.HorizontalFacingBlock;
@@ -107,7 +107,7 @@ public class BlockReport {
         if (block instanceof PlantBlock) soundName += ",EXTENDS_PLANT";
         if (block instanceof TallPlantBlock) soundName += ",EXTENDS_DOUBLE_PLANT";
         if (block instanceof PlantBlock) soundName += ",EXTENDS_CROPS";
-        if (block instanceof ConnectedPlantBlock) soundName += ",EXTENDS_CONNECTED_PLANT";
+        if (block instanceof ConnectingBlock) soundName += ",EXTENDS_CONNECTED_PLANT";
         if (block instanceof LeavesBlock) soundName += ",EXTENDS_LEAVES";
         if (block instanceof SlabBlock) soundName += ",EXTENDS_SLAB";
         if (block instanceof StairsBlock) soundName += ",EXTENDS_STAIRS";

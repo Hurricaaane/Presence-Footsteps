@@ -77,7 +77,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
     }
 
     protected void simulateStationary(LivingEntity ply) {
-        if (isImmobile && (ply.onGround || !ply.isSubmergedInWater()) && playbackImmobile()) {
+        if (isImmobile && (ply.method_24828() || !ply.isSubmergedInWater()) && playbackImmobile()) {
             solver.playAssociation(ply, solver.findAssociation(ply, 0d, isRightFoot),
                     State.STAND);
         }
@@ -112,7 +112,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
             lastX = ply.getX();
             motionY = (ply.getY() - lastY);
 
-            if (ply.onGround) {
+            if (ply.method_24828()) {
                 motionY += 0.0784000015258789d;
             }
 
@@ -129,7 +129,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
                     ply.distanceTraveled += MathHelper.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ) * 0.8;
                 }
 
-                if (ply.onGround) {
+                if (ply.method_24828()) {
                     ply.fallDistance = 0;
                 } else if (motionY < 0) {
                     ply.fallDistance -= motionY * 200;
@@ -177,7 +177,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         xMovec = movX;
         zMovec = movZ;
 
-        if (ply.onGround || ply.isSubmergedInWater() || ply.isClimbing()) {
+        if (ply.method_24828() || ply.isSubmergedInWater() || ply.isClimbing()) {
             State event = null;
 
             float dwm = distanceReference - dmwBase;
@@ -190,7 +190,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
             float distance = 0f;
             double verticalOffsetAsMinus = 0f;
 
-            if (ply.isClimbing() && !ply.onGround) {
+            if (ply.isClimbing() && !ply.method_24828()) {
                 distance = variator.DISTANCE_LADDER;
             } else if (!ply.isSubmergedInWater() && Math.abs(yPosition - ply.getY()) > 0.4) {
                 // This ensures this does not get recorded as landing, but as a step
@@ -221,7 +221,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
             }
         }
 
-        if (ply.onGround) {
+        if (ply.method_24828()) {
             // This fixes an issue where the value is evaluated while the player is between
             // two steps in the air while descending stairs
             yPosition = ply.getY();
@@ -254,7 +254,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
     }
 
     protected void simulateAirborne(LivingEntity ply) {
-        if ((ply.onGround || ply.isClimbing()) == isAirborne) {
+        if ((ply.method_24828() || ply.isClimbing()) == isAirborne) {
             isAirborne = !isAirborne;
             simulateJumpingLanding(ply);
         }
@@ -341,7 +341,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
 
         Association assos = solver.findAssociation(ply.world, new BlockPos(
             ply.getZ(),
-            ply.getY() - 0.1D - ply.getHeightOffset() - (ply.onGround ? 0 : 0.25D),
+            ply.getY() - 0.1D - ply.getHeightOffset() - (ply.method_24828() ? 0 : 0.25D),
             ply.getZ()
         ), "find_messy_foliage");
 

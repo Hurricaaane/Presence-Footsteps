@@ -92,7 +92,7 @@ public class StateLookup implements Lookup<BlockState> {
                 for (Identifier tag : tags.keySet()) {
                     Tag<Block> t = BlockTags.getContainer().get(tag);
 
-                    if (t != null && block.matches(t)) {
+                    if (t != null && block.isIn(t)) {
                         return tags.get(tag);
                     }
                 }
