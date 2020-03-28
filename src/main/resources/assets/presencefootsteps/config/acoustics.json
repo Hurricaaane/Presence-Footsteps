@@ -1061,6 +1061,21 @@
         ]
       }
     },
+    "deckwood": {
+      "walk": "deckwood.deckwood_run",
+      "wander": "deckwood.deckwood_run",
+      "land": {
+        "type": "simultaneous",
+        "array": [
+          "deckwood.deckwood_run",
+          {
+            "type": "delayed",
+            "delay": 50,
+            "name": "wood.wood_walk"
+          }
+        ]
+      }
+    },
     "squeakywood": {
       "walk": "squeakywood.squeakywood_walk",
       "wander": "squeakywood.squeakywood_wander",
@@ -1322,6 +1337,87 @@
         ]
       }
     },
+    "slimey": {
+      "walk": {
+        "type": "probability",
+        "array": [
+          3,
+          "mud.mud_walk",
+          1,
+          "water_stereofix.water_through"
+        ]
+      },
+      "wander": {
+        "type": "probability",
+        "array": [
+          3,
+          "mud.mud_walk",
+          1,
+          "water_stereofix.water_through"
+        ]
+      },
+      "land": {
+        "type": "simultaneous",
+        "array": [
+          "water.water_through",
+          "mud.mud_walk",
+          "water_stereofix.water_through"
+        ]
+      }
+    },
+    "mushroom": {
+      "walk": {
+        "type": "simultaneous",
+        "array": [
+          {
+            "name": "mud.mud_walk",
+            "pitch_min": 150,
+            "pitch_max": 170,
+          	"vol_min": 30,
+          	"vol_max": 50
+          },
+          {
+          	"name": "snow.snow_walk",
+          	"vol_min": 30,
+          	"vol_max": 40
+          }
+        ]
+      },
+      "wander": {
+        "type": "simultaneous",
+        "array": [
+          {
+            "name": "mud.mud_walk",
+            "pitch_min": 150,
+            "pitch_max": 170,
+          	"vol_min": 30,
+          	"vol_max": 50
+          },
+          {
+          	"name": "snow.snow_walk",
+          	"vol_min": 30,
+          	"vol_max": 40
+          }
+        ]
+      },
+      "land": {
+        "type": "simultaneous",
+        "array": [
+          {
+            "name": "mud.mud_walk",
+            "pitch_min": 150,
+            "pitch_max": 170,
+          	"vol_min": 30,
+          	"vol_max": 50
+          },
+          {
+          	"name": "snow.snow_walk",
+          	"vol_min": 30,
+          	"vol_max": 40
+          }
+        ]
+      }
+    },
     "stoneutility": {
       "walk": {
         "type": "simultaneous",
@@ -1432,6 +1528,158 @@
             "type": "delayed",
             "delay": 30,
             "name": "metalbar.metalbar_walk"
+          },
+          {
+            "type": "delayed",
+            "delay": 50,
+            "name": "metalbox.metalbox_run"
+          }
+        ]
+      }
+    },
+    "hardsteel": {
+      "walk": "marble.marble_walk",
+      "wander": {
+        "type": "simultaneous",
+        "array": [
+          "marble.marble_wander",
+          {
+            "type": "probability",
+            "array": [
+              9,
+              {
+                "name": "metalbar.metalbar_wander",
+                "vol_min": 10,
+                "vol_max": 50
+              },
+              7,
+              "@"
+            ]
+          }
+        ]
+      },
+      "jump": "marble.marble_wander",
+      "land": {
+        "type": "simultaneous",
+        "array": [
+          "marble.marble_wander",
+          {
+            "type": "delayed",
+            "delay": 30,
+            "name": "metalbar.metalbar_walk"
+          }
+        ]
+      }
+    },
+    "crumblystone": {
+      "run": {
+        "type": "simultaneous",
+        "array": [
+          {
+	        "name": "stone.stone_run",
+	        "pitch_min": 65,
+	        "pitch_max": 70
+	      },
+          {
+            "name": "weakice.weakice_walk",
+            "vol_min": 9,
+            "vol_max": 11,
+            "pitch_min": 30,
+            "pitch_max": 30
+          }
+        ]
+      },
+      "walk": {
+        "type": "simultaneous",
+        "array": [
+          {
+	        "name": "stone.stone_walk",
+	        "pitch_min": 65,
+	        "pitch_max": 70
+	      },
+          {
+            "name": "weakice.weakice_walk",
+            "vol_min": 3,
+            "vol_max": 8,
+            "pitch_min": 30,
+            "pitch_max": 30
+          }
+        ]
+      },
+      "wander": "stone.stone_wander",
+      "land": {
+        "type": "simultaneous",
+        "array": [
+          "concrete.concrete_walk",
+          {
+            "type": "delayed",
+            "delay": 30,
+            "name": "concrete.concrete_walk"
+          },
+          {
+            "name": "weakice.weakice_walk",
+            "vol_min": 3,
+            "vol_max": 10,
+            "pitch_min": 30,
+            "pitch_max": 30
+          }
+        ]
+      }
+    },
+    "hollowmetal": {
+      "walk": {
+      	"type": "simultaneous",
+      	"array": [
+      	  {
+            "name": "metalbox.metalbox_walk",
+            "vol_min": 70,
+            "vol_max": 80,
+            "pitch_min": 20,
+            "pitch_max": 30
+          },
+          "metalbar.metalbar_walk"
+      	]
+      },
+      "run": {
+      	"type": "simultaneous",
+      	"array": [
+      	  {
+            "name": "metalbox.metalbox_run",
+            "vol_min": 70,
+            "vol_max": 80,
+            "pitch_min": 20,
+            "pitch_max": 30
+          },
+          "metalbar.metalbar_run"
+      	]
+      },
+      "wander": {
+        "type": "simultaneous",
+        "array": [
+          "marble.marble_wander",
+          {
+            "type": "probability",
+            "array": [
+              4,
+              {
+                "name": "metalbox.metalbox_wander",
+                "vol_min": 10,
+                "vol_max": 30
+              },
+              7,
+              "@"
+            ]
+          }
+        ]
+      },
+      "land": {
+        "type": "simultaneous",
+        "array": [
+          "metalbox.metalbox_run",
+          {
+            "name": "metalbox.metalbox_walk",
+            "vol_min": 50,
+            "vol_max": 50
           },
           {
             "type": "delayed",

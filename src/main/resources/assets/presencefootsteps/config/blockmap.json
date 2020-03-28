@@ -34,6 +34,7 @@
 	"minecraft:gold_ore": "ore",
 	"minecraft:iron_ore": "ore",
 	"minecraft:coal_ore": "ore",
+	"minecraft:nether_gold_ore": "ore",
 
 	"minecraft:oak_log": "wood",
 	"minecraft:spruce_log": "wood",
@@ -88,6 +89,8 @@
 	"minecraft:redstone_wire": "NOT_EMITTER",
 	"minecraft:fire": "NOT_EMITTER",
 	"minecraft:fire.foliage": "fire",
+	"minecraft:soul_fire": "NOT_EMITTER",
+	"minecraft:soul_fire.foliage": "fire",
 	"minecraft:spawner": "metalbar",
 
 	"minecraft:grass": "NOT_EMITTER",
@@ -142,6 +145,7 @@
 
 	"minecraft:gold_block": "hardmetal",
 	"minecraft:iron_block": "hardmetal",
+	"minecraft:netherite_block": "hollowmetal",
 
 	"minecraft:oak_slab": "wood",
 	"minecraft:spruce_slab": "wood",
@@ -177,9 +181,13 @@
 	"minecraft:bookshelf": "wood",
 	"minecraft:mossy_cobblestone": "stone",
 	"minecraft:obsidian": "obsidian",
+	"minecraft:crying_obsidian": "obsidian",
+	"minecraft:respawn_anchor": "obsidian",
 
 	"minecraft:torch": "NOT_EMITTER",
 	"minecraft:wall_torch": "NOT_EMITTER",
+	"minecraft:soul_fire_torch": "NOT_EMITTER",
+	"minecraft:soul_fire_wall_torch": "NOT_EMITTER",
 	"minecraft:end_rod": "metalbar",
 
 	"minecraft:chorus_flower": "organic_solid",
@@ -251,9 +259,9 @@
 	"minecraft:cracked_stone_bricks": "brickstone",
 	"minecraft:chiseled_stone_bricks": "brickstone",
 
-	"minecraft:brown_mushroom_block": "organic",
-	"minecraft:red_mushroom_block": "organic",
-	"minecraft:mushroom_stem": "organic",
+	"minecraft:brown_mushroom_block": "mushroom",
+	"minecraft:red_mushroom_block": "mushroom",
+	"minecraft:mushroom_stem": "mushroom",
 
 	"minecraft:iron_bars": "metalbar",
 	"minecraft:glass_pane": "glass",
@@ -316,17 +324,17 @@
 	"minecraft:end_stone_brick_wall.bigger": "brickstone",
 	"minecraft:diorite_wall.bigger": "stone,ore",
 
-	"minecraft:oak_button[face=floor].foliage": "stone",
+	"minecraft:oak_button[face=floor].foliage": "wood",
 	"minecraft:oak_button": "NOT_EMITTER",
-	"minecraft:spruce_button[face=floor].foliage": "stone",
+	"minecraft:spruce_button[face=floor].foliage": "wood",
 	"minecraft:spruce_button": "NOT_EMITTER",
-	"minecraft:birch_button[face=floor].foliage": "stone",
+	"minecraft:birch_button[face=floor].foliage": "wood",
 	"minecraft:birch_button": "NOT_EMITTER",
-	"minecraft:jungle_button[face=floor].foliage": "stone",
+	"minecraft:jungle_button[face=floor].foliage": "wood",
 	"minecraft:jungle_button": "NOT_EMITTER",
-	"minecraft:acacia_button[face=floor].foliage": "stone",
+	"minecraft:acacia_button[face=floor].foliage": "wood",
 	"minecraft:acacia_button": "NOT_EMITTER",
-	"minecraft:dark_oak_button[face=floor].foliage": "stone",
+	"minecraft:dark_oak_button[face=floor].foliage": "wood",
 	"minecraft:dark_oak_button": "NOT_EMITTER",
 
 	"#minecraft:anvil": "metalcompressed,hardmetal",
@@ -451,7 +459,8 @@
 	"minecraft:red_sandstone_stairs": "sandstone",
 
 	"minecraft:magma_block": "magma",
-	"minecraft:nether_wart_block": "organic_solid",
+	"minecraft:nether_wart_block": "organic_solid,mushroom",
+	"minecraft:warped_wart_block": "organic_solid,mushroom",
 	"minecraft:red_nether_bricks": "brickstone",
 	"minecraft:bone_block": "bone",
 
@@ -665,7 +674,9 @@
 	"#minecraft:beds": "rug",
 
 	"minecraft:nether_wart": "NOT_EMITTER",
-	"minecraft:nether_wart.foliage": "organic",
+	"minecraft:nether_wart.foliage": "organic,mushroom",
+	"minecraft:nether_sprouts": "NOT_EMITTER",
+	"minecraft:nether_sprouts.foliage": "organic,mushroom",
 	"minecraft:brewing_stand": "metalbar",
 	"minecraft:cauldron": "metalbar",
 
@@ -735,9 +746,72 @@
 	"minecraft:bell": "metalbar",
 
 	"minecraft:lantern": "UNASSIGNED",
+	"minecraft:soul_fire_lantern": "UNASSIGNED",
 	"minecraft:campfire": "wood,magma",
 
 	"minecraft:sweet_berry_bush": "NOT_EMITTER",
 	"minecraft:sweet_berry_bush.messy": "straw",
-	"minecraft:sweet_berry_bush.foliage": "brush"
+	"minecraft:sweet_berry_bush.foliage": "brush",
+
+	"minecraft:weeping_vines": "mushroom",
+	"minecraft:weeping_vines.foliage": "mushroom",
+	"minecraft:weeping_vines_plant": "mushroom",
+	"minecraft:weeping_vines_plant.foliage": "mushroom",
+	"minecraft:twisting_vines": "leaves,mushroom",
+	"minecraft:twisting_vines.foliage": "mushroom",
+	"minecraft:twisting_vines_plant": "mushroom",
+	"minecraft:twisting_vines_plant.foliage": "mushroom",
+
+	"minecraft:crimson_fungus": "NOT_EMITTER",
+	"minecraft:crimson_fungus.foliage": "mushroom",
+	"minecraft:warped_fungus": "NOT_EMITTER",
+	"minecraft:warped_fungus.foliage": "mushroom",
+	"minecraft:crimson_roots": "NOT_EMITTER",
+	"minecraft:crimson_roots.foliage": "mushroom",
+	"minecraft:warped_roots": "NOT_EMITTER",
+	"minecraft:warped_roots.foliage": "mushroom",
+
+	"minecraft:crimson_button[face=floor].foliage": "wood,mushroom",
+	"minecraft:crimson_button": "NOT_EMITTER",
+	"minecraft:warped_button[face=floor].foliage": "wood,mushroom",
+	"minecraft:warped_button": "NOT_EMITTER",
+	
+	"minecraft:crimson_fence_gate.bigger": "bluntwood,mushroom",
+	"minecraft:warped_fence_gate.bigger": "bluntwood,mushroom",
+	"minecraft:crimson_fence.bigger": "bluntwood,mushroom",
+	"minecraft:warped_fence.bigger": "bluntwood,mushroom",
+	"minecraft:crimson_pressure_plate": "wood,mushroom",
+	"minecraft:warped_pressure_plate": "wood,mushroom",
+	"minecraft:crimson_pressure_plate.carpet": "wood,mushroom",
+	"minecraft:warped_pressure_plate.carpet": "wood,mushroom",
+	
+	"minecraft:crimson_planks": "wood,mushroom",
+	"minecraft:warped_planks": "wood,mushroom",
+	"minecraft:crimson_slab": "wood,mushroom",
+	"minecraft:warped_slab": "wood,mushroom",
+	
+	"minecraft:shroomlight": "organic,mushroom",
+	
+	"minecraft:crimson_trapdoor": "bluntwood,mushroom",
+	"minecraft:warped_trapdoor": "bluntwood,mushroom",
+	
+	"minecraft:crimson_door": "bluntwood,mushroom",
+	"minecraft:warped_door": "bluntwood,mushroom",
+	
+	"__todo": "TODO: moan sound type",
+	"minecraft:basalt": "sandstone,crumblystone",
+	"minecraft:polished_basalt": "marble,crumblystone",
+	"minecraft:soul_soil": "quicksand",
+	"minecraft:lodestone": "stonemachine",
+	"minecraft:target": "leaves",
+	"minecraft:ancient_debris": "hardsteel,stone",
+	
+	"#minecraft:nylium": "mud,slimey",
+	"minecraft:stripped_warped_stem": "organic_dry,mushroom,stone",
+	"minecraft:stripped_warped_hyphae": "organic_dry,mushroom,stone",
+	"#minecraft:warped_stems": "organic_dry,wood_sticky,mushroom",
+	
+	"minecraft:stripped_crimson_stem": "organic_dry,mushroom,stone",
+	"minecraft:stripped_crimson_hyphae": "organic_dry,mushroom,stone",
+	"#minecraft:crimson_stems": "organic_dry,wood_sticky,mushroom"
 }
