@@ -99,7 +99,10 @@ public class PresenceFootsteps implements ClientModInitializer {
             client.openScreen(new PFOptionsScreen(client.currentScreen));
         }
 
-        engine.onTick(client, ply);
+        ply.world.getPlayers().forEach(other -> {
+            engine.onTick(client, other);
+        });
+
         updateNotifier.attempt();
     }
 

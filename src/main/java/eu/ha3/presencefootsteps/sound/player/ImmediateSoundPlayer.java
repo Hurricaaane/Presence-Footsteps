@@ -65,7 +65,7 @@ public class ImmediateSoundPlayer implements SoundPlayer, StepSoundPlayer {
         PositionedSoundInstance sound = createSound(getSoundId(soundName, location), volume, pitch, location);
 
         MinecraftClient mc = MinecraftClient.getInstance();
-        double distance = mc.getCameraEntity().squaredDistanceTo(location);
+        double distance = mc.gameRenderer.getCamera().getPos().squaredDistanceTo(location.getPos());
 
         if (distance > 100) {
             mc.getSoundManager().play(sound, (int) Math.floor(Math.sqrt(distance) / 2));
