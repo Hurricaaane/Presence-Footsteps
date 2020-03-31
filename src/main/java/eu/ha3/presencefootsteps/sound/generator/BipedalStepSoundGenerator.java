@@ -79,7 +79,11 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
 
     protected void simulateStationary(LivingEntity ply) {
         if (isImmobile && (ply.isOnGround() || !ply.isSubmergedInWater()) && playbackImmobile()) {
-            solver.playAssociation(ply, solver.findAssociation(ply, 0d, isRightFoot), State.STAND);
+            Association assos = solver.findAssociation(ply, 0d, isRightFoot);
+
+            if (assos.hasAssociation() || !isImmobile) {
+                solver.playAssociation(ply, assos, State.STAND);
+            }
         }
     }
 
