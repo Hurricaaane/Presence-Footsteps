@@ -3,7 +3,6 @@ package eu.ha3.presencefootsteps.sound.generator;
 import java.util.Random;
 
 import eu.ha3.presencefootsteps.sound.State;
-import eu.ha3.presencefootsteps.sound.Isolator;
 import net.minecraft.entity.LivingEntity;
 
 class QuadrapedalStepSoundGenerator extends BipedalStepSoundGenerator {
@@ -15,10 +14,6 @@ class QuadrapedalStepSoundGenerator extends BipedalStepSoundGenerator {
     private float nextWalkDistanceMultiplier = 0.05f;
 
     private final Random rand = new Random();
-
-    public QuadrapedalStepSoundGenerator(Isolator isolator) {
-        super(isolator);
-    }
 
     @Override
     protected void stepped(LivingEntity ply, State event) {

@@ -28,9 +28,9 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
     protected double motionZ;
 
     // Construct
-    protected final Solver solver;
-    protected final AcousticLibrary acoustics;
-    protected final Variator variator;
+    protected Solver solver;
+    protected AcousticLibrary acoustics;
+    protected Variator variator;
 
     // Footsteps
     protected float dmwBase;
@@ -61,7 +61,8 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
 
     protected PlayerEntity clientPlayer;
 
-    public BipedalStepSoundGenerator(Isolator isolator) {
+    @Override
+    public void setIsolator(Isolator isolator) {
         solver = isolator.getSolver();
         acoustics = isolator.getAcoustics();
         variator = isolator.getVariator();
@@ -78,8 +79,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
 
     protected void simulateStationary(LivingEntity ply) {
         if (isImmobile && (ply.isOnGround() || !ply.isSubmergedInWater()) && playbackImmobile()) {
-            solver.playAssociation(ply, solver.findAssociation(ply, 0d, isRightFoot),
-                    State.STAND);
+            solver.playAssociation(ply, solver.findAssociation(ply, 0d, isRightFoot), State.STAND);
         }
     }
 

@@ -2,7 +2,6 @@ package eu.ha3.presencefootsteps.sound.generator;
 
 import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.util.MathUtil;
-import eu.ha3.presencefootsteps.sound.Isolator;
 import eu.ha3.presencefootsteps.sound.Options;
 import net.minecraft.entity.LivingEntity;
 
@@ -14,10 +13,6 @@ class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
     protected int flapMod = 0;
     private long lastTimeImmobile;
     protected long nextFlapTime;
-
-    public PegasusStepSoundGenerator(Isolator isolator) {
-        super(isolator);
-    }
 
     @Override
     public void generateFootsteps(LivingEntity ply) {

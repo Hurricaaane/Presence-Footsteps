@@ -2,9 +2,8 @@ package eu.ha3.presencefootsteps.sound.generator;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
-import eu.ha3.presencefootsteps.sound.Isolator;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,16 +23,16 @@ public enum Locomotion {
         }
     }
 
-    private final Function<Isolator, StepSoundGenerator> constructor;
+    private final Supplier<StepSoundGenerator> constructor;
 
     private final String translationKey = "menu.pf.stance." + name().toLowerCase();
 
-    Locomotion(Function<Isolator, StepSoundGenerator> gen) {
+    Locomotion(Supplier<StepSoundGenerator> gen) {
         constructor = gen;
     }
 
-    public StepSoundGenerator supplyGenerator(Isolator isolator) {
-        return constructor.apply(isolator);
+    public StepSoundGenerator supplyGenerator() {
+        return constructor.get();
     }
 
     public boolean isBiped() {

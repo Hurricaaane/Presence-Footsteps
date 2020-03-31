@@ -3,6 +3,7 @@ package eu.ha3.presencefootsteps.sound;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -15,12 +16,15 @@ import eu.ha3.presencefootsteps.sound.generator.Locomotion;
 import eu.ha3.presencefootsteps.sound.generator.StepSoundGenerator;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.profiler.Profiler;
 
 public class SoundEngine implements IdentifiableResourceReloadListener {
@@ -33,7 +37,7 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
 
     private static final Identifier ID = new Identifier("presencefootsteps", "sounds");
 
-    private Isolator isolator = new PFIsolator(this);
+    private PFIsolator isolator = new PFIsolator(this);
 
     private final PFConfig config;
 
@@ -57,27 +61,40 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
         }
     }
 
-    public void onTick(MinecraftClient client, PlayerEntity player) {
-        if (client.currentScreen == null && !client.isPaused()) {
-            if (config.getEnabled() && (!client.isInSingleplayer() || config.getEnabledMP())) {
-                isolator.onFrame(player);
+    public boolean isPaused(MinecraftClient client) {
+        return client.currentScreen != null || client.isPaused();
+    }
 
-                ((IEntity) player).setNextStepDistance(Integer.MAX_VALUE);
-            }
+    public boolean isRunning(MinecraftClient client) {
+        return config.getEnabled() && (client.isInSingleplayer() || config.getEnabledMP());
+    }
+
+    private List<? extends Entity> getTargets(PlayerEntity ply) {
+        if (config.getEnabledGlobal()) {
+            Box box = new Box(ply.getBlockPos()).expand(16);
+
+            return ply.world.getEntities((Entity)null, box, e -> e instanceof LivingEntity);
+        } else {
+            return ply.world.getPlayers();
+        }
+    }
+
+    public void onFrame(MinecraftClient client, PlayerEntity player) {
+        if (!isPaused(client) && isRunning(client)) {
+            getTargets(player).forEach(e -> {
+                StepSoundGenerator generator = ((StepSoundSource) e).getStepGenerator(this);
+                generator.setIsolator(isolator);
+                generator.generateFootsteps((LivingEntity)e);
+                isolator.think(); // Delayed sounds
+
+                ((IEntity) e).setNextStepDistance(Integer.MAX_VALUE);
+            });
         }
     }
 
     public boolean onSoundRecieved(SoundEvent event, SoundCategory category) {
 
-        if (!config.getEnabled() || category != SoundCategory.PLAYERS) {
-            return false;
-        }
-
-        MinecraftClient client = MinecraftClient.getInstance();
-
-        boolean isMultiplayer = !(client.isInSingleplayer() || client.isIntegratedServerRunning());
-
-        if (isMultiplayer && !config.getEnabledMP()) {
+        if (category != SoundCategory.PLAYERS || !isRunning(MinecraftClient.getInstance())) {
             return false;
         }
 
@@ -95,8 +112,11 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
                 && "step".contentEquals(name[name.length - 1]);
     }
 
-    public StepSoundGenerator supplyGenerator(PlayerEntity player) {
-        return Locomotion.forPlayer(player, config.getLocomotion()).supplyGenerator(isolator);
+    public Locomotion getLocomotion(LivingEntity entity) {
+        if (entity instanceof PlayerEntity) {
+            return Locomotion.forPlayer((PlayerEntity)entity, config.getLocomotion());
+        }
+        return Locomotion.BIPED;
     }
 
     @Override

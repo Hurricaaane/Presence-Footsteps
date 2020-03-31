@@ -43,6 +43,11 @@ class PFOptionsScreen extends GameGui {
         })).getStyle()
             .setText("menu.pf.multiplayer." + config.getEnabledMP());
 
+        addButton(new Button(left, row += 24).onClick(sender -> {
+            sender.getStyle().setText("menu.pf.global." + config.toggleGlobal());
+        })).getStyle()
+            .setText("menu.pf.global." + config.getEnabledGlobal());
+
         addButton(new Button(left, row += 24, 96, 20).onClick(sender -> {
             new BlockReport("report_concise").execute(state -> !PresenceFootsteps.getInstance().getEngine().getIsolator().getBlockMap().contains(state));
         })).getStyle()

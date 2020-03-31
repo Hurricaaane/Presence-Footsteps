@@ -7,13 +7,9 @@ import eu.ha3.presencefootsteps.world.Lookup;
 import eu.ha3.presencefootsteps.world.Solver;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 
 public interface Isolator {
-
-    void onFrame(PlayerEntity ply);
-
     AcousticLibrary getAcoustics();
 
     Solver getSolver();

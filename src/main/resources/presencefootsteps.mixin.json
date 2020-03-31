@@ -8,6 +8,7 @@
       "IEntity",
       "ILivingEntity",
       "MClientPlayNetworkHandler",
-      "MDebugHud"
+      "MDebugHud",
+      "MLivingEntity"
     ]
 }

@@ -14,6 +14,8 @@ public class PFConfig extends JsonFile {
 
     private boolean multiplayer = true;
 
+    private boolean global = true;
+
     private transient final PresenceFootsteps pf;
 
     public PFConfig(Path file, PresenceFootsteps pf) {
@@ -27,6 +29,13 @@ public class PFConfig extends JsonFile {
         save();
 
         return multiplayer;
+    }
+
+    public boolean toggleGlobal() {
+        global = !global;
+        save();
+
+        return global;
     }
 
     public Locomotion setLocomotion(Locomotion loco) {
@@ -43,6 +52,10 @@ public class PFConfig extends JsonFile {
 
     public Locomotion getLocomotion() {
         return Locomotion.byName(stance);
+    }
+
+    public boolean getEnabledGlobal() {
+        return global && getEnabled();
     }
 
     public boolean getEnabledMP() {

@@ -1,15 +1,10 @@
 package eu.ha3.presencefootsteps.sound;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
-
 import eu.ha3.presencefootsteps.config.Variator;
 import eu.ha3.presencefootsteps.sound.player.StepSoundPlayer;
 import eu.ha3.presencefootsteps.sound.acoustics.AcousticLibrary;
 import eu.ha3.presencefootsteps.sound.acoustics.AcousticsPlayer;
-import eu.ha3.presencefootsteps.sound.generator.StepSoundGenerator;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
 import eu.ha3.presencefootsteps.world.GolemLookup;
 import eu.ha3.presencefootsteps.world.Lookup;
@@ -20,12 +15,9 @@ import eu.ha3.presencefootsteps.world.StateLookup;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 
 public class PFIsolator implements Isolator, SoundPlayer {
-
-    private final Map<UUID, StepSoundGenerator> generators = new HashMap<>();
 
     private final SoundEngine engine;
 
@@ -93,21 +85,5 @@ public class PFIsolator implements Isolator, SoundPlayer {
     @Override
     public Variator getVariator() {
         return variator;
-    }
-
-    private StepSoundGenerator getGenerator(PlayerEntity ply) {
-        if (generators.size() > 10) {
-            generators.entrySet().removeIf(entry -> ply.world.getPlayerByUuid(entry.getKey()) == null);
-        }
-
-        return generators.computeIfAbsent(ply.getUuid(), uuid -> {
-            return engine.supplyGenerator(ply);
-        });
-    }
-
-    @Override
-    public void onFrame(PlayerEntity ply) {
-        getGenerator(ply).generateFootsteps(ply);
-        think(); // Delayed sounds
     }
 }
