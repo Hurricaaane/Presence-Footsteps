@@ -159,10 +159,10 @@ public class PFSolver implements Solver {
         BlockState above = world.getBlockState(up);
         // Try to see if the block above is a carpet...
 
-        String association = findForGolem(world, up, "carpet");
+        String association = findForGolem(world, up, Lookup.CARPET_SUBSTRATE);
 
         if (!Emitter.isEmitter(association)) {
-            association = isolator.getBlockMap().getAssociation(above, "carpet");
+            association = isolator.getBlockMap().getAssociation(above, Lookup.CARPET_SUBSTRATE);
         }
 
         if (Emitter.isEmitter(association)) {
@@ -178,7 +178,7 @@ public class PFSolver implements Solver {
                 BlockPos down = pos.down();
                 BlockState below = world.getBlockState(down);
 
-                association = isolator.getBlockMap().getAssociation(below, "bigger");
+                association = isolator.getBlockMap().getAssociation(below, Lookup.FENCE_SUBSTRATE);
 
                 if (Emitter.isResult(association)) {
                     logger.debug("Fence detected: " + association);
@@ -198,7 +198,7 @@ public class PFSolver implements Solver {
             if (Emitter.isEmitter(association)) {
                 // This condition implies that foliage over a NOT_EMITTER block CANNOT PLAY
                 // This block most not be executed if the association is a carpet
-                String foliage = isolator.getBlockMap().getAssociation(above, "foliage");
+                String foliage = isolator.getBlockMap().getAssociation(above, Lookup.FOLIAGE_SUBSTRATE);
 
                 if (Emitter.isEmitter(foliage)) {
                     logger.debug("Foliage detected: " + foliage);
@@ -261,14 +261,14 @@ public class PFSolver implements Solver {
 
         BlockState above = world.getBlockState(pos.up());
 
-        String foliage = isolator.getBlockMap().getAssociation(above, "foliage");
+        String foliage = isolator.getBlockMap().getAssociation(above, Lookup.FOLIAGE_SUBSTRATE);
 
         if (!Emitter.isEmitter(foliage)) {
             return Association.NOT_EMITTER;
         }
 
         // we discard the normal block association, and mark the foliage as detected
-        if ("MESSY_GROUND".equals(isolator.getBlockMap().getAssociation(above, "messy"))) {
+        if ("MESSY_GROUND".equals(isolator.getBlockMap().getAssociation(above, Lookup.MESSY_SUBSTRATE))) {
             return new Association().associated().with(foliage);
         }
 

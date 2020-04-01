@@ -11,8 +11,12 @@ import com.google.gson.JsonObject;
 public interface Lookup<T> {
 
     String EMPTY_SUBSTRATE = "";
+    String CARPET_SUBSTRATE = "carpet";
+    String FENCE_SUBSTRATE = "bigger";
+    String FOLIAGE_SUBSTRATE = "foliage";
+    String MESSY_SUBSTRATE = "messy";
 
-    Gson gson = new Gson();
+    Gson GSON = new Gson();
 
     /**
      * This will return the appropriate association for the given state and substrate.
@@ -59,7 +63,7 @@ public interface Lookup<T> {
      * The read values will added to any existing ones.
      */
     default void load(Reader reader) {
-        gson.fromJson(reader, JsonObject.class).entrySet().forEach(entry -> {
+        GSON.fromJson(reader, JsonObject.class).entrySet().forEach(entry -> {
             add(entry.getKey(), entry.getValue().getAsString());
         });
     }

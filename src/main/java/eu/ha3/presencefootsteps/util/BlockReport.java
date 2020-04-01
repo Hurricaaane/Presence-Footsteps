@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 import com.google.gson.stream.JsonWriter;
 
 import eu.ha3.presencefootsteps.PresenceFootsteps;
+import eu.ha3.presencefootsteps.world.Lookup;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
@@ -74,7 +75,7 @@ public class BlockReport {
                         writer.name("sound");
                         writer.value(getSoundData(state));
                         writer.name("association");
-                        writer.value(PresenceFootsteps.getInstance().getEngine().getIsolator().getBlockMap().getAssociation(state, ""));
+                        writer.value(PresenceFootsteps.getInstance().getEngine().getIsolator().getBlockMap().getAssociation(state, Lookup.EMPTY_SUBSTRATE));
                         writer.endObject();
                     }
                 } catch (IOException e) {
