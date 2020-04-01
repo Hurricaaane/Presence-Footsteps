@@ -113,7 +113,7 @@
 	"minecraft:tall_seagrass.messy": "MESSY_GROUND",
 	"minecraft:tall_seagrass.foliage": "mud",
 
-	"minecraft:sea_pickle": "UNASSIGNED",
+	"minecraft:sea_pickle": "mud,slime",
 
 	"minecraft:piston[facing=up]": "wood",
 	"minecraft:piston": "stonemachine",
@@ -381,8 +381,8 @@
 	"minecraft:terracotta": "brickstone",
 	"minecraft:coal_block": "stone",
 
-	"minecraft:slime_block": "UNASSIGNED",
-	"minecraft:honey_block": "UNASSIGNED",
+	"minecraft:slime_block": "mud,slime",
+	"minecraft:honey_block": "honey",
 	"minecraft:grass_path": "grass",
 
 	"minecraft:sunflower": "NOT_EMITTER",
@@ -637,7 +637,7 @@
 	"minecraft:polished_andesite_slab": "marble",
 	"minecraft:diorite_slab": "stone,ore",
 
-	"minecraft:scaffolding": "UNASSIGNED",
+	"minecraft:scaffolding": "scaffold",
 
 	"minecraft:iron_door": "metalsubparts",
 	"#minecraft:wooden_doors": "bluntwood",
@@ -797,16 +797,15 @@
 	
 	"minecraft:crimson_door": "bluntwood,mushroom",
 	"minecraft:warped_door": "bluntwood,mushroom",
-	
-	"__todo": "TODO: moan sound type",
+
 	"minecraft:basalt": "sandstone,crumblystone",
 	"minecraft:polished_basalt": "marble,crumblystone",
-	"minecraft:soul_soil": "quicksand",
+	"minecraft:soul_soil": "souls",
 	"minecraft:lodestone": "stonemachine",
 	"minecraft:target": "leaves",
 	"minecraft:ancient_debris": "hardsteel,stone",
 	
-	"#minecraft:nylium": "mud,slimey",
+	"#minecraft:nylium": "mud,slick",
 	"minecraft:stripped_warped_stem": "organic_dry,mushroom,stone",
 	"minecraft:stripped_warped_hyphae": "organic_dry,mushroom,stone",
 	"#minecraft:warped_stems": "organic_dry,wood_sticky,mushroom",

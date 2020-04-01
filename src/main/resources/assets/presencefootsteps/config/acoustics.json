@@ -182,15 +182,39 @@
       }
     },
     "slime": {
-      "walk": {
-        "name": "@minecraft:block.slime.step"
+      "walk": "@minecraft:block.slime_block.step",
+      "land": "@minecraft:block.slime_block.break",
+      "wander": "@minecraft:block.slime_block.step"
+    },
+    "scaffold": {
+      "walk": "@minecraft:block.scaffolding.step",
+      "wander": {
+        "type": "simultaneous",
+        "array": [
+          "@minecraft:block.scaffolding.step",
+          {
+            "type": "delayed",
+            "delay": 50,
+            "name": "squeakywood.bluntwood_wander"
+          }
+        ]
       },
       "land": {
-        "name": "@minecraft:block.slime.break"
-      },
-      "wander": {
-        "name": "@minecraft:block.slime.step"
+        "type": "simultaneous",
+        "array": [
+          "@minecraft:block.scaffolding.step",
+          {
+            "type": "delayed",
+            "delay": 50,
+            "name": "squeakywood.bluntwood_walk"
+          }
+        ]
       }
+    },
+    "honey": {
+      "walk": "@minecraft:block.honey_block.step",
+      "land": "@minecraft:block.honey_block.break",
+      "wander": "@minecraft:block.honey_block.step"
     },
     "rails": {
       "walk": {
@@ -1290,6 +1314,12 @@
         ]
       }
     },
+    "souls": {
+      "walk": "@minecraft:block.soul_soil.place",
+      "run": "@minecraft:block.soul_soil.place",
+      "wander": "@minecraft:block.soul_soil.place",
+      "land": "@minecraft:block.soul_soil.place"
+    },
     "quicksand": {
       "walk": "quicksand.quicksand_walk",
       "wander": "dirt.dirt_wander",
@@ -1337,7 +1367,7 @@
         ]
       }
     },
-    "slimey": {
+    "slick": {
       "walk": {
         "type": "probability",
         "array": [
