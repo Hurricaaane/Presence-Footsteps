@@ -14,6 +14,14 @@ import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
 import net.minecraft.entity.Entity;
 
+/**
+ *
+ * An acoustic that can pick from more than one sound to play, each with their own relative
+ * weighting for how often that sound is picked.
+ *
+ * @author Hurry
+ *
+ */
 class WeightedAcoustic implements Acoustic {
 
     protected final List<Acoustic> theAcoustics;

@@ -10,14 +10,15 @@ import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
 import net.minecraft.entity.Entity;
 
-class EventSelectorAcoustics implements NamedAcoustic {
-    private final String name;
-
+/**
+ * An acoustic that can play different acoustics depending on a specific event type.
+ *
+ * @author Hurry
+ */
+class EventSelectorAcoustics implements Acoustic {
     private final Map<State, Acoustic> pairs = new HashMap<>();
 
-    public EventSelectorAcoustics(String name, JsonObject json, AcousticsJsonParser context) {
-        this.name = name;
-
+    public EventSelectorAcoustics(JsonObject json, AcousticsJsonParser context) {
         for (State i : State.values()) {
             String eventName = i.getName();
 
@@ -25,11 +26,6 @@ class EventSelectorAcoustics implements NamedAcoustic {
                 pairs.put(i, context.solveAcoustic(json.get(eventName)));
             }
         }
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override

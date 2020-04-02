@@ -30,11 +30,10 @@ class DelayedAcoustic extends VaryingAcoustic implements Options {
             || "delay_max".equals(option);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Long get(String option) {
+    public long get(String option) {
         return "delay_min".equals(option) ? delay.min
              : "delay_max".equals(option) ? delay.max
-             : null;
+             : 0;
     }
 }

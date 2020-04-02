@@ -8,6 +8,12 @@ import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
 import eu.ha3.presencefootsteps.util.Range;
 import net.minecraft.entity.Entity;
 
+
+/**
+ * The simplest form of an acoustic. Plays one sound with a set volume and pitch range.
+ *
+ * @author Hurry
+ */
 class VaryingAcoustic implements Acoustic {
 
     private final String soundName;
@@ -55,13 +61,11 @@ class VaryingAcoustic implements Acoustic {
         float volume = this.volume.random(player.getRNG());
         float pitch = this.pitch.random(player.getRNG());
 
-        if (inputOptions != null) {
-            if (inputOptions.containsKey("gliding_volume")) {
-                volume = this.volume.on(inputOptions.get("gliding_volume"));
-            }
-            if (inputOptions.containsKey("gliding_pitch")) {
-                pitch = this.pitch.on(inputOptions.get("gliding_pitch"));
-            }
+        if (inputOptions.containsKey("gliding_volume")) {
+            volume = this.volume.on(inputOptions.get("gliding_volume"));
+        }
+        if (inputOptions.containsKey("gliding_pitch")) {
+            pitch = this.pitch.on(inputOptions.get("gliding_pitch"));
         }
 
         player.playSound(location, soundName, volume, pitch, getOptions());

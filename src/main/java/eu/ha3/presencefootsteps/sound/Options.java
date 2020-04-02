@@ -11,8 +11,8 @@ public interface Options {
         }
 
         @Override
-        public <T> T get(String option) {
-            return null;
+        public long get(String option) {
+            return 0;
         }
     };
 
@@ -24,15 +24,13 @@ public interface Options {
 
     boolean containsKey(Object option);
 
-    <T> T get(String option);
+    long get(String option);
 
     final class MapOptions extends HashMap<String, Object> implements Options {
         private static final long serialVersionUID = 1L;
-
-        @SuppressWarnings("unchecked")
         @Override
-        public <T> T get(String option) {
-            return (T)super.get(option);
+        public long get(String option) {
+            return ((Number)super.get(option)).longValue();
         }
     }
 }

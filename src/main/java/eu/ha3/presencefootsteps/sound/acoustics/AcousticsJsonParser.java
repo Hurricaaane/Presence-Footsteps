@@ -90,7 +90,7 @@ public class AcousticsJsonParser {
         }
 
         json.getAsJsonObject("contents").entrySet().forEach(element -> {
-            lib.addAcoustic(new EventSelectorAcoustics(element.getKey(), element.getValue().getAsJsonObject(), this));
+            lib.addAcoustic(element.getKey(), new EventSelectorAcoustics(element.getValue().getAsJsonObject(), this));
         });
     }
 
@@ -99,6 +99,8 @@ public class AcousticsJsonParser {
 
         if (unsolved.isJsonObject()) {
             ret = solveAcousticsCompound(unsolved.getAsJsonObject());
+        } else if (unsolved.isJsonArray()) {
+            ret = new SimultaneousAcoustic(unsolved.getAsJsonArray(), this);
         } else if (unsolved.isJsonPrimitive() && unsolved.getAsJsonPrimitive().isString()) {
             ret = new VaryingAcoustic(unsolved.getAsString(), this);
         }

@@ -1,7 +1,6 @@
 package eu.ha3.presencefootsteps.sound.acoustics;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.gson.JsonArray;
@@ -13,17 +12,22 @@ import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
 import net.minecraft.entity.Entity;
 
+/**
+ * An acoustic that plays multiple other acoustics all a the same time.
+ *
+ * @author Hurry
+ */
 class SimultaneousAcoustic implements Acoustic {
 
     private final List<Acoustic> acoustics = new ArrayList<>();
 
     public SimultaneousAcoustic(JsonObject json, AcousticsJsonParser context) {
-        JsonArray sim = json.getAsJsonArray("array");
-        Iterator<JsonElement> iter = sim.iterator();
+        this(json.getAsJsonArray("array"), context);
+    }
 
-        while (iter.hasNext()) {
-            JsonElement subElement = iter.next();
-            acoustics.add(context.solveAcoustic(subElement));
+    public SimultaneousAcoustic(JsonArray sim, AcousticsJsonParser context) {
+        for (JsonElement i : sim) {
+            acoustics.add(context.solveAcoustic(i));
         }
     }
 

@@ -9,7 +9,7 @@ public interface AcousticLibrary {
     /**
      * Adds an acoustic to the library.
      */
-    void addAcoustic(NamedAcoustic acoustic);
+    void addAcoustic(String name, Acoustic acoustic);
 
     /**
      * Plays an acoustic with additional options.

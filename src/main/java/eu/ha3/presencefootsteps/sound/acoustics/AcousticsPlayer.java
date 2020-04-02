@@ -21,8 +21,8 @@ public class AcousticsPlayer extends ImmediateSoundPlayer implements AcousticLib
     }
 
     @Override
-    public void addAcoustic(NamedAcoustic acoustic) {
-        acoustics.put(acoustic.getName(), acoustic);
+    public void addAcoustic(String name, Acoustic acoustic) {
+        acoustics.put(name, acoustic);
     }
 
     @Override

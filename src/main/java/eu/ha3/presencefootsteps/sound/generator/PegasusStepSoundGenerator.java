@@ -95,7 +95,7 @@ class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
                         : MathUtil.scalex(fallDistance, variator.HUGEFALL_LANDING_DISTANCE_MIN, variator.HUGEFALL_LANDING_DISTANCE_MAX);
                 acoustics.playAcoustic(ply, "_SWIFT", State.LAND, Options.singular("gliding_volume", volume));
             } else {
-                acoustics.playAcoustic(ply, "_SWIFT", State.JUMP, null);
+                acoustics.playAcoustic(ply, "_SWIFT", State.JUMP, Options.EMPTY);
             }
         }
 
