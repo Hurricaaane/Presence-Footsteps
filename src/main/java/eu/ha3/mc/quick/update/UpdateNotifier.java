@@ -100,11 +100,21 @@ public class UpdateNotifier extends JsonFile {
         List<Version> versions = new ArrayList<>();
 
         Version getLatest(Version current) {
-            Version newVersion = new Version().upgrade(current);
+            Version newOwnVersion = new Version().upgrade(current);
+            Version newAnyVersion = new Version().upgrade(current);
 
-            versions.forEach(newVersion::upgrade);
+            versions.forEach(v -> {
+                if (newOwnVersion.compatible(v)) {
+                    newOwnVersion.upgrade(v);
+                }
+                newAnyVersion.upgrade(v);
+            });
 
-            return newVersion;
+            if (!newOwnVersion.equals(current)) {
+                return newOwnVersion;
+            }
+
+            return newAnyVersion;
         }
     }
 
@@ -124,7 +134,7 @@ public class UpdateNotifier extends JsonFile {
         }
 
         Version upgrade(Version other) {
-            if (number > other.number) {
+            if (number < other.number) {
                 number = other.number;
 
                 if (other.minecraft != null) {
@@ -137,6 +147,11 @@ public class UpdateNotifier extends JsonFile {
             }
 
             return this;
+        }
+
+        boolean compatible(Version other) {
+            return (Strings.isNullOrEmpty(minecraft) || minecraft.contentEquals(other.minecraft))
+                && (Strings.isNullOrEmpty(type) || minecraft.contentEquals(other.type));
         }
 
         @Override
