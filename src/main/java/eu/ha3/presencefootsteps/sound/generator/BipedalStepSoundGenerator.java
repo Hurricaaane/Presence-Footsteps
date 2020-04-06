@@ -2,7 +2,6 @@ package eu.ha3.presencefootsteps.sound.generator;
 
 import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
@@ -59,8 +58,6 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
     private boolean isMessyFoliage;
     private long brushesTime;
 
-    protected PlayerEntity clientPlayer;
-
     @Override
     public void setIsolator(Isolator isolator) {
         solver = isolator.getSolver();
@@ -69,12 +66,13 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
     }
 
     @Override
-    public void generateFootsteps(LivingEntity ply) {
+    public boolean generateFootsteps(LivingEntity ply) {
         simulateMotionData(ply);
         simulateFootsteps(ply);
         simulateAirborne(ply);
         simulateBrushes(ply);
         simulateStationary(ply);
+        return true;
     }
 
     protected void simulateStationary(LivingEntity ply) {
@@ -103,12 +101,10 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
      * remote server.
      */
     protected void simulateMotionData(LivingEntity ply) {
-        clientPlayer = PlayerUtil.resolveToClientPlayer(ply);
-
         if (PlayerUtil.isClientPlayer(ply)) {
-            motionX = clientPlayer.getVelocity().x;
-            motionY = clientPlayer.getVelocity().y;
-            motionZ = clientPlayer.getVelocity().z;
+            motionX = ply.getVelocity().x;
+            motionY = ply.getVelocity().y;
+            motionZ = ply.getVelocity().z;
         } else {
             // Other players don't send their motion data so we have to make our own
             // approximations.

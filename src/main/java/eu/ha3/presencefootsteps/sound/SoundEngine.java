@@ -18,6 +18,8 @@ import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.FlyingEntity;
+import net.minecraft.entity.mob.WaterCreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.sound.SoundCategory;
@@ -31,6 +33,7 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
 
     private static final Identifier blockmap = new Identifier("presencefootsteps", "config/blockmap.json");
     private static final Identifier golemmap = new Identifier("presencefootsteps", "config/golemmap.json");
+    private static final Identifier locomotionmap = new Identifier("presencefootsteps", "config/locomotionmap.json");
     private static final Identifier primitivemap = new Identifier("presencefootsteps", "config/primitivemap.json");
     private static final Identifier acoustics = new Identifier("presencefootsteps", "config/acoustics.json");
     private static final Identifier variator = new Identifier("presencefootsteps", "config/variator.json");
@@ -62,18 +65,21 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
     }
 
     public boolean isPaused(MinecraftClient client) {
-        return client.currentScreen != null || client.isPaused();
+        return false;//client.currentScreen != null || client.isPaused();
     }
 
     public boolean isRunning(MinecraftClient client) {
-        return config.getEnabled() && (client.isInSingleplayer() || config.getEnabledMP());
+        return true;// config.getEnabled() && (client.isInSingleplayer() || config.getEnabledMP());
     }
 
     private List<? extends Entity> getTargets(PlayerEntity ply) {
         if (config.getEnabledGlobal()) {
             Box box = new Box(ply.getBlockPos()).expand(16);
 
-            return ply.world.getEntities((Entity)null, box, e -> e instanceof LivingEntity);
+            return ply.world.getEntities((Entity)null, box, e ->
+                        e instanceof LivingEntity
+                    && !(e instanceof WaterCreatureEntity)
+                    && !(e instanceof FlyingEntity));
         } else {
             return ply.world.getPlayers();
         }
@@ -84,11 +90,12 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
             getTargets(player).forEach(e -> {
                 StepSoundGenerator generator = ((StepSoundSource) e).getStepGenerator(this);
                 generator.setIsolator(isolator);
-                generator.generateFootsteps((LivingEntity)e);
-                isolator.think(); // Delayed sounds
-
-                ((IEntity) e).setNextStepDistance(Integer.MAX_VALUE);
+                if (generator.generateFootsteps((LivingEntity)e)) {
+                    ((IEntity) e).setNextStepDistance(Integer.MAX_VALUE);
+                }
             });
+
+            isolator.think(); // Delayed sounds
         }
     }
 
@@ -113,10 +120,10 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
     }
 
     public Locomotion getLocomotion(LivingEntity entity) {
-        if (entity instanceof PlayerEntity) {
+        if (entity == MinecraftClient.getInstance().player) {
             return Locomotion.forPlayer((PlayerEntity)entity, config.getLocomotion());
         }
-        return Locomotion.BIPED;
+        return isolator.getLocomotionMap().lookup(entity);
     }
 
     @Override
@@ -145,6 +152,7 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
         collectResources(blockmap, manager, isolator.getBlockMap()::load);
         collectResources(golemmap, manager, isolator.getGolemMap()::load);
         collectResources(primitivemap, manager, isolator.getPrimitiveMap()::load);
+        collectResources(locomotionmap, manager, isolator.getLocomotionMap()::load);
         collectResources(acoustics, manager, new AcousticsJsonParser(isolator.getAcoustics())::parse);
         collectResources(variator, manager, isolator.getVariator()::load);
     }

@@ -15,9 +15,9 @@ class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
     protected long nextFlapTime;
 
     @Override
-    public void generateFootsteps(LivingEntity ply) {
+    public boolean generateFootsteps(LivingEntity ply) {
         lastTimeImmobile = timeImmobile;
-        super.generateFootsteps(ply);
+        return super.generateFootsteps(ply);
     }
 
     @Override

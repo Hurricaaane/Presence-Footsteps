@@ -9,7 +9,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 
 public enum Locomotion {
-    UNKNOWN(BipedalStepSoundGenerator::new),
+    NONE(() -> StepSoundGenerator.EMPTY),
     BIPED(BipedalStepSoundGenerator::new),
     QUADRUPED(QuadrapedalStepSoundGenerator::new),
     FLYING(PegasusStepSoundGenerator::new);
@@ -35,34 +35,21 @@ public enum Locomotion {
         return constructor.get();
     }
 
-    public boolean isBiped() {
-        return this == UNKNOWN || this == BIPED;
-    }
-
-    public boolean isEquine() {
-        return !isBiped();
-    }
-
-    public boolean isFlying() {
-        return this == FLYING;
-    }
-
     public String getDisplayName() {
         return I18n.translate("menu.pf.stance", I18n.translate(translationKey));
     }
 
     public static Locomotion byName(String name) {
-        return registry.getOrDefault(name, UNKNOWN);
+        return registry.getOrDefault(name, BIPED);
     }
 
     public static Locomotion forPlayer(PlayerEntity ply, Locomotion preference) {
-        if (preference == UNKNOWN) {
-
-            if (!(ply instanceof ClientPlayerEntity && MineLP.hasPonies())) {
-                return Locomotion.BIPED;
+        if (preference == NONE) {
+            if (ply instanceof ClientPlayerEntity && MineLP.hasPonies()) {
+                return MineLP.getLocomotion(ply);
             }
 
-            return MineLP.getLocomotion(ply);
+            return Locomotion.BIPED;
         }
 
         return preference;

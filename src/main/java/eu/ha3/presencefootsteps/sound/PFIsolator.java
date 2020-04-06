@@ -5,8 +5,11 @@ import eu.ha3.presencefootsteps.config.Variator;
 import eu.ha3.presencefootsteps.sound.player.StepSoundPlayer;
 import eu.ha3.presencefootsteps.sound.acoustics.AcousticLibrary;
 import eu.ha3.presencefootsteps.sound.acoustics.AcousticsPlayer;
+import eu.ha3.presencefootsteps.sound.generator.Locomotion;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
 import eu.ha3.presencefootsteps.world.GolemLookup;
+import eu.ha3.presencefootsteps.world.Index;
+import eu.ha3.presencefootsteps.world.LocomotionLookup;
 import eu.ha3.presencefootsteps.world.Lookup;
 import eu.ha3.presencefootsteps.world.PFSolver;
 import eu.ha3.presencefootsteps.world.PrimitiveLookup;
@@ -22,6 +25,8 @@ public class PFIsolator implements Isolator, SoundPlayer {
     private final SoundEngine engine;
 
     private final Variator variator = new Variator();
+
+    private final Index<Entity, Locomotion> locomotionMap = new LocomotionLookup();
 
     private final Lookup<EntityType<?>> golemMap = new GolemLookup();
 
@@ -60,6 +65,11 @@ public class PFIsolator implements Isolator, SoundPlayer {
     @Override
     public Solver getSolver() {
         return solver;
+    }
+
+    @Override
+    public Index<Entity, Locomotion> getLocomotionMap() {
+        return locomotionMap;
     }
 
     @Override

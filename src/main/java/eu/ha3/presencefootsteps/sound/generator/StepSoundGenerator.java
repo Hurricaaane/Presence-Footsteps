@@ -10,13 +10,15 @@ import net.minecraft.entity.LivingEntity;
  *
  */
 public interface StepSoundGenerator {
+    StepSoundGenerator EMPTY = ply -> false;
+
     /**
      * Generate footsteps sounds of the Entity.
      */
-    void generateFootsteps(LivingEntity ply);
+    boolean generateFootsteps(LivingEntity ply);
 
     /**
      * Sets this engine to use the parameters from a new isolator.
      */
-    void setIsolator(Isolator isolator);
+    default void setIsolator(Isolator isolator) {}
 }
