@@ -164,6 +164,7 @@
 	"minecraft:stone_brick_slab": "brickstone",
 	"minecraft:nether_brick_slab": "brickstone",
 	"minecraft:quartz_slab": "marble",
+	"minecraft:quartz_bricks": "marble",
 	"minecraft:red_sandstone_slab": "sandstone",
 	"minecraft:cut_red_sandstone_slab": "sandstone",
 	"minecraft:purpur_slab": "stonemachine,brickstone",
@@ -287,6 +288,8 @@
 	"minecraft:lily_pad.carpet": "waterfine",
 
 	"minecraft:nether_bricks": "brickstone",
+	"minecraft:cracked_nether_bricks": "brickstone",
+	"minecraft:chiseled_nether_bricks": "brickstone",
 	"minecraft:nether_brick_fence.bigger": "brickstone",
 	"minecraft:nether_brick_stairs": "brickstone",
 	"minecraft:enchanting_table": "stoneutility",
@@ -637,6 +640,27 @@
 	"minecraft:polished_andesite_slab": "marble",
 	"minecraft:diorite_slab": "stone,ore",
 
+	"minecraft:blackstone": "stone",
+	"minecraft:gilded_blackstone": "stone,ore",
+	"minecraft:blackstone_slab": "stone",
+	"minecraft:blackstone_stairs": "stone",
+	"minecraft:blackstone_wall.bigger": "stone",
+
+	"minecraft:polished_blackstone": "marble",
+	"minecraft:chiseled_polished_blackstone": "marble",
+	"minecraft:polished_blackstone_slab": "marble",
+	"minecraft:polished_blackstone_stairs": "marble",
+	"minecraft:polished_blackstone_button": "marble",
+	"minecraft:polished_blackstone_pressure_plate": "marble",
+	"minecraft:polished_blackstone_pressure_plate.carpet": "marble",
+	"minecraft:polished_blackstone_wall.bigger": "marble",
+
+	"minecraft:polished_blackstone_bricks": "brickstone",
+	"minecraft:polished_blackstone_brick_slab": "brickstone",
+	"minecraft:polished_blackstone_brick_stairs": "brickstone",
+	"minecraft:polished_blackstone_brick_wall.bigger": "brickstone",
+	"minecraft:cracked_polished_blackstone_bricks": "brickstone",
+
 	"minecraft:scaffolding": "scaffold",
 
 	"minecraft:iron_door": "metalsubparts",
@@ -679,6 +703,8 @@
 	"minecraft:nether_sprouts.foliage": "organic,mushroom",
 	"minecraft:brewing_stand": "metalbar",
 	"minecraft:cauldron": "metalbar",
+	"minecraft:chain": "chain",
+	"minecraft:chain.foliage": "chain",
 
 	"minecraft:potted_oxeye_daisy.foliage": "brush",
 
@@ -749,6 +775,8 @@
 	"minecraft:soul_fire_lantern": "UNASSIGNED",
 	"minecraft:campfire[lit=false]": "wood",
 	"minecraft:campfire": "wood,magma",
+	"minecraft:soul_campfire[lit=false]": "wood",
+	"minecraft:soul_campfire": "wood,magma",
 
 	"minecraft:sweet_berry_bush": "NOT_EMITTER",
 	"minecraft:sweet_berry_bush.messy": "straw",

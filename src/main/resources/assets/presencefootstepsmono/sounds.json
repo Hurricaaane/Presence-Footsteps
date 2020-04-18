@@ -367,6 +367,24 @@
       "presencefootstepsmono:marble/marble_wander7"
     ]
   },
+  "pf_presence.chain.chain_wander": {
+    "category": "master",
+    "subtitle": "subtitles.pf.chain",
+    "sounds": [
+      "presencefootstepsmono:chain/chain_1",
+      "presencefootstepsmono:chain/chain_2",
+      "presencefootstepsmono:chain/chain_3",
+      "presencefootstepsmono:chain/chain_4",
+      "presencefootstepsmono:chain/chain_5",
+      "presencefootstepsmono:chain/chain_6",
+      "presencefootstepsmono:chain/chain_7",
+      "presencefootstepsmono:chain/chain_8",
+      "presencefootstepsmono:chain/chain_9",
+      "presencefootstepsmono:chain/chain_10",
+      "presencefootstepsmono:chain/chain_11",
+      "presencefootstepsmono:chain/chain_12"
+    ]
+  },
   "pf_presence.metalbar.metalbar_land": {
     "category": "master",
     "subtitle": "subtitles.pf.metal_clink",
