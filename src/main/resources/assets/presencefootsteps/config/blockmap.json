@@ -747,6 +747,7 @@
 
 	"minecraft:lantern": "UNASSIGNED",
 	"minecraft:soul_fire_lantern": "UNASSIGNED",
+	"minecraft:campfire[lit=false]": "wood",
 	"minecraft:campfire": "wood,magma",
 
 	"minecraft:sweet_berry_bush": "NOT_EMITTER",
