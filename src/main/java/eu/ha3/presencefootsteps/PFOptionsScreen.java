@@ -12,6 +12,7 @@ import eu.ha3.presencefootsteps.sound.generator.Locomotion;
 import eu.ha3.presencefootsteps.util.BlockReport;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
 
 class PFOptionsScreen extends GameGui {
@@ -50,11 +51,13 @@ class PFOptionsScreen extends GameGui {
 
         addButton(new Button(left, row += 24, 96, 20).onClick(sender -> {
             new BlockReport("report_concise").execute(state -> !PresenceFootsteps.getInstance().getEngine().getIsolator().getBlockMap().contains(state));
-        })).getStyle()
+        })).setEnabled(client.world != null)
+            .getStyle()
             .setText("menu.pf.report.concise");
 
         addButton(new Button(left + 104, row, 96, 20)
             .onClick(sender -> new BlockReport("report_full").execute(null)))
+            .setEnabled(client.world != null)
             .getStyle()
                 .setText("menu.pf.report.full");
 
@@ -64,9 +67,9 @@ class PFOptionsScreen extends GameGui {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        renderBackground();
-        super.render(mouseX, mouseY, partialTicks);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
+        renderBackground(matrices);
+        super.render(matrices, mouseX, mouseY, partialTicks);
     }
 
     private String formatVolume(float volume) {
