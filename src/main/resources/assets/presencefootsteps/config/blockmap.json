@@ -187,8 +187,8 @@
 
 	"minecraft:torch": "NOT_EMITTER",
 	"minecraft:wall_torch": "NOT_EMITTER",
-	"minecraft:soul_fire_torch": "NOT_EMITTER",
-	"minecraft:soul_fire_wall_torch": "NOT_EMITTER",
+	"minecraft:soul_torch": "NOT_EMITTER",
+	"minecraft:soul_wall_torch": "NOT_EMITTER",
 	"minecraft:end_rod": "metalbar",
 
 	"minecraft:chorus_flower": "organic_solid",
@@ -707,6 +707,11 @@
 	"minecraft:chain.foliage": "chain",
 
 	"minecraft:potted_oxeye_daisy.foliage": "brush",
+
+	"minecraft:potted_warped_roots.foliage": "mushroom",
+	"minecraft:potted_crimson_roots.foliage": "mushroom",
+	"minecraft:potted_warped_fungus.foliage": "mushroom",
+	"minecraft:potted_crimson_fungus.foliage": "mushroom",
 
 	"minecraft:potted_wither_rose.messy": "straw",
 	"minecraft:potted_wither_rose.foliage": "brush",
