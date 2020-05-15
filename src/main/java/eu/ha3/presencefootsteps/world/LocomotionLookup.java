@@ -20,7 +20,7 @@ public class LocomotionLookup implements Index<Entity, Locomotion> {
         if (key instanceof PlayerEntity) {
             return Locomotion.forPlayer((PlayerEntity)key, Locomotion.NONE);
         }
-        return values.getOrDefault(EntityType.getId(key.getType()), Locomotion.BIPED);
+        return Locomotion.forLiving(key, values.getOrDefault(EntityType.getId(key.getType()), Locomotion.BIPED));
     }
 
     @Override
@@ -32,5 +32,10 @@ public class LocomotionLookup implements Index<Entity, Locomotion> {
         }
 
         values.put(id, Locomotion.byName(value.toUpperCase()));
+    }
+
+    @Override
+    public boolean contains(Identifier key) {
+        return values.containsKey(key);
     }
 }

@@ -1,9 +1,13 @@
 package eu.ha3.presencefootsteps.sound.generator;
 
+import com.minelittlepony.api.pony.meta.Race;
 import com.minelittlepony.client.MineLittlePony;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Identifier;
 
 class MineLP {
     private static boolean checkCompleted = false;
@@ -16,6 +20,18 @@ class MineLP {
         }
 
         return hasMineLP;
+    }
+
+    public static Locomotion getLocomotion(Entity entity, Locomotion fallback) {
+
+        Identifier texture = MinecraftClient.getInstance().getEntityRenderManager().getRenderer(entity).getTexture(entity);
+
+        Race race = MineLittlePony.getInstance().getManager().getPony(texture).getRace(false);
+
+        if (race.isHuman()) {
+            return fallback;
+        }
+        return race.hasWings() ? Locomotion.FLYING : Locomotion.QUADRUPED;
     }
 
     public static Locomotion getLocomotion(PlayerEntity ply) {

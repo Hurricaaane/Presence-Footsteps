@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 
 public enum Locomotion {
@@ -41,6 +42,14 @@ public enum Locomotion {
 
     public static Locomotion byName(String name) {
         return registry.getOrDefault(name, BIPED);
+    }
+
+    public static Locomotion forLiving(Entity entity, Locomotion fallback) {
+        if (MineLP.hasPonies()) {
+            return MineLP.getLocomotion(entity, fallback);
+        }
+
+        return fallback;
     }
 
     public static Locomotion forPlayer(PlayerEntity ply, Locomotion preference) {

@@ -34,11 +34,13 @@ import net.minecraft.block.TallPlantBlock;
 import net.minecraft.block.TorchBlock;
 import net.minecraft.block.TransparentBlock;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class BlockReport {
@@ -53,7 +55,7 @@ public class BlockReport {
             writeReport(filter);
             printResults();
         } catch (Exception e) {
-            addMessage(new TranslatableText("pf.report.error", e.getMessage()), Formatting.RED);
+            addMessage(new TranslatableText("pf.report.error", e.getMessage()).styled(s -> s.withColor(Formatting.RED)));
         }
     }
 
@@ -62,6 +64,8 @@ public class BlockReport {
 
         try (JsonWriter writer = new JsonWriter(Files.newBufferedWriter(loc))) {
             writer.setIndent("    ");
+            writer.beginObject();
+            writer.name("blocks");
             writer.beginObject();
             Registry.BLOCK.forEach(block -> {
                 BlockState state = block.getDefaultState();
@@ -82,6 +86,22 @@ public class BlockReport {
                     e.printStackTrace();
                 }
             });
+            writer.endObject();
+            writer.name("unmapped_entities");
+            writer.beginArray();
+            Registry.ENTITY_TYPE.forEach(type -> {
+                if (type.create(MinecraftClient.getInstance().world) instanceof LivingEntity) {
+                    Identifier id = Registry.ENTITY_TYPE.getId(type);
+                    if (!PresenceFootsteps.getInstance().getEngine().getIsolator().getLocomotionMap().contains(id)) {
+                        try {
+                            writer.value(id.toString());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+            writer.endArray();
             writer.endObject();
         }
     }
@@ -107,17 +127,12 @@ public class BlockReport {
         if (block instanceof FluidBlock) soundName += ",EXTENDS_LIQUID";
         if (block instanceof PlantBlock) soundName += ",EXTENDS_PLANT";
         if (block instanceof TallPlantBlock) soundName += ",EXTENDS_DOUBLE_PLANT";
-        if (block instanceof PlantBlock) soundName += ",EXTENDS_CROPS";
         if (block instanceof ConnectingBlock) soundName += ",EXTENDS_CONNECTED_PLANT";
         if (block instanceof LeavesBlock) soundName += ",EXTENDS_LEAVES";
         if (block instanceof SlabBlock) soundName += ",EXTENDS_SLAB";
         if (block instanceof StairsBlock) soundName += ",EXTENDS_STAIRS";
-        if (block instanceof SnowyBlock) {
-            soundName += ",EXTENDS_SNOWY";
-            if (block instanceof SpreadableBlock) {
-                soundName += ",EXTENDS_SPREADABLE";
-            }
-        }
+        if (block instanceof SnowyBlock) soundName += ",EXTENDS_SNOWY";
+        if (block instanceof SpreadableBlock) soundName += ",EXTENDS_SPREADABLE";
         if (block instanceof FallingBlock) soundName += ",EXTENDS_PHYSICALLY_FALLING";
         if (block instanceof PaneBlock) soundName += ",EXTENDS_PANE";
         if (block instanceof HorizontalFacingBlock) soundName += ",EXTENDS_PILLAR";
@@ -130,17 +145,15 @@ public class BlockReport {
     }
 
     private void printResults() {
-        Text link = new LiteralText(loc.getFileName().toString());
-
-        link.getStyle()
-            .setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, loc.toString()))
-            .setUnderline(true);
-
-        addMessage(new TranslatableText("pf.report.save").append(link), Formatting.GREEN);
+        addMessage(new TranslatableText("pf.report.save")
+                .append(new LiteralText(loc.getFileName().toString()).styled(s -> s
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, loc.toString()))
+                    .withFormatting(Formatting.UNDERLINE)))
+                .styled(s -> s
+                    .withColor(Formatting.GREEN)));
     }
 
-    public static void addMessage(Text text, Formatting color) {
-        text.getStyle().setColor(color);
+    public static void addMessage(Text text) {
         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(text);
     }
 

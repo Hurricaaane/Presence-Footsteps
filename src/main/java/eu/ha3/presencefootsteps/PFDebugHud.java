@@ -33,6 +33,7 @@ public class PFDebugHud {
             renderSoundList("PF Golem Sounds",
                     engine.getIsolator().getGolemMap().getAssociations(client.targetedEntity.getType()),
                     list);
+            list.add(engine.getIsolator().getLocomotionMap().lookup(client.targetedEntity).getDisplayName());
         }
     }
 
