@@ -151,7 +151,7 @@ public class UpdateNotifier extends JsonFile {
 
         boolean compatible(Version other) {
             return (Strings.isNullOrEmpty(minecraft) || minecraft.contentEquals(other.minecraft))
-                && (Strings.isNullOrEmpty(type) || minecraft.contentEquals(other.type));
+                && (Strings.isNullOrEmpty(type) || type.contentEquals(other.type));
         }
 
         @Override
@@ -159,8 +159,8 @@ public class UpdateNotifier extends JsonFile {
             return super.equals(other) ||
                     (other instanceof Version
                         && ((Version)other).number == number
-                        && Strings.nullToEmpty(minecraft).equals(((Version)other).minecraft)
-                        && Strings.nullToEmpty(type).equals(((Version)other).type));
+                        && Strings.nullToEmpty(minecraft).equals(Strings.nullToEmpty(((Version)other).minecraft))
+                        && Strings.nullToEmpty(type).equals(Strings.nullToEmpty(((Version)other).type)));
         }
     }
 
