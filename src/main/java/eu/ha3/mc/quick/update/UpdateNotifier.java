@@ -110,6 +110,8 @@ public class UpdateNotifier extends JsonFile {
                 newAnyVersion.upgrade(v);
             });
 
+            logger.info("Detected versions: Installed {}, Best {}, Available {}", current, newOwnVersion, newAnyVersion);
+
             if (!newOwnVersion.equals(current)) {
                 return newOwnVersion;
             }
@@ -150,8 +152,8 @@ public class UpdateNotifier extends JsonFile {
         }
 
         boolean compatible(Version other) {
-            return (Strings.isNullOrEmpty(minecraft) || minecraft.contentEquals(other.minecraft))
-                && (Strings.isNullOrEmpty(type) || type.contentEquals(other.type));
+            return (Strings.isNullOrEmpty(minecraft) || minecraft.equals(other.minecraft))
+                && (Strings.isNullOrEmpty(type) || type.equals(other.type));
         }
 
         @Override
@@ -161,6 +163,11 @@ public class UpdateNotifier extends JsonFile {
                         && ((Version)other).number == number
                         && Strings.nullToEmpty(minecraft).equals(Strings.nullToEmpty(((Version)other).minecraft))
                         && Strings.nullToEmpty(type).equals(Strings.nullToEmpty(((Version)other).type)));
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%s/%d/%s", type, number, minecraft);
         }
     }
 

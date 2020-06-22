@@ -69,7 +69,7 @@ public class PresenceFootsteps implements ClientModInitializer {
         updateNotifier = new UpdateNotifier(
                 pfFolder.resolve("updater.json"),
                 "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d",
-                new UpdateNotifier.Version("1.14.4", "r", 16), this::onUpdate);
+                new UpdateNotifier.Version("1.16", "r", 26), this::onUpdate);
         updateNotifier.load();
 
         config = new PFConfig(pfFolder.resolve("userconfig.json"), this);
@@ -105,7 +105,7 @@ public class PresenceFootsteps implements ClientModInitializer {
     private void onUpdate(Version newVersion, Version currentVersion) {
         ToastManager manager = MinecraftClient.getInstance().getToastManager();
 
-        SystemToast.show(manager, SystemToast.Type.TUTORIAL_HINT,
+        SystemToast.add(manager, SystemToast.Type.TUTORIAL_HINT,
                 new TranslatableText("pf.update.title"),
                 new TranslatableText("pf.update.text", newVersion.type, newVersion.number, newVersion.minecraft));
     }
