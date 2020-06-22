@@ -10,19 +10,18 @@ import eu.ha3.mc.quick.update.UpdateNotifier;
 import eu.ha3.mc.quick.update.UpdateNotifier.Version;
 import eu.ha3.presencefootsteps.sound.SoundEngine;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
-import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
 
 public class PresenceFootsteps implements ClientModInitializer {
 
@@ -42,7 +41,7 @@ public class PresenceFootsteps implements ClientModInitializer {
 
     private UpdateNotifier updateNotifier;
 
-    private FabricKeyBinding keyBinding;
+    private KeyBinding keyBinding;
 
     public PresenceFootsteps() {
         instance = this;
@@ -76,10 +75,9 @@ public class PresenceFootsteps implements ClientModInitializer {
         config = new PFConfig(pfFolder.resolve("userconfig.json"), this);
         config.load();
 
-        keyBinding = FabricKeyBinding.Builder.create(new Identifier("presencefootsteps", "settings"),
-                InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F10, "key.categories.misc").build();
+        keyBinding = new KeyBinding("presencefootsteps.settings.key", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F10, "key.categories.misc");
 
-        KeyBindingRegistry.INSTANCE.register(keyBinding);
+        KeyBindingHelper.registerKeyBinding(keyBinding);
 
         engine = new SoundEngine(config);
         debugHud = new PFDebugHud(engine);

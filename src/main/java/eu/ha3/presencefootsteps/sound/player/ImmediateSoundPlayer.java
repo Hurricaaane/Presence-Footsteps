@@ -14,7 +14,6 @@ import net.minecraft.util.Identifier;
 import eu.ha3.presencefootsteps.sound.player.StepSoundPlayer;
 import eu.ha3.presencefootsteps.util.PlayerUtil;
 import eu.ha3.presencefootsteps.sound.Options;
-import eu.ha3.presencefootsteps.sound.player.DelayedSoundPlayer;
 import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
 import eu.ha3.presencefootsteps.world.Association;
 
