@@ -64,10 +64,6 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
         }
     }
 
-    public boolean isPaused(MinecraftClient client) {
-        return client.currentScreen != null || client.isPaused();
-    }
-
     public boolean isRunning(MinecraftClient client) {
         return config.getEnabled() && (client.isInSingleplayer() || config.getEnabledMP());
     }
@@ -86,7 +82,7 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
     }
 
     public void onFrame(MinecraftClient client, PlayerEntity player) {
-        if (!isPaused(client) && isRunning(client)) {
+        if (!client.isPaused() && isRunning(client)) {
             getTargets(player).forEach(e -> {
                 StepSoundGenerator generator = ((StepSoundSource) e).getStepGenerator(this);
                 generator.setIsolator(isolator);
