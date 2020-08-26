@@ -6,6 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
+import com.minelittlepony.common.util.GamePaths;
+
 import eu.ha3.mc.quick.update.UpdateNotifier;
 import eu.ha3.mc.quick.update.UpdateNotifier.Version;
 import eu.ha3.presencefootsteps.sound.SoundEngine;
@@ -13,7 +15,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.toast.SystemToast;
@@ -62,9 +63,7 @@ public class PresenceFootsteps implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        Path pfFolder = FabricLoader.getInstance()
-                .getConfigDirectory().toPath()
-                .resolve("presencefootsteps");
+        Path pfFolder = GamePaths.getConfigDirectory().resolve("presencefootsteps");
 
         updateNotifier = new UpdateNotifier(
                 pfFolder.resolve("updater.json"),

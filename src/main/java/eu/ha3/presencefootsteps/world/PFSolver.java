@@ -136,7 +136,7 @@ public class PFSolver implements Solver {
     }
 
     private String findForGolem(World world, BlockPos pos, String substrate) {
-        List<Entity> golems = world.getEntities(Entity.class, new Box(pos), e -> !(e instanceof PlayerEntity));
+        List<Entity> golems = world.getEntitiesByClass(Entity.class, new Box(pos), e -> !(e instanceof PlayerEntity));
 
         if (!golems.isEmpty()) {
             String golem = isolator.getGolemMap().getAssociation(golems.get(0).getType(), substrate);

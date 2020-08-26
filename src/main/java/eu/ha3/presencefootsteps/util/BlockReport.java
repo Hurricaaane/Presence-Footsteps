@@ -8,10 +8,10 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import com.google.gson.stream.JsonWriter;
+import com.minelittlepony.common.util.GamePaths;
 
 import eu.ha3.presencefootsteps.PresenceFootsteps;
 import eu.ha3.presencefootsteps.world.Lookup;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
@@ -47,7 +47,7 @@ public class BlockReport {
     private final Path loc;
 
     public BlockReport(String baseName) {
-        loc = getUniqueFileName(FabricLoader.getInstance().getGameDirectory().toPath().resolve("presencefootsteps"), baseName, ".json");
+        loc = getUniqueFileName(GamePaths.getGameDirectory().resolve("presencefootsteps"), baseName, ".json");
     }
 
     public void execute(@Nullable Predicate<BlockState> filter) {

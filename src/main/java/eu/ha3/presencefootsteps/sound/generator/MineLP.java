@@ -24,7 +24,7 @@ class MineLP {
 
     public static Locomotion getLocomotion(Entity entity, Locomotion fallback) {
 
-        Identifier texture = MinecraftClient.getInstance().getEntityRenderManager().getRenderer(entity).getTexture(entity);
+        Identifier texture = MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(entity).getTexture(entity);
 
         Race race = MineLittlePony.getInstance().getManager().getPony(texture).getRace(false);
 

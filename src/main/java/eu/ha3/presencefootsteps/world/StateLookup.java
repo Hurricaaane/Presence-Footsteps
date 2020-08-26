@@ -16,7 +16,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.Property;
 import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -90,9 +89,7 @@ public class StateLookup implements Lookup<BlockState> {
                 Block block = Registry.BLOCK.get(id);
 
                 for (Identifier tag : tags.keySet()) {
-                    Tag<Block> t = BlockTags.getContainer().get(tag);
-
-                    if (t != null && block.isIn(t)) {
+                    if (BlockTags.getTagGroup().getTagOrEmpty(tag).contains(block)) {
                         return tags.get(tag);
                     }
                 }
