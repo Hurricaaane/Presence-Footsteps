@@ -65,11 +65,11 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
     }
 
     public boolean isPaused(MinecraftClient client) {
-        return false;//client.currentScreen != null || client.isPaused();
+        return client.currentScreen != null || client.isPaused();
     }
 
     public boolean isRunning(MinecraftClient client) {
-        return true;// config.getEnabled() && (client.isInSingleplayer() || config.getEnabledMP());
+        return config.getEnabled() && (client.isInSingleplayer() || config.getEnabledMP());
     }
 
     private List<? extends Entity> getTargets(PlayerEntity ply) {
