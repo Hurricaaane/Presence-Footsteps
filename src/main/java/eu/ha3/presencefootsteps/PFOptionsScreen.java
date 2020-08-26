@@ -29,7 +29,7 @@ class PFOptionsScreen extends GameGui {
         PFConfig config = PresenceFootsteps.getInstance().getConfig();
 
         addButton(new Label(width / 2, 30)).setCentered().getStyle()
-                .setText(getTitle().asString());
+                .setText(getTitle());
 
         addButton(new Slider(left, row, 0, 100, config.getVolume()))
             .onChange(config::setVolume)

@@ -34,6 +34,7 @@
 	"minecraft:phantom": "NONE",
 	"minecraft:pig": "QUADRUPED",
 	"minecraft:piglin": "BIPED",
+	"minecraft:piglin_brute": "BIPED",
 	"minecraft:pufferfish": "NONE",
 	"minecraft:zombified_piglin": "BIPED",
 	"minecraft:polar_bear": "QUADRUPED",
