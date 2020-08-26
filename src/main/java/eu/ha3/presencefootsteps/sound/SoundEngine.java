@@ -116,7 +116,7 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
     }
 
     public Locomotion getLocomotion(LivingEntity entity) {
-        if (entity == MinecraftClient.getInstance().player) {
+        if (entity instanceof PlayerEntity) {
             return Locomotion.forPlayer((PlayerEntity)entity, config.getLocomotion());
         }
         return isolator.getLocomotionMap().lookup(entity);

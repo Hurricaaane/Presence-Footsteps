@@ -8,7 +8,7 @@
 	"menu.pf.volume.min": "Volume: OFF",
 	"menu.pf.volume": "Volume: %d%%%%",
 	"menu.pf.stance": "Stance: %s",
-	"menu.pf.stance.unknown": "Auto",
+	"menu.pf.stance.auto": "Auto",
 	"menu.pf.stance.none": "None",
 	"menu.pf.stance.quadruped": "Quadrupedal",
 	"menu.pf.stance.biped": "Bipedal",

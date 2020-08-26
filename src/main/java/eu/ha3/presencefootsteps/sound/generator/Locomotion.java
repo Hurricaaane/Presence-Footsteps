@@ -26,7 +26,9 @@ public enum Locomotion {
 
     private final Supplier<StepSoundGenerator> constructor;
 
+    private static final String AUTO_TRANSLATION_KEY = "menu.pf.stance.auto";
     private final String translationKey = "menu.pf.stance." + name().toLowerCase();
+
 
     Locomotion(Supplier<StepSoundGenerator> gen) {
         constructor = gen;
@@ -36,8 +38,12 @@ public enum Locomotion {
         return constructor.get();
     }
 
+    public String getOptionName() {
+        return I18n.translate("menu.pf.stance", I18n.translate(this == NONE ? AUTO_TRANSLATION_KEY : translationKey));
+    }
+
     public String getDisplayName() {
-        return I18n.translate("menu.pf.stance", I18n.translate(translationKey));
+        return I18n.translate("pf.stance", I18n.translate(translationKey));
     }
 
     public static Locomotion byName(String name) {

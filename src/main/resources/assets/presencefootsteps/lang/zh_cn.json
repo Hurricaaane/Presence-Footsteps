@@ -8,7 +8,7 @@
   "menu.pf.volume.min": "音量: 关闭",
   "menu.pf.volume": "音量: %d%%%%",
   "menu.pf.stance": "站姿: %s",
-  "menu.pf.stance.unknown": "自动",
+  "menu.pf.stance.auto": "自动",
   "menu.pf.stance.none": "无",
   "menu.pf.stance.quadruped": "四足动物",
   "menu.pf.stance.biped": "双足动物",

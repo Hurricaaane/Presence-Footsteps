@@ -9,7 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
-class MineLP {
+public class MineLP {
     private static boolean checkCompleted = false;
     private static boolean hasMineLP;
 
@@ -31,6 +31,7 @@ class MineLP {
         if (race.isHuman()) {
             return fallback;
         }
+
         return race.hasWings() ? Locomotion.FLYING : Locomotion.QUADRUPED;
     }
 

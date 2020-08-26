@@ -17,13 +17,15 @@ import net.minecraft.text.TranslatableText;
 
 class PFOptionsScreen extends GameGui {
 
+    //private Label ponifiedLabel;
+
     public PFOptionsScreen(@Nullable Screen parent) {
         super(new TranslatableText("menu.pf.title"), parent);
     }
 
     @Override
     public void init() {
-        int left =  width / 2 - 100;
+        int left = width / 2 - 100;
         int row = height / 4 + 14;
 
         PFConfig config = PresenceFootsteps.getInstance().getConfig();
@@ -31,13 +33,16 @@ class PFOptionsScreen extends GameGui {
         addButton(new Label(width / 2, 30)).setCentered().getStyle()
                 .setText(getTitle());
 
+        // addButton(ponifiedLabel = new Label(8, height - 20));
+
+
         addButton(new Slider(left, row, 0, 100, config.getVolume()))
             .onChange(config::setVolume)
             .setFormatter(this::formatVolume);
 
         addButton(new EnumSlider<>(left, row += 24, config.getLocomotion())
                 .onChange(config::setLocomotion)
-                .setFormatter(Locomotion::getDisplayName));
+                .setFormatter(Locomotion::getOptionName));
 
         addButton(new Button(left, row += 24).onClick(sender -> {
             sender.getStyle().setText("menu.pf.multiplayer." + config.toggleMultiplayer());
@@ -69,6 +74,9 @@ class PFOptionsScreen extends GameGui {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
         renderBackground(matrices);
+
+        // ponifiedLabel.getStyle().setText("Mine Little Pony: " + (MineLP.hasPonies() ? "Y" : "N"));
+
         super.render(matrices, mouseX, mouseY, partialTicks);
     }
 
