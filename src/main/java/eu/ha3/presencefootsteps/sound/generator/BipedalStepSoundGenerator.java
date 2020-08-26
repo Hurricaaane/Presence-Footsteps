@@ -117,16 +117,18 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
             }
 
             lastY = ply.getY();
+
             motionZ = (ply.getZ() - lastZ);
             lastZ = ply.getZ();
         }
 
         if (ply instanceof OtherClientPlayerEntity) {
             if (ply.world.getTime() % 1 == 0) {
-                ply.distanceTraveled += MathHelper.sqrt(motionX * motionX + motionZ * motionZ) * 0.8;
 
                 if (motionX != 0 || motionZ != 0) {
-                    ply.distanceTraveled += MathHelper.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ) * 0.8;
+                    ply.distanceTraveled += MathHelper.sqrt(Math.pow(motionX, 2) + Math.pow(motionY, 2) + Math.pow(motionZ, 2)) * 0.8;
+                } else {
+                    ply.distanceTraveled += MathHelper.sqrt(Math.pow(motionX, 2) + Math.pow(motionZ, 2)) * 0.8;
                 }
 
                 if (ply.isOnGround()) {
