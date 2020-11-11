@@ -17,7 +17,7 @@ public class Association {
 
     private final BlockPos pos;
 
-    private String data = "NOT_EMITTER";
+    private String data = Emitter.NOT_EMITTER;
 
     private boolean hasAssociation = false;
     private Entity source;
@@ -52,6 +52,7 @@ public class Association {
     public Association with(@Nullable String data) {
 
         if (!isNull() && data != null) {
+            hasAssociation = true;
             this.data = data;
         }
 

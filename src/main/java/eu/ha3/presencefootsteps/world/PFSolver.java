@@ -247,7 +247,7 @@ public class PFSolver implements Solver {
             return Association.NOT_EMITTER;
         }
 
-        return new Association(in, pos).with(primitive);
+        return new Association(in, pos).associated().with(primitive);
     }
 
     @Override

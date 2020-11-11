@@ -14,11 +14,12 @@ public class PrimitiveLookup implements Lookup<BlockSoundGroup> {
     @Override
     public String getAssociation(BlockSoundGroup sounds, String substrate) {
 
+        Identifier id = sounds.getStepSound().getId();
         Map<Identifier, String> primitives = substrates.get(substrate);
 
         if (primitives == null) {
             // Check for break sound
-            primitives = substrates.get("break_" + sounds.getStepSound().getId().getPath());
+            primitives = substrates.get("break_" + id.getPath());
         }
 
         if (primitives == null) {
@@ -30,7 +31,7 @@ public class PrimitiveLookup implements Lookup<BlockSoundGroup> {
             return Emitter.UNASSIGNED;
         }
 
-        return primitives.getOrDefault(sounds.getStepSound().getId(), Emitter.UNASSIGNED);
+        return primitives.getOrDefault(id, Emitter.UNASSIGNED);
     }
 
     @Override
