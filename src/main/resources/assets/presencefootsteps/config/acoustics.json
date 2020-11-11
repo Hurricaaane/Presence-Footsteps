@@ -558,6 +558,50 @@
         ]
       }
     },
+    "mudfine": {
+        "type": "chance",
+        "probability": 45,
+        "acoustic": {
+          "type": "events",
+          "walk": { "name": "mud.mud_walk", "vol": 50 },
+          "wander": { "name": "mud.mud_wander", "vol": 50 },
+          "land": [
+            { "name": "mud.mud_walk", "vol": 50 },
+            {
+              "type": "delayed",
+              "delay": 50,
+              "name": "mud.mud_walk",
+              "vol": 50
+            }
+          ]
+        }
+    },
+    "splash": {
+      "walk": {
+        "type": "chance",
+        "probability": 5,
+        "acoustic": [
+          "water.water_through",
+          "water_stereofix.water_through"
+        ]
+      },
+      "jump": {
+        "type": "chance",
+        "probability": 45,
+        "acoustic": [
+          "water.water_through",
+          "water_stereofix.water_through"
+        ]
+      },
+      "land": {
+        "type": "chance",
+        "probability": 95,
+        "acoustic": [
+          "water.water_through",
+          "water_stereofix.water_through"
+        ]
+      }
+    },
     "glass": {
       "walk": {
         "type": "simultaneous",

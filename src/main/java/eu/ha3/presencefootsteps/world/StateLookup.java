@@ -3,7 +3,6 @@ package eu.ha3.presencefootsteps.world;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -30,7 +29,7 @@ public class StateLookup implements Lookup<BlockState> {
 
     @Override
     public String getAssociation(BlockState state, String substrate) {
-        return substrates.getOrDefault(substrate, Bucket.EMPTY).get(state);
+        return substrates.getOrDefault(substrate, Bucket.EMPTY).get(state).value;
     }
 
     @Override
@@ -53,7 +52,7 @@ public class StateLookup implements Lookup<BlockState> {
     @Override
     public boolean contains(BlockState state) {
         for (Bucket substrate : substrates.values()) {
-            if (Emitter.isResult(substrate.get(state))) {
+            if (substrate.get(state) != Key.NULL) {
                 return true;
             }
         }
@@ -63,13 +62,14 @@ public class StateLookup implements Lookup<BlockState> {
 
     private interface Bucket {
 
-        Bucket EMPTY = state -> Emitter.UNASSIGNED;
+        Bucket EMPTY = state -> Key.NULL;
 
         default void add(Key key) {}
 
-        String get(BlockState state);
+        Key get(BlockState state);
 
         final class Substrate implements Bucket {
+            private final KeyList wildcards = new KeyList();
             private final Map<Identifier, Bucket> blocks = new LinkedHashMap<>();
             private final Map<Identifier, Bucket> tags = new LinkedHashMap<>();
 
@@ -77,12 +77,21 @@ public class StateLookup implements Lookup<BlockState> {
 
             @Override
             public void add(Key key) {
-                (key.isTag ? tags : blocks).computeIfAbsent(key.identifier, Tile::new).add(key);
+                if (key.isWildcard) {
+                    wildcards.add(key);
+                } else {
+                    (key.isTag ? tags : blocks).computeIfAbsent(key.identifier, Tile::new).add(key);
+                }
             }
 
             @Override
-            public String get(BlockState state) {
-                return blocks.computeIfAbsent(Registry.BLOCK.getId(state.getBlock()), this::computeTile).get(state);
+            public Key get(BlockState state) {
+                Key association = blocks.computeIfAbsent(Registry.BLOCK.getId(state.getBlock()), this::computeTile).get(state);
+
+                if (association == Key.NULL) {
+                    return wildcards.findMatch(state);
+                }
+                return association;
             }
 
             private Bucket computeTile(Identifier id) {
@@ -100,7 +109,7 @@ public class StateLookup implements Lookup<BlockState> {
 
         final class Tile implements Bucket {
             private final Map<BlockState, Key> cache = new LinkedHashMap<>();
-            private final List<Key> keys = new LinkedList<>();
+            private final KeyList keys = new KeyList();
 
             Tile(Identifier id) { }
 
@@ -110,19 +119,22 @@ public class StateLookup implements Lookup<BlockState> {
             }
 
             @Override
-            public String get(BlockState state) {
-                return cache.computeIfAbsent(state, this::computekey).value;
+            public Key get(BlockState state) {
+                return cache.computeIfAbsent(state, keys::findMatch);
             }
+        }
+    }
 
-            private Key computekey(BlockState state) {
-                for (Key i : keys) {
-                    if (i.matches(state)) {
-                        return i;
-                    }
+    private static final class KeyList extends LinkedList<Key> {
+        private static final long serialVersionUID = -7880900110753930099L;
+
+        public Key findMatch(BlockState state) {
+            for (Key i : this) {
+                if (i.matches(state)) {
+                    return i;
                 }
-
-                return Key.NULL;
             }
+            return Key.NULL;
         }
     }
 
@@ -142,6 +154,8 @@ public class StateLookup implements Lookup<BlockState> {
 
         public final boolean isTag;
 
+        public final boolean isWildcard;
+
         private Key() {
             identifier = new Identifier("air");
             substrate = "";
@@ -149,6 +163,7 @@ public class StateLookup implements Lookup<BlockState> {
             value = Emitter.UNASSIGNED;
             empty = true;
             isTag = false;
+            isWildcard = false;
         }
 
         /*
@@ -166,15 +181,21 @@ public class StateLookup implements Lookup<BlockState> {
 
             String id = key.split("[\\.\\[]")[0];
 
-            if (id.indexOf('^') > -1) {
-                identifier = new Identifier(id.split("\\^")[0]);
-                PresenceFootsteps.logger.warn("Metadata entry for " + key + "=" + value + " was ignored");
-            } else {
-                identifier = new Identifier(id);
-            }
+            isWildcard = id.indexOf('*') == 0;
 
-            if (!isTag && !Registry.BLOCK.containsId(identifier)) {
-                PresenceFootsteps.logger.warn("Sound registered for unknown block id " + identifier);
+            if (!isWildcard) {
+                if (id.indexOf('^') > -1) {
+                    identifier = new Identifier(id.split("\\^")[0]);
+                    PresenceFootsteps.logger.warn("Metadata entry for " + key + "=" + value + " was ignored");
+                } else {
+                    identifier = new Identifier(id);
+                }
+
+                if (!isTag && !Registry.BLOCK.containsId(identifier)) {
+                    PresenceFootsteps.logger.warn("Sound registered for unknown block id " + identifier);
+                }
+            } else {
+                identifier = new Identifier("air");
             }
 
             key = key.replace(id, "");

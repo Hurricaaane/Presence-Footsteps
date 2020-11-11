@@ -345,7 +345,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
             ply.getZ(),
             ply.getY() - 0.1D - ply.getHeightOffset() - (ply.isOnGround() ? 0 : 0.25D),
             ply.getZ()
-        ), "find_messy_foliage");
+        ), Solver.MESSY_FOLIAGE_STRATEGY);
 
         if (!assos.isNull()) {
             if (!isMessyFoliage) {

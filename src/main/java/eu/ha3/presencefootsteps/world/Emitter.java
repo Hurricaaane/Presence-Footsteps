@@ -5,6 +5,7 @@ public final class Emitter {
 
     public static final String UNASSIGNED = "UNASSIGNED";
     public static final String NOT_EMITTER = "NOT_EMITTER";
+    public static final String MESSY_GROUND = "MESSY_GROUND";
 
     public static boolean isNonEmitter(String association) {
         return NOT_EMITTER.equals(association);

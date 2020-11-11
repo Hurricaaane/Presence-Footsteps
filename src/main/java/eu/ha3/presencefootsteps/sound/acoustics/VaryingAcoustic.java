@@ -24,21 +24,8 @@ class VaryingAcoustic implements Acoustic {
     public VaryingAcoustic(JsonObject json, AcousticsJsonParser context) {
         this(json.get("name").getAsString(), context);
 
-        if (json.has("vol_min")) {
-            volume.min = context.getPercentage(json, "vol_min");
-        }
-
-        if (json.has("vol_max")) {
-            volume.max = context.getPercentage(json, "vol_max");
-        }
-
-        if (json.has("pitch_min")) {
-            pitch.min = context.getPercentage(json, "pitch_min");
-        }
-
-        if (json.has("pitch_max")) {
-            pitch.max = context.getPercentage(json, "pitch_max");
-        }
+        volume.read("vol", json, context);
+        pitch.read("pitch", json, context);
     }
 
     public VaryingAcoustic(String name, AcousticsJsonParser context) {

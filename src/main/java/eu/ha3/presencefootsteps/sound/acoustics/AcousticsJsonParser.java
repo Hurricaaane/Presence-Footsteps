@@ -30,9 +30,11 @@ public class AcousticsJsonParser {
 
     static {
         factories.put("basic", VaryingAcoustic::new);
+        factories.put("events", EventSelectorAcoustics::new);
         factories.put("simultaneous", SimultaneousAcoustic::new);
         factories.put("delayed", DelayedAcoustic::new);
         factories.put("probability", WeightedAcoustic::fromJson);
+        factories.put("chance", ChanceAcoustic::fromJson);
     }
 
     private final AcousticLibrary lib;
@@ -75,30 +77,24 @@ public class AcousticsJsonParser {
 
         if (json.has("defaults")) {
             JsonObject defaults = json.getAsJsonObject("defaults");
-            if (defaults.has("vol_min")) {
-                defaultVolume.min = getPercentage(defaults, "vol_min");
-            }
-            if (defaults.has("vol_max")) {
-                defaultVolume.max = getPercentage(defaults, "vol_max");
-            }
-            if (defaults.has("pitch_min")) {
-                defaultPitch.min = getPercentage(defaults, "pitch_min");
-            }
-            if (defaults.has("pitch_max")) {
-                defaultPitch.max = getPercentage(defaults, "pitch_max");
-            }
+            defaultVolume.read("vol", defaults, this);
+            defaultPitch.read("pitch", defaults, this);
         }
 
         json.getAsJsonObject("contents").entrySet().forEach(element -> {
-            lib.addAcoustic(element.getKey(), new EventSelectorAcoustics(element.getValue().getAsJsonObject(), this));
+            lib.addAcoustic(element.getKey(), solveAcoustic(element.getValue(), "events"));
         });
     }
 
     public Acoustic solveAcoustic(JsonElement unsolved) throws JsonParseException {
+        return solveAcoustic(unsolved, "basic");
+    }
+
+    private Acoustic solveAcoustic(JsonElement unsolved, String defaultUnassigned) throws JsonParseException {
         Acoustic ret = null;
 
         if (unsolved.isJsonObject()) {
-            ret = solveAcousticsCompound(unsolved.getAsJsonObject());
+            ret = solveAcousticsCompound(unsolved.getAsJsonObject(), defaultUnassigned);
         } else if (unsolved.isJsonArray()) {
             ret = new SimultaneousAcoustic(unsolved.getAsJsonArray(), this);
         } else if (unsolved.isJsonPrimitive() && unsolved.getAsJsonPrimitive().isString()) {
@@ -112,9 +108,9 @@ public class AcousticsJsonParser {
         return ret;
     }
 
-    private Acoustic solveAcousticsCompound(JsonObject unsolved) throws JsonParseException {
+    private Acoustic solveAcousticsCompound(JsonObject unsolved, String defaultUnassigned) throws JsonParseException {
 
-        String type = unsolved.has("type") ? unsolved.get("type").getAsString() : "basic";
+        String type = unsolved.has("type") ? unsolved.get("type").getAsString() : defaultUnassigned;
 
         if (!factories.containsKey(type)) {
             throw new JsonParseException("Invalid type for acoustic `" + type + "`");

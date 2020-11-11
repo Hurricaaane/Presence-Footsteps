@@ -22,6 +22,8 @@ import eu.ha3.presencefootsteps.sound.State;
  * @author Hurry
  */
 public interface Solver {
+    String MESSY_FOLIAGE_STRATEGY = "find_messy_foliage";
+
     /**
      * Play an association.
      */

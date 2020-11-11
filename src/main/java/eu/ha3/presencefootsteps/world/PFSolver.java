@@ -12,6 +12,7 @@ import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction.Axis;
@@ -207,6 +208,22 @@ public class PFSolver implements Solver {
             }
         }
 
+        if (Emitter.isEmitter(association) && (
+                world.hasRain(up)
+                || in.getFluidState().isIn(FluidTags.WATER)
+                || above.getFluidState().isIn(FluidTags.WATER))) {
+            // Only if the block is open to the sky during rain
+            // or the block is submerged
+            // or the block is waterlogged
+            // then append the wet effect to footsteps
+            String wet = isolator.getBlockMap().getAssociation(in, Lookup.WET_SUBSTRATE);
+
+            if (Emitter.isEmitter(wet)) {
+                logger.debug("Wet block detected: " + wet);
+                association += "," + wet;
+            }
+        }
+
         // Player has stepped on a non-emitter block as defined in the blockmap
         if (Emitter.isNonEmitter(association)) {
             return Association.NOT_EMITTER;
@@ -255,7 +272,7 @@ public class PFSolver implements Solver {
 
     @Override
     public Association findAssociation(World world, BlockPos pos, String strategy) {
-        if (!"find_messy_foliage".equals(strategy)) {
+        if (!MESSY_FOLIAGE_STRATEGY.equals(strategy)) {
             return Association.NOT_EMITTER;
         }
 
@@ -268,7 +285,7 @@ public class PFSolver implements Solver {
         }
 
         // we discard the normal block association, and mark the foliage as detected
-        if ("MESSY_GROUND".equals(isolator.getBlockMap().getAssociation(above, Lookup.MESSY_SUBSTRATE))) {
+        if (Emitter.MESSY_GROUND.equals(isolator.getBlockMap().getAssociation(above, Lookup.MESSY_SUBSTRATE))) {
             return new Association().associated().with(foliage);
         }
 

@@ -8,6 +8,7 @@ public interface Lookup<T> extends Loadable {
 
     String EMPTY_SUBSTRATE = "";
     String CARPET_SUBSTRATE = "carpet";
+    String WET_SUBSTRATE = "wet";
     String FENCE_SUBSTRATE = "bigger";
     String FOLIAGE_SUBSTRATE = "foliage";
     String MESSY_SUBSTRATE = "messy";

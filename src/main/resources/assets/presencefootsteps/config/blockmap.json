@@ -1,4 +1,6 @@
 {
+	"*.wet": "mudfine,splash",
+
 	"minecraft:air": "NOT_EMITTER",
 	"minecraft:cave_air": "NOT_EMITTER",
 	"minecraft:void_air": "NOT_EMITTER",
