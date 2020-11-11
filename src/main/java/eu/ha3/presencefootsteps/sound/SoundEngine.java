@@ -75,7 +75,8 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
             return ply.world.getOtherEntities((Entity)null, box, e ->
                         e instanceof LivingEntity
                     && !(e instanceof WaterCreatureEntity)
-                    && !(e instanceof FlyingEntity));
+                    && !(e instanceof FlyingEntity)
+                    && !e.hasVehicle());
         } else {
             return ply.world.getPlayers();
         }
