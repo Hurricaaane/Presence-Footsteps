@@ -1125,25 +1125,21 @@
         "pitch_min": 1,
         "pitch_max": 50
       },
-      "land": {
-        "type": "simultaneous",
-        "array": [
-           {
-            "name": "chain.chain_wander",
+      "land": [
+        {
+          "name": "chain.chain_wander",
           "pitch_min": 1,
           "pitch_max": 5,
-            "vol_min": 10,
-            "vol_max": 50
-          },
-          {
-            "type": "delayed",
-            "delay": 30,
+          "vol": 170
+        },
+        {
+          "type": "delayed",
+          "delay": 30,
           "pitch_min": 1,
           "pitch_max": 5,
-            "name": "chain.chain_wander"
-          }
-        ]
-      }
+          "name": "chain.chain_wander"
+        }
+      ]
     },
     "metalbar": {
       "walk": "metalbar.metalbar_walk",
