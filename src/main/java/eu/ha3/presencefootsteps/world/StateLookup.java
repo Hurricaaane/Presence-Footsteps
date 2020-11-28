@@ -1,8 +1,8 @@
 package eu.ha3.presencefootsteps.world;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -125,11 +125,16 @@ public class StateLookup implements Lookup<BlockState> {
         }
     }
 
-    private static final class KeyList extends LinkedList<Key> {
-        private static final long serialVersionUID = -7880900110753930099L;
+    private static final class KeyList {
+        private final Set<Key> keys = new HashSet<>();
+
+        void add(Key key) {
+            keys.remove(key);
+            keys.add(key);
+        }
 
         public Key findMatch(BlockState state) {
-            for (Key i : this) {
+            for (Key i : keys) {
                 if (i.matches(state)) {
                     return i;
                 }
@@ -242,6 +247,30 @@ public class StateLookup implements Lookup<BlockState> {
             return true;
         }
 
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + (empty ? 1231 : 1237);
+            result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
+            result = prime * result + (isTag ? 1231 : 1237);
+            result = prime * result + (isWildcard ? 1231 : 1237);
+            result = prime * result + ((properties == null) ? 0 : properties.hashCode());
+            result = prime * result + ((substrate == null) ? 0 : substrate.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return this == obj || (obj != null && getClass() == obj.getClass()) && equals((Key) obj);
+        }
+        private boolean equals(Key other) {
+            return isTag == other.isTag && isWildcard == other.isWildcard && empty == other.empty
+                    && Objects.equals(identifier, other.identifier)
+                    && Objects.equals(substrate, other.substrate)
+                    && Objects.equals(properties, other.properties);
+        }
+
         private static class Attribute {
             private final String name;
             private final String value;
@@ -251,6 +280,23 @@ public class StateLookup implements Lookup<BlockState> {
 
                 this.name = split[0];
                 this.value = split[1];
+            }
+
+            @Override
+            public int hashCode() {
+                final int prime = 31;
+                int result = 1;
+                result = prime * result + ((name == null) ? 0 : name.hashCode());
+                result = prime * result + ((value == null) ? 0 : value.hashCode());
+                return result;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return this == obj || (obj != null && getClass() == obj.getClass()) && equals((Attribute) obj);
+            }
+            private boolean equals(Attribute other) {
+                return Objects.equals(name, other.name) && Objects.equals(value, other.value);
             }
         }
     }

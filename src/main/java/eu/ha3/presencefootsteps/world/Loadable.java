@@ -18,7 +18,9 @@ public interface Loadable {
      * The read values will added to any existing ones.
      */
     default void load(Reader reader) {
-        GSON.fromJson(reader, JsonObject.class).entrySet().forEach(entry -> {
+        JsonObject json = GSON.fromJson(reader, JsonObject.class);
+
+        json.entrySet().forEach(entry -> {
             add(entry.getKey(), entry.getValue().getAsString());
         });
     }
