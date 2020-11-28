@@ -12,8 +12,8 @@ import eu.ha3.mc.quick.update.UpdateNotifier;
 import eu.ha3.mc.quick.update.UpdateNotifier.Version;
 import eu.ha3.presencefootsteps.sound.SoundEngine;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
@@ -81,14 +81,14 @@ public class PresenceFootsteps implements ClientModInitializer {
         engine = new SoundEngine(config);
         debugHud = new PFDebugHud(engine);
 
-        ClientTickCallback.EVENT.register(this::onTick);
+        ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(engine);
     }
 
     private void onTick(MinecraftClient client) {
         PlayerEntity ply = client.player;
 
-        if (ply == null || ply.removed) {
+        if (ply == null || ply.isRemoved()) {
             return;
         }
 
