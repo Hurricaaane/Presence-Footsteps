@@ -19,7 +19,6 @@ public class Association {
 
     private String data = Emitter.NOT_EMITTER;
 
-    private boolean hasAssociation = false;
     private Entity source;
 
     public Association() {
@@ -40,19 +39,9 @@ public class Association {
         return this;
     }
 
-    public Association associated() {
-
-        if (!isNull()) {
-            hasAssociation = true;
-        }
-
-        return this;
-    }
-
     public Association with(@Nullable String data) {
 
         if (!isNull() && data != null) {
-            hasAssociation = true;
             this.data = data;
         }
 
@@ -64,11 +53,11 @@ public class Association {
     }
 
     public boolean isNotEmitter() {
-        return isNull() || "NOT_EMITTER".contentEquals(data);
+        return isNull() || Emitter.isNonEmitter(data);
     }
 
     public boolean hasAssociation() {
-        return !isNotEmitter() && hasAssociation;
+        return !isNotEmitter() && Emitter.isResult(data);
     }
 
     public String getAcousticName() {

@@ -230,7 +230,7 @@ public class PFSolver implements Solver {
         }
 
         if (Emitter.isResult(association)) {
-            return new Association(in, pos).associated().with(association);
+            return new Association(in, pos).with(association);
         }
 
         if (in.isAir()) {
@@ -247,7 +247,7 @@ public class PFSolver implements Solver {
             return Association.NOT_EMITTER;
         }
 
-        return new Association(in, pos).associated().with(primitive);
+        return new Association(in, pos).with(primitive);
     }
 
     @Override
@@ -286,7 +286,7 @@ public class PFSolver implements Solver {
 
         // we discard the normal block association, and mark the foliage as detected
         if (Emitter.MESSY_GROUND.equals(isolator.getBlockMap().getAssociation(above, Lookup.MESSY_SUBSTRATE))) {
-            return new Association().associated().with(foliage);
+            return new Association().with(foliage);
         }
 
         return Association.NOT_EMITTER;
