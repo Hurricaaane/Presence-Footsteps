@@ -712,6 +712,75 @@
         ]
       }
     },
+    "copper": {
+      "walk": "@minecraft:block.copper.step",
+      "wander": [
+        "@minecraft:block.copper.step",
+        "marble.marble_wander"
+      ],
+      "land": "@minecraft:block.copper.break",
+      "jump": [
+        "@minecraft:block.copper.step",
+        {
+          "type": "delayed",
+          "delay": 50,
+          "name": "lino.lino_run"
+        }
+      ]
+    },
+    "chimes": {
+      "walk": "@minecraft:block.amethyst_block.step",
+      "jump": "@minecraft:block.amethyst_block.hit",
+      "land": [
+        "@minecraft:block.amethyst_block.break",
+        {
+          "type": "delayed",
+          "delay": 70,
+        "vol_min": 20,
+          "vol_max": 50,
+          "name": "minecraft:block.amethyst_cluster.break"
+        }
+      ]
+    },
+    "squeakycopper": {
+      "walk": [
+        "@minecraft:block.copper.step",
+        {
+          "type": "delayed",
+          "vol_min": 20,
+          "vol_max": 50,
+          "pitch_max": 50,
+          "delay": 50,
+          "name": "squeakywood.squeakywood_wander"
+        }
+      ],
+      "wander": [
+        "@minecraft:block.copper.step",
+        {
+          "vol_min": 20,
+          "vol_max": 50,
+          "pitch_max": 50,
+          "name": "squeakywood.squeakywood_wander"
+        },
+        {
+          "type": "delayed",
+          "vol_min": 20,
+          "vol_max": 50,
+          "pitch_max": 50,
+          "delay": 50,
+          "name": "squeakywood.squeakywood_wander"
+        }
+      ],
+      "land": "@minecraft:block.copper.break",
+      "jump": [
+        "@minecraft:block.copper.step",
+        {
+          "type": "delayed",
+          "delay": 50,
+          "name": "lino.lino_run"
+        }
+      ]
+    },
     "composite": {
       "walk": "lino.lino_walk",
       "run": "lino.lino_run",

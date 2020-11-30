@@ -25,8 +25,7 @@ public class Variator extends JsonFile {
     public boolean EVENT_ON_JUMP = true;
 
     /**
-     * The maximum distance a player must fall before it is recognised as a hrad
-     * fall
+     * The maximum distance a player must fall before it is recognised as a hard fall
      */
     public float LAND_HARD_DISTANCE_MIN = 0.9f;
 

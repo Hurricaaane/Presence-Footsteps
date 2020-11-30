@@ -21,6 +21,7 @@
 	"minecraft:grass_block": "grass",
 	"minecraft:dirt": "dirt",
 	"minecraft:coarse_dirt": "dirt",
+	"minecraft:dirt_path": "grass",
 	"minecraft:podzol": "dirt,straw",
 	"minecraft:cobblestone": "stone",
 
@@ -218,6 +219,55 @@
 	"#minecraft:wooden_pressure_plates": "wood",
 	"#minecraft:wooden_pressure_plates.carpet": "wood",
 
+	"minecraft:lightning_rod": "copper",
+	"minecraft:copper_ore": "ore",
+	"minecraft:copper_block": "copper",
+	"minecraft:lightly_weathered_copper_block": "copper",
+	"minecraft:semi_weathered_copper_block": "copper",
+	"minecraft:weathered_copper_block": "copper",
+
+	"minecraft:cut_copper": "copper",
+	"minecraft:lightly_weathered_cut_copper": "copper",
+	"minecraft:semi_weathered_cut_copper": "copper",
+	"minecraft:weathered_cut_copper": "copper",
+
+	"minecraft:cut_copper_stairs": "copper",
+	"minecraft:lightly_weathered_cut_copper_stairs": "copper",
+	"minecraft:semi_weathered_cut_copper_stairs": "copper",
+	"minecraft:weathered_cut_copper_stairs": "copper",
+
+	"minecraft:cut_copper_slab": "copper",
+	"minecraft:lightly_weathered_cut_copper_slab": "copper",
+	"minecraft:semi_weathered_cut_copper_slab": "copper",
+	"minecraft:weathered_cut_copper_slab": "copper",
+
+	"minecraft:waxed_copper": "squeakycopper",
+	"minecraft:waxed_lightly_weathered_copper": "squeakycopper",
+	"minecraft:waxed_semi_weathered_copper": "squeakycopper",
+
+	"minecraft:waxed_cut_copper": "squeakycopper",
+	"minecraft:waxed_lightly_weathered_cut_copper": "squeakycopper",
+	"minecraft:waxed_semi_weathered_cut_copper": "squeakycopper",
+
+	"minecraft:waxed_cut_copper_stairs": "squeakycopper",
+	"minecraft:waxed_lightly_weathered_cut_copper_stairs": "squeakycopper",
+	"minecraft:waxed_semi_weathered_cut_copper_stairs": "squeakycopper",
+
+	"minecraft:waxed_cut_copper_slab": "squeakycopper",
+	"minecraft:waxed_lightly_weathered_cut_copper_slab": "squeakycopper",
+	"minecraft:waxed_semi_weathered_cut_copper_slab": "squeakycopper",
+
+	"minecraft:amethyst_block": "chimes",
+	"minecraft:budding_amethyst": "chimes",
+	"minecraft:amethyst_cluster": "chimes",
+	"minecraft:amethyst_cluster.foliage": "chimes",
+	"minecraft:large_amethyst_bud": "chimes",
+	"minecraft:large_amethyst_bud.foliage": "chimes",
+	"minecraft:medium_amethyst_bud": "chimes",
+	"minecraft:medium_amethyst_bud.foliage": "chimes",
+	"minecraft:small_amethyst_bud": "chimes",
+	"minecraft:small_amethyst_bud.foliage": "chimes",
+
 	"minecraft:redstone_ore": "ore",
 	"minecraft:redstone_torch": "NOT_EMITTER",
 	"minecraft:redstone_wall_torch": "NOT_EMITTER",
@@ -227,6 +277,7 @@
 	"minecraft:snow": "snow",
 	"minecraft:snow.carpet": "snow",
 	"minecraft:snow_block": "snow",
+	"minecraft:powder_snow": "snow",
 
 	"minecraft:packed_ice": "stone,snow",
 	"#minecraft:ice": "ice",
@@ -388,7 +439,6 @@
 
 	"minecraft:slime_block": "mud,slime",
 	"minecraft:honey_block": "honey",
-	"minecraft:grass_path": "grass",
 
 	"minecraft:sunflower": "NOT_EMITTER",
 	"minecraft:sunflower.messy": "MESSY_GROUND",
@@ -430,6 +480,7 @@
 	"minecraft:green_stained_glass": "glass",
 	"minecraft:red_stained_glass": "glass",
 	"minecraft:black_stained_glass": "glass",
+	"minecraft:tinted_glass": "glass",
 
 	"minecraft:white_stained_glass_pane": "glass",
 	"minecraft:orange_stained_glass_pane": "glass",
@@ -695,7 +746,11 @@
 	"minecraft:bamboo_sapling": "NOT_EMITTER",
 	"minecraft:bamboo_sapling.foliage": "squeakywood",
 	"minecraft:cocoa": "organic_dry",
+
+	"#candles": "brickstone",
 	"minecraft:cake": "organic",
+	"#candle_cakes": "organic",
+	"#candle_cakes.foliage": "brickstone",
 
 	"#minecraft:beds": "rug",
 
@@ -705,6 +760,9 @@
 	"minecraft:nether_sprouts.foliage": "organic,mushroom",
 	"minecraft:brewing_stand": "metalbar",
 	"minecraft:cauldron": "metalbar",
+	"minecraft:water_cauldron": "metalbar,waterfine",
+	"minecraft:lava_cauldron": "metalbar,waterfine",
+	"minecraft:powder_snow_cauldron": "metalbar",
 	"minecraft:chain": "chain",
 	"minecraft:chain.foliage": "chain",
 
@@ -840,7 +898,10 @@
 	"minecraft:lodestone": "stonemachine",
 	"minecraft:target": "leaves",
 	"minecraft:ancient_debris": "hardsteel,stone",
-	
+
+	"minecraft:tuff": "stone",
+	"minecraft:calcite": "marble,stone",
+
 	"#minecraft:nylium": "mud,slick",
 	"minecraft:stripped_warped_stem": "organic_dry,mushroom,stone",
 	"minecraft:stripped_warped_hyphae": "organic_dry,mushroom,stone",
