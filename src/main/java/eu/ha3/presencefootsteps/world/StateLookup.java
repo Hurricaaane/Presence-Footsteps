@@ -52,7 +52,7 @@ public class StateLookup implements Lookup<BlockState> {
     @Override
     public boolean contains(BlockState state) {
         for (Bucket substrate : substrates.values()) {
-            if (substrate.get(state) != Key.NULL) {
+            if (substrate.contains(state)) {
                 return true;
             }
         }
@@ -67,6 +67,10 @@ public class StateLookup implements Lookup<BlockState> {
         default void add(Key key) {}
 
         Key get(BlockState state);
+
+        default boolean contains(BlockState state) {
+            return false;
+        }
 
         final class Substrate implements Bucket {
             private final KeyList wildcards = new KeyList();
@@ -86,7 +90,7 @@ public class StateLookup implements Lookup<BlockState> {
 
             @Override
             public Key get(BlockState state) {
-                Key association = blocks.computeIfAbsent(Registry.BLOCK.getId(state.getBlock()), this::computeTile).get(state);
+                Key association = getTile(state).get(state);
 
                 if (association == Key.NULL) {
                     return wildcards.findMatch(state);
@@ -94,16 +98,23 @@ public class StateLookup implements Lookup<BlockState> {
                 return association;
             }
 
-            private Bucket computeTile(Identifier id) {
-                Block block = Registry.BLOCK.get(id);
+            @Override
+            public boolean contains(BlockState state) {
+                return getTile(state).contains(state);
+            }
 
-                for (Identifier tag : tags.keySet()) {
-                    if (BlockTags.getTagGroup().getTagOrEmpty(tag).contains(block)) {
-                        return tags.get(tag);
+            private Bucket getTile(BlockState state) {
+                return blocks.computeIfAbsent(Registry.BLOCK.getId(state.getBlock()), id -> {
+                    Block block = Registry.BLOCK.get(id);
+
+                    for (Identifier tag : tags.keySet()) {
+                        if (BlockTags.getTagGroup().getTagOrEmpty(tag).contains(block)) {
+                            return tags.get(tag);
+                        }
                     }
-                }
 
-                return Bucket.EMPTY;
+                    return Bucket.EMPTY;
+                });
             }
         }
 
@@ -121,6 +132,11 @@ public class StateLookup implements Lookup<BlockState> {
             @Override
             public Key get(BlockState state) {
                 return cache.computeIfAbsent(state, keys::findMatch);
+            }
+
+            @Override
+            public boolean contains(BlockState state) {
+                return get(state) != Key.NULL;
             }
         }
     }
