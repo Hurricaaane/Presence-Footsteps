@@ -18,6 +18,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import eu.ha3.presencefootsteps.sound.Isolator;
 import eu.ha3.presencefootsteps.sound.Options;
@@ -76,7 +77,14 @@ public class PFSolver implements Solver {
             }
         }
 
-        Association worked = findAssociation(player.world, pos);
+        Box collider = player.getBoundingBox();
+        // normalize to the bottom of the block
+        // so we can detect carpets on top of fences
+        collider = collider.offset(0, -(collider.minY - Math.floor(collider.minY)), 0);
+        // add buffer
+        collider = collider.expand(0.1);
+
+        Association worked = findAssociation(player.world, pos, collider);
 
         // If it didn't work, the player has walked over the air on the border of a block.
         // ------ ------ --> z
@@ -116,9 +124,9 @@ public class PFSolver implements Solver {
         // < maxofX- maxofX+ >
         // Take the maximum border to produce the sound
         if (isXdangMax) { // If we are in the positive border, add 1, else subtract 1
-            worked = findAssociation(player.world, pos.east(xdang > 0 ? 1 : -1));
+            worked = findAssociation(player.world, pos.east(xdang > 0 ? 1 : -1), collider);
         } else {
-            worked = findAssociation(player.world, pos.south(zdang > 0 ? 1 : -1));
+            worked = findAssociation(player.world, pos.south(zdang > 0 ? 1 : -1), collider);
         }
 
         // If that didn't work, then maybe the footstep hit in the
@@ -130,10 +138,10 @@ public class PFSolver implements Solver {
 
         // Take the maximum direction and try with the orthogonal direction of it
         if (isXdangMax) {
-            return findAssociation(player.world, pos.north(zdang > 0 ? 1 : -1));
+            return findAssociation(player.world, pos.north(zdang > 0 ? 1 : -1), collider);
         }
 
-        return findAssociation(player.world, pos.east(xdang > 0 ? 1 : -1));
+        return findAssociation(player.world, pos.east(xdang > 0 ? 1 : -1), collider);
     }
 
     private String findForGolem(World world, BlockPos pos, String substrate) {
@@ -152,8 +160,7 @@ public class PFSolver implements Solver {
         return Emitter.UNASSIGNED;
     }
 
-    private Association findAssociation(World world, BlockPos pos) {
-
+    private Association findAssociation(World world, BlockPos pos, Box collider) {
         BlockState in = world.getBlockState(pos);
 
         BlockPos up = pos.up();
@@ -186,6 +193,14 @@ public class PFSolver implements Solver {
                     pos = down;
                     in = below;
                 }
+            }
+
+            VoxelShape shape = in.getCollisionShape(world, pos);
+            if (shape.isEmpty()) {
+                shape = in.getOutlineShape(world, pos);
+            }
+            if (!shape.isEmpty() && !shape.getBoundingBox().offset(pos).intersects(collider)) {
+                return Association.NOT_EMITTER;
             }
 
             if (!Emitter.isResult(association)) {
