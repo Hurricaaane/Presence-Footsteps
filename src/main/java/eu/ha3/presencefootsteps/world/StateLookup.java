@@ -1,8 +1,8 @@
 package eu.ha3.presencefootsteps.world;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -142,7 +142,7 @@ public class StateLookup implements Lookup<BlockState> {
     }
 
     private static final class KeyList {
-        private final Set<Key> keys = new HashSet<>();
+        private final Set<Key> keys = new LinkedHashSet<>();
 
         void add(Key key) {
             keys.remove(key);
