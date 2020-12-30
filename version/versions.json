@@ -1,6 +1,12 @@
 {
   "versions": [
     {
+       "number": 29,
+       "for": "1.16.4",
+       "minecraft": "1.16.4",
+       "type": "r"
+    },
+    {
        "number": 28,
        "for": "1.16.2",
        "minecraft": "1.16.2",
