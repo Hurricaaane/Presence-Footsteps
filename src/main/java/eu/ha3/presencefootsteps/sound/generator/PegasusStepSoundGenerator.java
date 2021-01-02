@@ -73,7 +73,7 @@ class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
 
     @Override
     protected void simulateJumpingLanding(LivingEntity ply) {
-        if (solver.hasStoppingConditions(ply)) {
+        if (hasStoppingConditions(ply)) {
             return;
         }
 

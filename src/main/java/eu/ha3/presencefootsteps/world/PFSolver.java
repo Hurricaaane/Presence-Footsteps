@@ -72,7 +72,7 @@ public class PFSolver implements Solver {
         if (!(player instanceof OtherClientPlayerEntity)) {
             Vec3d vel = player.getVelocity();
 
-            if ((vel.x != 0 || vel.y != 0 || vel.z != 0) && Math.abs(vel.y) < 0.02) {
+            if (vel.lengthSquared() != 0 && Math.abs(vel.y) < 0.004) {
                 return Association.NOT_EMITTER; // Don't play sounds on every tiny bounce
             }
         }
@@ -263,26 +263,6 @@ public class PFSolver implements Solver {
         }
 
         return new Association(in, pos).with(primitive);
-    }
-
-    @Override
-    public boolean playStoppingConditions(Entity ply) {
-        if (!hasStoppingConditions(ply)) {
-            return false;
-        }
-
-        float volume = Math.min(1, (float) ply.getVelocity().length() * 0.35F);
-        Options options = Options.singular("gliding_volume", volume);
-        State state = ply.isSubmergedInWater() ? State.SWIM : State.WALK;
-
-        isolator.getAcoustics().playAcoustic(ply, "_SWIM", state, options);
-
-        return true;
-    }
-
-    @Override
-    public boolean hasStoppingConditions(Entity ply) {
-        return ply.isSubmergedInWater();
     }
 
     @Override

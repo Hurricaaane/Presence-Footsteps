@@ -46,16 +46,4 @@ public interface Solver {
      * it, using a custom strategy which strategies are defined by the solver.
      */
     Association findAssociation(World w, BlockPos pos, String strategy);
-
-    /**
-     * Play special sounds that must stop the usual footstep figuring things out
-     * process.
-     */
-    boolean playStoppingConditions(Entity ply);
-
-    /**
-     * Tells if footsteps can be played.
-     */
-    boolean hasStoppingConditions(Entity ply);
-
 }

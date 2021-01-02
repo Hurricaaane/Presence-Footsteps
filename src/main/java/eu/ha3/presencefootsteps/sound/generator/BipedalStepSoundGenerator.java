@@ -1,6 +1,7 @@
 package eu.ha3.presencefootsteps.sound.generator;
 
 import net.minecraft.client.network.OtherClientPlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -13,6 +14,7 @@ import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.sound.acoustics.AcousticLibrary;
 import eu.ha3.presencefootsteps.util.PlayerUtil;
 import eu.ha3.presencefootsteps.sound.Isolator;
+import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.world.Association;
 import eu.ha3.presencefootsteps.world.Solver;
 
@@ -171,9 +173,8 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         if (scalStat != scal < 0.001f) {
             scalStat = !scalStat;
 
-            if (scalStat && variator.PLAY_WANDER && !solver.hasStoppingConditions(ply)) {
-                solver.playAssociation(ply, solver.findAssociation(ply, 0, isRightFoot),
-                        State.WANDER);
+            if (scalStat && variator.PLAY_WANDER && !hasStoppingConditions(ply)) {
+                solver.playAssociation(ply, solver.findAssociation(ply, 0, isRightFoot), State.WANDER);
             }
         }
         xMovec = movX;
@@ -194,7 +195,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
 
             if (ply.isClimbing() && !ply.isOnGround()) {
                 distance = variator.DISTANCE_LADDER;
-            } else if (!ply.isSubmergedInWater() && Math.abs(yPosition - ply.getY()) > 0.4) {
+            } else if (/*!ply.isSubmergedInWater() && */Math.abs(yPosition - ply.getY()) > 0.4) {
                 // This ensures this does not get recorded as landing, but as a step
                 if (yPosition < ply.getY()) { // Going upstairs
                     distance = variator.DISTANCE_STAIR;
@@ -235,16 +236,29 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
     }
 
     protected void produceStep(LivingEntity ply, @Nullable State event, double verticalOffsetAsMinus) {
-        if (!solver.playStoppingConditions(ply)) {
-            if (event == null) {
-                event = speedDisambiguator(ply, State.WALK, State.RUN);
-            }
 
+        if (event == null) {
+            event = speedDisambiguator(ply, State.WALK, State.RUN);
+        }
+
+        if (hasStoppingConditions(ply)) {
+            float volume = Math.min(1, (float) ply.getVelocity().length() * 0.35F);
+            Options options = Options.singular("gliding_volume", volume);
+            State state = ply.isSubmergedInWater() ? State.SWIM : event;
+
+            acoustics.playAcoustic(ply, "_SWIM", state, options);
+
+            solver.playAssociation(ply, solver.findAssociation(ply.world, ply.getBlockPos().down(), Solver.MESSY_FOLIAGE_STRATEGY), event);
+        } else {
             solver.playAssociation(ply, solver.findAssociation(ply, verticalOffsetAsMinus, isRightFoot), event);
             isRightFoot = !isRightFoot;
         }
 
         stepThisFrame = true;
+    }
+
+    protected boolean hasStoppingConditions(Entity ply) {
+        return ply.isSubmergedInWater();
     }
 
     protected void stepped(LivingEntity ply, State event) {
@@ -277,7 +291,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
     }
 
     protected void simulateJumpingLanding(LivingEntity ply) {
-        if (solver.hasStoppingConditions(ply)) {
+        if (hasStoppingConditions(ply)) {
             return;
         }
 
