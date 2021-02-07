@@ -9,7 +9,6 @@ import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import eu.ha3.presencefootsteps.sound.player.StepSoundPlayer;
 import eu.ha3.presencefootsteps.util.PlayerUtil;
