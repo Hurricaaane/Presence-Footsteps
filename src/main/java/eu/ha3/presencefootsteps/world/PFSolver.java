@@ -182,7 +182,7 @@ public class PFSolver implements Solver {
             // CONTINUE with the actual block surface the player is walking on
             Material mat = in.getMaterial();
 
-            if (mat == Material.AIR || mat == Material.SUPPORTED) {
+            if (mat == Material.AIR || mat == Material.DECORATION) {
                 BlockPos down = pos.down();
                 BlockState below = world.getBlockState(down);
 

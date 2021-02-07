@@ -20,16 +20,13 @@
 	"minecraft:polished_andesite": "marble",
 	"minecraft:grass_block": "grass",
 	"minecraft:dirt": "dirt",
-	"minecraft:coarse_dirt": "dirt",
+	"minecraft:coarse_dirt": "dirt,gravel",
+	"minecraft:rooted_dirt": "dirt,gravel",
 	"minecraft:dirt_path": "grass",
 	"minecraft:podzol": "dirt,straw",
 	"minecraft:cobblestone": "stone",
 
 	"#minecraft:planks": "wood",
-
-	"#minecraft:saplings": "NOT_EMITTER",
-	"#minecraft:saplings.messy": "MESSY_GROUND",
-	"#minecraft:saplings.foliage": "straw",
 
 	"minecraft:bedrock": "bedrock",
 	"#minecraft:sand": "sand",
@@ -222,40 +219,44 @@
 	"minecraft:lightning_rod": "copper",
 	"minecraft:copper_ore": "ore",
 	"minecraft:copper_block": "copper",
-	"minecraft:lightly_weathered_copper_block": "copper",
-	"minecraft:semi_weathered_copper_block": "copper",
-	"minecraft:weathered_copper_block": "copper",
+	"minecraft:oxidized_copper": "copper",
+	"minecraft:exposed_copper": "copper",
+	"minecraft:weathered_copper": "copper",
 
 	"minecraft:cut_copper": "copper",
-	"minecraft:lightly_weathered_cut_copper": "copper",
-	"minecraft:semi_weathered_cut_copper": "copper",
+	"minecraft:oxidized_cut_copper": "copper",
+	"minecraft:exposed_cut_copper": "copper",
 	"minecraft:weathered_cut_copper": "copper",
 
 	"minecraft:cut_copper_stairs": "copper",
-	"minecraft:lightly_weathered_cut_copper_stairs": "copper",
-	"minecraft:semi_weathered_cut_copper_stairs": "copper",
+	"minecraft:oxidized_cut_copper_stairs": "copper",
+	"minecraft:exposed_cut_copper_stairs": "copper",
 	"minecraft:weathered_cut_copper_stairs": "copper",
 
 	"minecraft:cut_copper_slab": "copper",
-	"minecraft:lightly_weathered_cut_copper_slab": "copper",
-	"minecraft:semi_weathered_cut_copper_slab": "copper",
+	"minecraft:oxidized_cut_copper_slab": "copper",
+	"minecraft:exposed_cut_copper_slab": "copper",
 	"minecraft:weathered_cut_copper_slab": "copper",
 
-	"minecraft:waxed_copper": "squeakycopper",
-	"minecraft:waxed_lightly_weathered_copper": "squeakycopper",
-	"minecraft:waxed_semi_weathered_copper": "squeakycopper",
+	"minecraft:waxed_copper_block": "squeakycopper",
+	"minecraft:waxed_oxidized_copper": "squeakycopper",
+	"minecraft:waxed_exposed_copper": "squeakycopper",
+	"minecraft:waxed_weathered_copper": "squeakycopper",
 
 	"minecraft:waxed_cut_copper": "squeakycopper",
-	"minecraft:waxed_lightly_weathered_cut_copper": "squeakycopper",
-	"minecraft:waxed_semi_weathered_cut_copper": "squeakycopper",
+	"minecraft:waxed_oxidized_cut_copper": "squeakycopper",
+	"minecraft:waxed_exposed_cut_copper": "squeakycopper",
+	"minecraft:waxed_weathered_cut_copper": "squeakycopper",
 
 	"minecraft:waxed_cut_copper_stairs": "squeakycopper",
-	"minecraft:waxed_lightly_weathered_cut_copper_stairs": "squeakycopper",
-	"minecraft:waxed_semi_weathered_cut_copper_stairs": "squeakycopper",
+	"minecraft:waxed_oxidized_cut_copper_stairs": "squeakycopper",
+	"minecraft:waxed_exposed_cut_copper_stairs": "squeakycopper",
+	"minecraft:waxed_weathered_cut_copper_stairs": "squeakycopper",
 
 	"minecraft:waxed_cut_copper_slab": "squeakycopper",
-	"minecraft:waxed_lightly_weathered_cut_copper_slab": "squeakycopper",
-	"minecraft:waxed_semi_weathered_cut_copper_slab": "squeakycopper",
+	"minecraft:waxed_oxidized_cut_copper_slab": "squeakycopper",
+	"minecraft:waxed_exposed_cut_copper_slab": "squeakycopper",
+	"minecraft:waxed_weathered_cut_copper_slab": "squeakycopper",
 
 	"minecraft:amethyst_block": "chimes",
 	"minecraft:budding_amethyst": "chimes",
@@ -267,6 +268,9 @@
 	"minecraft:medium_amethyst_bud.foliage": "chimes",
 	"minecraft:small_amethyst_bud": "chimes",
 	"minecraft:small_amethyst_bud.foliage": "chimes",
+
+	"minecraft:glow_lichen.foliage[down=true]": "grass",
+	"minecraft:glow_lichen.foliage": "NOT_EMITTER",
 
 	"minecraft:dripstone_block": "sandstone,ore",
 	"minecraft:pointed_dripstone": "ore",
@@ -333,6 +337,32 @@
 	"minecraft:attached_melon_stem": "NOT_EMITTER",
 	"minecraft:vine": "leaves",
 	"minecraft:vine.foliage": "leaves",
+	"#minecraft:cave_vines": "leaves",
+
+	"#minecraft:saplings": "NOT_EMITTER",
+	"#minecraft:saplings.messy": "MESSY_GROUND",
+	"#minecraft:saplings.foliage": "straw",
+
+	"minecraft:small_dripleaf": "NOT_EMITTER",
+	"minecraft:small_dripleaf.messy": "MESSY_GROUND",
+	"minecraft:small_dripleaf.foliage": "straw",
+
+	"minecraft:big_dripleaf": "straw",
+	"minecraft:big_dripleaf.messy": "MESSY_GROUND",
+
+	"minecraft:big_dripleaf_stem": "NOT_EMITTER",
+	"minecraft:big_dripleaf_stem.messy": "MESSY_GROUND",
+	"minecraft:big_dripleaf_stem.foliage": "straw",
+	
+	"minecraft:moss_block": "rug,grass",
+	"minecraft:moss_carpet": "rug,grass",
+	"minecraft:moss_carpet.carpet": "rug,grass",
+	
+	"minecraft:azalea": "leaves",
+	"minecraft:flowering_azalea": "leaves",
+
+	"minecraft:spore_blossom": "NOT_EMITTER",
+	"minecraft:hanging_roots": "NOT_EMITTER",
 
 	"minecraft:oak_fence_gate.bigger": "bluntwood",
 	"minecraft:spruce_fence_gate.bigger": "bluntwood",
@@ -844,7 +874,7 @@
 	"minecraft:bell": "metalbar",
 
 	"minecraft:lantern": "UNASSIGNED",
-	"minecraft:soul_fire_lantern": "UNASSIGNED",
+	"minecraft:soul_lantern": "UNASSIGNED",
 	"minecraft:campfire[lit=false]": "wood",
 	"minecraft:campfire": "wood,magma",
 	"minecraft:soul_campfire[lit=false]": "wood",

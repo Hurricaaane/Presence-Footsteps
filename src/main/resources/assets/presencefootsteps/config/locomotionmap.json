@@ -68,5 +68,8 @@
 	"minecraft:zombie_horse": "QUADRUPED",
 	"minecraft:zombie_villager": "BIPED",
 	"minecraft:ravager": "QUADRUPED",
-	"minecraft:strider": "BIPED"
+	"minecraft:strider": "BIPED",
+	"minecraft:axolotl": "QUADRUPED",
+	"minecraft:glow_squid": "NONE",
+	"minecraft:armor_stand": "NONE"
 }
