@@ -5,9 +5,9 @@ import java.util.Random;
 import eu.ha3.presencefootsteps.sound.State;
 import net.minecraft.entity.LivingEntity;
 
-class QuadrapedalStepSoundGenerator extends BipedalStepSoundGenerator {
+public class QuadrupedModifier extends Modifier<TerrestrialStepSoundGenerator> {
 
-    private static final int STEPPING_FUNCTION = 2;
+    //private static final int STEPPING_FUNCTION = 2;
 
     private int hoof = 0;
 
@@ -16,7 +16,7 @@ class QuadrapedalStepSoundGenerator extends BipedalStepSoundGenerator {
     private final Random rand = new Random();
 
     @Override
-    protected void stepped(LivingEntity ply, State event) {
+    protected void stepped(TerrestrialStepSoundGenerator generator, LivingEntity ply, State event) {
         if (hoof == 0 || hoof == 2) {
             nextWalkDistanceMultiplier = rand.nextFloat();
         }
@@ -24,7 +24,7 @@ class QuadrapedalStepSoundGenerator extends BipedalStepSoundGenerator {
         hoof = (hoof + 1) % 3;
 
         if (event == State.WALK) {
-            produceStep(ply, event);
+            generator.produceStep(ply, event);
         }
     }
 
@@ -32,7 +32,7 @@ class QuadrapedalStepSoundGenerator extends BipedalStepSoundGenerator {
     protected float reevaluateDistance(State event, float distance) {
 
         if (event == State.WALK) {
-            switch (STEPPING_FUNCTION) {
+            /*switch (STEPPING_FUNCTION) {
             case 0: {
                 final float overallMultiplier = 1.5f;
                 final float ndm = 0.425f + nextWalkDistanceMultiplier * 0.15f;
@@ -51,7 +51,7 @@ class QuadrapedalStepSoundGenerator extends BipedalStepSoundGenerator {
                 }
                 return distance * (1 - ndm) * overallMultiplier;
             }
-            case 2: {
+            case 2: {*/
                 final float overallMultiplier = 1.85f / 2;
                 final float ndm = 0.2f;
 
@@ -62,8 +62,8 @@ class QuadrapedalStepSoundGenerator extends BipedalStepSoundGenerator {
                     return distance * pond * overallMultiplier;
                 }
                 return distance * (1 - pond) * overallMultiplier;
-            }
-            }
+            //}
+            //}
         }
 
         if (event == State.RUN && hoof == 0) {
@@ -76,5 +76,4 @@ class QuadrapedalStepSoundGenerator extends BipedalStepSoundGenerator {
 
         return distance;
     }
-
 }

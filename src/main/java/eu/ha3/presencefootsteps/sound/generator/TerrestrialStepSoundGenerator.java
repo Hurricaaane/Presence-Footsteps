@@ -18,7 +18,7 @@ import eu.ha3.presencefootsteps.sound.Options;
 import eu.ha3.presencefootsteps.world.Association;
 import eu.ha3.presencefootsteps.world.Solver;
 
-class BipedalStepSoundGenerator implements StepSoundGenerator {
+class TerrestrialStepSoundGenerator implements StepSoundGenerator {
 
     private double lastX;
     private double lastY;
@@ -59,6 +59,12 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
 
     private boolean isMessyFoliage;
     private long brushesTime;
+
+    private final Modifier<TerrestrialStepSoundGenerator> modifier;
+
+    public TerrestrialStepSoundGenerator(Modifier<TerrestrialStepSoundGenerator> modifier) {
+        this.modifier = modifier;
+    }
 
     @Override
     public void setIsolator(Isolator isolator) {
@@ -215,11 +221,11 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
             if (event == null) {
                 event = speedDisambiguator(ply, State.WALK, State.RUN);
             }
-            distance = reevaluateDistance(event, distance);
+            distance = modifier.reevaluateDistance(event, distance);
 
             if (dwm > distance) {
                 produceStep(ply, event, verticalOffsetAsMinus);
-                stepped(ply, event);
+                modifier.stepped(this, ply, event);
                 dmwBase = distanceReference;
             }
         }
@@ -231,11 +237,11 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         }
     }
 
-    protected void produceStep(LivingEntity ply, State event) {
+    public final void produceStep(LivingEntity ply, State event) {
         produceStep(ply, event, 0d);
     }
 
-    protected void produceStep(LivingEntity ply, @Nullable State event, double verticalOffsetAsMinus) {
+    public final void produceStep(LivingEntity ply, @Nullable State event, double verticalOffsetAsMinus) {
 
         if (event == null) {
             event = speedDisambiguator(ply, State.WALK, State.RUN);
@@ -259,14 +265,6 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
 
     protected boolean hasStoppingConditions(Entity ply) {
         return ply.isSubmergedInWater();
-    }
-
-    protected void stepped(LivingEntity ply, State event) {
-
-    }
-
-    protected float reevaluateDistance(State event, float distance) {
-        return distance;
     }
 
     protected void simulateAirborne(LivingEntity ply) {
@@ -325,8 +323,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
             // Do not toggle foot:
             // After landing sounds, the first foot will be same as the one used to jump.
         } else if (/* !this.stepThisFrame && */!ply.isSneaking()) {
-            playSinglefoot(ply, getOffsetMinus(ply), speedDisambiguator(ply, State.CLIMB, State.CLIMB_RUN),
-                    isRightFoot);
+            playSinglefoot(ply, getOffsetMinus(ply), speedDisambiguator(ply, State.CLIMB, State.CLIMB_RUN), isRightFoot);
             if (!this.stepThisFrame)
                 isRightFoot = !isRightFoot;
         }

@@ -12,7 +12,7 @@
 	"menu.pf.stance.none": "Yok",
 	"menu.pf.stance.quadruped": "Dört ayaklı",
 	"menu.pf.stance.biped": "Çift ayaklı",
-	"menu.pf.stance.flying": "Kuş gibi",
+	"menu.pf.stance.flying_biped": "Kuş gibi",
 	"menu.pf.report.full": "Tam rapor",
 	"menu.pf.report.concise": "Özetli rapor",
 	"pf.report.save": "Dosya %s olarak kaydedildi",

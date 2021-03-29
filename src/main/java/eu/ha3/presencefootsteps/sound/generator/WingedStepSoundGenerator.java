@@ -6,7 +6,7 @@ import eu.ha3.presencefootsteps.sound.Options;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Vec3d;
 
-class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
+class WingedStepSoundGenerator extends TerrestrialStepSoundGenerator {
 
     protected boolean isFalling = false;
 
@@ -14,6 +14,10 @@ class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
     protected int flapMod = 0;
     private long lastTimeImmobile;
     protected long nextFlapTime;
+
+    public WingedStepSoundGenerator(Modifier<TerrestrialStepSoundGenerator> modifier) {
+        super(modifier);
+    }
 
     @Override
     public boolean generateFootsteps(LivingEntity ply) {
