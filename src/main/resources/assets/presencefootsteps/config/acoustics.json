@@ -351,6 +351,116 @@
         ]
       }
     },
+    "slate": {
+      "run": {
+        "name": "stone.stone_run",
+        "pitch_min": 65,
+        "pitch_max": 70
+      },
+      "walk": [
+        {
+          "name": "gravel.gravel_run",
+          "vol": 30,
+	      "pitch_min": 45,
+	      "pitch_max": 50
+        },
+      	{
+	      "name": "stone.stone_walk",
+	      "pitch_min": 65,
+	      "pitch_max": 70
+	    }
+	  ],
+      "wander": "stone.stone_wander",
+      "land": {
+        "type": "simultaneous",
+        "array": [
+          "concrete.concrete_run",
+          {
+            "name": "stone.stone_walk",
+            "vol_min": 50,
+            "vol_max": 50
+          },
+          {
+            "type": "delayed",
+            "delay": 50,
+            "name": "stone.stone_run"
+          }
+        ]
+      }
+    },
+    "slate_ore": {
+      "walk": [
+        {
+          "name": "gravel.gravel_run",
+          "vol": 30,
+	      "pitch_min": 45,
+	      "pitch_max": 50
+        },
+        "stone.stone_walk"
+      ],
+      "run": "stone.stone_run",
+      "wander": "stone.stone_wander",
+      "land": {
+        "type": "simultaneous",
+        "array": [
+          "stone.stone_run",
+          {
+            "name": "stone.stone_walk",
+            "vol_min": 50,
+            "vol_max": 50
+          },
+          {
+            "type": "delayed",
+            "delay": 50,
+            "name": "stone.stone_run"
+          }
+        ]
+      }
+    },
+    "rough_slate": {
+      "run": [
+        {
+          "name": "gravel.gravel_run",
+          "vol": 40,
+	      "pitch_min": 45,
+	      "pitch_max": 50
+        },
+	    {
+	      "name": "stone.stone_run",
+	      "pitch_min": 45,
+	      "pitch_max": 50
+	    }
+      ],
+      "walk": [
+        {
+          "name": "gravel.gravel_run",
+          "vol": 20,
+	      "pitch_min": 45,
+	      "pitch_max": 50
+        },
+      	{
+	      "name": "stone.stone_walk",
+	      "pitch_min": 55,
+	      "pitch_max": 60
+	    }
+	  ],
+      "wander": "stone.stone_wander",
+      "land": {
+        "type": "simultaneous",
+        "array": [
+          "concrete.concrete_run",
+          {
+            "name": "stone.stone_walk",
+            "vol": 40
+          },
+          {
+            "type": "delayed",
+            "delay": 50,
+            "name": "stone.gravel_walk"
+          }
+        ]
+      }
+    },
     "stone": {
       "run": {
         "name": "stone.stone_run",

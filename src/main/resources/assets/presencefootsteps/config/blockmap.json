@@ -25,16 +25,57 @@
 	"minecraft:dirt_path": "grass",
 	"minecraft:podzol": "dirt,straw",
 	"minecraft:cobblestone": "stone",
+	
+	"minecraft:deepslate[axis=y]": "slate",
+	"minecraft:deepslate": "rough_slate",
+	"minecraft:infested_deepslate": "slate",
+	
+	"minecraft:cobbled_deepslate": "rough_slate",
+	"minecraft:cobbled_deepslate_wall.bigger": "rough_slate",
+	"minecraft:cobbled_deepslate_stairs": "rough_slate",
+	"minecraft:cobbled_deepslate_slab": "rough_slate",
+	"minecraft:polished_deepslate": "composite,ore",
+	"minecraft:polished_deepslate_wall.bigger": "composite,ore",
+	"minecraft:polished_deepslate_stairs": "composite,ore",
+	"minecraft:polished_deepslate_slab": "composite,ore",
+	
+	"minecraft:deepslate_bricks": "composite,brickstone",
+	"minecraft:deepslate_brick_wall.bigger": "composite,brickstone",
+	"minecraft:deepslate_brick_stairs": "composite,brickstone",
+	"minecraft:deepslate_brick_slab": "composite,brickstone",
+	"minecraft:cracked_deepslate_bricks": "composite,brickstone",
+	"minecraft:chiseled_deepslate": "composite,brickstone",
+	
+	"minecraft:deepslate_tiles": "brickstone",
+	"minecraft:deepslate_tile_wall.bigger": "brickstone",
+	"minecraft:deepslate_tile_stairs": "brickstone",
+	"minecraft:deepslate_tile_slab": "brickstone",
+	"minecraft:cracked_deepslate_tiles": "brickstone",
 
 	"#minecraft:planks": "wood",
 
 	"minecraft:bedrock": "bedrock",
 	"#minecraft:sand": "sand",
 	"minecraft:gravel": "gravel",
+
+	"minecraft:diamond_ore": "ore",
+	"minecraft:copper_ore": "ore",
+	"minecraft:redstone_ore": "ore",
+	"minecraft:emerald_ore": "ore",
 	"minecraft:gold_ore": "ore",
 	"minecraft:iron_ore": "ore",
 	"minecraft:coal_ore": "ore",
 	"minecraft:nether_gold_ore": "ore",
+
+
+	"minecraft:deepslate_diamond_ore": "slate_ore",
+	"minecraft:deepslate_copper_ore": "slate_ore",
+	"minecraft:deepslate_redstone_ore": "slate_ore",
+	"minecraft:deepslate_lapis_ore": "slate_ore",
+	"minecraft:deepslate_emerald_ore": "slate_ore",
+	"minecraft:deepslate_gold_ore": "slate_ore",
+	"minecraft:deepslate_iron_ore": "slate_ore",
+	"minecraft:deepslate_coal_ore": "slate_ore",
 
 	"minecraft:oak_log": "wood",
 	"minecraft:spruce_log": "wood",
@@ -198,7 +239,6 @@
 	"minecraft:purpur_stairs": "stonemachine,brickstone",
 
 	"minecraft:chest": "squeakywood",
-	"minecraft:diamond_ore": "ore",
 	"minecraft:diamond_block": "composite",
 	"minecraft:crafting_table": "wood",
 	"minecraft:farmland": "dirt",
@@ -217,7 +257,6 @@
 	"#minecraft:wooden_pressure_plates.carpet": "wood",
 
 	"minecraft:lightning_rod": "copper",
-	"minecraft:copper_ore": "ore",
 	"minecraft:copper_block": "copper",
 	"minecraft:oxidized_copper": "copper",
 	"minecraft:exposed_copper": "copper",
@@ -239,22 +278,18 @@
 	"minecraft:weathered_cut_copper_slab": "copper",
 
 	"minecraft:waxed_copper_block": "squeakycopper",
-	"minecraft:waxed_oxidized_copper": "squeakycopper",
 	"minecraft:waxed_exposed_copper": "squeakycopper",
 	"minecraft:waxed_weathered_copper": "squeakycopper",
 
 	"minecraft:waxed_cut_copper": "squeakycopper",
-	"minecraft:waxed_oxidized_cut_copper": "squeakycopper",
 	"minecraft:waxed_exposed_cut_copper": "squeakycopper",
 	"minecraft:waxed_weathered_cut_copper": "squeakycopper",
 
 	"minecraft:waxed_cut_copper_stairs": "squeakycopper",
-	"minecraft:waxed_oxidized_cut_copper_stairs": "squeakycopper",
 	"minecraft:waxed_exposed_cut_copper_stairs": "squeakycopper",
 	"minecraft:waxed_weathered_cut_copper_stairs": "squeakycopper",
 
 	"minecraft:waxed_cut_copper_slab": "squeakycopper",
-	"minecraft:waxed_oxidized_cut_copper_slab": "squeakycopper",
 	"minecraft:waxed_exposed_cut_copper_slab": "squeakycopper",
 	"minecraft:waxed_weathered_cut_copper_slab": "squeakycopper",
 
@@ -279,7 +314,6 @@
 	"minecraft:sculk_sensor": "sand,mud",
 	"minecraft:sculk_sensor.foliage": "brush",
 
-	"minecraft:redstone_ore": "ore",
 	"minecraft:redstone_torch": "NOT_EMITTER",
 	"minecraft:redstone_wall_torch": "NOT_EMITTER",
 	"minecraft:stone_button[face=floor].foliage": "stone",
@@ -392,7 +426,6 @@
 
 	"minecraft:redstone_lamp": "stoneutility",
 	"minecraft:sandstone_stairs": "sandstone",
-	"minecraft:emerald_ore": "ore",
 	"minecraft:ender_chest": "obsidian",
 	"minecraft:tripwire_hook": "NOT_EMITTER",
 	"minecraft:tripwire": "NOT_EMITTER",
@@ -931,6 +964,7 @@
 
 	"minecraft:basalt": "sandstone,crumblystone",
 	"minecraft:polished_basalt": "marble,crumblystone",
+	"minecraft:smooth_basalt": "marble,crumblystone",
 	"minecraft:soul_soil": "souls",
 	"minecraft:lodestone": "stonemachine",
 	"minecraft:target": "leaves",

@@ -10,10 +10,8 @@ import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
-import eu.ha3.presencefootsteps.sound.player.StepSoundPlayer;
 import eu.ha3.presencefootsteps.util.PlayerUtil;
 import eu.ha3.presencefootsteps.sound.Options;
-import eu.ha3.presencefootsteps.sound.player.SoundPlayer;
 import eu.ha3.presencefootsteps.world.Association;
 
 /**

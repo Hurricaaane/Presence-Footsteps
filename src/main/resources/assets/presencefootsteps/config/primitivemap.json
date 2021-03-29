@@ -34,5 +34,9 @@
 	"minecraft:block.lodestone.step": "stonemachine",
 	"minecraft:block.chain.step": "chain",
 	"minecraft:block.nether_gold_ore.break": "ore",
-	"minecraft:block.gilded_blackstone.break": "stone,ore"
+	"minecraft:block.gilded_blackstone.break": "stone,ore",
+	"minecraft:block.deepslate.step": "slate",
+	"minecraft:block.polished_deepslate.step": "rough_slate",
+	"minecraft:block.deepslate_bricks.step": "composite,brickstone",
+	"minecraft:block.deepslate_tiles.step": "brickstone"
 }
