@@ -31,7 +31,7 @@ class DelayedAcoustic extends VaryingAcoustic implements Options {
     }
 
     @Override
-    public long get(String option) {
+    public float get(String option) {
         return "delay_min".equals(option) ? delay.min
              : "delay_max".equals(option) ? delay.max
              : 0;

@@ -69,10 +69,10 @@ class DelayedSoundPlayer implements SoundPlayer {
             this.volume = volume;
             this.pitch = pitch;
 
-            maximum = options.containsKey("skippable") ? -1L : options.get("delay_max");
+            maximum = options.containsKey("skippable") ? -1L : (long)options.get("delay_max");
             timeToPlay = System.currentTimeMillis() + Math.max(MathUtil.randAB(getRNG(),
-                    options.get("delay_min"),
-                    options.get("delay_max")
+                    (long)options.get("delay_min"),
+                    (long)options.get("delay_max")
             ), nextPlayTime);
         }
 

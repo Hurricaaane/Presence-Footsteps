@@ -11,7 +11,7 @@ public interface Options {
         }
 
         @Override
-        public long get(String option) {
+        public float get(String option) {
             return 0;
         }
     };
@@ -24,13 +24,13 @@ public interface Options {
 
     boolean containsKey(Object option);
 
-    long get(String option);
+    float get(String option);
 
     final class MapOptions extends HashMap<String, Object> implements Options {
         private static final long serialVersionUID = 1L;
         @Override
-        public long get(String option) {
-            return ((Number)super.get(option)).longValue();
+        public float get(String option) {
+            return ((Number)super.get(option)).floatValue();
         }
     }
 }
