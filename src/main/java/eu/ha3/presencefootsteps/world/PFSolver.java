@@ -81,8 +81,14 @@ public class PFSolver implements Solver {
         // normalize to the bottom of the block
         // so we can detect carpets on top of fences
         collider = collider.offset(0, -(collider.minY - Math.floor(collider.minY)), 0);
+
+        double expansionRatio = 0.1;
+
         // add buffer
-        collider = collider.expand(0.1);
+        collider = collider.expand(expansionRatio);
+        if (player.isSprinting()) {
+            collider = collider.expand(0.3, 0.5, 0.3);
+        }
 
         Association worked = findAssociation(player.world, pos, collider);
 
@@ -200,6 +206,7 @@ public class PFSolver implements Solver {
                 shape = in.getOutlineShape(world, pos);
             }
             if (!shape.isEmpty() && !shape.getBoundingBox().offset(pos).intersects(collider)) {
+                logger.debug("Skipping due to hitbox miss");
                 return Association.NOT_EMITTER;
             }
 
