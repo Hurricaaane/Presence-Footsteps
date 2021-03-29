@@ -142,7 +142,7 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         }
     }
 
-    protected boolean stoppedImmobile(float reference) {
+    protected boolean updateImmobileState(LivingEntity ply, float reference) {
         float diff = lastReference - reference;
         lastReference = reference;
         if (!isImmobile && diff == 0f) {
@@ -180,15 +180,15 @@ class BipedalStepSoundGenerator implements StepSoundGenerator {
         xMovec = movX;
         zMovec = movZ;
 
+        float dwm = distanceReference - dmwBase;
+        boolean immobile = updateImmobileState(ply, distanceReference);
+        if (immobile && !ply.isClimbing()) {
+            dwm = 0;
+            dmwBase = distanceReference;
+        }
+
         if (ply.isOnGround() || ply.isSubmergedInWater() || ply.isClimbing()) {
             State event = null;
-
-            float dwm = distanceReference - dmwBase;
-            boolean immobile = stoppedImmobile(distanceReference);
-            if (immobile && !ply.isClimbing()) {
-                dwm = 0;
-                dmwBase = distanceReference;
-            }
 
             float distance = 0f;
             double verticalOffsetAsMinus = 0f;

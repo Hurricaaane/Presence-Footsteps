@@ -4,6 +4,7 @@ import eu.ha3.presencefootsteps.sound.State;
 import eu.ha3.presencefootsteps.util.MathUtil;
 import eu.ha3.presencefootsteps.sound.Options;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.math.Vec3d;
 
 class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
 
@@ -27,6 +28,28 @@ class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
         if (isAirborne) {
             simulateFlying(ply);
         }
+    }
+
+    @Override
+    protected boolean updateImmobileState(LivingEntity ply, float reference) {
+
+        if (isAirborne) {
+            final Vec3d vel = ply.getVelocity();
+
+            boolean stationary = vel.x != 0 && vel.z != 0;
+            lastReference = reference;
+            if (!isImmobile && stationary) {
+                timeImmobile = System.currentTimeMillis();
+                isImmobile = true;
+            } else if (isImmobile && !stationary) {
+                isImmobile = false;
+                return System.currentTimeMillis() - timeImmobile > variator.IMMOBILE_DURATION;
+            }
+
+            return false;
+        }
+
+        return super.updateImmobileState(ply, reference);
     }
 
     protected boolean updateState(double x, double y, double z, double strafe) {
@@ -119,11 +142,13 @@ class PegasusStepSoundGenerator extends QuadrapedalStepSoundGenerator {
 
             float volume = 1;
             long diffImmobile = now - lastTimeImmobile;
+
             if (diffImmobile > variator.WING_IMMOBILE_FADE_START) {
                 volume -= MathUtil.scalex(diffImmobile,
                         variator.WING_IMMOBILE_FADE_START,
                         variator.WING_IMMOBILE_FADE_START + variator.WING_IMMOBILE_FADE_DURATION);
             }
+            System.out.println("DFinal: " + volume + " === " + Options.singular("gliding_volume", volume).get("gliding_volume"));
 
             acoustics.playAcoustic(ply, "_WING", State.WALK, Options.singular("gliding_volume", volume));
         }
