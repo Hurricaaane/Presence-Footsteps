@@ -3,10 +3,10 @@ package eu.ha3.presencefootsteps.sound;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import eu.ha3.presencefootsteps.PFConfig;
 import eu.ha3.presencefootsteps.PresenceFootsteps;
@@ -68,18 +68,22 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
         return config.getEnabled() && (client.isInSingleplayer() || config.getEnabledMP());
     }
 
-    private List<? extends Entity> getTargets(PlayerEntity ply) {
+    private Stream<? extends Entity> getTargets(PlayerEntity ply) {
         if (config.getEnabledGlobal()) {
             Box box = new Box(ply.getBlockPos()).expand(16);
 
-            return ply.world.getOtherEntities((Entity)null, box, e ->
-                        e instanceof LivingEntity
-                    && !(e instanceof WaterCreatureEntity)
-                    && !(e instanceof FlyingEntity)
-                    && !e.hasVehicle());
-        } else {
-            return ply.world.getPlayers();
+            return ply.world.getOtherEntities((Entity)null, box, this::isValidTarget).stream();
         }
+
+        return ply.world.getPlayers().stream().filter(this::isValidTarget);
+    }
+
+    private boolean isValidTarget(Entity e) {
+        return e instanceof LivingEntity
+                && !(e instanceof WaterCreatureEntity)
+                && !(e instanceof FlyingEntity)
+                && !e.hasVehicle()
+                && !((LivingEntity)e).isSleeping();
     }
 
     public void onFrame(MinecraftClient client, PlayerEntity player) {
