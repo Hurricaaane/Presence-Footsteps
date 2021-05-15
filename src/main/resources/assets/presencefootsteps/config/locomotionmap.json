@@ -70,6 +70,7 @@
 	"minecraft:ravager": "QUADRUPED",
 	"minecraft:strider": "BIPED",
 	"minecraft:axolotl": "QUADRUPED",
+	"minecraft:goat": "QUADRUPED",
 	"minecraft:glow_squid": "NONE",
 	"minecraft:armor_stand": "NONE"
 }

@@ -2,6 +2,7 @@
 	"*.wet": "mudfine,splash",
 
 	"minecraft:air": "NOT_EMITTER",
+	"minecraft:light": "NOT_EMITTER",
 	"minecraft:cave_air": "NOT_EMITTER",
 	"minecraft:void_air": "NOT_EMITTER",
 	"minecraft:bubble_column": "NOT_EMITTER",
@@ -25,11 +26,15 @@
 	"minecraft:dirt_path": "grass",
 	"minecraft:podzol": "dirt,straw",
 	"minecraft:cobblestone": "stone",
-	
+
+	"minecraft:raw_iron_block": "stone",
+	"minecraft:raw_copper_block": "stone",
+	"minecraft:raw_gold_block": "stone",
+
 	"minecraft:deepslate[axis=y]": "slate",
 	"minecraft:deepslate": "rough_slate",
 	"minecraft:infested_deepslate": "slate",
-	
+
 	"minecraft:cobbled_deepslate": "rough_slate",
 	"minecraft:cobbled_deepslate_wall.bigger": "rough_slate",
 	"minecraft:cobbled_deepslate_stairs": "rough_slate",
@@ -278,18 +283,22 @@
 	"minecraft:weathered_cut_copper_slab": "copper",
 
 	"minecraft:waxed_copper_block": "squeakycopper",
+	"minecraft:waxed_oxidized_copper": "squeakycopper",
 	"minecraft:waxed_exposed_copper": "squeakycopper",
 	"minecraft:waxed_weathered_copper": "squeakycopper",
 
 	"minecraft:waxed_cut_copper": "squeakycopper",
+	"minecraft:waxed_oxidized_cut_copper": "squeakycopper",
 	"minecraft:waxed_exposed_cut_copper": "squeakycopper",
 	"minecraft:waxed_weathered_cut_copper": "squeakycopper",
 
 	"minecraft:waxed_cut_copper_stairs": "squeakycopper",
+	"minecraft:waxed_oxidized_cut_copper_stairs": "squeakycopper",
 	"minecraft:waxed_exposed_cut_copper_stairs": "squeakycopper",
 	"minecraft:waxed_weathered_cut_copper_stairs": "squeakycopper",
 
 	"minecraft:waxed_cut_copper_slab": "squeakycopper",
+	"minecraft:waxed_oxidized_cut_copper_slab": "squeakycopper",
 	"minecraft:waxed_exposed_cut_copper_slab": "squeakycopper",
 	"minecraft:waxed_weathered_cut_copper_slab": "squeakycopper",
 
@@ -908,6 +917,7 @@
 
 	"minecraft:lantern": "UNASSIGNED",
 	"minecraft:soul_lantern": "UNASSIGNED",
+
 	"minecraft:campfire[lit=false]": "wood",
 	"minecraft:campfire": "wood,magma",
 	"minecraft:soul_campfire[lit=false]": "wood",
