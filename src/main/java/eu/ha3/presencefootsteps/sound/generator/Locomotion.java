@@ -8,6 +8,8 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
 public enum Locomotion {
     NONE(() -> StepSoundGenerator.EMPTY),
@@ -39,8 +41,8 @@ public enum Locomotion {
         return constructor.get();
     }
 
-    public String getOptionName() {
-        return I18n.translate("menu.pf.stance", I18n.translate(this == NONE ? AUTO_TRANSLATION_KEY : translationKey));
+    public Text getOptionName() {
+        return new TranslatableText("menu.pf.stance", new TranslatableText(this == NONE ? AUTO_TRANSLATION_KEY : translationKey));
     }
 
     public String getDisplayName() {

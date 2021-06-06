@@ -6,7 +6,7 @@
 	"menu.pf.global.true": "Entities: All",
 	"menu.pf.global.false": "Entities: Player",
 	"menu.pf.volume.min": "Volume: OFF",
-	"menu.pf.volume": "Volume: %d%%%%",
+	"menu.pf.volume": "Volume: %d%%",
 	"menu.pf.stance": "Stance: %s",
 	"menu.pf.stance.auto": "Auto",
 	"menu.pf.stance.none": "None",

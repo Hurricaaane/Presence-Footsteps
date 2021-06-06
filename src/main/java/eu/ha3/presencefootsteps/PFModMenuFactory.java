@@ -1,20 +1,11 @@
 package eu.ha3.presencefootsteps;
 
-import net.minecraft.client.gui.screen.Screen;
-
-import java.util.function.Function;
-
-import io.github.prospector.modmenu.api.ModMenuApi;
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
 
 public class PFModMenuFactory implements ModMenuApi {
-
     @Override
-    public String getModId() {
-        return "presencefootsteps";
-    }
-
-    @Override
-    public Function<Screen, ? extends Screen> getConfigScreenFactory() {
+    public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return PFOptionsScreen::new;
     }
 }

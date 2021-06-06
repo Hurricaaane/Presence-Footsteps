@@ -6,7 +6,7 @@
 	"menu.pf.global.true": "Varlıklar: Tümü",
 	"menu.pf.global.false": "Varlıklar: Oyuncu",
 	"menu.pf.volume.min": "Ses: KAPALI",
-	"menu.pf.volume": "Ses: %d%%%%",
+	"menu.pf.volume": "Ses: %d%%",
 	"menu.pf.stance": "Duruş: %s",
 	"menu.pf.stance.auto": "Otomatik",
 	"menu.pf.stance.none": "Yok",

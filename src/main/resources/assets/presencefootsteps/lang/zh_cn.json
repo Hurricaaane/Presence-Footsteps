@@ -6,7 +6,7 @@
   "menu.pf.global.true": "实体: 全部",
   "menu.pf.global.false": "实体: 仅玩家",
   "menu.pf.volume.min": "音量: 关闭",
-  "menu.pf.volume": "音量: %d%%%%",
+  "menu.pf.volume": "音量: %d%%",
   "menu.pf.stance": "站姿: %s",
   "menu.pf.stance.auto": "自动",
   "menu.pf.stance.none": "无",

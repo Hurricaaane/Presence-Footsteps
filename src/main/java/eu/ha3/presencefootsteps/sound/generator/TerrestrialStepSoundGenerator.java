@@ -4,7 +4,6 @@ import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nullable;
 
@@ -134,9 +133,9 @@ class TerrestrialStepSoundGenerator implements StepSoundGenerator {
             if (ply.world.getTime() % 1 == 0) {
 
                 if (motionX != 0 || motionZ != 0) {
-                    ply.distanceTraveled += MathHelper.sqrt(Math.pow(motionX, 2) + Math.pow(motionY, 2) + Math.pow(motionZ, 2)) * 0.8;
+                    ply.distanceTraveled += Math.sqrt(Math.pow(motionX, 2) + Math.pow(motionY, 2) + Math.pow(motionZ, 2)) * 0.8;
                 } else {
-                    ply.distanceTraveled += MathHelper.sqrt(Math.pow(motionX, 2) + Math.pow(motionZ, 2)) * 0.8;
+                    ply.distanceTraveled += Math.sqrt(Math.pow(motionX, 2) + Math.pow(motionZ, 2)) * 0.8;
                 }
 
                 if (ply.isOnGround()) {
