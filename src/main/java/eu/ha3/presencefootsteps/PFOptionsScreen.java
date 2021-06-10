@@ -1,6 +1,6 @@
 package eu.ha3.presencefootsteps;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.minelittlepony.common.client.gui.GameGui;
 import com.minelittlepony.common.client.gui.element.AbstractSlider;

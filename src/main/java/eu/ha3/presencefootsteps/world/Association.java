@@ -1,6 +1,6 @@
 package eu.ha3.presencefootsteps.world;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

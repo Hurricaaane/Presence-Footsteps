@@ -1,6 +1,6 @@
 package eu.ha3.presencefootsteps.sound;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public enum State {
     /**
