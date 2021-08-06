@@ -8,6 +8,8 @@ import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.Nullable;
+
 import eu.ha3.presencefootsteps.PFConfig;
 import eu.ha3.presencefootsteps.PresenceFootsteps;
 import eu.ha3.presencefootsteps.mixins.IEntity;
@@ -100,9 +102,9 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
         }
     }
 
-    public boolean onSoundRecieved(SoundEvent event, SoundCategory category) {
+    public boolean onSoundRecieved(@Nullable SoundEvent event, SoundCategory category) {
 
-        if (category != SoundCategory.PLAYERS || !isRunning(MinecraftClient.getInstance())) {
+        if (event == null || category != SoundCategory.PLAYERS || !isRunning(MinecraftClient.getInstance())) {
             return false;
         }
 
