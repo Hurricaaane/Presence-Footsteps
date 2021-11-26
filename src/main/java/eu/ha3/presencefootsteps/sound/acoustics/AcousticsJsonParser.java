@@ -23,8 +23,6 @@ public class AcousticsJsonParser {
 
     private static final Map<String, AcousticFactory> factories = new HashMap<>();
 
-    private static final JsonParser PARSER = new JsonParser();
-
     private final Range defaultVolume = new Range(1);
     private final Range defaultPitch = new Range(1);
 
@@ -56,7 +54,7 @@ public class AcousticsJsonParser {
         defaultVolume.on(1);
         defaultPitch.on(1);
 
-        JsonObject json = PARSER.parse(reader).getAsJsonObject();
+        JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
 
         if (!"library".equals(json.get("type").getAsString())) {
             throw new JsonParseException("Invalid type: \"library\"");
