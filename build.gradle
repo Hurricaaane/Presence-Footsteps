@@ -1,44 +1,27 @@
 plugins {
     id 'java-library'
-    id 'fabric-loom' version '0.8-SNAPSHOT'
+    id 'fabric-loom' version '0.10-SNAPSHOT'
     id 'maven-publish'
+    id 'org.ajoberstar.reckon' version '0.13.0'
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(16)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
-def createVersion() {
-    def parts = []
-
-    if (project.release != 'RELEASE') {
-        parts.push project.release
-    }
-
-    def branch = System.env.TRAVIS_BRANCH
-
-    if (branch != null && branch != 'master' && !project.minecraft_version.startsWith(branch)) {
-        parts.push branch
-    }
-
-    parts.push project.minecraft_version
-
-    def ver = project.version
-    if (parts.size > 0) {
-      return ver + '-' + parts.join('-')
-    }
-    return ver
-}
-
-version = createVersion()
 group = project.group
 description = project.displayname
 archivesBaseName = project.name
 
-minecraft {
-    refmapName = 'presencefootsteps.mixin.refmap.json'
+loom {
+    mixin.defaultRefmapName = 'presencefootsteps.mixin.refmap.json'
+}
+
+reckon {
+    scopeFromProp()
+    stageFromProp('beta', 'rc', 'final')
 }
 
 repositories {
@@ -74,10 +57,10 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property "version", project.version.toString()
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.version.toString()
     }
 
     from 'LICENSE'
