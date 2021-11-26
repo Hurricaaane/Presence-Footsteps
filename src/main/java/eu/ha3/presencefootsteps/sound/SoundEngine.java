@@ -1,21 +1,17 @@
 package eu.ha3.presencefootsteps.sound;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.Nullable;
 
 import eu.ha3.presencefootsteps.PFConfig;
-import eu.ha3.presencefootsteps.PresenceFootsteps;
 import eu.ha3.presencefootsteps.mixins.IEntity;
 import eu.ha3.presencefootsteps.sound.acoustics.AcousticsJsonParser;
 import eu.ha3.presencefootsteps.sound.generator.Locomotion;
 import eu.ha3.presencefootsteps.sound.generator.StepSoundGenerator;
+import eu.ha3.presencefootsteps.util.ResourceUtils;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -32,13 +28,12 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.profiler.Profiler;
 
 public class SoundEngine implements IdentifiableResourceReloadListener {
-
-    private static final Identifier blockmap = new Identifier("presencefootsteps", "config/blockmap.json");
-    private static final Identifier golemmap = new Identifier("presencefootsteps", "config/golemmap.json");
-    private static final Identifier locomotionmap = new Identifier("presencefootsteps", "config/locomotionmap.json");
-    private static final Identifier primitivemap = new Identifier("presencefootsteps", "config/primitivemap.json");
-    private static final Identifier acoustics = new Identifier("presencefootsteps", "config/acoustics.json");
-    private static final Identifier variator = new Identifier("presencefootsteps", "config/variator.json");
+    private static final Identifier BLOCK_MAP = new Identifier("presencefootsteps", "config/blockmap.json");
+    private static final Identifier GOLEM_MAP = new Identifier("presencefootsteps", "config/golemmap.json");
+    private static final Identifier LOCOMOTION_MAP = new Identifier("presencefootsteps", "config/locomotionmap.json");
+    private static final Identifier PRIMITIVE_MAP = new Identifier("presencefootsteps", "config/primitivemap.json");
+    private static final Identifier ACOUSTICS = new Identifier("presencefootsteps", "config/acoustics.json");
+    private static final Identifier VARIATOR = new Identifier("presencefootsteps", "config/variator.json");
 
     private static final Identifier ID = new Identifier("presencefootsteps", "sounds");
 
@@ -138,8 +133,6 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
     public CompletableFuture<Void> reload(Synchronizer sync, ResourceManager sender,
             Profiler serverProfiler, Profiler clientProfiler,
             Executor serverExecutor, Executor clientExecutor) {
-
-        sync.getClass();
         return sync.whenPrepared(null).thenRunAsync(() -> {
             clientProfiler.startTick();
             clientProfiler.push("Reloading PF Sounds");
@@ -152,26 +145,12 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
     public void reloadEverything(ResourceManager manager) {
         isolator = new PFIsolator(this);
 
-        collectResources(blockmap, manager, isolator.getBlockMap()::load);
-        collectResources(golemmap, manager, isolator.getGolemMap()::load);
-        collectResources(primitivemap, manager, isolator.getPrimitiveMap()::load);
-        collectResources(locomotionmap, manager, isolator.getLocomotionMap()::load);
-        collectResources(acoustics, manager, new AcousticsJsonParser(isolator.getAcoustics())::parse);
-        collectResources(variator, manager, isolator.getVariator()::load);
-    }
-
-    private void collectResources(Identifier id, ResourceManager manager, Consumer<Reader> consumer) {
-        try {
-            manager.getAllResources(id).forEach(res -> {
-                try (Reader stream = new InputStreamReader(res.getInputStream())) {
-                    consumer.accept(stream);
-                } catch (Exception e) {
-                    PresenceFootsteps.logger.error("Error encountered loading resource " + res.getId() + " from pack" + res.getResourcePackName(), e);
-                }
-            });
-        } catch (IOException e) {
-            PresenceFootsteps.logger.error("Error encountered opening resources for " + id, e);
-        }
+        ResourceUtils.forEachReverse(BLOCK_MAP, manager, isolator.getBlockMap()::load);
+        ResourceUtils.forEach(GOLEM_MAP, manager, isolator.getGolemMap()::load);
+        ResourceUtils.forEach(PRIMITIVE_MAP, manager, isolator.getPrimitiveMap()::load);
+        ResourceUtils.forEach(LOCOMOTION_MAP, manager, isolator.getLocomotionMap()::load);
+        ResourceUtils.forEach(ACOUSTICS, manager, new AcousticsJsonParser(isolator.getAcoustics())::parse);
+        ResourceUtils.forEach(VARIATOR, manager, isolator.getVariator()::load);
     }
 
     public void shutdown() {
