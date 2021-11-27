@@ -24,7 +24,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.profiler.Profiler;
 
 public class SoundEngine implements IdentifiableResourceReloadListener {
@@ -65,27 +64,21 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
         return config.getEnabled() && (client.isInSingleplayer() || config.getEnabledMP());
     }
 
-    private Stream<? extends Entity> getTargets(PlayerEntity ply) {
-        if (config.getEnabledGlobal()) {
-            Box box = new Box(ply.getBlockPos()).expand(16);
-
-            return ply.world.getOtherEntities((Entity)null, box, this::isValidTarget).stream();
-        }
-
-        return ply.world.getPlayers().stream().filter(this::isValidTarget);
+    private Stream<? extends Entity> getTargets(Entity cameraEntity) {
+        return cameraEntity.world.getOtherEntities(null, cameraEntity.getBoundingBox().expand(16), e -> {
+            return e instanceof LivingEntity
+                    && !(e instanceof WaterCreatureEntity)
+                    && !(e instanceof FlyingEntity)
+                    && !e.hasVehicle()
+                    && !((LivingEntity)e).isSleeping()
+                    && e.distanceTo(cameraEntity) <= 16
+                    && (config.getEnabledGlobal() || (e instanceof PlayerEntity));
+        }).stream();
     }
 
-    private boolean isValidTarget(Entity e) {
-        return e instanceof LivingEntity
-                && !(e instanceof WaterCreatureEntity)
-                && !(e instanceof FlyingEntity)
-                && !e.hasVehicle()
-                && !((LivingEntity)e).isSleeping();
-    }
-
-    public void onFrame(MinecraftClient client, PlayerEntity player) {
+    public void onFrame(MinecraftClient client, Entity cameraEntity) {
         if (!client.isPaused() && isRunning(client)) {
-            getTargets(player).forEach(e -> {
+            getTargets(cameraEntity).forEach(e -> {
                 StepSoundGenerator generator = ((StepSoundSource) e).getStepGenerator(this);
                 generator.setIsolator(isolator);
                 if (generator.generateFootsteps((LivingEntity)e)) {
