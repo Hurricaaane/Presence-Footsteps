@@ -138,7 +138,7 @@ public class SoundEngine implements IdentifiableResourceReloadListener {
     public void reloadEverything(ResourceManager manager) {
         isolator = new PFIsolator(this);
 
-        ResourceUtils.forEachReverse(BLOCK_MAP, manager, isolator.getBlockMap()::load);
+        ResourceUtils.forEach(BLOCK_MAP, manager, isolator.getBlockMap()::load);
         ResourceUtils.forEach(GOLEM_MAP, manager, isolator.getGolemMap()::load);
         ResourceUtils.forEach(PRIMITIVE_MAP, manager, isolator.getPrimitiveMap()::load);
         ResourceUtils.forEach(LOCOMOTION_MAP, manager, isolator.getLocomotionMap()::load);
