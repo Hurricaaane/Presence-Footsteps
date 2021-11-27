@@ -3,6 +3,7 @@ package eu.ha3.presencefootsteps.world;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -142,14 +143,25 @@ public class StateLookup implements Lookup<BlockState> {
     }
 
     private static final class KeyList {
+        private final Set<Key> priorityKeys = new LinkedHashSet<>();
         private final Set<Key> keys = new LinkedHashSet<>();
 
         void add(Key key) {
+            Set<Key> keys = getSetFor(key);
             keys.remove(key);
             keys.add(key);
         }
 
+        private Set<Key> getSetFor(Key key) {
+            return key.empty ? keys : priorityKeys;
+        }
+
         public Key findMatch(BlockState state) {
+            for (Key i : priorityKeys) {
+                if (i.matches(state)) {
+                    return i;
+                }
+            }
             for (Key i : keys) {
                 if (i.matches(state)) {
                     return i;
@@ -160,7 +172,6 @@ public class StateLookup implements Lookup<BlockState> {
     }
 
     private static final class Key {
-
         public static final Key NULL = new Key();
 
         public final Identifier identifier;
@@ -253,7 +264,7 @@ public class StateLookup implements Lookup<BlockState> {
                     if (key.getName().equals(property.name)) {
                         Comparable<?> value = entries.get(key);
 
-                        if (!Objects.toString(value).equals(property.value)) {
+                        if (!Objects.toString(value).equalsIgnoreCase(property.value)) {
                             return false;
                         }
                     }
@@ -261,6 +272,14 @@ public class StateLookup implements Lookup<BlockState> {
             }
 
             return true;
+        }
+
+        @Override
+        public String toString() {
+            return (isTag ? "#" : "") + identifier
+                    + "[" + properties.stream().map(Attribute::toString).collect(Collectors.joining()) + "]"
+                    + "." + substrate
+                    + "=" + value;
         }
 
         @Override
@@ -287,32 +306,16 @@ public class StateLookup implements Lookup<BlockState> {
                     && Objects.equals(properties, other.properties);
         }
 
-        private static class Attribute {
-            private final String name;
-            private final String value;
-
+        private static record Attribute (String name, String value) {
             Attribute(String prop) {
-                String[] split = prop.split("=");
-
-                this.name = split[0];
-                this.value = split[1];
+                this(prop.split("="));
             }
-
+            Attribute(String[] split) {
+                this(split[0], split[1]);
+            }
             @Override
-            public int hashCode() {
-                final int prime = 31;
-                int result = 1;
-                result = prime * result + ((name == null) ? 0 : name.hashCode());
-                result = prime * result + ((value == null) ? 0 : value.hashCode());
-                return result;
-            }
-
-            @Override
-            public boolean equals(Object obj) {
-                return this == obj || (obj != null && getClass() == obj.getClass()) && equals((Attribute) obj);
-            }
-            private boolean equals(Attribute other) {
-                return Objects.equals(name, other.name) && Objects.equals(value, other.value);
+            public String toString() {
+                return name + "=" + value;
             }
         }
     }
