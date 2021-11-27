@@ -1,6 +1,7 @@
 package eu.ha3.presencefootsteps;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +21,6 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.TranslatableText;
 
@@ -86,17 +86,13 @@ public class PresenceFootsteps implements ClientModInitializer {
     }
 
     private void onTick(MinecraftClient client) {
-        PlayerEntity ply = client.player;
+        Optional.ofNullable(client.getCameraEntity()).filter(e -> !e.isRemoved()).ifPresent(cameraEntity -> {
+            if (keyBinding.isPressed() && client.currentScreen == null) {
+                client.setScreen(new PFOptionsScreen(client.currentScreen));
+            }
 
-        if (ply == null || ply.isRemoved()) {
-            return;
-        }
-
-        if (keyBinding.isPressed() && client.currentScreen == null) {
-            client.setScreen(new PFOptionsScreen(client.currentScreen));
-        }
-
-        engine.onFrame(client, ply);
+            engine.onFrame(client, cameraEntity);
+        });
 
         updateNotifier.attempt();
     }
