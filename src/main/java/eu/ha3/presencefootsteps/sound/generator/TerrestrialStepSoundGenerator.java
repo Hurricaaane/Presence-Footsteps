@@ -200,7 +200,7 @@ class TerrestrialStepSoundGenerator implements StepSoundGenerator {
 
             if (ply.isClimbing() && !ply.isOnGround()) {
                 distance = variator.DISTANCE_LADDER;
-            } else if (/*!ply.isSubmergedInWater() && */Math.abs(yPosition - ply.getY()) > 0.4) {
+            } else if (!ply.isSubmergedInWater() && Math.abs(yPosition - ply.getY()) > 0.4) {
                 // This ensures this does not get recorded as landing, but as a step
                 if (yPosition < ply.getY()) { // Going upstairs
                     distance = variator.DISTANCE_STAIR;
