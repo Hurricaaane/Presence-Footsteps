@@ -9,8 +9,9 @@ import org.lwjgl.glfw.GLFW;
 
 import com.minelittlepony.common.util.GamePaths;
 
-import eu.ha3.mc.quick.update.UpdateNotifier;
-import eu.ha3.mc.quick.update.UpdateNotifier.Version;
+import eu.ha3.mc.quick.update.TargettedVersion;
+import eu.ha3.mc.quick.update.UpdateChecker;
+import eu.ha3.mc.quick.update.UpdaterConfig;
 import eu.ha3.presencefootsteps.sound.SoundEngine;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -25,8 +26,10 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.text.TranslatableText;
 
 public class PresenceFootsteps implements ClientModInitializer {
-
     public static final Logger logger = LogManager.getLogger("PFSolver");
+
+    private static final String MODID = "presencefootsteps";
+    private static final String UPDATER_ENDPOINT = "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/latest.json";
 
     private static PresenceFootsteps instance;
 
@@ -40,7 +43,7 @@ public class PresenceFootsteps implements ClientModInitializer {
 
     private PFDebugHud debugHud;
 
-    private UpdateNotifier updateNotifier;
+    private UpdateChecker updater;
 
     private KeyBinding keyBinding;
 
@@ -62,14 +65,9 @@ public class PresenceFootsteps implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-
         Path pfFolder = GamePaths.getConfigDirectory().resolve("presencefootsteps");
 
-        updateNotifier = new UpdateNotifier(
-                pfFolder.resolve("updater.json"),
-                "https://raw.githubusercontent.com/Sollace/Presence-Footsteps/master/version/versions.json?ver=%d",
-                new UpdateNotifier.Version("1.18", "r", 33), this::onUpdate);
-        updateNotifier.load();
+        updater = new UpdateChecker(new UpdaterConfig(pfFolder.resolve("updater.json")), MODID, UPDATER_ENDPOINT, this::onUpdate);
 
         config = new PFConfig(pfFolder.resolve("userconfig.json"), this);
         config.load();
@@ -92,16 +90,15 @@ public class PresenceFootsteps implements ClientModInitializer {
             }
 
             engine.onFrame(client, cameraEntity);
+            updater.attempt();
         });
-
-        updateNotifier.attempt();
     }
 
-    private void onUpdate(Version newVersion, Version currentVersion) {
+    private void onUpdate(TargettedVersion newVersion, TargettedVersion currentVersion) {
         ToastManager manager = MinecraftClient.getInstance().getToastManager();
 
         SystemToast.add(manager, SystemToast.Type.TUTORIAL_HINT,
                 new TranslatableText("pf.update.title"),
-                new TranslatableText("pf.update.text", newVersion.type, newVersion.number, newVersion.minecraft));
+                new TranslatableText("pf.update.text", newVersion.version().getFriendlyString(), newVersion.minecraft().getFriendlyString()));
     }
 }

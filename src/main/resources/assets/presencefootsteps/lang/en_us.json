@@ -19,8 +19,7 @@
 	"pf.report.save": "File saved as: %s",
 	"pf.report.error": "Failed to generate report: %s",
 	"pf.update.title": "An Update is Available",
-	"pf.update.text": "Presence Footsteps %s%d for mc%s",
-	
+	"pf.update.text": "Presence Footsteps %s for mc%s",
 	"subtitles.pf.footsteps": "Footsteps",
 	"subtitles.pf.wood_squeak": "Wood squeaks",
 	"subtitles.pf.wood_bends": "Wood bends",
