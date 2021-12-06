@@ -352,7 +352,7 @@ class TerrestrialStepSoundGenerator implements StepSoundGenerator {
         }
 
         Association assos = solver.findAssociation(ply.world, new BlockPos(
-            ply.getZ(),
+            ply.getX(),
             ply.getY() - 0.1D - ply.getHeightOffset() - (ply.isOnGround() ? 0 : 0.25D),
             ply.getZ()
         ), Solver.MESSY_FOLIAGE_STRATEGY);
