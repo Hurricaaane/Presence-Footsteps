@@ -3,6 +3,7 @@ package eu.ha3.presencefootsteps.util;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 import org.jetbrains.annotations.Nullable;
@@ -50,13 +51,15 @@ public class BlockReport {
         loc = getUniqueFileName(GamePaths.getGameDirectory().resolve("presencefootsteps"), baseName, ".json");
     }
 
-    public void execute(@Nullable Predicate<BlockState> filter) {
-        try {
-            writeReport(filter);
-            printResults();
-        } catch (Exception e) {
-            addMessage(new TranslatableText("pf.report.error", e.getMessage()).styled(s -> s.withColor(Formatting.RED)));
-        }
+    public CompletableFuture<?> execute(@Nullable Predicate<BlockState> filter) {
+        return CompletableFuture.runAsync(() -> {
+            try {
+                writeReport(filter);
+                printResults();
+            } catch (Exception e) {
+                addMessage(new TranslatableText("pf.report.error", e.getMessage()).styled(s -> s.withColor(Formatting.RED)));
+            }
+        });
     }
 
     private void writeReport(@Nullable Predicate<BlockState> filter) throws IOException {

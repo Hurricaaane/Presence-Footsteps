@@ -63,6 +63,10 @@ public class PresenceFootsteps implements ClientModInitializer {
         return config;
     }
 
+    public UpdateChecker getUpdateChecker() {
+        return updater;
+    }
+
     @Override
     public void onInitializeClient() {
         Path pfFolder = GamePaths.getConfigDirectory().resolve("presencefootsteps");
